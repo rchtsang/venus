@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/ThaumicMekanism/venus.git"
   },
-  "author": "Keyhan Vakil",
+  "author": "Keyhan Vakil and Stephan Kaminsky",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ThaumicMekanism/venus/issues"
