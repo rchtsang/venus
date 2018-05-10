@@ -22,13 +22,15 @@ module.exports = function(grunt) {
                 }
             }
         },
-        imgmin: {
-            venus: {
-                files: {
-                    'out/images/*': ['src/main/frontend/images/*']
-                }
-            }
-        },
+
+        copy: {
+		  	main: {
+			    expand: true,
+			    src: 'src/main/frontend/images/*',
+			    dest: 'src/main/frontend/images/',
+		  	},
+		},
+
         htmlmin: {
             venus: {
                 options: {
@@ -48,9 +50,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-imgmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.registerTask('test', 'qunit:src');
-    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'imgmin', 'htmlmin']);
-    grunt.registerTask('frontend', ['cssmin:venus', 'imgmin:venus', 'htmlmin:venus']);
+    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin']);
+    grunt.registerTask('frontend', ['cssmin:venus', 'htmlmin:venus']);
 };
