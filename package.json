@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kvakil/venus.git"
+    "url": "git+https://github.com/ThaumicMekanism/venus.git"
   },
   "author": "Keyhan Vakil",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kvakil/venus/issues"
+    "url": "https://github.com/ThaumicMekanism/venus/issues"
   },
-  "homepage": "https://github.com/kvakil/venus#readme",
+  "homepage": "https://github.com/ThaumicMekanism/venus#readme",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
