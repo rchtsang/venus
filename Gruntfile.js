@@ -22,6 +22,13 @@ module.exports = function(grunt) {
                 }
             }
         },
+        imgmin: {
+            venus: {
+                files: {
+                    'out/images/*': ['src/main/frontend/images/*']
+                }
+            }
+        },
         htmlmin: {
             venus: {
                 options: {
@@ -44,5 +51,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.registerTask('test', 'qunit:src');
     grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin']);
-    grunt.registerTask('frontend', ['cssmin:venus', 'htmlmin:venus']);
+    grunt.registerTask('frontend', ['cssmin:venus', 'imgmin:venus', 'htmlmin:venus']);
 };
