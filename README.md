@@ -1,11 +1,11 @@
-# [venus](https://kvakil.github.io/venus/)
-[![Build Status](https://travis-ci.org/kvakil/venus.svg?branch=master)](https://travis-ci.org/kvakil/venus)
+# [venus](https://ThaumicMekanism.github.io/venus/)
+[![Build Status](https://travis-ci.org/ThaumicMekanism/venus.svg?branch=master)](https://travis-ci.org/ThaumicMekanism/venus)
 
 __venus__ is a RISC-V instruction set simulator built for education.
 
 ## Using venus
 
-venus is [available online](https://kvakil.github.io/venus/).
+venus is [available online](https://ThaumicMekanism.github.io/venus/).
 
 ## Features
 * RV32IM
@@ -17,10 +17,15 @@ venus is [available online](https://kvakil.github.io/venus/).
 
 ## Resources
 
-#### [User Guide](https://github.com/kvakil/venus/wiki)
+#### [User Guide](https://github.com/ThaumicMekanism/venus/wiki)
 
-#### [Roadmap](https://github.com/kvakil/venus/projects/2)
+#### [Roadmap](https://github.com/ThaumicMekanism/venus/projects/2)
 
-#### [Contributing](https://github.com/kvakil/venus/blob/master/CONTRIBUTING.md)
+#### [Contributing](https://github.com/ThaumicMekanism/venus/blob/master/CONTRIBUTING.md)
 
-#### [MIT License](https://github.com/kvakil/venus/blob/master/LICENSE)
+#### [MIT License](https://github.com/ThaumicMekanism/venus/blob/master/LICENSE)
+
+## Credit
+
+* Origionally made by [kvakil](https://github.com/kvakil/venus)
+* With edits by [ThaumicMekanism](https://github.com/ThaumicMekanism/venus)
