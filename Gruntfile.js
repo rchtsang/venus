@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 		  	main: {
 			    expand: true,
 			    src: 'src/main/frontend/images/*',
-			    dest: 'src/main/frontend/images/',
+			    dest: 'out/images/',
 		  	},
 		},
 
