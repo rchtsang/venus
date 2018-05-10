@@ -48,8 +48,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-imgmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.registerTask('test', 'qunit:src');
-    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin']);
+    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'imgmin', 'htmlmin']);
     grunt.registerTask('frontend', ['cssmin:venus', 'imgmin:venus', 'htmlmin:venus']);
 };
