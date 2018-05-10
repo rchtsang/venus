@@ -23,7 +23,7 @@ module.exports = function(grunt) {
             }
         },
 
-        copyimgs: {
+        copy: {
 		  	main: {
 			    expand: true,
 			    src: 'src/main/frontend/images/*',
@@ -53,6 +53,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.registerTask('test', 'qunit:src');
-    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin', 'copyimgs']);
+    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin', 'copy']);
     grunt.registerTask('frontend', ['cssmin:venus', 'htmlmin:venus']);
 };
