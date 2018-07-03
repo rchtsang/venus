@@ -626,7 +626,11 @@
         }
     );
     codeMirror.setSize("100%", "88vh");
-    window.onload = function(){document.head.appendChild(document.createElement('script')).src='https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js';};
+    window.onload = function(){
+      document.head.appendChild(document.createElement('script')).src='https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js';
+      document.head.appendChild(document.createElement('script')).src='https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js';
+      document.head.appendChild(document.createElement('script')).src='https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js';
+    };
 </script>
 </body>
 </html>
