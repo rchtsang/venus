@@ -626,10 +626,32 @@
         }
     );
     codeMirror.setSize("100%", "88vh");
+    /*
+      Make script tag and load it to page
+    */
+    function loadScript(url, onfail, onload) {
+      var urlelm = document.getElementById(url);
+      if (urlelm) {
+        urlelm.parentNode.removeChild(urlelm)
+      }
+      var script = document.createElement('script');
+      script.setAttribute("onerror", onfail);
+      script.setAttribute("onload", onload);
+      script.setAttribute("src", url);
+      script.setAttribute("id", url);
+      document.getElementsByTagName("head")[0].appendChild(script);
+    }
+    function loadDecoder(){
+      loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js', 
+        `alert("Could not load the decoder! Please try to reload the page to get it to load.");` ,
+        `loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js', "", "");`
+      );
+    }
     window.onload = function(){
-      document.head.appendChild(document.createElement('script')).src='https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js';
-      document.head.appendChild(document.createElement('script')).src='https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js';
-      document.head.appendChild(document.createElement('script')).src='https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js';
+      loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js',
+        `alert("Could not load the tracer! Please refresh and try again!"); loadDecoder();`,
+        `loadDecoder();`
+      );
     };
 </script>
 </body>
