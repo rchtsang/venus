@@ -20,12 +20,9 @@
 <body>
 <div class="tabs is-boxed is-centered">
   <ul>
-    <li style="position: absolute; left:3rem; z-index:-1;"><font size="6px" color="#00d1b2">
-      Venus
-      </font>&nbsp;
-      <font style="padding-right: 10px;" size="3px">
-        by Kvakil
-      </font>
+    <li style="position: absolute; left:3rem; z-index:1;">
+    	<font size="6px" color="#00d1b2">Venus</font>&nbsp;
+    	<font style="padding-right: 10px; cursor:pointer;" size="3px" onclick="window.location.href=`https://github.com/kvakil`;">by Kvakil</font>
     </li>
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
