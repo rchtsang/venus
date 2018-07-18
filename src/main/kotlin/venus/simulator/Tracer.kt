@@ -16,6 +16,7 @@ class Tracer (val sim: Simulator) {
     private var prevInst = MachineCode(0)
 
     fun trace() : ArrayList<Trace> {
+        cleanFormat();
         sim.reset()
         var t = ArrayList<Trace>()
         var i = 0
@@ -69,5 +70,9 @@ class Tracer (val sim: Simulator) {
             s = s + t.getString(format, base) + "\n"
         }
         return s
+    }
+
+    private fun cleanFormat() {
+        this.format = this.format.replace("\\t", "\t").replace("\\n", "\n")
     }
 }
