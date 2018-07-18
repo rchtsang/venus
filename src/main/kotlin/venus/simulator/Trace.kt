@@ -1,6 +1,7 @@
 package venus.simulator
 
 import venus.riscv.MachineCode
+import venus.riscv.insts.ecall
 
 /**
  * Created by Thaumic on 7/14/2018.
@@ -24,7 +25,10 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
     }
 
     fun getString(format : String, base : Int) : String {
-        var f = format.replace("%inst%", numToBase(this.inst.toString().toInt(), 32, 10, true)).replace("%pc%", numToBase(this.pc, 32, 10, false)).replace("%line%", numToBase(this.line, 16, 10, false))
+        if (this.ecallMsg == "exiting the simulator") {
+            return "exiting the simulator"
+        }
+        var f = format.replace("%output%", this.ecallMsg).replace("%inst%", numToBase(this.inst.toString().toInt(), 32, 10, true)).replace("%pc%", numToBase(this.pc, 32, 10, false)).replace("%line%", numToBase(this.line, 16, 10, false))
         for (i in 0..(regs.size - 1)) {
             f = f.replace("%" + i.toString() + "%", numToBase(this.regs[i], 32, 16, true))
         }
