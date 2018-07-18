@@ -9,6 +9,7 @@ import venus.riscv.MemorySegments
 import venus.riscv.insts.dsl.Instruction
 import venus.simulator.Diff
 import venus.simulator.Simulator
+import venus.simulator.Tracer
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
 import venus.simulator.diffs.RegisterDiff
@@ -47,6 +48,7 @@ internal object Renderer {
         renderProgramListing()
         clearConsole()
         updateAll()
+        (document.getElementById("tregPattern") as HTMLTextAreaElement).value = Tracer(displaySim).bf
     }
 
     /** Shows the editor tab and hides other tabs */
