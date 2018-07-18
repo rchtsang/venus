@@ -11,10 +11,12 @@ class BTypeImplementation32(private val cond: (Int, Int) -> Boolean) : Instructi
         val imm: Int = constructBranchImmediate(mcode)
         val vrs1: Int = sim.getReg(rs1)
         val vrs2: Int = sim.getReg(rs2)
-        if (cond(vrs1, vrs2))
+        if (cond(vrs1, vrs2)) {
+            sim.branched = true
             sim.incrementPC(imm)
-        else
+        } else {
             sim.incrementPC(mcode.length)
+        }
     }
 }
 

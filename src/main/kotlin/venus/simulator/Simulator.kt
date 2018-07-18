@@ -51,6 +51,8 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
 
     fun step(): List<Diff> {
+        this.branched = false
+        this.ecallMsg = ""
         preInstruction.clear()
         postInstruction.clear()
         /* TODO: abstract away instruction length */
@@ -67,6 +69,20 @@ class Simulator(val linkedProgram: LinkedProgram) {
             diff(state)
         }
         return diffs
+    }
+
+    var ecallMsg = ""
+    var branched = false
+    fun reset() {
+        while (this.canUndo()) {
+            this.undo()
+        }
+        this.branched = false
+        this.ecallMsg = ""
+    }
+
+    fun trace(): Tracer {
+        return Tracer(this)
     }
 
     fun canUndo() = !history.isEmpty()
@@ -148,7 +164,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         }
     }
 
-    private fun getNextInstruction(): MachineCode {
+    fun getNextInstruction(): MachineCode {
         val short0 = loadHalfWord(getPC())
         val length = getInstructionLength(short0)
         if (length != 4) {
