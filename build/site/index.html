@@ -62,6 +62,10 @@
             }
         </script>
     </div>
+    <div id="" class="panel-block">
+        <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
+        <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
+    </div>
 </div></nav></article></div><div class="tile is-parent"><article class="tile is-child"><div class="field is-horizontal"><div class="field-label is-small"><label class="label">Display Settings</label></div><div class="field-body"><div class="control"><div class="field"><div class="select is-small"><select id="display-settings" onchange="driver.updateRegMemDisplay()"><option selected>Hex</option><option>Decimal</option><option>Unsigned</option><option>ASCII</option></select></div></div></div></div></div></article></div></div></div></div></section><script type="text/javascript" src="js/codemirror.js"></script><script type="text/javascript" src="../classes/main/lib/kotlin.js"></script><script type="text/javascript" src="../classes/main/venus_main.js"></script><script type="text/javascript">var driver = venus_main.venus.glue.Driver;
     var editor = document.getElementById("asm-editor");
     var codeMirror = CodeMirror.fromTextArea(editor,

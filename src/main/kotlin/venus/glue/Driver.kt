@@ -9,6 +9,7 @@ import venus.linker.Linker
 import venus.riscv.InstructionField
 import venus.riscv.userStringToInt
 import venus.simulator.Simulator
+import venus.simulator.SimulatorError
 import venus.simulator.Tracer
 import kotlin.browser.document
 import kotlin.browser.window
@@ -212,10 +213,20 @@ import kotlin.browser.window
         t.format = (document.getElementById("tregPattern") as HTMLTextAreaElement).value
         t.base = (document.getElementById("tbase-val") as HTMLInputElement).value.toInt()
         t.totCommands = (document.getElementById("ttot-cmds-val") as HTMLInputElement).value.toInt()
+        t.maxSteps = (document.getElementById("tmaxsteps-val") as HTMLInputElement).value.toInt()
         t.instFirst = (document.getElementById("tinst-first") as HTMLButtonElement).value == "true"
-        Renderer.clearConsole()
-        Renderer.printConsole(t.traceString())
-        Renderer.setNameButtonSpinning("simulator-trace", false)
+        window.setTimeout(Driver::traceStart, TIMEOUT_TIME, t)
         return t /*I am currently returning the trace object for debug purposes*/
+    }
+    internal fun traceStart(t : Tracer) {
+        try {
+            var ts = t.traceString()
+            Renderer.clearConsole()
+            Renderer.printConsole(ts)
+        } catch (e : SimulatorError) {
+            Renderer.clearConsole()
+            Renderer.printConsole(e.toString())
+        }
+        Renderer.setNameButtonSpinning("simulator-trace", false)
     }
 }

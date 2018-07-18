@@ -7,12 +7,14 @@ import venus.riscv.MachineCode
  */
 //@todo Make it so this handles making the string as well.
 class Tracer (val sim: Simulator) {
-    val bf: String = "%output%%0%\t%1%\t%2%\t%3%\t%4%\t%5%\t%6%\t%7%\t%8%\t%9%\t%10%\t%11%\t%12%\t%13%\t%14%\t%15%\t%16%\t%17%\t%18%\t%19%\t%20%\t%21%\t%22%\t%23%\t%24%\t%25%\t%26%\t%27%\t%28%\t%29%\t%30%\t%31%\t%line%\t%pc%\t%inst%"
+    val bf: String = "%output%%0%\t%1%\t%2%\t%3%\t%4%\t%5%\t%6%\t%7%\t%8%\t%9%\t%10%\t%11%\t%12%\t%13%\t%14%\t%15%\t%16%\t%17%\t%18%\t%19%\t%20%\t%21%\t%22%\t%23%\t%24%\t%25%\t%26%\t%27%\t%28%\t%29%\t%30%\t%31%\t%line%\t%pc%\t%inst%\n"
+    val ms: Int = 1000000
     var format = bf
     var amtReg = 32
     var base = 16
     var totCommands = -1
     var instFirst = false
+    var maxSteps = ms
     private var prevInst = MachineCode(0)
 
     fun trace() : ArrayList<Trace> {
@@ -25,6 +27,9 @@ class Tracer (val sim: Simulator) {
             sim.step()
         }
         while (!sim.isDone()) {
+            if (i > this.maxSteps && this.maxSteps > 0) {
+                throw SimulatorError("The max number of steps (" + this.maxSteps + ") in the tracer has been reached! You can increase this in the settings or disable it by setting it to 0 or less.")
+            }
             t.add(getSingleTrace(i))
             sim.step()
             i++
@@ -67,7 +72,7 @@ class Tracer (val sim: Simulator) {
         var tr = this.trace()
         var s = ""
         for (t in tr) {
-            s = s + t.getString(format, base) + "\n"
+            s += t.getString(format, base)
         }
         return s
     }
