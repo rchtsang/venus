@@ -244,6 +244,21 @@ internal object Renderer {
     }
 
     /**
+     * Sets whether the name button is spinning.
+     *
+     * @param spinning whether the button should be spin
+     */
+    fun setNameButtonSpinning(name: String, spinning: Boolean) {
+        val runButton = getElement(name)
+        if (spinning) {
+            runButton.classList.add("is-loading")
+            disableControlButtons()
+        } else {
+            runButton.classList.remove("is-loading")
+            updateControlButtons()
+        }
+    }
+    /**
      * Sets whether a button is disabled.
      *
      * @param id the id of the button to change
@@ -299,12 +314,23 @@ internal object Renderer {
     fun renderMemoryTab() {
         tabSetVisibility("memory", "block")
         tabSetVisibility("register", "none")
+        tabSetVisibility("tracerSettings", "none")
     }
 
     /** Show the register sidebar tab */
     fun renderRegisterTab() {
         tabSetVisibility("register", "block")
         tabSetVisibility("memory", "none")
+        tabSetVisibility("tracerSettings", "none")
+    }
+
+    /**
+     * Show the tracer settings tab
+     */
+    fun renderTracerSettingsTab() {
+        tabSetVisibility("tracerSettings", "block")
+        tabSetVisibility("memory", "none")
+        tabSetVisibility("register", "none")
     }
 
     /**

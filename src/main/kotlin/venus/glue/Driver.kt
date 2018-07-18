@@ -1,5 +1,6 @@
 package venus.glue
 
+import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import venus.assembler.Assembler
@@ -8,6 +9,7 @@ import venus.linker.Linker
 import venus.riscv.InstructionField
 import venus.riscv.userStringToInt
 import venus.simulator.Simulator
+import venus.simulator.Tracer
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -146,6 +148,13 @@ import kotlin.browser.window
         Renderer.renderRegisterTab()
     }
 
+    /**
+     * Change to trace settings tab
+     */
+    @JsName("openTracerSettingsTab") fun openTracerSettingsTab() {
+        Renderer.renderTracerSettingsTab()
+    }
+
     internal fun currentlyRunning(): Boolean = timer != null
 
     /**
@@ -193,5 +202,20 @@ import kotlin.browser.window
         if (success) {
             window.alert("Successfully copied machine code to clipboard")
         }
+    }
+
+    @JsName("trace") fun trace() : Tracer {
+        //@todo make it so trace is better
+        Renderer.setNameButtonSpinning("simulator-trace", true)
+        Renderer.clearConsole()
+        var t = sim.trace()
+        t.format = (document.getElementById("tregPattern") as HTMLTextAreaElement).value
+        t.base = (document.getElementById("tbase-val") as HTMLInputElement).value.toInt()
+        t.totCommands = (document.getElementById("ttot-cmds-val") as HTMLInputElement).value.toInt()
+        t.instFirst = (document.getElementById("tinst-first") as HTMLButtonElement).value == "true"
+        Renderer.clearConsole()
+        Renderer.printConsole(t.traceString())
+        Renderer.setNameButtonSpinning("simulator-trace", false)
+        return t /*I am currently returning the trace object for debug purposes*/
     }
 }

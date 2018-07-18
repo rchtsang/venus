@@ -37,6 +37,7 @@ val ecall = Instruction(
 
 private fun printInteger(sim: Simulator) {
     val arg = sim.getReg(11)
+    sim.ecallMsg = arg.toString()
     Renderer.printConsole(arg)
 }
 
@@ -45,6 +46,7 @@ private fun printString(sim: Simulator) {
     var c = sim.loadByte(arg)
     arg++
     while (c != 0) {
+        sim.ecallMsg += c.toChar()
         Renderer.printConsole(c.toChar())
         c = sim.loadByte(arg)
         arg++
@@ -60,15 +62,18 @@ private fun sbrk(sim: Simulator) {
 
 private fun exit(sim: Simulator) {
     sim.setPC(MemorySegments.STATIC_BEGIN)
+    sim.ecallMsg = "exiting the simulator"
 }
 
 private fun printChar(sim: Simulator) {
     val arg = sim.getReg(11)
+    sim.ecallMsg = (arg.toChar()).toString()
     Renderer.printConsole(arg.toChar())
 }
 
 private fun exitWithCode(sim: Simulator) {
     sim.setPC(MemorySegments.STATIC_BEGIN)
     val retVal = sim.getReg(11)
+    sim.ecallMsg = "Exited with error code $retVal"
     Renderer.printConsole("Exited with error code $retVal\n")
 }

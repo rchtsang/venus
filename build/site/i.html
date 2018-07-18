@@ -610,7 +610,7 @@
                   </div>
                 </div>
                 <div id="" class="panel-block" align="center">
-                  <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
+                <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
                 </div>
                 <div id="" class="panel-block">
                   <div class="field is-horizontal" align="center">
@@ -627,8 +627,8 @@
                   </div>
                 </div>
                 <div id="" class="panel-block">
-                  <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
-                  <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
+                      <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
+                      <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
                 </div>
                 <div id="" class="panel-block">
                   <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
@@ -688,7 +688,8 @@
   </div>
 </section>
 <script type="text/javascript" src="js/codemirror.js"></script>
-<script type="text/javascript" src="venus.js"></script>
+<script type="text/javascript" src="../classes/main/lib/kotlin.js"></script>
+<script type="text/javascript" src="../classes/main/venus_main.js"></script>
 <script type="text/javascript">
     var driver = venus_main.venus.glue.Driver;
     var editor = document.getElementById("asm-editor");
@@ -702,33 +703,6 @@
         }
     );
     codeMirror.setSize("100%", "88vh");
-    /*
-      Make script tag and load it to page
-    */
-    function loadScript(url, onfail, onload) {
-      var urlelm = document.getElementById(url);
-      if (urlelm) {
-        urlelm.parentNode.removeChild(urlelm)
-      }
-      var script = document.createElement('script');
-      script.setAttribute("onerror", onfail);
-      script.setAttribute("onload", onload);
-      script.setAttribute("src", url);
-      script.setAttribute("id", url);
-      document.getElementsByTagName("head")[0].appendChild(script);
-    }
-    function loadDecoder(){
-      loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js', 
-        `alert("Could not load the decoder! Please try to reload the page to get it to load.");` ,
-        `loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js', "", "");`
-      );
-    }
-    window.onload = function(){
-      loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js',
-        `alert("Could not load the tracer! Please refresh and try again!"); loadDecoder();`,
-        `loadDecoder();`
-      );
-    };
 </script>
 </body>
 </html>
