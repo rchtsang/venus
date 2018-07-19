@@ -10,7 +10,6 @@ import venus.riscv.InstructionField
 import venus.riscv.userStringToInt
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
-import venus.simulator.Trace
 import venus.simulator.Tracer
 import kotlin.browser.document
 import kotlin.browser.window

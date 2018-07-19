@@ -92,7 +92,7 @@ class Tracer (val sim: Simulator) {
             }
         }
         var t = tr[tr.size - 1]
-        while(i < this.totCommands) {
+        while (i < this.totCommands) {
             t.inst = MachineCode(0)
             t.line++
             t.pc = incPC(t.pc)
