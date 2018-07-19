@@ -86,7 +86,7 @@ class Tracer (val sim: Simulator) {
         for (t in tr) {
             this.tr.str += t.getString(format, base)
             i++
-            if (this.totCommands > 0 && i > this.totCommands) {
+            if (this.totCommands > 0 && i >= this.totCommands) {
                 break
             }
         }

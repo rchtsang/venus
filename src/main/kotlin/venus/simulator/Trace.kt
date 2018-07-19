@@ -45,5 +45,3 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
 * Takes in a base 10 integer and a base to convert it to and returns a string of what the number is.
 */
 external fun vnumToBase(curNumBase: Int, n : Int, length : Int, base : Int, signextend : Boolean) : String
-
-
