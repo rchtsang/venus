@@ -10,6 +10,7 @@ import venus.riscv.InstructionField
 import venus.riscv.userStringToInt
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
+import venus.simulator.Trace
 import venus.simulator.Tracer
 import kotlin.browser.document
 import kotlin.browser.window
@@ -220,13 +221,18 @@ import kotlin.browser.window
     }
     internal fun traceStart() {
         try {
-            var ts = tr.traceString()
-            Renderer.clearConsole()
-            Renderer.printConsole(ts)
+            var t = tr.trace()
+            window.setTimeout(Driver::traceString, TIMEOUT_TIME, t)
         } catch (e : SimulatorError) {
             Renderer.clearConsole()
             Renderer.printConsole(e.toString())
+            Renderer.setNameButtonSpinning("simulator-trace", false)
         }
+    }
+    internal fun traceString(t: ArrayList<Trace>) {
+        var ts = tr.traceString(t)
+        Renderer.clearConsole()
+        Renderer.printConsole(ts)
         Renderer.setNameButtonSpinning("simulator-trace", false)
     }
 }
