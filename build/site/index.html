@@ -9,7 +9,7 @@
         <div class="field is-horizontal">
             <article class="tile is-child is-primary" align="center">
                 <h3>Registers Pattern:</h3>
-                <small>To add tabs, type '\t' & new line, type '\n'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.<br><b>%output%</b> represents an ecall message out</small>
+                <small>To add tabs, type '\t'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.</small>
                 <br>
                 <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%0%</textarea>
             </article>
@@ -44,7 +44,7 @@
                 if (e.value == "") {
                     return;
                 }
-                if (e.value < 2) {
+                if (e.value < 1) {
                     e.value = 2;
                 }
                 if (e.value > 32) {
@@ -63,8 +63,8 @@
         </script>
     </div>
     <div id="" class="panel-block">
-        <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
-        <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
+        <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored)</label><br>
+        <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=1000000 spellcheck="false">
     </div>
 </div></nav></article></div><div class="tile is-parent"><article class="tile is-child"><div class="field is-horizontal"><div class="field-label is-small"><label class="label">Display Settings</label></div><div class="field-body"><div class="control"><div class="field"><div class="select is-small"><select id="display-settings" onchange="driver.updateRegMemDisplay()"><option selected>Hex</option><option>Decimal</option><option>Unsigned</option><option>ASCII</option></select></div></div></div></div></div></article></div></div></div></div></section><script type="text/javascript" src="js/codemirror.js"></script><script type="text/javascript" src="../classes/main/lib/kotlin.js"></script><script type="text/javascript" src="../classes/main/venus_main.js"></script><script type="text/javascript">var driver = venus_main.venus.glue.Driver;
     var editor = document.getElementById("asm-editor");
@@ -77,4 +77,41 @@
             lint: true
         }
     );
-    codeMirror.setSize("100%", "88vh");</script></body></html>
+    codeMirror.setSize("100%", "88vh");function getBaseLog(x, y) {
+    return Math.log(y) / Math.log(x);
+}
+function decimalToHexString(number)
+{
+    if (number < 0)
+    {
+        number = 0xFFFFFFFF + number + 1;
+    }
+
+    return number.toString(16).toUpperCase().substring(0,8);
+}
+function numToBase(curNumBase, n, length, base, signextend) {
+    var amount = Math.pow(2, length);
+    length = getBaseLog(curNumBase, amount);
+    var num = 0;
+    if (signextend) {
+        num = parseInt(parseInt(n, base).toString(10), 10);
+        num = parseInt(decimalToHexString(num), 16).toString(curNumBase);
+    } else {
+        num = parseInt(n, base).toString(curNumBase);
+    }
+    if (length - num.length > 0) {
+        num = "0".repeat(length - num.length) + num;
+    }
+    snum = "";
+    if (curNumBase == 2) {
+        for (var i = 0; i < length; i++) {
+            if (i % 4 == 0 && i != 0) {
+                snum += " ";
+            }
+            snum += num[i];
+        }
+    } else {
+        snum = num;
+    }
+    return snum;
+}</script></body></html>

@@ -14,9 +14,10 @@ class Tracer (val sim: Simulator) {
     var instFirst = false
     private var prevInst = MachineCode(0)
     var maxSteps = 1000000
+    var tr = TraceEncapsulation()
 
-    fun trace() : ArrayList<Trace> {
-        cleanFormat();
+    fun trace() {
+        this.tr.traced = false
         sim.reset()
         var t = ArrayList<Trace>()
         var i = 0
@@ -33,8 +34,9 @@ class Tracer (val sim: Simulator) {
             i++
         }
         t.add(getSingleTrace(i))
+        this.tr.trace = t
+        this.tr.traced = true
         sim.reset()
-        return t
     }
 
     fun getSingleTrace(line : Int) : Trace {
@@ -66,11 +68,24 @@ class Tracer (val sim: Simulator) {
         return sim.ecallMsg
     }
 
-    fun traceString(tr: ArrayList<Trace>): String {
-        var s = ""
+    fun getString(): String {
+        if (!this.tr.stred) {
+            throw SimulatorError("The trace string has not finished!")
+        }
+        return this.tr.str
+    }
+
+    fun traceString() {
+        if (!this.tr.traced) {
+            throw SimulatorError("You need to make the run the trace before you can get the trace string!")
+        }
+        this.tr.str = ""
+        this.tr.stred = false
+        var tr = this.tr.trace
         var i = 0
+        cleanFormat()
         for (t in tr) {
-            s += t.getString(format, base)
+            this.tr.str += t.getString(format, base)
             i++
             if (this.totCommands > 0 && i > this.totCommands) {
                 break
@@ -81,10 +96,10 @@ class Tracer (val sim: Simulator) {
             t.inst = MachineCode(0)
             t.line++
             t.pc = incPC(t.pc)
-            s += t.getString(format, base)
+            this.tr.str += t.getString(format, base)
             i++
         }
-        return s
+        this.tr.stred = true
     }
 
     private fun incPC(pc : Int) : Int {
@@ -94,4 +109,11 @@ class Tracer (val sim: Simulator) {
     private fun cleanFormat() {
         this.format = this.format.replace("\\t", "\t").replace("\\n", "\n")
     }
+}
+
+class TraceEncapsulation () {
+    lateinit var trace: ArrayList<Trace>
+    var traced = false
+    var str: String = ""
+    var stred = false
 }
