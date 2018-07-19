@@ -1,8 +1,6 @@
 package venus.simulator
 
 import venus.riscv.MachineCode
-
-import kotlin.js.Math
 /**
  * Created by Thaumic on 7/14/2018.
  */
