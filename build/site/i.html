@@ -716,10 +716,10 @@
         }
     );
     codeMirror.setSize("100%", "88vh");
-    function getBaseLog(x, y) {
+    function vgetBaseLog(x, y) {
         return Math.log(y) / Math.log(x);
     }
-    function decimalToHexString(number)
+    function vdecimalToHexString(number)
     {
         if (number < 0)
         {
@@ -730,11 +730,11 @@
     }
     function vnumToBase(curNumBase, n, length, base, signextend) {
         var amount = Math.pow(2, length);
-        length = getBaseLog(curNumBase, amount);
+        length = vgetBaseLog(curNumBase, amount);
         var num = 0;
         if (signextend) {
             num = parseInt(parseInt(n, base).toString(10), 10);
-            num = parseInt(decimalToHexString(num), 16).toString(curNumBase);
+            num = parseInt(vdecimalToHexString(num), 16).toString(curNumBase);
         } else {
             num = parseInt(n, base).toString(curNumBase);
         }
