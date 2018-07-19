@@ -93,7 +93,7 @@ function decimalToHexString(number)
 
     return number.toString(16).toUpperCase().substring(0,8);
 }
-function numToBase(curNumBase, n, length, base, signextend) {
+function vnumToBase(curNumBase, n, length, base, signextend) {
     var amount = Math.pow(2, length);
     length = getBaseLog(curNumBase, amount);
     var num = 0;
