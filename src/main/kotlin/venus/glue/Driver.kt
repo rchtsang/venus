@@ -19,6 +19,7 @@ import kotlin.browser.window
  */
 @JsName("Driver") object Driver {
     lateinit var sim: Simulator
+    lateinit var tr: Tracer
     private var timer: Int? = null
 
     /**
@@ -61,6 +62,7 @@ import kotlin.browser.window
         try {
             val linked = Linker.link(listOf(prog))
             sim = Simulator(linked)
+            tr = Tracer(sim)
             return true
         } catch (e: AssemblerError) {
             Renderer.displayError(e)
@@ -205,22 +207,20 @@ import kotlin.browser.window
         }
     }
 
-    @JsName("trace") fun trace() : Tracer {
+    @JsName("trace") fun trace() {
         //@todo make it so trace is better
         Renderer.setNameButtonSpinning("simulator-trace", true)
         Renderer.clearConsole()
-        var t = sim.trace()
-        t.format = (document.getElementById("tregPattern") as HTMLTextAreaElement).value
-        t.base = (document.getElementById("tbase-val") as HTMLInputElement).value.toInt()
-        t.totCommands = (document.getElementById("ttot-cmds-val") as HTMLInputElement).value.toInt()
-        t.maxSteps = (document.getElementById("tmaxsteps-val") as HTMLInputElement).value.toInt()
-        t.instFirst = (document.getElementById("tinst-first") as HTMLButtonElement).value == "true"
-        window.setTimeout(Driver::traceStart, TIMEOUT_TIME, t)
-        return t /*I am currently returning the trace object for debug purposes*/
+        tr.format = (document.getElementById("tregPattern") as HTMLTextAreaElement).value
+        tr.base = (document.getElementById("tbase-val") as HTMLInputElement).value.toInt()
+        tr.totCommands = (document.getElementById("ttot-cmds-val") as HTMLInputElement).value.toInt()
+        tr.maxSteps = (document.getElementById("tmaxsteps-val") as HTMLInputElement).value.toInt()
+        tr.instFirst = (document.getElementById("tinst-first") as HTMLButtonElement).value == "true"
+        window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
     }
-    internal fun traceStart(t : Tracer) {
+    internal fun traceStart() {
         try {
-            var ts = t.traceString()
+            var ts = tr.traceString()
             Renderer.clearConsole()
             Renderer.printConsole(ts)
         } catch (e : SimulatorError) {
