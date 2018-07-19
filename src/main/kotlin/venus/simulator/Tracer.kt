@@ -66,8 +66,7 @@ class Tracer (val sim: Simulator) {
         return sim.ecallMsg
     }
 
-    fun traceString(): String {
-        var tr = this.trace()
+    fun traceString(tr: ArrayList<Trace>): String {
         var s = ""
         var i = 0
         for (t in tr) {
