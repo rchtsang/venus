@@ -11,6 +11,7 @@ import venus.riscv.userStringToInt
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
 import venus.simulator.Tracer
+import venus.simulator.wordAddressed
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -216,6 +217,7 @@ import kotlin.browser.window
         tr.totCommands = (document.getElementById("ttot-cmds-val") as HTMLInputElement).value.toInt()
         tr.maxSteps = (document.getElementById("tmaxsteps-val") as HTMLInputElement).value.toInt()
         tr.instFirst = (document.getElementById("tinst-first") as HTMLButtonElement).value == "true"
+        wordAddressed = (document.getElementById("tPCWAddr") as HTMLButtonElement).value == "true"
         window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
     }
     internal fun traceStart() {

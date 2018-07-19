@@ -15,7 +15,6 @@ class Tracer (val sim: Simulator) {
     private var prevInst = MachineCode(0)
     var maxSteps = 1000000
     var tr = TraceEncapsulation()
-
     fun trace() {
         this.tr.traced = false
         sim.reset()
@@ -109,11 +108,13 @@ class Tracer (val sim: Simulator) {
     private fun cleanFormat() {
         this.format = this.format.replace("\\t", "\t").replace("\\n", "\n")
     }
-}
 
+}
 class TraceEncapsulation () {
+
     lateinit var trace: ArrayList<Trace>
     var traced = false
     var str: String = ""
     var stred = false
 }
+var wordAddressed = false
