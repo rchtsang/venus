@@ -28,7 +28,7 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
         }
         var f = format.replace("%output%", this.ecallMsg).replace("%inst%", vnumToBase(base, this.inst.toString().toInt(), 32, 10, true)).replace("%pc%", vnumToBase(base, this.getPC(), 32, 10, false)).replace("%line%", vnumToBase(base, this.line, 16, 10, false))
         for (i in 0..(regs.size - 1)) {
-            f = f.replace("%" + i.toString() + "%", vnumToBase(base, this.regs[i], 32, 16, true))
+            f = f.replace("%" + i.toString() + "%", vnumToBase(base, this.regs[i], 32, 10, true))
         }
         return f
     }
