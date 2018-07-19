@@ -26,7 +26,7 @@ class Tracer (val sim: Simulator) {
         }
         while (!sim.isDone()) {
             if (i > this.maxSteps && this.maxSteps > 0) {
-                throw SimulatorError("The max number of steps (" + this.maxSteps + ") in the tracer has been reached! You can increase this in the settings or disable it by setting it to 0 or less.")
+                throw SimulatorError("The max number of steps (" + this.maxSteps + ") in the tracer has been reached! You can increase this in the settings or disable it by setting it to 0 or less. This is the current safty for infinitely looping programs.")
             }
             t.add(getSingleTrace(i))
             sim.step()
