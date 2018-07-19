@@ -91,6 +91,11 @@
       <div class="tile is-parent">
         <article class="tile is-child">
           <textarea id="console-output" class="textarea" placeholder="console output" readonly></textarea>
+          <a onclick="CopyToClipboard('console-output')">Copy!</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a onclick="downloadtrace('console-output', 'console.out', true)">Download!</a>
+          <br>
+          <br>
         </article>
       </div>
     </div>
@@ -743,6 +748,39 @@
             snum = num;
         }
         return snum;
+    }
+    function downloadtrace(id, filename, custom_name) {
+        var cusN = prompt("Please enter a name for the file. Leave blank for default.");
+        if (cusN != "") {
+            if (cusN == null) {
+                return;
+            }
+            if (cusN.split('.').pop() != filename.split('.').pop()) {
+                cusN = cusN + "." + filename.split('.').pop();
+            }
+            filename = cusN;
+        }
+        var text = document.getElementById(id).value;
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+    function CopyToClipboard(containerid) {
+        var copyText = document.getElementById(containerid);
+
+        /* Select the text field */
+        copyText.select();
+
+        /* Copy the text inside the text field */
+        document.execCommand("Copy");
+        return
     }
     /*
       Make script tag and load it to page
