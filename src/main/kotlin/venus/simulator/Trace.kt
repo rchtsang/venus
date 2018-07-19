@@ -26,16 +26,24 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
         if (this.ecallMsg == "exiting the simulator") {
             return "exiting the simulator\n"
         }
-        var f = format.replace("%output%", this.ecallMsg).replace("%inst%", numToBase(base, this.inst.toString().toInt(), 32, 10, true)).replace("%pc%", numToBase(base, this.pc, 32, 10, false)).replace("%line%", numToBase(base, this.line, 16, 10, false))
+        var f = format.replace("%output%", this.ecallMsg).replace("%inst%", vnumToBase(base, this.inst.toString().toInt(), 32, 10, true)).replace("%pc%", vnumToBase(base, this.getPC(), 32, 10, false)).replace("%line%", vnumToBase(base, this.line, 16, 10, false))
         for (i in 0..(regs.size - 1)) {
-            f = f.replace("%" + i.toString() + "%", numToBase(base, this.regs[i], 32, 16, true))
+            f = f.replace("%" + i.toString() + "%", vnumToBase(base, this.regs[i], 32, 16, true))
         }
         return f
+    }
+
+    fun getPC(): Int {
+        if (wordAddressed) {
+            return this.pc / 4
+        }
+        return this.pc
     }
 
 }
 /*
 * Takes in a base 10 integer and a base to convert it to and returns a string of what the number is.
 */
-external fun numToBase(curNumBase: Int, n : Int, length : Int, base : Int, signextend : Boolean) : String
+external fun vnumToBase(curNumBase: Int, n : Int, length : Int, base : Int, signextend : Boolean) : String
+
 
