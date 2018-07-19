@@ -221,18 +221,18 @@ import kotlin.browser.window
     }
     internal fun traceStart() {
         try {
-            var t = tr.trace()
-            window.setTimeout(Driver::traceString, TIMEOUT_TIME, t)
+            tr.trace()
+            window.setTimeout(Driver::traceString, TIMEOUT_TIME)
         } catch (e : SimulatorError) {
             Renderer.clearConsole()
             Renderer.printConsole(e.toString())
             Renderer.setNameButtonSpinning("simulator-trace", false)
         }
     }
-    internal fun traceString(t: ArrayList<Trace>) {
-        var ts = tr.traceString(t)
+    internal fun traceString() {
+        tr.traceString()
         Renderer.clearConsole()
-        Renderer.printConsole(ts)
+        Renderer.printConsole(tr.getString())
         Renderer.setNameButtonSpinning("simulator-trace", false)
     }
 }

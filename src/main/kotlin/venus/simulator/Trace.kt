@@ -1,8 +1,8 @@
 package venus.simulator
 
 import venus.riscv.MachineCode
-import venus.riscv.insts.ecall
 
+import kotlin.js.Math
 /**
  * Created by Thaumic on 7/14/2018.
  */
@@ -26,19 +26,17 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
 
     fun getString(format : String, base : Int) : String {
         if (this.ecallMsg == "exiting the simulator") {
-            return "exiting the simulator"
+            return "exiting the simulator\n"
         }
-        var f = format.replace("%output%", this.ecallMsg).replace("%inst%", numToBase(this.inst.toString().toInt(), 32, 10, true)).replace("%pc%", numToBase(this.pc, 32, 10, false)).replace("%line%", numToBase(this.line, 16, 10, false))
+        var f = format.replace("%output%", this.ecallMsg).replace("%inst%", numToBase(base, this.inst.toString().toInt(), 32, 10, true)).replace("%pc%", numToBase(base, this.pc, 32, 10, false)).replace("%line%", numToBase(base, this.line, 16, 10, false))
         for (i in 0..(regs.size - 1)) {
-            f = f.replace("%" + i.toString() + "%", numToBase(this.regs[i], 32, 16, true))
+            f = f.replace("%" + i.toString() + "%", numToBase(base, this.regs[i], 32, 16, true))
         }
         return f
     }
-    /*
-    * Takes in a base 10 integer and a base to convert it to and returns a string of what the number is.
-    */
-    fun numToBase(i : Int, length : Int, base : Int, signextend : Boolean) : String {
 
-        return i.toString()
-    }
 }
+/*
+* Takes in a base 10 integer and a base to convert it to and returns a string of what the number is.
+*/
+external fun numToBase(curNumBase: Int, n : Int, length : Int, base : Int, signextend : Boolean) : String

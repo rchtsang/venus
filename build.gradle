@@ -6,7 +6,8 @@ buildscript {
     ext.dokka_version = '0.9.14'
 
     repositories {
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-1.1.4' }
+        mavenCentral()
+        //maven { url 'https://dl.bintray.com/kotlin/kotlin-1.1.4' }
         jcenter()
     }
     dependencies {
