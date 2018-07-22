@@ -104,7 +104,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         return breakpoints[idx]
     }
 
-    fun atBreakpoint() = breakpoints[state.pc / 4]
+    fun atBreakpoint() = breakpoints[(state.pc - MemorySegments.TEXT_BEGIN) / 4]
 
     fun getPC() = state.pc
 

@@ -10,7 +10,7 @@ object MemorySegments {
     const val STATIC_BEGIN = 0x1000_0000
     /**
      * Memory address where the text segment starts
-     * @fixme a bug currently prevents TEXT_BEGIN from being anything other than 0
+     * @fixme FIXED??? a bug currently prevents TEXT_BEGIN from being anything other than 0
      */
     const val TEXT_BEGIN = 0x0000_0000
 }
