@@ -110,7 +110,7 @@ class Tracer (val sim: Simulator) {
     }
 
     fun setWordAddressed(b: Boolean) {
-        wordAddressed = b;
+        wordAddressed = b
     }
 
 }
