@@ -109,6 +109,10 @@ class Tracer (val sim: Simulator) {
         this.format = this.format.replace("\\t", "\t").replace("\\n", "\n")
     }
 
+    fun setWordAddressed(b: Boolean) {
+        wordAddressed = b;
+    }
+
 }
 class TraceEncapsulation () {
 
