@@ -37,7 +37,6 @@ import kotlin.browser.window
 
         window.setTimeout(Driver::initTimeout, 10)
 
-
         console.log("Finished loading driver!")
     }
 
