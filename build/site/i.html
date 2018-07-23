@@ -28,6 +28,9 @@
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
     <li><center>Text Start:</center><input id="text-start" class="input" style="border-radius:1px;font-size:0.6rem;text-align:center;" onblur="driver.verifyText(this)" spellcheck="false"></li>
+    <li>
+      <button id="sv" class="button" onclick="toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false">Save</button><button id="sv" class="button" onclick="toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
+    </li>
   </ul>
 </div>
 <div class="container is-fluid">

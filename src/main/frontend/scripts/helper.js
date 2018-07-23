@@ -1,3 +1,34 @@
+/*This will remove the venus save data*/
+var url_string = window.location.href
+var url = new URL(url_string)
+if (url.searchParams.get("clear") === "true") {
+    console.log("Found clear message! Removing venus data from the localStorage...")
+    localStorage.removeItem("venus")
+    function removeURLParameter(url, parameter) {
+        //prefer to use l.search if you have a location/link object
+        var urlparts= url.split('?');
+        if (urlparts.length>=2) {
+
+            var prefix= encodeURIComponent(parameter)+'=';
+            var pars= urlparts[1].split(/[&;]/g);
+
+            //reverse iteration as may be destructive
+            for (var i= pars.length; i-- > 0;) {
+                //idiom for string.startsWith
+                if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+                    pars.splice(i, 1);
+                }
+            }
+
+            url= urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
+            return url;
+        } else {
+            return url;
+        }
+    }
+    window.location.replace(removeURLParameter(window.location.href, "clear"))
+}
+
 function vgetBaseLog(x, y) {
     return Math.log(y) / Math.log(x);
 }
@@ -110,10 +141,16 @@ var LocalStorageManager = class LocalStorageManager{
         }
     }
     writeObj() {
-        localStorage.setItem(this.name, JSON.stringify(this.vls));
+        /*@todo handle if this obj is NOT the thing taking the storage, this will loop forever in rare cases.*/
+        try {
+            localStorage.setItem(this.name, JSON.stringify(this.vls));
+        } catch (e) {
+            console.log("Could not store the data in localStorage! Removing largest element and trying again...")
+            this.removeLargest()
+        }
     }
     setup() {
-        this.vls[this.name] = 'false';
+        this.vls[this.name] = 'true';
         this.writeObj();
     }
     get(key) {
@@ -137,5 +174,18 @@ var LocalStorageManager = class LocalStorageManager{
     reset() {
         this.vls = {}
         this.setup()
+    }
+    removeLargest() {
+        var largestKey = ""
+        var ksize = 0
+        for (key in this.vls.keys()) {
+            var v = this.get(key)
+            if (v.length >= ksize) {
+                ksize = v.length
+                largestKey = key
+            }
+        }
+        console.log("Removing largest key '" + key + "' of size '" + ksize + "'")
+        remove(largestKey)
     }
 }

@@ -34,6 +34,7 @@ import kotlin.browser.window
         console.log("Loading driver...")
 
         useLS = LS.get("venus") == "true"
+        Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, useLS)
 
         window.setTimeout(Driver::initTimeout, 10)
 
@@ -251,7 +252,6 @@ import kotlin.browser.window
             console.warn("Could not change text because the program is currently running!")
         }
         val ts = Renderer.intToString(MemorySegments.TEXT_BEGIN)
-        LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
         input.value = ts
     }
 
@@ -289,10 +289,12 @@ import kotlin.browser.window
 
     @JsName("persistentStorage") fun persistentStorage(b: Boolean) {
         this.useLS = b
-        this.LS.set("venus", this.useLS.toString())
         if (this.useLS) {
+            console.log("Persistent storage has been enabled!")
+            this.LS.set("venus", this.useLS.toString())
             this.saveAll()
         } else {
+            console.log("Persistent storage has been disabled!")
             this.LS.reset()
         }
     }
