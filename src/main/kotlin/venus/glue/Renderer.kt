@@ -49,9 +49,6 @@ internal object Renderer {
         renderProgramListing()
         clearConsole()
         updateAll()
-        var t = Tracer(displaySim)
-        (document.getElementById("tregPattern") as HTMLTextAreaElement).value = t.format
-        (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = t.maxSteps.toString()
     }
 
     /** Shows the editor tab and hides other tabs */
