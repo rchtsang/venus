@@ -411,7 +411,7 @@ internal object Renderer {
 
     /** a map from integers to the corresponding hex digits */
     private val hexMap = listOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a', 'b', 'c', 'd', 'e', 'f')
+        'A', 'B', 'C', 'D', 'E', 'F')
 
     /**
      * Convert a certain byte to hex
