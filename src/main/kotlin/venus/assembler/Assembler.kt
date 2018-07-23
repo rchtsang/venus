@@ -1,11 +1,14 @@
 package venus.assembler
 
 import venus.assembler.pseudos.checkArgsLength
+import venus.glue.Renderer
+import venus.riscv.MachineCode
 import venus.riscv.MemorySegments
 import venus.riscv.Program
 import venus.riscv.insts.dsl.Instruction
 import venus.riscv.insts.dsl.relocators.Relocator
 import venus.riscv.userStringToInt
+import venus.simulator.SimulatorError
 
 /**
  * This singleton implements a simple two-pass assembler to transform files into programs.
@@ -20,11 +23,37 @@ object Assembler {
      * @see venus.simulator.Simulator
      */
     fun assemble(text: String): AssemblerOutput {
-        val (passOneProg, talInstructions, passOneErrors) = AssemblerPassOne(text).run()
+        var (passOneProg, talInstructions, passOneErrors) = AssemblerPassOne(text).run()
+
+        /* This will force pc to be word aligned. Removed it because I guess you could custom it.
+        if (passOneProg.insts.size > 0) {
+            val l = passOneProg.insts[0].length
+            if (MemorySegments.TEXT_BEGIN % l != 0) {
+                /*This will align the pc so we do not have invalid stuffs.*/
+                MemorySegments.setTextBegin(MemorySegments.TEXT_BEGIN - (MemorySegments.TEXT_BEGIN % l))
+            }
+        }*/
+
         if (passOneErrors.isNotEmpty()) {
             return AssemblerOutput(passOneProg, passOneErrors)
         }
-        val passTwoOutput = AssemblerPassTwo(passOneProg, talInstructions).run()
+        var passTwoOutput = AssemblerPassTwo(passOneProg, talInstructions).run()
+        if (passTwoOutput.prog.textSize + MemorySegments.TEXT_BEGIN > MemorySegments.STATIC_BEGIN) {
+            try {
+                MemorySegments.setTextBegin(MemorySegments.STATIC_BEGIN - passOneProg.textSize)
+                Renderer.updateText()
+                val pone = AssemblerPassOne(text).run()
+                passOneProg = pone.prog
+                passOneErrors = pone.errors
+                talInstructions = pone.talInstructions
+                if (passOneErrors.isNotEmpty()) {
+                    return AssemblerOutput(passOneProg, passOneErrors)
+                }
+                passTwoOutput = AssemblerPassTwo(passOneProg, talInstructions).run()
+            } catch (e: SimulatorError) {
+                throw SimulatorError("Could not change the text size so could not fit the program because the static is too low and the text would be below zero!")
+            }
+        }
         return passTwoOutput
     }
 }
