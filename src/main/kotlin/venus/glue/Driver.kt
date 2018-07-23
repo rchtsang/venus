@@ -220,6 +220,7 @@ import kotlin.browser.window
                 var i = userStringToInt(input.value)
                 try {
                     MemorySegments.setTextBegin(i)
+                    this.openSimulator()
                 } catch (e: SimulatorError) {
                     console.warn(e.toString())
                 }
@@ -231,7 +232,6 @@ import kotlin.browser.window
             console.warn("Could not change text because the program is currently running!")
         }
         val ts = Renderer.intToString(MemorySegments.TEXT_BEGIN)
-        console.log("Text section starts at: " + ts)
         input.value = ts
     }
 
