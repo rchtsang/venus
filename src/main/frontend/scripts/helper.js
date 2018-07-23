@@ -90,7 +90,7 @@ function toggleThis(e) {
     }
 }
 
-class LocalStorageManager{
+var LocalStorageManager = class LocalStorageManager{
     constructor(name) {
         this.name = name;
         this.vls = {};
