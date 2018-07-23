@@ -25,7 +25,7 @@ import kotlin.browser.window
     lateinit var tr: Tracer
     private var timer: Int? = null
     val LS = LocalStorage()
-    var useLS = false
+    private var useLS = false
 
     init {
         console.log("Loading driver...")
@@ -289,5 +289,10 @@ import kotlin.browser.window
         Renderer.clearConsole()
         Renderer.printConsole(tr.getString())
         Renderer.setNameButtonSpinning("simulator-trace", false)
+    }
+
+    fun persistentStorage(b: Boolean) {
+        this.useLS = b
+        this.LS.set("venus", b.toString())
     }
 }
