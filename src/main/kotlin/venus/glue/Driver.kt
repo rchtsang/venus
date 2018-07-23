@@ -6,6 +6,7 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
+import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.InstructionField
 import venus.riscv.MemorySegments
@@ -21,35 +22,28 @@ import kotlin.browser.window
  * The "driver" singleton which can be called from Javascript for all functionality.
  */
 @JsName("Driver") object Driver {
-    lateinit var sim: Simulator
-    lateinit var tr: Tracer
+    var sim: Simulator = Simulator(LinkedProgram())
+    var tr: Tracer = Tracer(sim)
     private var timer: Int? = null
     val LS = LocalStorage()
     private var useLS = false
+    private var saveInterval: Int? = null
+    var p = ""
 
     init {
         console.log("Loading driver...")
 
         useLS = LS.get("venus") == "true"
 
-        val t = Tracer(sim)
-        var txtStart = Renderer.intToString(MemorySegments.TEXT_BEGIN)
-        var fmt = t.format
-        var ms = t.maxSteps.toString()
+        window.setTimeout(Driver::initTimeout, 10)
 
-        if (useLS) {
-            console.log("Using local storage!")
-            txtStart = LS.get("text_begin")
-            fmt = LS.get("trace_format")
-            ms = LS.get("maxSteps")
-        } else {
-            console.log("Local Storage has been disabled!")
-        }
-        (document.getElementById("tregPattern") as HTMLTextAreaElement).value = fmt
-        (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = ms
-        val ts = document.getElementById("text-start") as HTMLInputElement
-        ts.value = txtStart
-        verifyText(ts)
+
+        console.log("Finished loading driver!")
+    }
+
+    fun initTimeout() {
+        loadAll(useLS)
+        this.saveInterval = window.setInterval(Driver::saveIntervalFn, 5000)
     }
 
     /**
@@ -266,13 +260,16 @@ import kotlin.browser.window
         //@todo make it so trace is better
         Renderer.setNameButtonSpinning("simulator-trace", true)
         Renderer.clearConsole()
+        this.loadTraceSettings()
+        window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
+    }
+    private fun loadTraceSettings() {
         tr.format = (document.getElementById("tregPattern") as HTMLTextAreaElement).value
         tr.base = (document.getElementById("tbase-val") as HTMLInputElement).value.toInt()
         tr.totCommands = (document.getElementById("ttot-cmds-val") as HTMLInputElement).value.toInt()
         tr.maxSteps = (document.getElementById("tmaxsteps-val") as HTMLInputElement).value.toInt()
         tr.instFirst = (document.getElementById("tinst-first") as HTMLButtonElement).value == "true"
         wordAddressed = (document.getElementById("tPCWAddr") as HTMLButtonElement).value == "true"
-        window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
     }
     internal fun traceStart() {
         try {
@@ -291,8 +288,90 @@ import kotlin.browser.window
         Renderer.setNameButtonSpinning("simulator-trace", false)
     }
 
-    fun persistentStorage(b: Boolean) {
+    @JsName("persistentStorage") fun persistentStorage(b: Boolean) {
         this.useLS = b
-        this.LS.set("venus", b.toString())
+        this.LS.set("venus", this.useLS.toString())
+        if (this.useLS) {
+            this.saveAll()
+        } else {
+            this.LS.reset()
+        }
+    }
+
+    fun saveIntervalFn() {
+        if (this.useLS) {
+            saveAll()
+        }
+    }
+
+    fun saveAll() {
+        /*Trace settings*/
+        loadTraceSettings()
+        this.LS.set("trace_format", tr.format)
+        this.LS.set("trace_base", tr.base.toString())
+        this.LS.set("trace_totCommands", tr.totCommands.toString())
+        this.LS.set("trace_maxSteps", tr.maxSteps.toString())
+        this.LS.set("trace_instFirst", tr.instFirst.toString())
+        this.LS.set("trace_wordAddressed", wordAddressed.toString())
+
+        /*Text Begin*/
+        this.LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
+
+        /*Program*/
+        js("codeMirror.save()")
+        this.LS.set("prog", getText())
+    }
+
+    /*If b is true, will load stored values else load default values.*/
+    fun loadAll(b: Boolean) {
+        val t = Tracer(sim)
+        /*Trace Settings*/
+        var fmt = t.format
+        var bs = t.base.toString()
+        var totC = t.totCommands.toString()
+        var ms = t.maxSteps.toString()
+        var instf = t.instFirst.toString()
+        var wa = wordAddressed.toString()
+
+        /*Text begin*/
+        var txtStart = Renderer.intToString(MemorySegments.TEXT_BEGIN)
+
+        /*Program*/
+        js("codeMirror.save()")
+        this.p = getText()
+        if (useLS) {
+            console.log("Using local storage!")
+            /*Trace Settings*/
+            fmt = LS.safeget("trace_format", fmt)
+            bs = LS.safeget("trace_base", bs)
+            totC = LS.safeget("trace_totCommands", totC)
+            ms = LS.safeget("trace_maxSteps", ms)
+            instf = LS.safeget("trace_instFirst", instf)
+            wa = LS.safeget("trace_wordAddressed", wa)
+
+            /*Text Begin*/
+            txtStart = LS.safeget("text_begin", txtStart)
+
+            /*Program*/
+            this.p = LS.safeget("prog", this.p)
+        } else {
+            console.log("Local Storage has been disabled!")
+        }
+        /*Trace Settings*/
+        (document.getElementById("tregPattern") as HTMLTextAreaElement).value = fmt
+        (document.getElementById("tbase-val") as HTMLInputElement).value = bs
+        (document.getElementById("ttot-cmds-val") as HTMLInputElement).value = totC
+        (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = ms
+        Renderer.renderButton(document.getElementById("tinst-first") as HTMLButtonElement, instf == "true")
+        Renderer.renderButton(document.getElementById("tPCWAddr") as HTMLButtonElement, wa == "true")
+
+        /*Text Begin*/
+        val ts = document.getElementById("text-start") as HTMLInputElement
+        ts.value = txtStart
+        verifyText(ts)
+
+        /*Program*/
+        js("codeMirror.setValue(driver.p)")
+        p = ""
     }
 }
