@@ -50,34 +50,14 @@
     <div id="" class="panel-block">
         <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
         <input id="tbase-val" type="number" class="input is-small" style="width:180px;" onblur="validateBase(this);" onkeyup="validateBase(this);" value=2 spellcheck="false">
-        <script>
-            function validateBase(e) {
-                if (e.value == "") {
-                    return;
-                }
-                if (e.value < 1) {
-                    e.value = 2;
-                }
-                if (e.value > 32) {
-                    e.value = 32;
-                }
-            }
-            function toggleThis(e) {
-                if (e.value == "true") {
-                    e.classList.remove("is-primary");
-                    e.value = "false";
-                } else {
-                    e.classList.add("is-primary");
-                    e.value = "true";
-                }
-            }
-        </script>
     </div>
     <div id="" class="panel-block">
         <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored)</label><br>
         <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=1000000 spellcheck="false">
     </div>
-</div></nav></article></div><div class="tile is-parent"><article class="tile is-child"><div class="field is-horizontal"><div class="field-label is-small"><label class="label">Display Settings</label></div><div class="field-body"><div class="control"><div class="field"><div class="select is-small"><select id="display-settings" onchange="driver.updateRegMemDisplay()"><option selected>Hex</option><option>Decimal</option><option>Unsigned</option><option>ASCII</option></select></div></div></div></div></div></article></div></div></div></div></section><script type="text/javascript" src="js/codemirror.js"></script><script type="text/javascript" src="../classes/main/lib/kotlin.js"></script><script type="text/javascript" src="../classes/main/venus_main.js"></script><script type="text/javascript">var driver = venus_main.venus.glue.Driver;
+</div></nav></article></div><div class="tile is-parent"><article class="tile is-child"><div class="field is-horizontal"><div class="field-label is-small"><label class="label">Display Settings</label></div><div class="field-body"><div class="control"><div class="field"><div class="select is-small"><select id="display-settings" onchange="driver.updateRegMemDisplay()"><option selected>Hex</option><option>Decimal</option><option>Unsigned</option><option>ASCII</option></select></div></div></div></div></div></article></div></div></div></div></section><script type="text/javascript" src="../../src/main/frontend/js/helper.js"></script>
+<script type="text/javascript" src="../../src/main/frontend/js/codemirror.js"></script>
+<script type="text/javascript" src="../../src/main/frontend/js/risc-mode.js"></script></script><script type="text/javascript" src="../classes/main/lib/kotlin.js"></script><script type="text/javascript" src="../classes/main/venus_main.js"></script><script type="text/javascript">var driver = venus_main.venus.glue.Driver;
     var editor = document.getElementById("asm-editor");
     var codeMirror = CodeMirror.fromTextArea(editor,
         {
@@ -88,74 +68,5 @@
             lint: true
         }
     );
-    codeMirror.setSize("100%", "88vh");function vgetBaseLog(x, y) {
-    return Math.log(y) / Math.log(x);
-}
-function vdecimalToHexString(number)
-{
-    if (number < 0)
-    {
-        number = 0xFFFFFFFF + number + 1;
-    }
-
-    return number.toString(16).toUpperCase().substring(0,8);
-}
-function vnumToBase(curNumBase, n, length, base, signextend) {
-    var amount = Math.pow(2, length);
-    length = vgetBaseLog(curNumBase, amount);
-    var num = 0;
-    if (signextend) {
-        num = parseInt(parseInt(n, base).toString(10), 10);
-        num = parseInt(vdecimalToHexString(num), 16).toString(curNumBase);
-    } else {
-        num = parseInt(n, base).toString(curNumBase);
-    }
-    if (length - num.length > 0) {
-        num = "0".repeat(length - num.length) + num;
-    }
-    snum = "";
-    if (curNumBase == 2) {
-        for (var i = 0; i < length; i++) {
-            if (i % 4 == 0 && i != 0) {
-                snum += " ";
-            }
-            snum += num[i];
-        }
-    } else {
-        snum = num;
-    }
-    return snum;
-}function downloadtrace(id, filename, custom_name) {
-    var cusN = prompt("Please enter a name for the file. Leave blank for default.");
-    if (cusN != "") {
-        if (cusN == null) {
-            return;
-        }
-        if (cusN.split('.').pop() != filename.split('.').pop()) {
-            cusN = cusN + "." + filename.split('.').pop();
-        }
-        filename = cusN;
-    }
-    var text = document.getElementById(id).value;
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-}
-function CopyToClipboard(containerid) {
-    var copyText = document.getElementById(containerid);
-
-    /* Select the text field */
-    copyText.select();
-
-    /* Copy the text inside the text field */
-    document.execCommand("Copy");
-    return
-}
+    codeMirror.setSize("100%", "88vh");
 </script></body></html>

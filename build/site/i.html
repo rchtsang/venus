@@ -7,11 +7,11 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119121070-2"></script>
   <script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-	gtag('config', 'UA-119121070-2');
+      gtag('config', 'UA-119121070-2');
   </script>
   <title>venus</title>
   <link rel="stylesheet" type="text/css" href="css/venus.css">
@@ -21,9 +21,9 @@
 <div class="tabs is-boxed is-centered">
   <ul>
     <li style="padding-right: 20px;">
-    	<font size="3px" color="#00d1b2">Venus</font>&nbsp;
-    	<!--<font style="cursor:pointer;" size="2px" onclick="window.location.href=`https://github.com/kvakil`;">by Keyhan Vakil</font>
-        <font style="padding-right: 10px; cursor:pointer;" size="2px" onclick="window.location.href=`https://github.com/ThaumicMekanism`;"> & Stephan Kaminsky</font>-->
+      <font size="5px" color="#00d1b2">Venus</font>&nbsp;
+      <!--<font style="cursor:pointer;" size="2px" onclick="window.location.href=`https://github.com/kvakil`;">by Keyhan Vakil</font>
+      <font style="padding-right: 10px; cursor:pointer;" size="2px" onclick="window.location.href=`https://github.com/ThaumicMekanism`;"> & Stephan Kaminsky</font>-->
     </li>
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
@@ -619,7 +619,7 @@
                   </div>
                 </div>
                 <div id="" class="panel-block" align="center">
-                <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
+                  <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
                 </div>
                 <div id="" class="panel-block">
                   <div class="field is-horizontal" align="center">
@@ -638,8 +638,8 @@
                   </div>
                 </div>
                 <div id="" class="panel-block">
-                      <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
-                      <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
+                  <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
+                  <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
                 </div>
                 <div id="" class="panel-block">
                   <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
@@ -668,8 +668,8 @@
                   </script>
                 </div>
                 <div id="" class="panel-block">
-                  <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored)</label><br>
-                  <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=1000000 spellcheck="false">
+                  <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
+                  <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
                 </div>
               </div>
             </nav>
@@ -702,7 +702,9 @@
     </div>
   </div>
 </section>
-<script type="text/javascript" src="js/codemirror.js"></script>
+<script type="text/javascript" src="../../src/main/frontend/js/helper.js"></script>
+<script type="text/javascript" src="../../src/main/frontend/js/codemirror.js"></script>
+<script type="text/javascript" src="../../src/main/frontend/js/risc-mode.js"></script>
 <script type="text/javascript" src="../classes/main/lib/kotlin.js"></script>
 <script type="text/javascript" src="../classes/main/venus_main.js"></script>
 <script type="text/javascript">
@@ -718,77 +720,6 @@
         }
     );
     codeMirror.setSize("100%", "88vh");
-    function vgetBaseLog(x, y) {
-        return Math.log(y) / Math.log(x);
-    }
-    function vdecimalToHexString(number)
-    {
-        if (number < 0)
-        {
-            number = 0xFFFFFFFF + number + 1;
-        }
-
-        return number.toString(16).toUpperCase().substring(0,8);
-    }
-    function vnumToBase(curNumBase, n, length, base, signextend) {
-        var amount = Math.pow(2, length);
-        length = vgetBaseLog(curNumBase, amount);
-        var num = 0;
-        if (signextend) {
-            num = parseInt(parseInt(n, base).toString(10), 10);
-            num = parseInt(vdecimalToHexString(num), 16).toString(curNumBase);
-        } else {
-            num = parseInt(n, base).toString(curNumBase);
-        }
-        if (length - num.length > 0) {
-            num = "0".repeat(length - num.length) + num;
-        }
-        snum = "";
-        if (curNumBase == 2) {
-            for (var i = 0; i < length; i++) {
-                if (i % 4 == 0 && i != 0) {
-                    snum += " ";
-                }
-                snum += num[i];
-            }
-        } else {
-            snum = num;
-        }
-        return snum;
-    }
-    function downloadtrace(id, filename, custom_name) {
-        var cusN = prompt("Please enter a name for the file. Leave blank for default.");
-        if (cusN != "") {
-            if (cusN == null) {
-                return;
-            }
-            if (cusN.split('.').pop() != filename.split('.').pop()) {
-                cusN = cusN + "." + filename.split('.').pop();
-            }
-            filename = cusN;
-        }
-        var text = document.getElementById(id).value;
-        var element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        element.setAttribute('download', filename);
-
-        element.style.display = 'none';
-        document.body.appendChild(element);
-
-        element.click();
-
-        document.body.removeChild(element);
-    }
-    function CopyToClipboard(containerid) {
-        var copyText = document.getElementById(containerid);
-
-        /* Select the text field */
-        copyText.select();
-
-        /* Copy the text inside the text field */
-        document.execCommand("Copy");
-        return
-    }
 </script>
 </body>
 </html>

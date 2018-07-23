@@ -1,6 +1,7 @@
 package venus.glue
 
 import org.w3c.dom.HTMLButtonElement
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import venus.assembler.Assembler
@@ -23,14 +24,32 @@ import kotlin.browser.window
     lateinit var sim: Simulator
     lateinit var tr: Tracer
     private var timer: Int? = null
+    val LS = LocalStorage()
+    var useLS = false
 
     init {
         console.log("Loading driver...")
-        (document.getElementById("text-start") as HTMLInputElement).value = Renderer.toHex(MemorySegments.TEXT_BEGIN)
+
+        useLS = LS.get("venus") == "true"
 
         val t = Tracer(sim)
-        (document.getElementById("tregPattern") as HTMLTextAreaElement).value = t.format
-        (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = t.maxSteps.toString()
+        var txtStart = Renderer.intToString(MemorySegments.TEXT_BEGIN)
+        var fmt = t.format
+        var ms = t.maxSteps.toString()
+
+        if (useLS) {
+            console.log("Using local storage!")
+            txtStart = LS.get("text_begin")
+            fmt = LS.get("trace_format")
+            ms = LS.get("maxSteps")
+        } else {
+            console.log("Local Storage has been disabled!")
+        }
+        (document.getElementById("tregPattern") as HTMLTextAreaElement).value = fmt
+        (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = ms
+        val ts = document.getElementById("text-start") as HTMLInputElement
+        ts.value = txtStart
+        verifyText(ts)
     }
 
     /**
@@ -224,7 +243,10 @@ import kotlin.browser.window
                 var i = userStringToInt(input.value)
                 try {
                     MemorySegments.setTextBegin(i)
-                    this.openSimulator()
+                    val tabDisplay = document.getElementById("simulator-tab") as HTMLElement
+                    if (tabDisplay.classList.contains("is-active")) {
+                        this.openSimulator()
+                    }
                 } catch (e: SimulatorError) {
                     console.warn(e.toString())
                 }
@@ -236,6 +258,7 @@ import kotlin.browser.window
             console.warn("Could not change text because the program is currently running!")
         }
         val ts = Renderer.intToString(MemorySegments.TEXT_BEGIN)
+        LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
         input.value = ts
     }
 

@@ -10,7 +10,6 @@ import venus.riscv.insts.dsl.Instruction
 import venus.riscv.userStringToInt
 import venus.simulator.Diff
 import venus.simulator.Simulator
-import venus.simulator.Tracer
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
 import venus.simulator.diffs.RegisterDiff
