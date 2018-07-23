@@ -27,6 +27,10 @@ import kotlin.browser.window
     init {
         console.log("Loading driver...")
         (document.getElementById("text-start") as HTMLInputElement).value = Renderer.toHex(MemorySegments.TEXT_BEGIN)
+
+        val t = Tracer(sim)
+        (document.getElementById("tregPattern") as HTMLTextAreaElement).value = t.format
+        (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = t.maxSteps.toString()
     }
 
     /**
