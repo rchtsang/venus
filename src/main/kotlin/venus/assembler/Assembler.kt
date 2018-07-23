@@ -2,7 +2,6 @@ package venus.assembler
 
 import venus.assembler.pseudos.checkArgsLength
 import venus.glue.Renderer
-import venus.riscv.MachineCode
 import venus.riscv.MemorySegments
 import venus.riscv.Program
 import venus.riscv.insts.dsl.Instruction
