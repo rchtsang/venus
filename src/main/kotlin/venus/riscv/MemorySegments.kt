@@ -1,5 +1,7 @@
 package venus.riscv
 
+import venus.simulator.SimulatorError
+
 /** A singleton containing constants which say where various segments start */
 object MemorySegments {
     /** Memory address where the stack segment starts (growing downwards) */
@@ -12,5 +14,18 @@ object MemorySegments {
      * Memory address where the text segment starts
      * @fixme FIXED??? a bug currently prevents TEXT_BEGIN from being anything other than 0
      */
-    const val TEXT_BEGIN = 0x0000_0000
+    var TEXT_BEGIN = 0x0000_0000
+
+    fun setTextBegin(i: Int) {
+        /*@todo add this function!*/
+        if (i < 0) {
+            throw SimulatorError("The text location must be a positive number!")
+        } else if (i >= MemorySegments.STATIC_BEGIN) {
+            /*
+            * @todo add check to see if text plus program is above stack. Should error as well.
+            */
+            throw SimulatorError("The text location in memory cannot be larger than the static!")
+        }
+        MemorySegments.TEXT_BEGIN = i
+    }
 }

@@ -26,6 +26,7 @@
     </li>
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
+    <li><center>Text Start:</center><input id="text-start" class="input" style="border-radius:1px;font-size:0.6rem;text-align:center;" onblur="driver.verifyText(this)" spellcheck="false"></li>
   </ul>
 </div>
 <div class="container is-fluid">

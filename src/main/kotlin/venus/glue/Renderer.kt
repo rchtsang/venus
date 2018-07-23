@@ -7,6 +7,7 @@ import venus.riscv.InstructionField
 import venus.riscv.MachineCode
 import venus.riscv.MemorySegments
 import venus.riscv.insts.dsl.Instruction
+import venus.riscv.userStringToInt
 import venus.simulator.Diff
 import venus.simulator.Simulator
 import venus.simulator.Tracer
@@ -102,6 +103,7 @@ internal object Renderer {
      * @todo refactor this into a "reset" and "update" all function
      */
     fun updateAll() {
+        updateText()
         updatePC(sim.getPC())
         updateMemory(activeMemoryAddress)
         updateControlButtons()
@@ -196,6 +198,17 @@ internal object Renderer {
             register.classList.add("is-modified")
             activeRegister = register
         }
+    }
+
+    fun intToString(value: Int): String {
+        var v = when (displayType) {
+            "Hex" -> toHex(value)
+            "Decimal" -> value.toString()
+            "Unsigned" -> toUnsigned(value)
+            "ASCII" -> toAscii(value)
+            else -> toHex(value)
+        }
+        return v
     }
 
     /**
@@ -483,4 +496,9 @@ internal object Renderer {
 
     fun moveMemoryUp() = moveMemoryBy(MEMORY_CONTEXT)
     fun moveMemoryDown() = moveMemoryBy(-MEMORY_CONTEXT)
+
+    fun updateText() {
+        var t = (document.getElementById("text-start") as HTMLInputElement)
+        t.value = intToString(userStringToInt(t.value))
+    }
 }

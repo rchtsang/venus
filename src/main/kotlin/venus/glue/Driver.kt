@@ -7,6 +7,7 @@ import venus.assembler.Assembler
 import venus.assembler.AssemblerError
 import venus.linker.Linker
 import venus.riscv.InstructionField
+import venus.riscv.MemorySegments
 import venus.riscv.userStringToInt
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
@@ -22,6 +23,11 @@ import kotlin.browser.window
     lateinit var sim: Simulator
     lateinit var tr: Tracer
     private var timer: Int? = null
+
+    init {
+        console.log("Loading driver...")
+        (document.getElementById("text-start") as HTMLInputElement).value = Renderer.toHex(MemorySegments.TEXT_BEGIN)
+    }
 
     /**
      * Run when the user clicks the "Simulator" tab.
@@ -206,6 +212,27 @@ import kotlin.browser.window
         if (success) {
             window.alert("Successfully copied machine code to clipboard")
         }
+    }
+
+    @JsName("verifyText") fun verifyText(input: HTMLInputElement) {
+        if (!currentlyRunning()) {
+            try {
+                var i = userStringToInt(input.value)
+                try {
+                    MemorySegments.setTextBegin(i)
+                } catch (e: SimulatorError) {
+                    console.warn(e.toString())
+                }
+            } catch (e: NumberFormatException) {
+                /* do nothing */
+                console.warn("Unknown number format!")
+            }
+        } else {
+            console.warn("Could not change text because the program is currently running!")
+        }
+        val ts = Renderer.intToString(MemorySegments.TEXT_BEGIN)
+        console.log("Text section starts at: " + ts)
+        input.value = ts
     }
 
     @JsName("trace") fun trace() {
