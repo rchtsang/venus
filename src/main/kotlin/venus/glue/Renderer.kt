@@ -497,4 +497,13 @@ internal object Renderer {
         var t = (document.getElementById("text-start") as HTMLInputElement)
         t.value = intToString(userStringToInt(t.value))
     }
+
+    fun renderButton(e: HTMLButtonElement, b: Boolean) {
+        if (b) {
+            e.classList.add("is-primary")
+        } else {
+            e.classList.remove("is-primary")
+        }
+        e.value = b.toString()
+    }
 }

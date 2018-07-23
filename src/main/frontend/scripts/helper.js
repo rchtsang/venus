@@ -124,11 +124,18 @@ var LocalStorageManager = class LocalStorageManager{
         return v
     }
     set(key, value) {
+        if (this.vls[key] === value) {
+            return
+        }
         this.vls[key] = value;
         this.writeObj();
     }
     remove(key) {
         delete this.vls[key];
         this.writeObj();
+    }
+    reset() {
+        this.vls = {}
+        this.setup()
     }
 }

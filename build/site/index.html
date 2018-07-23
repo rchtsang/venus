@@ -20,7 +20,8 @@
                 <h3>Registers Pattern:</h3>
                 <small>To add tabs, type '\t'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.</small>
                 <br>
-                <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%0%</textarea>
+                <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%output%%0%	%1%	%2%	%3%	%4%	%5%	%6%	%7%	%8%	%9%	%10%	%11%	%12%	%13%	%14%	%15%	%16%	%17%	%18%	%19%	%20%	%21%	%22%	%23%	%24%	%25%	%26%	%27%	%28%	%29%	%30%	%31%	%line%	%pc%	%inst%
+</textarea>
             </article>
         </div>
     </div>
@@ -57,7 +58,7 @@
     </div>
 </div></nav></article></div><div class="tile is-parent"><article class="tile is-child"><div class="field is-horizontal"><div class="field-label is-small"><label class="label">Display Settings</label></div><div class="field-body"><div class="control"><div class="field"><div class="select is-small"><select id="display-settings" onchange="driver.updateRegMemDisplay()"><option selected>Hex</option><option>Decimal</option><option>Unsigned</option><option>ASCII</option></select></div></div></div></div></div></article></div></div></div></div></section><script type="text/javascript" src="../../src/main/frontend/scripts/helper.js"></script>
 <script type="text/javascript" src="../../src/main/frontend/js/codemirror.js"></script>
-<script type="text/javascript" src="../../src/main/frontend/js/risc-mode.js"></script></script><script type="text/javascript" src="../classes/main/lib/kotlin.js"></script><script type="text/javascript" src="../classes/main/venus_main.js"></script><script type="text/javascript">var driver = venus_main.venus.glue.Driver;
+<script type="text/javascript" src="../../src/main/frontend/js/risc-mode.js"></script></script><script type="text/javascript" src="../classes/main/lib/kotlin.js"></script><script type="text/javascript" src="../classes/main/venus_main.js"></script><script type="text/javascript">
     var editor = document.getElementById("asm-editor");
     var codeMirror = CodeMirror.fromTextArea(editor,
         {
@@ -69,4 +70,5 @@
         }
     );
     codeMirror.setSize("100%", "88vh");
+    var driver = venus_main.venus.glue.Driver;
 </script></body></html>

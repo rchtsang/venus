@@ -19,10 +19,23 @@ class LocalStorage {
     fun remove(key: String) {
         lsm.remove(key)
     }
+
+    fun reset() {
+        lsm.reset()
+    }
+
+    fun safeget(key: String, prevVal: String): String {
+        val v = this.get(key)
+        if (v == "undefined") {
+            return prevVal
+        }
+        return v
+    }
 }
 
 external class LocalStorageManager (name: String) {
     fun set(key: String, value: String)
     fun get(key: String): String
     fun remove(key: String)
+    fun reset()
 }
