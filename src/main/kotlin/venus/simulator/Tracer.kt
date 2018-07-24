@@ -15,10 +15,13 @@ class Tracer (val sim: Simulator) {
     private var prevInst = MachineCode(0)
     var maxSteps = 1000000
     var tr = TraceEncapsulation()
+    var twoStage = false
+
     fun trace() {
         this.tr.traced = false
         sim.reset()
-        var t = ArrayList<Trace>()
+        var tl = ArrayList<Trace>()
+        var prevTrace: Trace ?= null
         var i = 0
         if (!this.instFirst && !sim.isDone()) {
             prevInst = sim.getNextInstruction()
@@ -28,12 +31,17 @@ class Tracer (val sim: Simulator) {
             if (i > this.maxSteps && this.maxSteps > 0) {
                 throw SimulatorError("The max number of steps (" + this.maxSteps + ") in the tracer has been reached! You can increase this in the settings or disable it by setting it to 0 or less. This is the current safty for infinitely looping programs.")
             }
-            t.add(getSingleTrace(i))
+            var currentTrace = getSingleTrace(i)
+            currentTrace.prevTrace = prevTrace
+            tl.add(currentTrace)
+            prevTrace = currentTrace
             sim.step()
             i++
         }
-        t.add(getSingleTrace(i))
-        this.tr.trace = t
+        var currentTrace = getSingleTrace(i)
+        currentTrace.prevTrace = prevTrace
+        tl.add(currentTrace)
+        this.tr.trace = tl
         this.tr.traced = true
         sim.reset()
     }
@@ -84,6 +92,17 @@ class Tracer (val sim: Simulator) {
         var i = 0
         cleanFormat()
         for (t in tr) {
+            if (twoStage && t.branched) {
+                val pt = t.prevTrace
+                val flushed = pt?.copy() ?: this.getSingleTrace(-1)
+                val nextPC = flushed.pc + flushed.inst.length
+                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
+                flushed.pc = nextPC
+                flushed.line = i
+                this.tr.str += flushed.getString(format, base)
+                i++
+            }
+            t.line = i
             this.tr.str += t.getString(format, base)
             i++
             if (this.totCommands > 0 && i >= this.totCommands) {
