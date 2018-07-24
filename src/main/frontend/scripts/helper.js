@@ -150,7 +150,7 @@ var LocalStorageManager = class LocalStorageManager{
         }
     }
     setup() {
-        this.vls[this.name] = 'true';
+        this.vls[this.name] = 'false';
         this.writeObj();
     }
     get(key) {
