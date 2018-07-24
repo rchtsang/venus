@@ -178,14 +178,20 @@ var LocalStorageManager = class LocalStorageManager{
     removeLargest() {
         var largestKey = ""
         var ksize = 0
-        for (key in this.vls.keys()) {
+        var key = ""
+        for (key of Object.keys(this.vls)) {
             var v = this.get(key)
             if (v.length >= ksize) {
                 ksize = v.length
                 largestKey = key
             }
         }
-        console.log("Removing largest key '" + key + "' of size '" + ksize + "'")
-        remove(largestKey)
+        var ktot = Object.keys(this.vls)
+        if (ktot !== 0) {
+            console.log("Removing largest key '" + largestKey + "' of size '" + ksize + "'")
+            this.remove(largestKey)
+        } else {
+            console.log("Could not remove any more elements! If this was called by set, then you should clear your localStorage and try again.")
+        }
     }
 }
