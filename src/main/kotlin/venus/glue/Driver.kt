@@ -301,7 +301,18 @@ import kotlin.browser.window
 
     fun saveIntervalFn() {
         if (this.useLS) {
+            blinkSave(true)
+            window.setTimeout(Driver::blinkSave, 500, false)
             saveAll()
+        }
+    }
+
+    fun blinkSave(b: Boolean) {
+        val e = document.getElementById("sv") as HTMLButtonElement
+        if (b) {
+            e.style.color = "yellow"
+        } else {
+            e.style.color = ""
         }
     }
 
