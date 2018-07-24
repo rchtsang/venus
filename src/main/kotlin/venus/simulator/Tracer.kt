@@ -21,7 +21,7 @@ class Tracer (val sim: Simulator) {
         this.tr.traced = false
         sim.reset()
         var tl = ArrayList<Trace>()
-        var prevTrace: Trace ?= null
+        var prevTrace: Trace? = null
         var i = 0
         if (!this.instFirst && !sim.isDone()) {
             prevInst = sim.getNextInstruction()

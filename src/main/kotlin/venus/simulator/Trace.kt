@@ -1,7 +1,6 @@
 package venus.simulator
 
 import venus.riscv.MachineCode
-import venus.riscv.insts.ecall
 
 /**
  * Created by Thaumic on 7/14/2018.
@@ -14,7 +13,7 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
     var inst = MachineCode(0)
     var line = 0
     var pc = 0
-    var prevTrace: Trace ?= null
+    var prevTrace: Trace? = null
 
     init {
         this.ecallMsg = ecallMsg
