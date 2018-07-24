@@ -14,7 +14,7 @@ import venus.simulator.diffs.RegisterDiff
     Eventually, it will support debugging. */
 class Simulator(val linkedProgram: LinkedProgram) {
     private val state = SimulatorState()
-    private var maxpc = MemorySegments.TEXT_BEGIN
+    var maxpc = MemorySegments.TEXT_BEGIN
     private var cycles = 0
     private val history = History()
     private val preInstruction = ArrayList<Diff>()

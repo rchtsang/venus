@@ -1,6 +1,8 @@
 package venus.simulator
 
 import venus.riscv.MachineCode
+import venus.riscv.insts.ecall
+
 /**
  * Created by Thaumic on 7/14/2018.
  */
@@ -12,6 +14,7 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
     var inst = MachineCode(0)
     var line = 0
     var pc = 0
+    var prevTrace: Trace ?= null
 
     init {
         this.ecallMsg = ecallMsg
@@ -38,6 +41,11 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
             return this.pc / 4
         }
         return this.pc
+    }
+
+    fun copy(): Trace {
+        /*@fixme This is not a pure copy since modifing internal things in the copy still can affect the main.*/
+        return Trace(branched, ecallMsg, regs, inst, line, pc)
     }
 
 }
