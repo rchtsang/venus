@@ -36,7 +36,7 @@ import kotlin.browser.window
         useLS = LS.get("venus") == "true"
         Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, useLS)
 
-        window.setTimeout(Driver::initTimeout, 10)
+        window.setTimeout(Driver::initTimeout, 5)
 
         console.log("Finished loading driver!")
     }
@@ -268,6 +268,7 @@ import kotlin.browser.window
         tr.totCommands = (document.getElementById("ttot-cmds-val") as HTMLInputElement).value.toInt()
         tr.maxSteps = (document.getElementById("tmaxsteps-val") as HTMLInputElement).value.toInt()
         tr.instFirst = (document.getElementById("tinst-first") as HTMLButtonElement).value == "true"
+        tr.twoStage = (document.getElementById("tTwoStage") as HTMLButtonElement).value == "true"
         wordAddressed = (document.getElementById("tPCWAddr") as HTMLButtonElement).value == "true"
     }
     internal fun traceStart() {
@@ -325,6 +326,7 @@ import kotlin.browser.window
         this.LS.set("trace_maxSteps", tr.maxSteps.toString())
         this.LS.set("trace_instFirst", tr.instFirst.toString())
         this.LS.set("trace_wordAddressed", wordAddressed.toString())
+        this.LS.set("trace_TwoStage", this.tr.twoStage.toString())
 
         /*Text Begin*/
         this.LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
@@ -343,6 +345,7 @@ import kotlin.browser.window
         var totC = t.totCommands.toString()
         var ms = t.maxSteps.toString()
         var instf = t.instFirst.toString()
+        var tws = t.twoStage.toString()
         var wa = wordAddressed.toString()
 
         /*Text begin*/
@@ -359,6 +362,7 @@ import kotlin.browser.window
             totC = LS.safeget("trace_totCommands", totC)
             ms = LS.safeget("trace_maxSteps", ms)
             instf = LS.safeget("trace_instFirst", instf)
+            tws = LS.safeget("trace_TwoStage", tws)
             wa = LS.safeget("trace_wordAddressed", wa)
 
             /*Text Begin*/
@@ -376,6 +380,7 @@ import kotlin.browser.window
         (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = ms
         Renderer.renderButton(document.getElementById("tinst-first") as HTMLButtonElement, instf == "true")
         Renderer.renderButton(document.getElementById("tPCWAddr") as HTMLButtonElement, wa == "true")
+        Renderer.renderButton(document.getElementById("tTwoStage") as HTMLButtonElement, tws == "true")
 
         /*Text Begin*/
         val ts = document.getElementById("text-start") as HTMLInputElement
