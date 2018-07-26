@@ -296,8 +296,14 @@ import kotlin.browser.window
             this.saveAll()
         } else {
             console.log("Persistent storage has been disabled!")
-            this.LS.reset()
+            this.LS.set("venus", "false")
+            //this.LS.reset()
         }
+    }
+
+    @JsName("psReset") fun psReset() {
+        this.LS.reset()
+        console.log("Persistent storage has been reset!")
     }
 
     fun saveIntervalFn() {
