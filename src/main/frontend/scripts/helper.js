@@ -121,6 +121,39 @@ function toggleThis(e) {
     }
 }
 
+(function(window, document, undefined){
+    'use strict';
+    var start;
+    var end;
+    var delta;
+    var button = document.getElementById("sv");
+    var maxtime = 1500;
+    window.svtmot = -1;
+    window.svclr = false;
+
+    button.addEventListener("mousedown", function(){
+        start = new Date();
+        clearTimeout(window.svtmot);
+        window.svtmot = setTimeout(function(date){
+            if (window.svtmot !== -1 && start === date) {
+                button.style.backgroundColor = "red"
+            }
+        }, maxtime, start);
+    });
+
+    button.addEventListener("mouseup", function() {
+        window.svtmot = -1;
+        clearTimeout(window.svtmot);
+        end = new Date();
+        delta = end - start;
+        if (delta > maxtime) {
+            window.svclr = true;
+            driver.psReset();
+        }
+        button.style.backgroundColor = "";
+    });
+})(window, document);
+
 var LocalStorageManager = class LocalStorageManager{
     constructor(name) {
         this.name = name;
