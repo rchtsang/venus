@@ -29,7 +29,7 @@
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
     <li><center>Text Start:</center><input id="text-start" class="input" style="border-radius:1px;font-size:0.6rem;text-align:center;" onblur="driver.verifyText(this)" spellcheck="false"></li>
     <li>
-      <button id="sv" class="button" onclick="toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false">Save</button><button id="sv" class="button" onclick="toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
+      <button id="sv" class="button" onclick="toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
     </li>
   </ul>
 </div>
@@ -632,11 +632,13 @@
                       <tr>
                         <th><center>Instruction first?</center></th>
                         <th><center>PC Word Addressed?</center></th>
+                        <th><center>Two Stage?</center></th>
                       </tr>
                       </thead>
                       <tr>
                         <th><center><button id="tinst-first" class="button is-primary" onclick="toggleThis(this)" value="true">Inst First</button></center></th>
                         <th><center><button id="tPCWAddr" class="button is-primary" onclick="toggleThis(this)" value="true">PC Word Addr</button></center></th>
+                        <th><center><button id="tTwoStage" class="button" onclick="toggleThis(this)" value="false">Two Stage</button></center></th>
                       </tr>
                     </table>
                   </div>

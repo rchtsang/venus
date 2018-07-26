@@ -6,7 +6,7 @@ import venus.riscv.MachineCode
  * Created by Thaumic on 7/14/2018.
  */
 class Tracer (val sim: Simulator) {
-    var version = "v2.0.0"
+    var version = "v2.0.1"
     var format = "%output%%0%\t%1%\t%2%\t%3%\t%4%\t%5%\t%6%\t%7%\t%8%\t%9%\t%10%\t%11%\t%12%\t%13%\t%14%\t%15%\t%16%\t%17%\t%18%\t%19%\t%20%\t%21%\t%22%\t%23%\t%24%\t%25%\t%26%\t%27%\t%28%\t%29%\t%30%\t%31%\t%line%\t%pc%\t%inst%\n"
     var amtReg = 32
     var base = 2
@@ -92,7 +92,7 @@ class Tracer (val sim: Simulator) {
         var i = 0
         cleanFormat()
         for (t in tr) {
-            if (twoStage && t.branched) {
+            if (twoStage && this.instFirst && t.branched) {
                 val pt = t.prevTrace
                 val flushed = pt?.copy() ?: this.getSingleTrace(-1)
                 val nextPC = flushed.pc + flushed.inst.length
@@ -105,6 +105,17 @@ class Tracer (val sim: Simulator) {
             t.line = i
             this.tr.str += t.getString(format, base)
             i++
+            /*@todo make this less gedo*/
+            if (twoStage && !this.instFirst && t.branched) {
+                val pt = t.prevTrace
+                val flushed = pt?.copy() ?: this.getSingleTrace(-1)
+                val nextPC = flushed.pc + flushed.inst.length
+                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
+                flushed.pc = nextPC
+                flushed.line = i
+                this.tr.str += flushed.getString(format, base)
+                i++
+            }
             if (this.totCommands > 0 && i >= this.totCommands) {
                 break
             }
