@@ -127,7 +127,7 @@ function toggleThis(e) {
     var end;
     var delta;
     var button = document.getElementById("sv");
-    var maxtime = 1500;
+    var maxtime = 1000;
     window.svtmot = -1;
     window.svclr = false;
 
