@@ -10,7 +10,6 @@ import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.InstructionField
 import venus.riscv.MemorySegments
-import venus.riscv.Program
 import venus.riscv.userStringToInt
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
