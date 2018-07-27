@@ -10,6 +10,7 @@ import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.InstructionField
 import venus.riscv.MemorySegments
+import venus.riscv.Program
 import venus.riscv.userStringToInt
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
@@ -26,7 +27,7 @@ import kotlin.browser.window
     var tr: Tracer = Tracer(sim)
     private var timer: Int? = null
     val LS = LocalStorage()
-    private var useLS = false
+    internal var useLS = false
     private var saveInterval: Int? = null
     var p = ""
     private var ready = false
@@ -55,8 +56,13 @@ import kotlin.browser.window
      */
     @JsName("openSimulator") fun openSimulator() {
         if (this.ready) {
-            val success = assemble(getText())
-            if (success) Renderer.renderSimulator(sim)
+            try {
+                val success = assemble(getText())
+                if (success) Renderer.renderSimulator(sim)
+            } catch (e: Throwable) {
+                Renderer.renderSimulator(Simulator(LinkedProgram()))
+                handleError("Open Simulator", e)
+            }
         } else {
             window.setTimeout(Driver::openSimulator, 100)
         }
@@ -153,18 +159,26 @@ import kotlin.browser.window
      * Runs the simulator for one step and renders any updates.
      */
     @JsName("step") fun step() {
-        val diffs = sim.step()
-        Renderer.updateFromDiffs(diffs)
-        Renderer.updateControlButtons()
+        try {
+            val diffs = sim.step()
+            Renderer.updateFromDiffs(diffs)
+            Renderer.updateControlButtons()
+        } catch (e: Throwable) {
+            handleError("step", e)
+        }
     }
 
     /**
      * Undo the last executed instruction and render any updates.
      */
     @JsName("undo") fun undo() {
-        val diffs = sim.undo()
-        Renderer.updateFromDiffs(diffs)
-        Renderer.updateControlButtons()
+        try {
+            val diffs = sim.undo()
+            Renderer.updateFromDiffs(diffs)
+            Renderer.updateControlButtons()
+        } catch (e: Throwable) {
+            handleError("undo", e)
+        }
     }
 
     /**
@@ -227,38 +241,47 @@ import kotlin.browser.window
     }
 
     @JsName("dump") fun dump() {
-        Renderer.clearConsole()
-        Renderer.printConsole(getInstructionDump())
-        val ta = document.getElementById("console-output") as HTMLTextAreaElement
-        ta.select()
-        val success = document.execCommand("copy")
-        if (success) {
-            window.alert("Successfully copied machine code to clipboard")
+        try {
+            Renderer.clearConsole()
+            Renderer.printConsole(getInstructionDump())
+            val ta = document.getElementById("console-output") as HTMLTextAreaElement
+            ta.select()
+            val success = document.execCommand("copy")
+            if (success) {
+                //window.alert("Successfully copied machine code to clipboard")
+                console.log("Successfully copied machine code to clipboard")
+            }
+        } catch (e: Throwable) {
+            handleError("dump", e)
         }
     }
 
     @JsName("verifyText") fun verifyText(input: HTMLInputElement) {
-        if (!currentlyRunning()) {
-            try {
-                var i = userStringToInt(input.value)
+        try {
+            if (!currentlyRunning()) {
                 try {
-                    MemorySegments.setTextBegin(i)
-                    val tabDisplay = document.getElementById("simulator-tab") as HTMLElement
-                    if (tabDisplay.classList.contains("is-active")) {
-                        this.openSimulator()
+                    var i = userStringToInt(input.value)
+                    try {
+                        MemorySegments.setTextBegin(i)
+                        val tabDisplay = document.getElementById("simulator-tab") as HTMLElement
+                        if (tabDisplay.classList.contains("is-active")) {
+                            this.openSimulator()
+                        }
+                    } catch (e: SimulatorError) {
+                        console.warn(e.toString())
                     }
-                } catch (e: SimulatorError) {
-                    console.warn(e.toString())
+                } catch (e: NumberFormatException) {
+                    /* do nothing */
+                    console.warn("Unknown number format!")
                 }
-            } catch (e: NumberFormatException) {
-                /* do nothing */
-                console.warn("Unknown number format!")
+            } else {
+                console.warn("Could not change text because the program is currently running!")
             }
-        } else {
-            console.warn("Could not change text because the program is currently running!")
+            val ts = Renderer.intToString(MemorySegments.TEXT_BEGIN)
+            input.value = ts
+        } catch (e: Throwable) {
+            handleError("Verify Text", e)
         }
-        val ts = Renderer.intToString(MemorySegments.TEXT_BEGIN)
-        input.value = ts
     }
 
     @JsName("trace") fun trace() {
@@ -281,16 +304,19 @@ import kotlin.browser.window
         try {
             tr.trace()
             window.setTimeout(Driver::traceString, TIMEOUT_TIME)
-        } catch (e : SimulatorError) {
-            Renderer.clearConsole()
-            Renderer.printConsole(e.toString())
+        } catch (e : Throwable) {
+            handleError("Trace Start", e)
             Renderer.setNameButtonSpinning("simulator-trace", false)
         }
     }
     internal fun traceString() {
-        tr.traceString()
-        Renderer.clearConsole()
-        Renderer.printConsole(tr.getString())
+        try {
+            tr.traceString()
+            Renderer.clearConsole()
+            Renderer.printConsole(tr.getString())
+        } catch (e: Throwable) {
+            handleError("Trace to String", e)
+        }
         Renderer.setNameButtonSpinning("simulator-trace", false)
     }
 
@@ -298,7 +324,7 @@ import kotlin.browser.window
         this.useLS = b
         if (this.useLS) {
             console.log("Persistent storage has been enabled!")
-            this.LS.set("venus", this.useLS.toString())
+            this.LS.set("venus", "true")
             this.saveAll()
         } else {
             console.log("Persistent storage has been disabled!")

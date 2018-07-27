@@ -2,7 +2,7 @@ package venus.glue
 
 class LocalStorage {
     //@todo convert this to js and use it externally instead.
-    private var lsm: LocalStorageManager = LocalStorageManager("venus")
+    internal var lsm: LocalStorageManager = LocalStorageManager("venus")
 
     init {
 
