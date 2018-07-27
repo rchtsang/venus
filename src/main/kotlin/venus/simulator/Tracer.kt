@@ -1,6 +1,7 @@
 package venus.simulator
 
 import venus.riscv.MachineCode
+import venus.riscv.MemorySegments
 
 /**
  * Created by Thaumic on 7/14/2018.
@@ -88,16 +89,17 @@ class Tracer (val sim: Simulator) {
         }
         this.tr.str = ""
         this.tr.stred = false
-        var tr = this.tr.trace
+        val tr = this.tr.trace
         var i = 0
         cleanFormat()
         for (t in tr) {
             if (twoStage && this.instFirst && t.branched) {
                 val pt = t.prevTrace
                 val flushed = pt?.copy() ?: this.getSingleTrace(-1)
-                val nextPC = flushed.pc + flushed.inst.length
-                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
+                var nextPC = flushed.pc + flushed.inst.length
                 flushed.pc = nextPC
+                nextPC -= MemorySegments.TEXT_BEGIN
+                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
                 flushed.line = i
                 this.tr.str += flushed.getString(format, base)
                 i++
@@ -109,9 +111,10 @@ class Tracer (val sim: Simulator) {
             if (twoStage && !this.instFirst && t.branched) {
                 val pt = t.prevTrace
                 val flushed = pt?.copy() ?: this.getSingleTrace(-1)
-                val nextPC = flushed.pc + flushed.inst.length
-                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
+                var nextPC = flushed.pc + flushed.inst.length
                 flushed.pc = nextPC
+                nextPC -= MemorySegments.TEXT_BEGIN
+                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
                 flushed.line = i
                 this.tr.str += flushed.getString(format, base)
                 i++
