@@ -29,6 +29,7 @@ import kotlin.browser.window
     private var useLS = false
     private var saveInterval: Int? = null
     var p = ""
+    private var ready = false
 
     init {
         console.log("Loading driver...")
@@ -44,6 +45,7 @@ import kotlin.browser.window
     fun initTimeout() {
         loadAll(useLS)
         this.saveInterval = window.setInterval(Driver::saveIntervalFn, 5000)
+        this.ready = true
     }
 
     /**
@@ -52,8 +54,12 @@ import kotlin.browser.window
      * Assembles the text in the editor, and then renders the simulator.
      */
     @JsName("openSimulator") fun openSimulator() {
-        val success = assemble(getText())
-        if (success) Renderer.renderSimulator(sim)
+        if (this.ready) {
+            val success = assemble(getText())
+            if (success) Renderer.renderSimulator(sim)
+        } else {
+            window.setTimeout(Driver::openSimulator, 100)
+        }
     }
 
     /**
