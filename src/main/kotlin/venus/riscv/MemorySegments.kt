@@ -14,7 +14,7 @@ object MemorySegments {
      * Memory address where the text segment starts
      * @fixme FIXED??? a bug currently prevents TEXT_BEGIN from being anything other than 0
      */
-    var TEXT_BEGIN = 0x0000_0000
+    public var TEXT_BEGIN = 0x0000_0000
 
     fun setTextBegin(i: Int) {
         /*@todo add this function!*/
