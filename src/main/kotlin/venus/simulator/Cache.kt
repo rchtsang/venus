@@ -18,8 +18,8 @@ class Cache {
     }
 
     fun access(address: Int) {
+        val c = CacheState(address, this)
         addresses.add(address)
-        var c = CacheState(address, this)
         cacheList.add(c)
     }
 
@@ -58,6 +58,10 @@ class Cache {
 
     fun getMissRate(): Double {
         return this.currentState().getMissRate()
+    }
+
+    fun wasHit(): Boolean {
+        return this.currentState().wasHit()
     }
 
     fun memoryAccessCount(): Int {
