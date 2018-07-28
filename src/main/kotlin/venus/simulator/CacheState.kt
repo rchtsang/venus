@@ -9,6 +9,7 @@ class CacheState(address: Int, cache: Cache, default: Boolean = false) {
     private var prevCacheState: CacheState
     private var currentInternalCache: InternalCache
     private val cache = cache
+    private var wasHit = false
 
     private var hitcount = 0
 
@@ -23,7 +24,8 @@ class CacheState(address: Int, cache: Cache, default: Boolean = false) {
             prevCacheState = cache.currentState()
             this.hitcount = this.prevCacheState.getHitCount()
             currentInternalCache = prevCacheState.currentInternalCache.copy()
-            hitcount += if (this.currentInternalCache.push(address)) 1 else 0
+            this.wasHit = this.currentInternalCache.push(address)
+            hitcount += if (this.wasHit) 1 else 0
         }
     }
 
@@ -41,6 +43,10 @@ class CacheState(address: Int, cache: Cache, default: Boolean = false) {
 
     fun getMissRate(): Double {
         return this.getMissCount().toDouble() / this.cache.memoryAccessCount().toDouble()
+    }
+
+    fun wasHit(): Boolean {
+        return this.wasHit
     }
 }
 
