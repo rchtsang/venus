@@ -7,7 +7,7 @@ class Cache {
     private var placementPol: PlacementPolicy = PlacementPolicy.DIRECT_MAPPING
     private var BlockRepPolicy: BlockReplacementPolicy = BlockReplacementPolicy.LRU
     /*This is the set size of blocks*/
-    private var ppSize: Int = 1
+    private var associativity: Int = 1
 
     private var cacheList = ArrayList<CacheState>()
     private var addresses = ArrayList<Int>()
@@ -75,10 +75,12 @@ class Cache {
     }
 
     fun setNumberOfBlocks(i: Int) {
-        this.numberOfBlocks = i
-        if (this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE) {
-            this.ppSize = i
+        val d = Math.log2(i.toDouble())
+        if (!isInt(d)) {
+            throw CacheError("Number of Blocks must be a power of 2!")
         }
+        this.numberOfBlocks = i
+        this.setAssociativity(i)
         this.update()
     }
 
@@ -87,6 +89,10 @@ class Cache {
     }
 
     fun setCacheBlockSize(i: Int) {
+        val d = Math.log2(i.toDouble())
+        if (!isInt(d)) {
+            throw CacheError("Cache Block Size must be a power of 2!")
+        }
         this.cacheBlockSize = i
         this.update()
     }
@@ -107,10 +113,10 @@ class Cache {
     fun setBlockRepPolicy (brp: BlockReplacementPolicy) {
         this.BlockRepPolicy = brp
         if (brp.equals(PlacementPolicy.DIRECT_MAPPING)) {
-            this.ppSize = 1
+            this.associativity = 1
         }
         if (brp.equals(PlacementPolicy.FULLY_ASSOCIATIVE)) {
-            this.ppSize = this.numberOfBlocks
+            this.associativity = this.numberOfBlocks
         }
         this.update()
     }
@@ -119,13 +125,34 @@ class Cache {
         return this.BlockRepPolicy
     }
 
-    fun setppSize(i: Int, override: Boolean = false) {
+    fun setAssociativity(i: Int, override: Boolean = false) {
         if (this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE || override) {
-            this.ppSize = i
+            val d = Math.log2(i.toDouble())
+            if (!isInt(d)) {
+                throw CacheError("Associativity must be a power of 2!")
+            }
+            this.associativity = i
         }
         this.update()
     }
+
+    fun associativity(): Int {
+        return this.associativity
+    }
+
+    internal fun isInt(d: Double): Boolean {
+        return !d.isNaN() && !d.isInfinite() && d == Math.floor(d).toDouble()
+    }
 }
+
+external class Math {
+    companion object {
+        fun log2(d: Double): Double
+        fun log2(d: Int): Double
+        fun floor(d: Double): Int
+    }
+}
+
 enum class PlacementPolicy {
     DIRECT_MAPPING,
     FULLY_ASSOCIATIVE,
