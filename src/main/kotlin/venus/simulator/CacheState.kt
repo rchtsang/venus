@@ -58,9 +58,7 @@ private class InternalCache(cache: Cache) {
 
     fun setup () {
         /*@todo sets up this (for the default state)*/
-        if (!cache.placementPol().equals(PlacementPolicy.DIRECT_MAPPING)) {
-            indexSize = Math.log2(cache.cacheSize().toDouble() / (cache.cacheBlockSize().toDouble() * cache.associativity())).toInt()
-        }
+        indexSize = Math.log2(cache.cacheSize().toDouble() / (cache.cacheBlockSize().toDouble() * cache.associativity())).toInt()
         offsetSize = Math.log2(this.cache.cacheBlockSize()).toInt()
         tagSize = 32 - indexSize - offsetSize
     }

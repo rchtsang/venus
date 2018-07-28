@@ -2,8 +2,8 @@ package venus.simulator
 
 class Cache {
     private var numberOfBlocks: Int = 1
-    /*This is in words*/
-    private var cacheBlockSize: Int = 1
+    /*This is in bytes*/
+    private var cacheBlockSize: Int = 4
     private var placementPol: PlacementPolicy = PlacementPolicy.DIRECT_MAPPING
     private var BlockRepPolicy: BlockReplacementPolicy = BlockReplacementPolicy.LRU
     /*This is the set size of blocks*/
