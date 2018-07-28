@@ -6,8 +6,8 @@ package venus.simulator
  * If default is true, then the address is ignored since it will be the centinel node.
  */
 class CacheState(address: Int, cache: Cache, default: Boolean = false) {
-    private lateinit var prevCacheState: CacheState
-    private lateinit var currentInternalCache: InternalCache
+    private var prevCacheState: CacheState
+    private var currentInternalCache: InternalCache
     private val cache = cache
 
     private var hitcount = 0
@@ -46,9 +46,17 @@ class CacheState(address: Int, cache: Cache, default: Boolean = false) {
 
 private class InternalCache(cache: Cache) {
     val cache = cache
+    var indexSize = 0
+    var offsetSize = 0
+    var tagSize = 0
 
     fun setup () {
         /*@todo sets up this (for the default state)*/
+        if (!cache.placementPol().equals(PlacementPolicy.DIRECT_MAPPING)) {
+            indexSize = Math.log2(cache.cacheSize().toDouble() / (cache.cacheBlockSize().toDouble() * cache.associativity())).toInt()
+        }
+        offsetSize = Math.log2(this.cache.cacheBlockSize()).toInt()
+        tagSize = 32 - indexSize - offsetSize
     }
 
     fun push (address: Int): Boolean {
@@ -58,6 +66,9 @@ private class InternalCache(cache: Cache) {
 
     fun copy(): InternalCache {
         val inCache = InternalCache(this.cache)
+        inCache.indexSize = this.indexSize
+        inCache.tagSize = this.tagSize
+        inCache.offsetSize = this.offsetSize
         /*@todo will copy the elements in here so that we can keep each state.*/
         return inCache
     }
