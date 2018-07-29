@@ -1,11 +1,13 @@
 package venus.simulator.Cache
 
+import venus.riscv.Address
+
 /**
  * This is a class representing the state of a cacheHandler.
  *
  * If default is true, then the address is ignored since it will be the centinel node.
  */
-class CacheState(address: Int, cacheHandler: CacheHandler, default: Boolean = false) {
+class CacheState(address: Address, cacheHandler: CacheHandler, default: Boolean = false) {
     private var prevCacheState: CacheState
     private var currentInternalCache: InternalCache
     private val cache = cacheHandler
@@ -63,7 +65,7 @@ private class InternalCache(cacheHandler: CacheHandler) {
         tagSize = 32 - indexSize - offsetSize
     }
 
-    fun push (address: Int): Boolean {
+    fun push (address: Address): Boolean {
         /*@todo will update the current state and return if it was successful*/
         return false
     }

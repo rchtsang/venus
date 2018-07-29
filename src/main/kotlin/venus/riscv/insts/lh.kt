@@ -8,6 +8,6 @@ val lh = LoadTypeInstruction(
         name = "lh",
         opcode = 0b0000011,
         funct3 = 0b001,
-        load32 = Simulator::loadHalfWord,
+        load32 = Simulator::loadHalfWordwCache,
         postLoad32 = { v -> signExtend(v, 16) }
 )

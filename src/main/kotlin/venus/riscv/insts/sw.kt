@@ -7,5 +7,5 @@ val sw = STypeInstruction(
         name = "sw",
         opcode = 0b0100011,
         funct3 = 0b010,
-        store32 = Simulator::storeWord
+        store32 = Simulator::storeWordwCache
 )

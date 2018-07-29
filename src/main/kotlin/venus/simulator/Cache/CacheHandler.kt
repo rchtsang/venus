@@ -1,5 +1,8 @@
 package venus.simulator.Cache
 
+import venus.riscv.Address
+import venus.riscv.MemSize
+
 class CacheHandler {
     private var numberOfBlocks: Int = 1
     /*This is in bytes*/
@@ -10,25 +13,25 @@ class CacheHandler {
     private var associativity: Int = 1
 
     private var cacheList = ArrayList<CacheState>()
-    private var addresses = ArrayList<Int>()
-    private var initialCache = CacheState(0, this, true)
+    private var addresses = ArrayList<Address>()
+    private var initialCache = CacheState(Address(0, MemSize.WORD), this, true)
 
     init {
         this.reset()
     }
 
     /*@TODO Read and write do nothing special at the moment. Make it so that we can detect read and write hit/miss rate separately.*/
-    fun read(address: Int) {
+    fun read(address: Address) {
         this.access(address)
     }
 
-    fun write(address: Int) {
+    fun write(address: Address) {
         this.access(address)
     }
 
-    fun access(address: Int) {
-        val c = CacheState(address, this)
-        addresses.add(address)
+    fun access(a: Address) {
+        val c = CacheState(a, this)
+        addresses.add(a)
         cacheList.add(c)
     }
 
@@ -40,10 +43,10 @@ class CacheHandler {
     }
 
     fun update() {
-        var adrs = this.addresses
+        val adrs = this.addresses
         this.reset()
-        for (addr in adrs) {
-            this.access(addr)
+        for (a in adrs) {
+            this.access(a)
         }
     }
 

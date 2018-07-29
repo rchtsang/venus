@@ -8,6 +8,6 @@ val lb = LoadTypeInstruction(
         name = "lb",
         opcode = 0b0000011,
         funct3 = 0b000,
-        load32 = Simulator::loadByte,
+        load32 = Simulator::loadBytewCache,
         postLoad32 = { v -> signExtend(v, 8) }
 )

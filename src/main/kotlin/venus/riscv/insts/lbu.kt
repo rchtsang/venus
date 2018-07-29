@@ -7,5 +7,5 @@ val lbu = LoadTypeInstruction(
         name = "lbu",
         opcode = 0b0000011,
         funct3 = 0b100,
-        load32 = Simulator::loadByte
+        load32 = Simulator::loadBytewCache
 )
