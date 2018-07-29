@@ -23,7 +23,7 @@ internal fun handleError(where: String, error: Throwable) {
 
         Driver.LS.lsm = oldlsm
         Driver.useLS = olduseLS
-        Renderer.printConsole("[AN ERROR HAS OCCURRED] Here are the details that may help solve this issue.\n\n")
+        Renderer.printConsole("[ERROR] An uncaught error has occurred! (Well yes, this did catch that error but it should have been handled already so it is still an uncaught error.) Here are the details that may help solve this issue.\n\n")
         Renderer.printConsole("ID:\n'" + where + "'!\n\n")
         Renderer.printConsole("Error:\n`" + error.toString())
         Renderer.printConsole("`\n\nData:\n" + t)
