@@ -1,4 +1,4 @@
-package venus.simulator.Cache
+package venus.simulator.cache
 
 import venus.riscv.Address
 

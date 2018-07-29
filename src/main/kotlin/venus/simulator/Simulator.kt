@@ -3,7 +3,7 @@ package venus.simulator
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
-import venus.simulator.Cache.CacheHandler
+import venus.simulator.cache.CacheHandler
 import venus.simulator.diffs.HeapSpaceDiff
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
