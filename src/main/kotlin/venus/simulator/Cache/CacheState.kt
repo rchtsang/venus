@@ -1,14 +1,14 @@
-package venus.simulator
+package venus.simulator.Cache
 
 /**
- * This is a class representing the state of a cache.
+ * This is a class representing the state of a cacheHandler.
  *
  * If default is true, then the address is ignored since it will be the centinel node.
  */
-class CacheState(address: Int, cache: Cache, default: Boolean = false) {
+class CacheState(address: Int, cacheHandler: CacheHandler, default: Boolean = false) {
     private var prevCacheState: CacheState
     private var currentInternalCache: InternalCache
-    private val cache = cache
+    private val cache = cacheHandler
     private var wasHit = false
 
     private var hitcount = 0
@@ -17,11 +17,11 @@ class CacheState(address: Int, cache: Cache, default: Boolean = false) {
         if (default) {
             prevCacheState = this
             /*Since this is the first block, we must set it up properly*/
-            currentInternalCache = InternalCache(cache)
+            currentInternalCache = InternalCache(cacheHandler)
             currentInternalCache.setup()
         } else {
-            /*Since this is not the default state, we can use the data made in the previous cache to set up this cache.*/
-            prevCacheState = cache.currentState()
+            /*Since this is not the default state, we can use the data made in the previous cacheHandler to set up this cacheHandler.*/
+            prevCacheState = cacheHandler.currentState()
             this.hitcount = this.prevCacheState.getHitCount()
             currentInternalCache = prevCacheState.currentInternalCache.copy()
             this.wasHit = this.currentInternalCache.push(address)
@@ -50,8 +50,8 @@ class CacheState(address: Int, cache: Cache, default: Boolean = false) {
     }
 }
 
-private class InternalCache(cache: Cache) {
-    val cache = cache
+private class InternalCache(cacheHandler: CacheHandler) {
+    val cache = cacheHandler
     var indexSize = 0
     var offsetSize = 0
     var tagSize = 0

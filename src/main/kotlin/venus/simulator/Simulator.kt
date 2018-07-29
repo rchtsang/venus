@@ -1,10 +1,12 @@
 package venus.simulator
 
+import org.w3c.workers.Cache
 import venus.linker.LinkedProgram
 import venus.riscv.InstructionField
 import venus.riscv.MachineCode
 import venus.riscv.MemorySegments
 import venus.riscv.insts.dsl.Instruction
+import venus.simulator.Cache.CacheHandler
 import venus.simulator.diffs.HeapSpaceDiff
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
@@ -20,6 +22,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
     private val preInstruction = ArrayList<Diff>()
     private val postInstruction = ArrayList<Diff>()
     private val breakpoints: Array<Boolean>
+    private val cache: CacheHandler = CacheHandler()
 
     init {
         for (inst in linkedProgram.prog.insts) {
