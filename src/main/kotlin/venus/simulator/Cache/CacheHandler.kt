@@ -1,6 +1,6 @@
-package venus.simulator
+package venus.simulator.Cache
 
-class Cache {
+class CacheHandler {
     private var numberOfBlocks: Int = 1
     /*This is in bytes*/
     private var cacheBlockSize: Int = 4
@@ -15,6 +15,15 @@ class Cache {
 
     init {
         this.reset()
+    }
+
+    /*@TODO Read and write do nothing special at the moment. Make it so that we can detect read and write hit/miss rate separately.*/
+    fun read(address: Int) {
+        this.access(address)
+    }
+
+    fun write(address: Int) {
+        this.access(address)
     }
 
     fun access(address: Int) {
@@ -95,7 +104,7 @@ class Cache {
     fun setCacheBlockSize(i: Int) {
         val d = Math.log2(i.toDouble())
         if (!isInt(d)) {
-            throw CacheError("Cache Block Size must be a power of 2!")
+            throw CacheError("CacheHandler Block Size must be a power of 2!")
         }
         this.cacheBlockSize = i
         this.update()

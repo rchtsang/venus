@@ -1,4 +1,4 @@
-package venus.simulator
+package venus.simulator.Cache
 
 /**
  * Thrown when errors occur during cache op.
