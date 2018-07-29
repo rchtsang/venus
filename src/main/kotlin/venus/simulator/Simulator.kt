@@ -1,10 +1,7 @@
 package venus.simulator
 
-import org.w3c.workers.Cache
 import venus.linker.LinkedProgram
-import venus.riscv.InstructionField
-import venus.riscv.MachineCode
-import venus.riscv.MemorySegments
+import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
 import venus.simulator.Cache.CacheHandler
 import venus.simulator.diffs.HeapSpaceDiff
@@ -124,13 +121,29 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
 
     fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
+    fun loadBytewCache(addr: Int): Int {
+        cache.read(Address(addr, MemSize.BYTE))
+        return this.loadByte(addr)
+    }
     fun loadHalfWord(addr: Int): Int = state.mem.loadHalfWord(addr)
+    fun loadHalfWordwCache(addr: Int): Int {
+        cache.read(Address(addr, MemSize.HALF))
+        return this.loadHalfWord(addr)
+    }
     fun loadWord(addr: Int): Int = state.mem.loadWord(addr)
+    fun loadWordwCache(addr: Int): Int {
+        cache.read(Address(addr, MemSize.WORD))
+        return this.loadWord(addr)
+    }
 
     fun storeByte(addr: Int, value: Int) {
         preInstruction.add(MemoryDiff(addr, loadWord(addr)))
         state.mem.storeByte(addr, value)
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
+    }
+    fun storeBytewCache(addr: Int, value: Int) {
+        cache.write(Address(addr, MemSize.BYTE))
+        this.storeByte(addr, value)
     }
 
     fun storeHalfWord(addr: Int, value: Int) {
@@ -138,11 +151,19 @@ class Simulator(val linkedProgram: LinkedProgram) {
         state.mem.storeHalfWord(addr, value)
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
+    fun storeHalfWordwCache(addr: Int, value: Int) {
+        cache.write(Address(addr, MemSize.HALF))
+        this.storeHalfWord(addr, value)
+    }
 
     fun storeWord(addr: Int, value: Int) {
         preInstruction.add(MemoryDiff(addr, loadWord(addr)))
         state.mem.storeWord(addr, value)
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
+    }
+    fun storeWordwCache(addr: Int, value: Int) {
+        cache.write(Address(addr, MemSize.WORD))
+        this.storeWord(addr, value)
     }
 
     fun getHeapEnd() = state.heapEnd
