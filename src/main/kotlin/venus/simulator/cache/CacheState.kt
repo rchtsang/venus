@@ -54,6 +54,10 @@ class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: 
     fun wasHit(): Boolean {
         return this.wasHit
     }
+
+    fun getBlocksState(): ArrayList<String> {
+        return currentInternalCache.getBlocksState()
+    }
 }
 
 enum class RW {
@@ -84,6 +88,10 @@ private class InternalCache(cacheHandler: CacheHandler) {
     fun write (address: Address): Boolean {
         /*@todo will update the current state and return if it was successful*/
         return cache.write(address)
+    }
+
+    fun getBlocksState(): ArrayList<String> {
+        return cache.blockStates()
     }
 
     fun copy(): InternalCache {

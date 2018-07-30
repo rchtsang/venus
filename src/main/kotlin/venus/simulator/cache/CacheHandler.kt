@@ -71,6 +71,10 @@ class CacheHandler {
         RorW = ArrayList()
     }
 
+    fun getBlocksState(): ArrayList<String> {
+        return this.currentState().getBlocksState()
+    }
+
     fun getHitCount(): Int {
         return this.currentState().getHitCount()
     }
