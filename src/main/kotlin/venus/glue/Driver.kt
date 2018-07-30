@@ -360,8 +360,8 @@ import kotlin.browser.window
         val bs = cache.cacheBlockSize().toString()
         val nb = cache.numberOfBlocks().toString()
         val av = cache.associativity().toString()
-        val at = cache.placementPol().toString()
-        val rp = cache.blockRepPolicy().toString()
+        val at = cache.placementPol().toMyString()
+        val rp = cache.blockRepPolicy().toMyString()
         val cs = cache.cacheSize().toString()
         (document.getElementById("block-size-val") as HTMLInputElement).value = bs
         (document.getElementById("numblocks-val") as HTMLInputElement).value = nb
@@ -463,6 +463,13 @@ import kotlin.browser.window
         /*Program*/
         js("codeMirror.save()")
         this.LS.set("prog", getText())
+
+        /*Cache*/
+        this.LS.set("cache_associativity", this.cache.associativity().toString())
+        this.LS.set("cache_cacheBlockSize", this.cache.cacheBlockSize().toString())
+        this.LS.set("cache_numberOfBlocks", this.cache.numberOfBlocks().toString())
+        this.LS.set("cache_placementPol", this.cache.placementPol().toString())
+        this.LS.set("cache_blockRepPolicy", this.cache.blockRepPolicy().toString())
     }
 
     /*If b is true, will load stored values else load default values.*/
@@ -499,6 +506,13 @@ import kotlin.browser.window
 
             /*Program*/
             this.p = LS.safeget("prog", this.p)
+
+            /*Cache*/
+            this.cache.setAssociativity(LS.safeget("cache_associativity", this.cache.associativity().toString()).toInt())
+            this.cache.setCacheBlockSize(LS.safeget("cache_cacheBlockSize", this.cache.cacheBlockSize().toString()).toInt())
+            this.cache.setNumberOfBlocks(LS.safeget("cache_numberOfBlocks", this.cache.numberOfBlocks().toString()).toInt())
+            this.cache.setPlacementPol(PlacementPolicy.valueOf(LS.safeget("cache_placementPol", this.cache.placementPol().toString())))
+            this.cache.setBlockRepPolicy(BlockReplacementPolicy.valueOf(LS.safeget("cache_blockRepPolicy", this.cache.blockRepPolicy().toString())))
         } else {
             console.log("Local Storage has been disabled!")
         }

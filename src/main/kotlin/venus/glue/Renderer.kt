@@ -207,7 +207,7 @@ internal object Renderer {
     }
 
     fun updateCache(a: Address) {
-        println("Need to implement the update cHandler feature!")
+        //println("Need to implement the update cHandler feature!")
         (document.getElementById("hit-count") as HTMLDivElement).innerHTML = sim.state.cache.getHitCount().toString()
         val hr = sim.state.cache.getHitRate()
         (document.getElementById("hit-rate") as HTMLDivElement).innerHTML = (if (hr.isNaN()) "???" else hr).toString()

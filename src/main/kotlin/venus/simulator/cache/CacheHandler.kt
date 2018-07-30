@@ -191,7 +191,7 @@ enum class PlacementPolicy {
     FULLY_ASSOCIATIVE,
     NWAY_SET_ASSOCIATIVE;
 
-    override fun toString(): String {
+    fun toMyString(): String {
         if (this.equals(PlacementPolicy.FULLY_ASSOCIATIVE)) {
             return "Fully Associative"
         }
@@ -205,7 +205,7 @@ enum class BlockReplacementPolicy {
     LRU,
     RANDOM;
 
-    override fun toString(): String {
+    fun toMyString(): String {
         if (this.equals(BlockReplacementPolicy.LRU)) {
             return "LRU"
         }
