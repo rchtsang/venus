@@ -638,13 +638,13 @@
                     </div>
                   </div>
                 </div>
-                <div id="associativity-size" class="panel-block">
+                <div id="associativity" class="panel-block">
                   <div class="field is-horizontal">
                     <div class="field-label">
                       <label class="label is-small" for="associativity-val">Associativity</label>
                     </div>
                     <div class="field-body is-expanded">
-                      <input id="block-size-val" class="input is-small" onblur="driver.updateCacheAssociativity(this)" spellcheck="false">
+                      <input id="associativity-val" class="input is-small" onblur="driver.updateCacheAssociativity(this)" spellcheck="false">
                     </div>
                   </div>
                 </div>
@@ -689,8 +689,7 @@
                       <h3>Registers Pattern:</h3>
                       <small>To add tabs, type '\t' & new line, type '\n'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.<br><b>%output%</b> represents an ecall message out</small>
                       <br>
-                      <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%output%%0%	%1%	%2%	%3%	%4%	%5%	%6%	%7%	%8%	%9%	%10%	%11%	%12%	%13%	%14%	%15%	%16%	%17%	%18%	%19%	%20%	%21%	%22%	%23%	%24%	%25%	%26%	%27%	%28%	%29%	%30%	%31%	%line%	%pc%	%inst%
-</textarea>
+                      <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%output%%0%	%1%	%2%	%3%	%4%	%5%	%6%	%7%	%8%	%9%	%10%	%11%	%12%	%13%	%14%	%15%	%16%	%17%	%18%	%19%	%20%	%21%	%22%	%23%	%24%	%25%	%26%	%27%	%28%	%29%	%30%	%31%	%line%	%pc%	%inst%</textarea>
                     </article>
                   </div>
                 </div>
