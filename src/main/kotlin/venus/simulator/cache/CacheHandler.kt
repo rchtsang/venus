@@ -7,46 +7,60 @@ class CacheHandler {
     private var numberOfBlocks: Int = 1
     /*This is in bytes*/
     private var cacheBlockSize: Int = 4
-    private var placementPol: PlacementPolicy = PlacementPolicy.DIRECT_MAPPING
+    private var placementPol: PlacementPolicy = PlacementPolicy.NWAY_SET_ASSOCIATIVE
     private var BlockRepPolicy: BlockReplacementPolicy = BlockReplacementPolicy.LRU
     /*This is the set size of blocks*/
     private var associativity: Int = 1
 
     private var cacheList = ArrayList<CacheState>()
     private var addresses = ArrayList<Address>()
-    private var initialCache = CacheState(Address(0, MemSize.WORD), this, true)
+    private var RorW = ArrayList<RW>()
+    private var initialCache = CacheState(Address(0, MemSize.WORD), this, RW.READ, true)
 
     init {
         this.reset()
     }
 
     /*@TODO Read and write do nothing special at the moment. Make it so that we can detect read and write hit/miss rate separately.*/
-    fun read(address: Address) {
-        this.access(address)
+    fun read(a: Address) {
+        val c = CacheState(a, this, RW.READ)
+        addresses.add(a)
+        cacheList.add(c)
+        RorW.add(RW.READ)
     }
 
-    fun write(address: Address) {
-        this.access(address)
+    fun write(a: Address) {
+        val c = CacheState(a, this, RW.WRITE)
+        addresses.add(a)
+        cacheList.add(c)
+        RorW.add(RW.WRITE)
     }
 
     fun access(a: Address) {
-        val c = CacheState(a, this)
+        val c = CacheState(a, this, RW.READ)
         addresses.add(a)
         cacheList.add(c)
+        RorW.add(RW.READ)
     }
 
-    fun undoAccess() {
+    fun undoAccess(addr: Address) {
         if (this.memoryAccessCount() > 0) {
             this.addresses.removeAt(this.addresses.size - 1)
             this.cacheList.removeAt(this.cacheList.size - 1)
+            this.RorW.removeAt(this.RorW.size - 1)
         }
     }
 
     fun update() {
         val adrs = this.addresses
+        val row = this.RorW
         this.reset()
-        for (a in adrs) {
-            this.access(a)
+        for (i in adrs.indices) {
+            if (row[i] == RW.READ) {
+                this.read(adrs[i])
+            } else {
+                this.write(adrs[i])
+            }
         }
     }
 
@@ -54,6 +68,7 @@ class CacheHandler {
         cacheList = ArrayList()
         cacheList.add(initialCache)
         addresses = ArrayList()
+        RorW = ArrayList()
     }
 
     fun getHitCount(): Int {
