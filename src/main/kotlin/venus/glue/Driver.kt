@@ -369,7 +369,10 @@ import kotlin.browser.window
         (document.getElementById("associativity-type") as HTMLSelectElement).value = at
         (document.getElementById("replacementPolicy") as HTMLSelectElement).value = rp
         (document.getElementById("cache-size-val") as HTMLInputElement).value = cs
-        Renderer.updateCache(Address(0, MemSize.WORD))
+        (document.getElementById("hit-count") as HTMLDivElement).innerHTML = cache.getHitCount().toString()
+        val hr = cache.getHitRate()
+        (document.getElementById("hit-rate") as HTMLDivElement).innerHTML = (if (hr.isNaN()) "???" else hr).toString()
+        (document.getElementById("access-amt") as HTMLDivElement).innerHTML = cache.memoryAccessCount().toString()
     }
 
     @JsName("trace") fun trace() {
