@@ -721,28 +721,6 @@
                 <div id="" class="panel-block">
                   <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
                   <input id="tbase-val" type="number" class="input is-small" style="width:180px;" onblur="validateBase(this);" onkeyup="validateBase(this);" value=2 spellcheck="false">
-                  <script>
-                      function validateBase(e) {
-                          if (e.value == "") {
-                              return;
-                          }
-                          if (e.value < 1) {
-                              e.value = 2;
-                          }
-                          if (e.value > 32) {
-                              e.value = 32;
-                          }
-                      }
-                      function toggleThis(e) {
-                          if (e.value == "true") {
-                              e.classList.remove("is-primary");
-                              e.value = "false";
-                          } else {
-                              e.classList.add("is-primary");
-                              e.value = "true";
-                          }
-                      }
-                  </script>
                 </div>
                 <div id="" class="panel-block">
                   <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
