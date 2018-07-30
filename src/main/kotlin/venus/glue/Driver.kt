@@ -64,6 +64,7 @@ import kotlin.browser.window
                 if (success) {
                     Renderer.renderSimulator(sim)
                     setCacheSettings()
+                    Renderer.updateCache(Address(0, MemSize.WORD))
                 }
             } catch (e: Throwable) {
                 Renderer.renderSimulator(Simulator(LinkedProgram()))
@@ -535,5 +536,6 @@ import kotlin.browser.window
         p = ""
 
         setCacheSettings()
+        cache.update()
     }
 }

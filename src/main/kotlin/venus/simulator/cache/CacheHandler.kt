@@ -15,7 +15,6 @@ class CacheHandler {
     private var cacheList = ArrayList<CacheState>()
     private var addresses = ArrayList<Address>()
     private var RorW = ArrayList<RW>()
-    private var initialCache = CacheState(Address(0, MemSize.WORD), this, RW.READ, true)
 
     init {
         this.reset()
@@ -66,7 +65,7 @@ class CacheHandler {
 
     fun reset() {
         cacheList = ArrayList()
-        cacheList.add(initialCache)
+        cacheList.add(CacheState(Address(0, MemSize.WORD), this, RW.READ, true))
         addresses = ArrayList()
         RorW = ArrayList()
     }
