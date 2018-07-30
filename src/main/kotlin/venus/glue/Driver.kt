@@ -61,7 +61,10 @@ import kotlin.browser.window
         if (this.ready) {
             try {
                 val success = assemble(getText())
-                if (success) Renderer.renderSimulator(sim)
+                if (success) {
+                    Renderer.renderSimulator(sim)
+                    setCacheSettings()
+                }
             } catch (e: Throwable) {
                 Renderer.renderSimulator(Simulator(LinkedProgram()))
                 handleError("Open Simulator", e)
