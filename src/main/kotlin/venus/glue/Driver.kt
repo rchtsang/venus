@@ -354,12 +354,18 @@ import kotlin.browser.window
     }
 
     fun setCacheSettings() {
-        (document.getElementById("block-size-val") as HTMLInputElement).value = cache.cacheBlockSize().toString()
-        (document.getElementById("numblocks-val") as HTMLInputElement).value = cache.numberOfBlocks().toString()
-        (document.getElementById("associativity-val") as HTMLInputElement).value = cache.associativity().toString()
-        (document.getElementById("associativity-type") as HTMLSelectElement).value = cache.placementPol().toString()
-        (document.getElementById("replacementPolicy") as HTMLSelectElement).value = cache.blockRepPolicy().toString()
-        (document.getElementById("cache-size-val") as HTMLInputElement).value = cache.cacheSize().toString()
+        val bs = cache.cacheBlockSize().toString()
+        val nb = cache.numberOfBlocks().toString()
+        val av = cache.associativity().toString()
+        val at = cache.placementPol().toString()
+        val rp = cache.blockRepPolicy().toString()
+        val cs = cache.cacheSize().toString()
+        (document.getElementById("block-size-val") as HTMLInputElement).value = bs
+        (document.getElementById("numblocks-val") as HTMLInputElement).value = nb
+        (document.getElementById("associativity-val") as HTMLInputElement).value = av
+        (document.getElementById("associativity-type") as HTMLSelectElement).value = at
+        (document.getElementById("replacementPolicy") as HTMLSelectElement).value = rp
+        (document.getElementById("cache-size-val") as HTMLInputElement).value = cs
     }
 
     @JsName("trace") fun trace() {
