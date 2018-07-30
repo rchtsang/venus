@@ -212,6 +212,7 @@ internal object Renderer {
         val hr = sim.state.cache.getHitRate()
         (document.getElementById("hit-rate") as HTMLInputElement).value = (if (hr.isNaN()) "???" else hr).toString()
         (document.getElementById("access-amt") as HTMLInputElement).value = sim.state.cache.memoryAccessCount().toString()
+        (document.getElementById("cacheDebug") as HTMLDivElement).innerHTML = sim.state.cache.getBlocksState().toString()
     }
 
     /**
