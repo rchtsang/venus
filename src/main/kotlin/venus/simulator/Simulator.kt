@@ -4,10 +4,7 @@ import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
 import venus.simulator.cache.CacheHandler
-import venus.simulator.diffs.HeapSpaceDiff
-import venus.simulator.diffs.MemoryDiff
-import venus.simulator.diffs.PCDiff
-import venus.simulator.diffs.RegisterDiff
+import venus.simulator.diffs.*
 
 /** Right now, this is a loose wrapper around SimulatorState
     Eventually, it will support debugging. */
@@ -19,7 +16,6 @@ class Simulator(val linkedProgram: LinkedProgram) {
     private val preInstruction = ArrayList<Diff>()
     private val postInstruction = ArrayList<Diff>()
     private val breakpoints: Array<Boolean>
-    private val cache: CacheHandler = CacheHandler()
 
     init {
         for (inst in linkedProgram.prog.insts) {
@@ -122,17 +118,23 @@ class Simulator(val linkedProgram: LinkedProgram) {
 
     fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
     fun loadBytewCache(addr: Int): Int {
-        cache.read(Address(addr, MemSize.BYTE))
+        preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
+        state.cache.read(Address(addr, MemSize.BYTE))
+        postInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
         return this.loadByte(addr)
     }
     fun loadHalfWord(addr: Int): Int = state.mem.loadHalfWord(addr)
     fun loadHalfWordwCache(addr: Int): Int {
-        cache.read(Address(addr, MemSize.HALF))
+        preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
+        state.cache.read(Address(addr, MemSize.HALF))
+        postInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
         return this.loadHalfWord(addr)
     }
     fun loadWord(addr: Int): Int = state.mem.loadWord(addr)
     fun loadWordwCache(addr: Int): Int {
-        cache.read(Address(addr, MemSize.WORD))
+        preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
+        state.cache.read(Address(addr, MemSize.WORD))
+        postInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
         return this.loadWord(addr)
     }
 
@@ -142,8 +144,10 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeBytewCache(addr: Int, value: Int) {
-        cache.write(Address(addr, MemSize.BYTE))
+        preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
+        state.cache.write(Address(addr, MemSize.BYTE))
         this.storeByte(addr, value)
+        postInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
     }
 
     fun storeHalfWord(addr: Int, value: Int) {
@@ -152,8 +156,10 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeHalfWordwCache(addr: Int, value: Int) {
-        cache.write(Address(addr, MemSize.HALF))
+        preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
+        state.cache.write(Address(addr, MemSize.HALF))
         this.storeHalfWord(addr, value)
+        postInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
     }
 
     fun storeWord(addr: Int, value: Int) {
@@ -162,8 +168,10 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeWordwCache(addr: Int, value: Int) {
-        cache.write(Address(addr, MemSize.WORD))
+        preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
+        state.cache.write(Address(addr, MemSize.WORD))
         this.storeWord(addr, value)
+        postInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
     }
 
     fun getHeapEnd() = state.heapEnd

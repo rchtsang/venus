@@ -7,7 +7,7 @@ import venus.riscv.Address
  *
  * If default is true, then the address is ignored since it will be the centinel node.
  */
-class CacheState(address: Address, cacheHandler: CacheHandler, default: Boolean = false) {
+class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: Boolean = false) {
     private var prevCacheState: CacheState
     private var currentInternalCache: InternalCache
     private val cache = cacheHandler
@@ -26,7 +26,11 @@ class CacheState(address: Address, cacheHandler: CacheHandler, default: Boolean 
             prevCacheState = cacheHandler.currentState()
             this.hitcount = this.prevCacheState.getHitCount()
             currentInternalCache = prevCacheState.currentInternalCache.copy()
-            this.wasHit = this.currentInternalCache.push(address)
+            if (rw.equals(RW.READ)) {
+                this.wasHit = this.currentInternalCache.read(address)
+            } else {
+                this.wasHit = this.currentInternalCache.write(address)
+            }
             hitcount += if (this.wasHit) 1 else 0
         }
     }
@@ -52,29 +56,42 @@ class CacheState(address: Address, cacheHandler: CacheHandler, default: Boolean 
     }
 }
 
+enum class RW {
+    READ,
+    WRITE
+}
+
 private class InternalCache(cacheHandler: CacheHandler) {
-    val cache = cacheHandler
-    var indexSize = 0
-    var offsetSize = 0
-    var tagSize = 0
+    val cHandler = cacheHandler
+//    var indexSize = 0
+//    var offsetSize = 0
+//    var tagSize = 0
+    lateinit var cache: Cache
 
     fun setup () {
         /*@todo sets up this (for the default state)*/
-        indexSize = Math.log2(cache.cacheSize().toDouble() / (cache.cacheBlockSize().toDouble() * cache.associativity())).toInt()
-        offsetSize = Math.log2(this.cache.cacheBlockSize()).toInt()
-        tagSize = 32 - indexSize - offsetSize
+//        indexSize = Math.log2(cHandler.cacheSize().toDouble() / (cHandler.cacheBlockSize().toDouble() * cHandler.associativity())).toInt()
+//        offsetSize = Math.log2(this.cHandler.cacheBlockSize()).toInt()
+//        tagSize = 32 - indexSize - offsetSize
+        this.cache = Cache(cHandler)
     }
 
-    fun push (address: Address): Boolean {
+    fun read (address: Address): Boolean {
         /*@todo will update the current state and return if it was successful*/
-        return false
+        return cache.read(address)
+    }
+
+    fun write (address: Address): Boolean {
+        /*@todo will update the current state and return if it was successful*/
+        return cache.write(address)
     }
 
     fun copy(): InternalCache {
-        val inCache = InternalCache(this.cache)
-        inCache.indexSize = this.indexSize
-        inCache.tagSize = this.tagSize
-        inCache.offsetSize = this.offsetSize
+        val inCache = InternalCache(this.cHandler)
+        inCache.cache = this.cache.copy()
+//        inCache.indexSize = this.indexSize
+//        inCache.tagSize = this.tagSize
+//        inCache.offsetSize = this.offsetSize
         /*@todo will copy the elements in here so that we can keep each state.*/
         return inCache
     }

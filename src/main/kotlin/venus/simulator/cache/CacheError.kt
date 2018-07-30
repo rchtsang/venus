@@ -1,7 +1,7 @@
 package venus.simulator.cache
 
 /**
- * Thrown when errors occur during cache op.
+ * Thrown when errors occur during cHandler op.
  */
 class CacheError : Throwable {
     /**

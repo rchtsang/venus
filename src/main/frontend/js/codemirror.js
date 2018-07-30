@@ -1096,7 +1096,7 @@ var bidiOrdering = (function() {
   }
 })()
 
-// Get the bidi ordering for the given line (and cache it). Returns
+// Get the bidi ordering for the given line (and cHandler it). Returns
 // false for lines that are fully left-to-right, and an array of
 // BidiSpan objects otherwise.
 function getOrder(line, direction) {
@@ -1915,7 +1915,7 @@ function buildLineContent(cm, lineView) {
     if (builder.map.length == 0)
       { builder.map.push(0, 0, builder.content.appendChild(zeroWidthElement(cm.display.measure))) }
 
-    // Store the map and a cache object for the current logical line
+    // Store the map and a cHandler object for the current logical line
     if (i == 0) {
       lineView.measure.map = builder.map
       lineView.measure.cache = {}
@@ -2483,7 +2483,7 @@ function ensureLineHeights(cm, lineView, rect) {
 }
 
 // Find a line map (mapping character offsets to text nodes) and a
-// measurement cache for the given line number. (A line view might
+// measurement cHandler for the given line number. (A line view might
 // contain multiple lines when collapsed ranges are present.)
 function mapFromLineView(lineView, line, lineN) {
   if (lineView.line == line)
@@ -2550,7 +2550,7 @@ function prepareMeasureForLine(cm, line) {
 }
 
 // Given a prepared measurement object, measures the position of an
-// actual character (or fetches it from the cache).
+// actual character (or fetches it from the cHandler).
 function measureCharPrepared(cm, prepared, ch, bias, varHeight) {
   if (prepared.before) { ch = -1 }
   var key = ch + (bias || ""), found

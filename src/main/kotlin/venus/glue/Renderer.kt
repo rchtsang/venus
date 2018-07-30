@@ -3,13 +3,11 @@ package venus.glue
 
 import org.w3c.dom.*
 import venus.assembler.AssemblerError
-import venus.riscv.InstructionField
-import venus.riscv.MachineCode
-import venus.riscv.MemorySegments
+import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
-import venus.riscv.userStringToInt
 import venus.simulator.Diff
 import venus.simulator.Simulator
+import venus.simulator.diffs.CacheDiff
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
 import venus.simulator.diffs.RegisterDiff
@@ -119,6 +117,7 @@ internal object Renderer {
                 is RegisterDiff -> updateRegister(diff.id, diff.v, true)
                 is PCDiff -> updatePC(diff.pc)
                 is MemoryDiff -> updateMemory(diff.addr)
+                is CacheDiff -> updateCache(diff.addr)
                 else -> {
                     println("diff not yet implemented")
                 }
@@ -205,6 +204,10 @@ internal object Renderer {
             else -> toHex(value)
         }
         return v
+    }
+
+    fun updateCache(a: Address) {
+        println("Need to implement the update cHandler feature!")
     }
 
     /**
