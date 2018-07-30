@@ -46,17 +46,19 @@ class Cache
 
         // if the block isn't found in the cHandler, put it there
         var h = true
+        var bs = BlockState.HIT
         if (!isInMemory(address)) {
             allocate(address.address)
             numReadMisses++
             h = false
+            bs = BlockState.MISS
         }
 
         // calculate what set the block is in and ask it for the data
         val set = sets[address.address / this.c.cacheBlockSize() % sets.size]
         val blockoffset = address.address % this.c.cacheBlockSize()
         numReads++
-        set.read(getTag(address.address), blockoffset)
+        set.read(getTag(address.address), blockoffset, bs)
         return h
     }
 
@@ -64,10 +66,12 @@ class Cache
 
         // if the block isn't found in the cHandler, put it there
         var h = true
+        var bs = BlockState.HIT
         if (!isInMemory(address)) {
             allocate(address.address)
             numWriteMisses++
             h = false
+            bs = BlockState.MISS
         }
 
         // calculate what set the block is in and ask it for the data
@@ -75,7 +79,7 @@ class Cache
         val blockoffset = address.address % this.c.cacheBlockSize()
         val set = sets[index]
         numWrites++
-        set.write(getTag(address.address), blockoffset/*, data*/)
+        set.write(getTag(address.address), blockoffset/*, data*/, bs)
         return h
     }
 
@@ -122,5 +126,13 @@ class Cache
             cc.sets[s] = this.sets[s].copy()
         }
         return cc
+    }
+
+    fun blockStates(): ArrayList<String> {
+        val bss = ArrayList<String>()
+        for (s in sets) {
+            s.blockStates(bss)
+        }
+        return bss
     }
 }

@@ -212,3 +212,9 @@ enum class BlockReplacementPolicy {
         return "Random"
     }
 }
+
+enum class BlockState {
+    HIT,
+    MISS,
+    EMPTY
+}

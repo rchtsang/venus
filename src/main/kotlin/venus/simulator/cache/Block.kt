@@ -19,6 +19,7 @@ class Block
  */
 (private val blocksize: Int) {
 
+    public var blockState = BlockState.EMPTY
     /**
      * Returns the tag field of the address. The containing set uses this to
      * find an exact address.
@@ -112,6 +113,7 @@ class Block
         b.isValid = this.isValid
         b.isDirty = this.isDirty
         b.recentUse = this.recentUse
+        b.blockState = this.blockState
         //b.words = this.words?.copyOf()
         return b
     }
