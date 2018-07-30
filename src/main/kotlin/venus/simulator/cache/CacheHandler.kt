@@ -7,7 +7,7 @@ class CacheHandler {
     private var numberOfBlocks: Int = 1
     /*This is in bytes*/
     private var cacheBlockSize: Int = 4
-    private var placementPol: PlacementPolicy = PlacementPolicy.NWAY_SET_ASSOCIATIVE
+    private var placementPol: PlacementPolicy = PlacementPolicy.DIRECT_MAPPING
     private var BlockRepPolicy: BlockReplacementPolicy = BlockReplacementPolicy.LRU
     /*This is the set size of blocks*/
     private var associativity: Int = 1
@@ -102,7 +102,7 @@ class CacheHandler {
 
     /*This is in bytes*/
     fun cacheSize(): Int {
-        return 4 * this.numberOfBlocks * this.cacheBlockSize
+        return this.numberOfBlocks * this.cacheBlockSize
     }
 
     fun setNumberOfBlocks(i: Int) {
@@ -111,7 +111,9 @@ class CacheHandler {
             throw CacheError("Number of Blocks must be a power of 2!")
         }
         this.numberOfBlocks = i
-        this.setAssociativity(i)
+        if (this.placementPol == PlacementPolicy.FULLY_ASSOCIATIVE) {
+            this.setAssociativity(i, true)
+        }
         this.update()
     }
 
@@ -134,6 +136,12 @@ class CacheHandler {
 
     fun setPlacementPol(p: PlacementPolicy) {
         this.placementPol = p
+        if (p.equals(PlacementPolicy.DIRECT_MAPPING)) {
+            this.associativity = 1
+        }
+        if (p.equals(PlacementPolicy.FULLY_ASSOCIATIVE)) {
+            this.associativity = this.numberOfBlocks
+        }
         this.update()
     }
 
@@ -143,12 +151,6 @@ class CacheHandler {
 
     fun setBlockRepPolicy (brp: BlockReplacementPolicy) {
         this.BlockRepPolicy = brp
-        if (brp.equals(PlacementPolicy.DIRECT_MAPPING)) {
-            this.associativity = 1
-        }
-        if (brp.equals(PlacementPolicy.FULLY_ASSOCIATIVE)) {
-            this.associativity = this.numberOfBlocks
-        }
         this.update()
     }
 
@@ -163,8 +165,8 @@ class CacheHandler {
                 throw CacheError("Associativity must be a power of 2!")
             }
             this.associativity = i
+            this.update()
         }
-        this.update()
     }
 
     fun associativity(): Int {
@@ -187,9 +189,26 @@ external class Math {
 enum class PlacementPolicy {
     DIRECT_MAPPING,
     FULLY_ASSOCIATIVE,
-    NWAY_SET_ASSOCIATIVE
+    NWAY_SET_ASSOCIATIVE;
+
+    override fun toString(): String {
+        if (this.equals(PlacementPolicy.FULLY_ASSOCIATIVE)) {
+            return "Fully Associative"
+        }
+        if (this.equals(PlacementPolicy.NWAY_SET_ASSOCIATIVE)) {
+            return "N-Way Set Associative"
+        }
+        return "Direct Mapped"
+    }
 }
 enum class BlockReplacementPolicy {
     LRU,
-    RANDOM
+    RANDOM;
+
+    override fun toString(): String {
+        if (this.equals(BlockReplacementPolicy.LRU)) {
+            return "LRU"
+        }
+        return "Random"
+    }
 }

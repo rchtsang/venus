@@ -1,7 +1,5 @@
 package venus.simulator.cache
 
-import kotlin.js.Date
-
 /**
  * Created by thaum on 7/29/2018.
  */

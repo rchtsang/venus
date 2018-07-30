@@ -6,7 +6,7 @@ import venus.simulator.cache.CacheHandler
 class SimulatorState {
     private val regs = IntArray(32)
     val mem = Memory()
-    val cache: CacheHandler = CacheHandler()
+    lateinit var cache: CacheHandler
     var pc: Int = 0
     var heapEnd: Int = MemorySegments.HEAP_BEGIN
     fun getReg(i: Int) = regs[i]

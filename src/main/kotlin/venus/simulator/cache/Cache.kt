@@ -3,6 +3,7 @@ package venus.simulator.cache
 import venus.riscv.Address
 
 class Cache
+/* ktlint-disable no-multi-spaces */
 /**
  *
  * @param capacity      the size in words of the cHandler
@@ -10,7 +11,8 @@ class Cache
  * @param blocksize     the size in bytes of each block
  * @param memory        a reference to main memory
  */
-(c: CacheHandler){
+/* ktlint-enable no-multi-spaces */
+(c: CacheHandler) {
     internal var numWrites: Int = 0
     internal var numReads: Int = 0
     internal var numWriteMisses: Int = 0
