@@ -1,15 +1,18 @@
 package venus.simulator
 
+/* ktlint-disable no-wildcard-imports */
+
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
-import venus.simulator.cache.CacheHandler
 import venus.simulator.diffs.*
+
+/* ktlint-enable no-wildcard-imports */
 
 /** Right now, this is a loose wrapper around SimulatorState
     Eventually, it will support debugging. */
 class Simulator(val linkedProgram: LinkedProgram) {
-    private val state = SimulatorState()
+    val state = SimulatorState()
     var maxpc = MemorySegments.TEXT_BEGIN
     private var cycles = 0
     private val history = History()

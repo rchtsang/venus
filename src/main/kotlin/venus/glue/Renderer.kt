@@ -208,6 +208,9 @@ internal object Renderer {
 
     fun updateCache(a: Address) {
         println("Need to implement the update cHandler feature!")
+        (document.getElementById("hit-count") as HTMLDivElement).innerHTML = sim.state.cache.getHitCount().toString()
+        (document.getElementById("hit-rate") as HTMLDivElement).innerHTML = sim.state.cache.getHitRate().toString()
+        (document.getElementById("access-amt") as HTMLDivElement).innerHTML = sim.state.cache.memoryAccessCount().toString()
     }
 
     /**
@@ -331,6 +334,7 @@ internal object Renderer {
         tabSetVisibility("memory", "block")
         tabSetVisibility("register", "none")
         tabSetVisibility("tracerSettings", "none")
+        tabSetVisibility("cache", "none")
     }
 
     /** Show the register sidebar tab */
@@ -338,6 +342,7 @@ internal object Renderer {
         tabSetVisibility("register", "block")
         tabSetVisibility("memory", "none")
         tabSetVisibility("tracerSettings", "none")
+        tabSetVisibility("cache", "none")
     }
 
     /**
@@ -345,6 +350,14 @@ internal object Renderer {
      */
     fun renderTracerSettingsTab() {
         tabSetVisibility("tracerSettings", "block")
+        tabSetVisibility("memory", "none")
+        tabSetVisibility("register", "none")
+        tabSetVisibility("cache", "none")
+    }
+
+    fun renderCacheTab() {
+        tabSetVisibility("cache", "block")
+        tabSetVisibility("tracerSettings", "none")
         tabSetVisibility("memory", "none")
         tabSetVisibility("register", "none")
     }

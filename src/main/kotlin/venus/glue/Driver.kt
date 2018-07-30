@@ -1,22 +1,25 @@
 package venus.glue
 
-import org.w3c.dom.HTMLButtonElement
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HTMLTextAreaElement
+/* ktlint-disable no-wildcard-imports */
+
+import org.w3c.dom.*
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
 import venus.linker.LinkedProgram
 import venus.linker.Linker
-import venus.riscv.InstructionField
-import venus.riscv.MemorySegments
-import venus.riscv.userStringToInt
+import venus.riscv.*
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
 import venus.simulator.Tracer
+import venus.simulator.cache.BlockReplacementPolicy
+import venus.simulator.cache.CacheError
+import venus.simulator.cache.CacheHandler
+import venus.simulator.cache.PlacementPolicy
 import venus.simulator.wordAddressed
 import kotlin.browser.document
 import kotlin.browser.window
+
+/* ktlint-enable no-wildcard-imports */
 
 /**
  * The "driver" singleton which can be called from Javascript for all functionality.
@@ -24,6 +27,7 @@ import kotlin.browser.window
 @JsName("Driver") object Driver {
     var sim: Simulator = Simulator(LinkedProgram())
     var tr: Tracer = Tracer(sim)
+    var cache: CacheHandler = CacheHandler()
     private var timer: Int? = null
     val LS = LocalStorage()
     internal var useLS = false
@@ -97,6 +101,8 @@ import kotlin.browser.window
         try {
             val linked = Linker.link(listOf(prog))
             sim = Simulator(linked)
+            this.cache.reset()
+            sim.state.cache = this.cache
             tr = Tracer(sim)
             return true
         } catch (e: AssemblerError) {
@@ -142,6 +148,7 @@ import kotlin.browser.window
             }
 
             sim.step()
+            Renderer.updateCache(Address(0, MemSize.WORD))
             cycles++
         }
 
@@ -161,6 +168,7 @@ import kotlin.browser.window
         try {
             val diffs = sim.step()
             Renderer.updateFromDiffs(diffs)
+            Renderer.updateCache(Address(0, MemSize.WORD))
             Renderer.updateControlButtons()
         } catch (e: Throwable) {
             handleError("step", e)
@@ -199,6 +207,10 @@ import kotlin.browser.window
      */
     @JsName("openTracerSettingsTab") fun openTracerSettingsTab() {
         Renderer.renderTracerSettingsTab()
+    }
+
+    @JsName("openCacheTab") fun openCacheTab() {
+        Renderer.renderCacheTab()
     }
 
     internal fun currentlyRunning(): Boolean = timer != null
@@ -281,6 +293,73 @@ import kotlin.browser.window
         } catch (e: Throwable) {
             handleError("Verify Text", e)
         }
+    }
+
+    @JsName("updateCacheBlockSize") fun updateCacheBlockSize(e: HTMLInputElement) {
+        val v = e.value.toInt()
+        try {
+            cache.setCacheBlockSize(v)
+        } catch (er: CacheError) {
+            Renderer.clearConsole()
+            Renderer.printConsole(er.toString())
+        }
+        e.value = cache.cacheBlockSize().toString()
+        setCacheSettings()
+    }
+
+    @JsName("updateCacheNumberOfBlocks") fun updateCacheNumberOfBlocks(e: HTMLInputElement) {
+        val v = e.value.toInt()
+        try {
+            cache.setNumberOfBlocks(v)
+        } catch (er: CacheError) {
+            Renderer.clearConsole()
+            Renderer.printConsole(er.toString())
+        }
+        e.value = cache.numberOfBlocks().toString()
+        setCacheSettings()
+    }
+
+    @JsName("updateCacheAssociativity") fun updateCacheAssociativity(e: HTMLInputElement) {
+        val v = e.value.toInt()
+        try {
+            cache.setAssociativity(v)
+        } catch (er: CacheError) {
+            Renderer.clearConsole()
+            Renderer.printConsole(er.toString())
+        }
+        e.value = cache.associativity().toString()
+        setCacheSettings()
+    }
+
+    @JsName("updateCachePlacementPolicy") fun updateCachePlacementPolicy(e: HTMLSelectElement) {
+        if (e.value == "N-Way Set Associative") {
+            this.cache.setPlacementPol(PlacementPolicy.NWAY_SET_ASSOCIATIVE)
+        } else if (e.value == "Fully Associative") {
+            this.cache.setPlacementPol(PlacementPolicy.FULLY_ASSOCIATIVE)
+        } else {
+            this.cache.setPlacementPol(PlacementPolicy.DIRECT_MAPPING)
+            e.value = "Direct Mapped"
+        }
+        setCacheSettings()
+    }
+
+    @JsName("updateCacheReplacementPolicy") fun updateCacheReplacementPolicy(e: HTMLSelectElement) {
+        if (e.value == "Random") {
+            this.cache.setBlockRepPolicy(BlockReplacementPolicy.RANDOM)
+        } else {
+            this.cache.setBlockRepPolicy(BlockReplacementPolicy.LRU)
+            e.value = "LRU"
+        }
+        setCacheSettings()
+    }
+
+    fun setCacheSettings() {
+        (document.getElementById("block-size-val") as HTMLInputElement).value = cache.cacheBlockSize().toString()
+        (document.getElementById("numblocks-val") as HTMLInputElement).value = cache.numberOfBlocks().toString()
+        (document.getElementById("associativity-val") as HTMLInputElement).value = cache.associativity().toString()
+        (document.getElementById("associativity-type") as HTMLSelectElement).value = cache.placementPol().toString()
+        (document.getElementById("replacementPolicy") as HTMLSelectElement).value = cache.blockRepPolicy().toString()
+        (document.getElementById("cache-size-val") as HTMLInputElement).value = cache.cacheSize().toString()
     }
 
     @JsName("trace") fun trace() {
@@ -427,5 +506,7 @@ import kotlin.browser.window
         /*Program*/
         js("codeMirror.setValue(driver.p)")
         p = ""
+
+        setCacheSettings()
     }
 }
