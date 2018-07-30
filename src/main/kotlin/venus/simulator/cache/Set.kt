@@ -27,15 +27,17 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
     }
 
     // returns the relevant block, or null if not found
-    fun read(tag: Int, offset: Int) {
+    fun read(tag: Int, offset: Int, bs: BlockState) {
         val theBlock = findBlock(tag)
+        theBlock?.blockState = bs
         theBlock?.read(offset, ++useCounter) ?: 0
     }
 
-    fun write(tag: Int, offset: Int/*, data: Int*/) {
+    fun write(tag: Int, offset: Int, /*data: Int, */bs: BlockState) {
         val theBlock = findBlock(tag)
         if (theBlock != null) {
             theBlock.write(offset, /*data,*/ ++useCounter)
+            theBlock.blockState = bs
         } else {
             // this shouldn't happen ...
             //throw CacheError("Could not find block with tag '" + tag.toString() + "'! This error should not have occurred since it should have been handled earlier in the code.")
@@ -69,6 +71,12 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
                 return blocks[i]
         }
         return result
+    }
+
+    fun blockStates(a: ArrayList<String>) {
+        for (b in blocks) {
+            a.add(b.blockState.toString())
+        }
     }
 
 }
