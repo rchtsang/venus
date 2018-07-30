@@ -208,10 +208,10 @@ internal object Renderer {
 
     fun updateCache(a: Address) {
         //println("Need to implement the update cHandler feature!")
-        (document.getElementById("hit-count") as HTMLDivElement).innerHTML = sim.state.cache.getHitCount().toString()
+        (document.getElementById("hit-count") as HTMLInputElement).value = sim.state.cache.getHitCount().toString()
         val hr = sim.state.cache.getHitRate()
-        (document.getElementById("hit-rate") as HTMLDivElement).innerHTML = (if (hr.isNaN()) "???" else hr).toString()
-        (document.getElementById("access-amt") as HTMLDivElement).innerHTML = sim.state.cache.memoryAccessCount().toString()
+        (document.getElementById("hit-rate") as HTMLInputElement).value = (if (hr.isNaN()) "???" else hr).toString()
+        (document.getElementById("access-amt") as HTMLInputElement).value = sim.state.cache.memoryAccessCount().toString()
     }
 
     /**

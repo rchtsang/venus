@@ -613,10 +613,35 @@
                 </div>
               </div>
               <div id="cache-tab-view">
-                <div id="cache-stats" class="panel-block">
-                  <span>Hit Count: </span><div id="hit-count">0</div>
-                  <span>Accesses: </span><div id="access-amt">0</div>
-                  <span>Hit Rate: </span><div id="hit-rate">0</div>
+                <div id="hit-count-div" class="panel-block">
+                  <div class="field is-horizontal">
+                    <div class="field-label">
+                      <label class="label is-small" for="hit-count">Hit Count</label>
+                    </div>
+                    <div class="field-body is-expanded">
+                      <input id="hit-count" class="input is-small" spellcheck="false" value="0" disabled>
+                    </div>
+                  </div>
+                </div>
+                <div id="access-amt-div" class="panel-block">
+                  <div class="field is-horizontal">
+                    <div class="field-label">
+                      <label class="label is-small" for="access-amt">Accesses</label>
+                    </div>
+                    <div class="field-body is-expanded">
+                      <input id="access-amt" class="input is-small" spellcheck="false" value="0" disabled>
+                    </div>
+                  </div>
+                </div>
+                <div id="hit-rate-div" class="panel-block">
+                  <div class="field is-horizontal">
+                    <div class="field-label">
+                      <label class="label is-small" for="hit-rate">Hit Rate</label>
+                    </div>
+                    <div class="field-body is-expanded">
+                      <input id="hit-rate" class="input is-small" spellcheck="false" value="???" disabled>
+                    </div>
+                  </div>
                 </div>
                 <div id="block-size" class="panel-block">
                   <div class="field is-horizontal">
@@ -659,7 +684,7 @@
                   </div>
                 </div>
                 <div class="panel-block">
-                  <div class="field is-narrow">
+                  <div class="field is-narrow" style="margin-bottom:0px;">
                     <div class="control">
                       <div class="select">
                         <select id="associativity-type" onchange="driver.updateCachePlacementPolicy(this)">
@@ -679,6 +704,11 @@
                         </select>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <div id="notes-div" class="panel-block">
+                  <div class="field is-horizontal">
+                    <span><b>NOTE:</b> This is a write allocate cache.</span>
                   </div>
                 </div>
               </div>
