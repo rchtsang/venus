@@ -225,7 +225,6 @@ import kotlin.browser.window
         Renderer.renderGeneralSettingsTab()
     }
 
-
     internal fun currentlyRunning(): Boolean = timer != null
 
     /**
