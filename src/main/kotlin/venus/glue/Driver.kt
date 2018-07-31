@@ -29,7 +29,7 @@ import kotlin.browser.window
     var tr: Tracer = Tracer(sim)
     var cache: CacheHandler = CacheHandler()
     var alignedMemory = false
-    var mutableProgram = true
+    var mutableText = true
     private var timer: Int? = null
     val LS = LocalStorage()
     internal var useLS = false

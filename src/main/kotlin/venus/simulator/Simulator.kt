@@ -161,7 +161,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         if (Driver.alignedMemory && addr % MemSize.BYTE.size != 0) {
             throw AlignmentError("Address: '" + addr.toString() + "' is not BYTE aligned!")
         }
-        if (!Driver.mutableProgram && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.BYTE.size)..this.maxpc) {
+        if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.BYTE.size)..this.maxpc) {
             throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
@@ -179,7 +179,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         if (Driver.alignedMemory && addr % MemSize.HALF.size != 0) {
             throw AlignmentError("Address: '" + addr.toString() + "' is not HALF WORD aligned!")
         }
-        if (!Driver.mutableProgram && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.HALF.size)..this.maxpc) {
+        if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.HALF.size)..this.maxpc) {
             throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
@@ -197,7 +197,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         if (Driver.alignedMemory && addr % MemSize.WORD.size != 0) {
             throw AlignmentError("Address: '" + addr.toString() + "' is not WORD aligned!")
         }
-        if (!Driver.mutableProgram && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.WORD.size)..this.maxpc) {
+        if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.WORD.size)..this.maxpc) {
             throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
