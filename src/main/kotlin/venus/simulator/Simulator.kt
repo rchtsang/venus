@@ -2,7 +2,6 @@ package venus.simulator
 
 /* ktlint-disable no-wildcard-imports */
 
-import venus.glue.Driver
 import venus.glue.Renderer
 import venus.linker.LinkedProgram
 import venus.riscv.*
