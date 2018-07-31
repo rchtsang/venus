@@ -488,7 +488,6 @@ import kotlin.browser.window
         this.LS.set("aligned_memory", simSettings.alignedAddress.toString())
         this.LS.set("mutable_text", simSettings.mutableText.toString())
 
-
         /*Program*/
         js("codeMirror.save()")
         this.LS.set("prog", getText())
