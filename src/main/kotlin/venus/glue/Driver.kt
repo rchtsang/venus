@@ -217,6 +217,15 @@ import kotlin.browser.window
         Renderer.renderCacheTab()
     }
 
+    @JsName("openSettingsTab") fun openSettingsTab() {
+        Renderer.renderSettingsTab()
+    }
+
+    @JsName("openGeneralSettingsTab") fun openGeneralSettingsTab() {
+        Renderer.renderGeneralSettingsTab()
+    }
+
+
     internal fun currentlyRunning(): Boolean = timer != null
 
     /**

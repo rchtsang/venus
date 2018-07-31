@@ -407,7 +407,7 @@ internal object Renderer {
     fun renderMemoryTab() {
         tabSetVisibility("memory", "block")
         tabSetVisibility("register", "none")
-        tabSetVisibility("tracerSettings", "none")
+        tabSetVisibility("settings", "none")
         tabSetVisibility("cache", "none")
     }
 
@@ -415,25 +415,35 @@ internal object Renderer {
     fun renderRegisterTab() {
         tabSetVisibility("register", "block")
         tabSetVisibility("memory", "none")
-        tabSetVisibility("tracerSettings", "none")
+        tabSetVisibility("settings", "none")
         tabSetVisibility("cache", "none")
+    }
+
+    fun renderCacheTab() {
+        tabSetVisibility("cache", "block")
+        tabSetVisibility("settings", "none")
+        tabSetVisibility("memory", "none")
+        tabSetVisibility("register", "none")
+    }
+
+    fun renderSettingsTab() {
+        tabSetVisibility("settings", "block")
+        tabSetVisibility("memory", "none")
+        tabSetVisibility("register", "none")
+        tabSetVisibility("cache", "none")
+    }
+
+    fun renderGeneralSettingsTab() {
+        tabSetVisibility("general-settings", "block")
+        tabSetVisibility("tracer-settings", "none")
     }
 
     /**
      * Show the tracer settings tab
      */
     fun renderTracerSettingsTab() {
-        tabSetVisibility("tracerSettings", "block")
-        tabSetVisibility("memory", "none")
-        tabSetVisibility("register", "none")
-        tabSetVisibility("cache", "none")
-    }
-
-    fun renderCacheTab() {
-        tabSetVisibility("cache", "block")
-        tabSetVisibility("tracerSettings", "none")
-        tabSetVisibility("memory", "none")
-        tabSetVisibility("register", "none")
+        tabSetVisibility("general-settings", "none")
+        tabSetVisibility("tracer-settings", "block")
     }
 
     /**

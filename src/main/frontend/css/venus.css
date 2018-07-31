@@ -89,7 +89,14 @@ body {
     display: none;
 }
 
-#tracerSettings-tab-view {
+#cache-tab-view {
+    display: none;
+}
+
+#settings-tab-view {
+    display: none;
+}
+#tracer-settings-tab-view {
     display: none;
 }
 
