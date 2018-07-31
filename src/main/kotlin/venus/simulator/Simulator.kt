@@ -14,6 +14,7 @@ import venus.simulator.diffs.*
 /** Right now, this is a loose wrapper around SimulatorState
     Eventually, it will support debugging. */
 class Simulator(val linkedProgram: LinkedProgram) {
+    var settings = SimulatorSettings()
     val state = SimulatorState()
     var maxpc = MemorySegments.TEXT_BEGIN
     private var cycles = 0
@@ -123,7 +124,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
 
     fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
     fun loadBytewCache(addr: Int): Int {
-        if (Driver.alignedMemory && addr % MemSize.BYTE.size != 0) {
+        if (this.settings.alignedAddress && addr % MemSize.BYTE.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not BYTE aligned!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
@@ -133,7 +134,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
     fun loadHalfWord(addr: Int): Int = state.mem.loadHalfWord(addr)
     fun loadHalfWordwCache(addr: Int): Int {
-        if (Driver.alignedMemory && addr % MemSize.HALF.size != 0) {
+        if (this.settings.alignedAddress && addr % MemSize.HALF.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not HALF WORD aligned!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
@@ -143,7 +144,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
     fun loadWord(addr: Int): Int = state.mem.loadWord(addr)
     fun loadWordwCache(addr: Int): Int {
-        if (Driver.alignedMemory && addr % MemSize.WORD.size != 0) {
+        if (this.settings.alignedAddress && addr % MemSize.WORD.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not WORD aligned!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
@@ -158,10 +159,10 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeBytewCache(addr: Int, value: Int) {
-        if (Driver.alignedMemory && addr % MemSize.BYTE.size != 0) {
+        if (this.settings.alignedAddress && addr % MemSize.BYTE.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not BYTE aligned!")
         }
-        if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.BYTE.size)..this.maxpc) {
+        if (!this.settings.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.BYTE.size)..this.maxpc) {
             throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
@@ -176,10 +177,10 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeHalfWordwCache(addr: Int, value: Int) {
-        if (Driver.alignedMemory && addr % MemSize.HALF.size != 0) {
+        if (this.settings.alignedAddress && addr % MemSize.HALF.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not HALF WORD aligned!")
         }
-        if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.HALF.size)..this.maxpc) {
+        if (!this.settings.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.HALF.size)..this.maxpc) {
             throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
@@ -194,10 +195,10 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeWordwCache(addr: Int, value: Int) {
-        if (Driver.alignedMemory && addr % MemSize.WORD.size != 0) {
+        if (this.settings.alignedAddress && addr % MemSize.WORD.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not WORD aligned!")
         }
-        if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.WORD.size)..this.maxpc) {
+        if (!this.settings.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.WORD.size)..this.maxpc) {
             throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
