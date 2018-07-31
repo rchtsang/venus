@@ -99,7 +99,12 @@ class Cache
         //val index = address / blocksize % sets.size
         val index = address / c.cacheBlockSize() % sets.size
         val set = sets[index]
-        val evictee = set.getLRU()
+        var evictee: Block
+        if (c.blockRepPolicy().equals(BlockReplacementPolicy.RANDOM)) {
+            evictee = set.getRandom()
+        } else {
+            evictee = set.getLRU()
+        }
 
         // If the least recently used block is dirty, write it back to
         // main memory.
