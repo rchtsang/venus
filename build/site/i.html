@@ -27,10 +27,6 @@
     </li>
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
-    <li><center>Text Start:</center><input id="text-start" class="input" style="border-radius:1px;font-size:0.6rem;text-align:center;" onblur="driver.verifyText(this)" spellcheck="false"></li>
-    <li>
-      <button id="sv" class="button" onclick="if(window.svclr&&this.value=='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
-    </li>
   </ul>
 </div>
 <div class="container is-fluid">
@@ -116,7 +112,6 @@
                 <a id="memory-tab" onclick="driver.openMemoryTab()">Memory</a>
                 <a id="cache-tab" onclick="driver.openCacheTab()">Cache</a>
                 <a id="settings-tab" onclick="driver.openSettingsTab()">Settings</a>
-                <a id="tracerSettings-tab" onclick="driver.openTracerSettingsTab()">Tracer Settings</a>
               </p>
               <div id="register-tab-view">
                 <div id="reg-0" class="panel-block">
@@ -716,51 +711,88 @@
                   </div>
                 </div>
               </div>
-              <div id="tracerSettings-tab-view">
-                <div id="" class="panel-block">
-                  <div class="field is-horizontal">
-                    <article class="tile is-child is-primary" align="center">
-                      <h3>Registers Pattern:</h3>
-                      <small>To add tabs, type '\t' & new line, type '\n'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.<br><b>%output%</b> represents an ecall message out</small>
-                      <br>
-                      <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%output%%0%	%1%	%2%	%3%	%4%	%5%	%6%	%7%	%8%	%9%	%10%	%11%	%12%	%13%	%14%	%15%	%16%	%17%	%18%	%19%	%20%	%21%	%22%	%23%	%24%	%25%	%26%	%27%	%28%	%29%	%30%	%31%	%line%	%pc%	%inst%</textarea>
-                    </article>
+
+              <nav id="settings-tab-view" class="panel">
+                <p class="panel-tabs"></a>
+                  <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()">General Settings</a>
+                  <a id="tracer-settings-tab" onclick="driver.openTracerSettingsTab()">Tracer Settings</a>
+                </p>
+                <div id="general-settings-tab-view">
+                  <div id="textStart" class="panel-block">
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <label class="label is-small" for="text-start">Text Start</label>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <input id="text-start" class="input" onblur="driver.verifyText(this)" spellcheck="false"></li>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="" class="panel-block">
+                    <div class="field is-horizontal" align="center">
+                      <table id="" class="table" style="width:50%; margin-bottom: 0;">
+                        <thead>
+                        <tr>
+                          <th><center>Save on Close</center></th>
+                        </tr>
+                        </thead>
+                        <tr>
+                          <th>
+                            <center>
+                              <button id="sv" class="button" onclick="if(window.svclr&&this.value=='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
+                            </center>
+                          </th>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
                 </div>
-                <div id="" class="panel-block" align="center">
-                  <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
-                </div>
-                <div id="" class="panel-block">
-                  <div class="field is-horizontal" align="center">
-                    <table id="" class="table" style="width:50%; margin-bottom: 0;">
-                      <thead>
-                      <tr>
-                        <th><center>Instruction first?</center></th>
-                        <th><center>PC Word Addressed?</center></th>
-                        <th><center>Two Stage?</center></th>
-                      </tr>
-                      </thead>
-                      <tr>
-                        <th><center><button id="tinst-first" class="button is-primary" onclick="toggleThis(this)" value="true">Inst First</button></center></th>
-                        <th><center><button id="tPCWAddr" class="button is-primary" onclick="toggleThis(this)" value="true">PC Word Addr</button></center></th>
-                        <th><center><button id="tTwoStage" class="button" onclick="toggleThis(this)" value="false">Two Stage</button></center></th>
-                      </tr>
-                    </table>
+                <div id="tracer-settings-tab-view">
+                  <div id="" class="panel-block">
+                    <div class="field is-horizontal">
+                      <article class="tile is-child is-primary" align="center">
+                        <h3>Registers Pattern:</h3>
+                        <small>To add tabs, type '\t' & new line, type '\n'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.<br><b>%output%</b> represents an ecall message out</small>
+                        <br>
+                        <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%output%%0%	%1%	%2%	%3%	%4%	%5%	%6%	%7%	%8%	%9%	%10%	%11%	%12%	%13%	%14%	%15%	%16%	%17%	%18%	%19%	%20%	%21%	%22%	%23%	%24%	%25%	%26%	%27%	%28%	%29%	%30%	%31%	%line%	%pc%	%inst%</textarea>
+                      </article>
+                    </div>
+                  </div>
+                  <div id="" class="panel-block" align="center">
+                    <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
+                  </div>
+                  <div id="" class="panel-block">
+                    <div class="field is-horizontal" align="center">
+                      <table id="" class="table" style="width:50%; margin-bottom: 0;">
+                        <thead>
+                        <tr>
+                          <th><center>Instruction first?</center></th>
+                          <th><center>PC Word Addressed?</center></th>
+                          <th><center>Two Stage?</center></th>
+                        </tr>
+                        </thead>
+                        <tr>
+                          <th><center><button id="tinst-first" class="button is-primary" onclick="toggleThis(this)" value="true">Inst First</button></center></th>
+                          <th><center><button id="tPCWAddr" class="button is-primary" onclick="toggleThis(this)" value="true">PC Word Addr</button></center></th>
+                          <th><center><button id="tTwoStage" class="button" onclick="toggleThis(this)" value="false">Two Stage</button></center></th>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div id="" class="panel-block">
+                    <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
+                    <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
+                  </div>
+                  <div id="" class="panel-block">
+                    <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
+                    <input id="tbase-val" type="number" class="input is-small" style="width:180px;" onblur="validateBase(this);" onkeyup="validateBase(this);" value=2 spellcheck="false">
+                  </div>
+                  <div id="" class="panel-block">
+                    <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
+                    <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
                   </div>
                 </div>
-                <div id="" class="panel-block">
-                  <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
-                  <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
-                </div>
-                <div id="" class="panel-block">
-                  <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
-                  <input id="tbase-val" type="number" class="input is-small" style="width:180px;" onblur="validateBase(this);" onkeyup="validateBase(this);" value=2 spellcheck="false">
-                </div>
-                <div id="" class="panel-block">
-                  <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
-                  <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
-                </div>
-              </div>
+              </nav>
             </nav>
           </article>
         </div>
