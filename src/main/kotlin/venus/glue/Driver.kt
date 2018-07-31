@@ -484,6 +484,10 @@ import kotlin.browser.window
 
         /*Text Begin*/
         this.LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
+        /*Other Settings*/
+        this.LS.set("aligned_memory", alignedMemory.toString())
+        this.LS.set("mutable_text", mutableText.toString())
+
 
         /*Program*/
         js("codeMirror.save()")
@@ -511,6 +515,9 @@ import kotlin.browser.window
 
         /*Text begin*/
         var txtStart = Renderer.intToString(MemorySegments.TEXT_BEGIN)
+        /*Other Settings*/
+        var am = alignedMemory.toString()
+        var mt = mutableText.toString()
 
         /*Program*/
         js("codeMirror.save()")
@@ -528,6 +535,10 @@ import kotlin.browser.window
 
             /*Text Begin*/
             txtStart = LS.safeget("text_begin", txtStart)
+
+            /*Other Settings*/
+            am = LS.safeget("aligned_memory", am)
+            mt = LS.safeget("mutable_text", mt)
 
             /*Program*/
             this.p = LS.safeget("prog", this.p)
@@ -554,6 +565,10 @@ import kotlin.browser.window
         val ts = document.getElementById("text-start") as HTMLInputElement
         ts.value = txtStart
         verifyText(ts)
+
+        /*Other Settings*/
+        Renderer.renderButton(document.getElementById("alignAddr") as HTMLButtonElement, am == "true")
+        Renderer.renderButton(document.getElementById("mutableText") as HTMLButtonElement, mt == "true")
 
         /*Program*/
         js("codeMirror.setValue(driver.p)")
