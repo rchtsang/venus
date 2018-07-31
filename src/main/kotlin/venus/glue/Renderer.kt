@@ -8,6 +8,7 @@ import venus.riscv.insts.dsl.Instruction
 import venus.simulator.Diff
 import venus.simulator.Simulator
 import venus.simulator.cache.BlockState
+import venus.simulator.cache.ChangedBlockState
 import venus.simulator.diffs.CacheDiff
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
@@ -206,7 +207,7 @@ internal object Renderer {
         }
         return v
     }
-
+    /*@TODO make it so I can detect between if I am continuing or not so I do not have to be too wasteful.*/
     fun updateCache(a: Address) {
         //println("Need to implement the update cHandler feature!")
         (document.getElementById("hit-count") as HTMLInputElement).value = Driver.cache.getHitCount().toString()
@@ -226,12 +227,17 @@ internal object Renderer {
         val t = document.createElement("table")
         t.setAttribute("style", "border-collapse: collapse;border: 1px solid black;width:100%;")
         val bs = Driver.cache.getBlocksState()
+        val b = Driver.cache.currentState().getChangedBlockState()
         for (i in bs.indices) {
             val tr = document.createElement("tr")
             val th = document.createElement("th")
-            tr.setAttribute("style", "border: 1px solid black;")
+            if (!b.noChange && b.block == i) {
+                tr.setAttribute("style", "border: 1.5px solid black;")
+            } else {
+                tr.setAttribute("style", "border: 1px solid black;")
+            }
             th.id = "cache-block-" + i.toString()
-            th.innerHTML = i.toString() + ") EMPTY"
+            th.innerHTML = i.toString() + ") " + bs[i]
             tr.appendChild(th)
             t.appendChild(tr)
         }
@@ -240,10 +246,15 @@ internal object Renderer {
         cb.appendChild(t)
     }
 
-    fun updateCacheBlocks() {
-        val b = Driver.cache.currentState().getChangedBlockState()
+    fun updateCacheBlocks(b: ChangedBlockState = Driver.cache.currentState().getChangedBlockState()) {
         if (!b.noChange) {
+            val pb = Driver.cache.currentState().getPrevChangedBlock()
+            if (pb != -1) {
+                val prevelm = document.getElementById("cache-block-" + pb.toString())
+                prevelm?.parentElement?.setAttribute("style", "border: 1px solid black;")
+            }
             val elm = document.getElementById("cache-block-" + b.block.toString())
+            elm?.parentElement?.setAttribute("style", "border: 1.5px solid black;")
             if (b.state == BlockState.HIT) {
                 elm?.innerHTML = b.block.toString() + ") HIT"
                 elm?.setAttribute("style", "background-color:#00d1b2;")
@@ -261,6 +272,7 @@ internal object Renderer {
         val bs = Driver.cache.currentState().getBlocksState()
         for (i in bs.indices) {
             val elm = document.getElementById("cache-block-" + i.toString())
+            elm?.parentElement?.setAttribute("style", "border: 1px solid black;")
             if (BlockState.valueOf(bs[i]) == BlockState.HIT) {
                 elm?.innerHTML = i.toString() + ") HIT"
                 elm?.setAttribute("style", "background-color:#00d1b2;")
@@ -272,6 +284,7 @@ internal object Renderer {
                 elm?.setAttribute("style", "")
             }
         }
+        updateCacheBlocks()
     }
 
     /**
