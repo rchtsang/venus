@@ -162,7 +162,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
             throw AlignmentError("Address: '" + addr.toString() + "' is not BYTE aligned!")
         }
         if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.BYTE.size)..this.maxpc) {
-            throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
+            throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
         state.cache.write(Address(addr, MemSize.BYTE))
@@ -180,7 +180,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
             throw AlignmentError("Address: '" + addr.toString() + "' is not HALF WORD aligned!")
         }
         if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.HALF.size)..this.maxpc) {
-            throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
+            throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
         state.cache.write(Address(addr, MemSize.HALF))
@@ -198,7 +198,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
             throw AlignmentError("Address: '" + addr.toString() + "' is not WORD aligned!")
         }
         if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.WORD.size)..this.maxpc) {
-            throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
+            throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
         }
         preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
         state.cache.write(Address(addr, MemSize.WORD))
