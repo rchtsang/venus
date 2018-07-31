@@ -91,7 +91,6 @@ class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: 
         return this.latestChange
     }
 
-
     fun getPrevChangedBlock(): Int {
         return this.prevCacheState.getChangedBlockState().block
     }
