@@ -370,6 +370,7 @@ import kotlin.browser.window
         (document.getElementById("associativity-type") as HTMLSelectElement).value = at
         (document.getElementById("replacementPolicy") as HTMLSelectElement).value = rp
         (document.getElementById("cache-size-val") as HTMLInputElement).value = cs
+        Renderer.makeCacheBlocks()
         Renderer.updateCache(Address(0, MemSize.WORD))
     }
 
@@ -532,7 +533,7 @@ import kotlin.browser.window
         js("codeMirror.setValue(driver.p)")
         p = ""
 
-        setCacheSettings()
         cache.update()
+        setCacheSettings()
     }
 }

@@ -58,12 +58,26 @@ class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: 
     fun getBlocksState(): ArrayList<String> {
         return currentInternalCache.getBlocksState()
     }
+
+    var prevBlockStates = ArrayList<String>()
+    fun getChangedBlockState(): ChangedBlockState {
+        val prevStates = prevCacheState.getBlocksState()
+        val currentStates = currentInternalCache.getBlocksState()
+        for (index in currentStates.indices) {
+            if (currentStates[index] != prevStates[index]) {
+                return ChangedBlockState(index, BlockState.valueOf(currentStates[index]))
+            }
+        }
+        return ChangedBlockState(-1, BlockState.EMPTY, true)
+    }
 }
 
 enum class RW {
     READ,
     WRITE
 }
+
+class ChangedBlockState(val block: Int, val state: BlockState, val noChange: Boolean = false)
 
 private class InternalCache(cacheHandler: CacheHandler) {
     val cHandler = cacheHandler

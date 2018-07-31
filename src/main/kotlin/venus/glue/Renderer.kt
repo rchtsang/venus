@@ -7,6 +7,8 @@ import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
 import venus.simulator.Diff
 import venus.simulator.Simulator
+import venus.simulator.cache.BlockState
+import venus.simulator.cache.CacheError
 import venus.simulator.diffs.CacheDiff
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
@@ -212,7 +214,65 @@ internal object Renderer {
         val hr = Driver.cache.getHitRate()
         (document.getElementById("hit-rate") as HTMLInputElement).value = (if (hr.isNaN()) "???" else hr).toString()
         (document.getElementById("access-amt") as HTMLInputElement).value = Driver.cache.memoryAccessCount().toString()
-        (document.getElementById("cacheDebug") as HTMLDivElement).innerHTML = Driver.cache.getBlocksState().toString()
+        //(document.getElementById("cacheDebug") as HTMLDivElement).innerHTML = Driver.cache.getBlocksState().toString()
+        try {
+            updateAllCacheBlocks()
+        } catch (e: Throwable) {
+            makeCacheBlocks()
+            updateAllCacheBlocks()
+        }
+    }
+
+    fun makeCacheBlocks() {
+        val t = document.createElement("table")
+        t.setAttribute("style", "border-collapse: collapse;border: 1px solid black;width:100%;")
+        val bs = Driver.cache.getBlocksState()
+        for (i in bs.indices) {
+            val tr = document.createElement("tr")
+            val th = document.createElement("th")
+            tr.setAttribute("style", "border: 1px solid black;")
+            th.id = "cache-block-" + i.toString()
+            th.innerHTML = i.toString() + ") EMPTY"
+            tr.appendChild(th)
+            t.appendChild(tr)
+        }
+        val cb = (document.getElementById("cacheBlocks") as HTMLDivElement)
+        cb.innerHTML = ""
+        cb.appendChild(t)
+    }
+
+    fun updateCacheBlocks() {
+        val b = Driver.cache.currentState().getChangedBlockState()
+        if (!b.noChange) {
+            val elm = document.getElementById("cache-block-" + b.block.toString())
+            if (b.state == BlockState.HIT) {
+                elm?.innerHTML = b.block.toString() + ") HIT"
+                elm?.setAttribute("style", "background-color:#00d1b2;")
+            } else if (b.state == BlockState.MISS) {
+                elm?.innerHTML = b.block.toString() + ") MISS"
+                elm?.setAttribute("style", "background-color:#ff4e4e;")
+            } else {
+                elm?.innerHTML = b.block.toString() + ") EMPTY"
+                elm?.setAttribute("style", "")
+            }
+        }
+    }
+
+    fun updateAllCacheBlocks() {
+        val bs = Driver.cache.currentState().getBlocksState()
+        for (i in bs.indices) {
+            val elm = document.getElementById("cache-block-" + i.toString())
+            if (BlockState.valueOf(bs[i]) == BlockState.HIT) {
+                elm?.innerHTML = i.toString() + ") HIT"
+                elm?.setAttribute("style", "background-color:#00d1b2;")
+            } else if (BlockState.valueOf(bs[i]) == BlockState.MISS) {
+                elm?.innerHTML = i.toString() + ") MISS"
+                elm?.setAttribute("style", "background-color:#ff4e4e;")
+            } else {
+                elm?.innerHTML = i.toString() + ") EMPTY"
+                elm?.setAttribute("style", "")
+            }
+        }
     }
 
     /**
