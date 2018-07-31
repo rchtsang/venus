@@ -121,7 +121,7 @@ import kotlin.browser.window
         if (currentlyRunning()) {
             runEnd()
         } else {
-            try{
+            try {
                 Renderer.setRunButtonSpinning(true)
                 timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
                 sim.step() // walk past breakpoint
