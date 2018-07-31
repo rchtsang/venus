@@ -8,14 +8,11 @@ import venus.assembler.AssemblerError
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.*
-import venus.simulator.Simulator
-import venus.simulator.SimulatorError
-import venus.simulator.Tracer
+import venus.simulator.*
 import venus.simulator.cache.BlockReplacementPolicy
 import venus.simulator.cache.CacheError
 import venus.simulator.cache.CacheHandler
 import venus.simulator.cache.PlacementPolicy
-import venus.simulator.wordAddressed
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -130,7 +127,7 @@ import kotlin.browser.window
                 sim.step() // walk past breakpoint
             } catch (e: Throwable) {
                 runEnd()
-                handleError("RunStart" , e)
+                handleError("RunStart" , e, e is AlignmentError || e is StoreError)
             }
         }
     }
@@ -167,7 +164,7 @@ import kotlin.browser.window
             timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
         } catch (e: Throwable) {
             runEnd()
-            handleError("RunStart" , e)
+            handleError("RunStart" , e, e is AlignmentError || e is StoreError)
         }
     }
 
@@ -188,7 +185,7 @@ import kotlin.browser.window
             Renderer.updateCache(Address(0, MemSize.WORD))
             Renderer.updateControlButtons()
         } catch (e: Throwable) {
-            handleError("step", e)
+            handleError("step", e, e is AlignmentError || e is StoreError)
         }
     }
 
@@ -201,7 +198,7 @@ import kotlin.browser.window
             Renderer.updateFromDiffs(diffs)
             Renderer.updateControlButtons()
         } catch (e: Throwable) {
-            handleError("undo", e)
+            handleError("undo", e, e is AlignmentError || e is StoreError)
         }
     }
 
@@ -416,7 +413,7 @@ import kotlin.browser.window
             tr.trace()
             window.setTimeout(Driver::traceString, TIMEOUT_TIME)
         } catch (e : Throwable) {
-            handleError("Trace Start", e)
+            handleError("Trace Start", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
         }
     }
