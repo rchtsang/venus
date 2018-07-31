@@ -392,6 +392,14 @@ import kotlin.browser.window
         Renderer.updateCache(Address(0, MemSize.WORD))
     }
 
+    @JsName("setAlignedAddressing") fun setAlignedAddressing(b: Boolean) {
+        this.alignedMemory = b
+    }
+
+    @JsName("setMutableText") fun setMutableText(b: Boolean) {
+        this.mutableText = b
+    }
+
     @JsName("trace") fun trace() {
         //@todo make it so trace is better
         Renderer.setNameButtonSpinning("simulator-trace", true)

@@ -159,7 +159,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
     fun storeBytewCache(addr: Int, value: Int) {
         if (Driver.alignedMemory && addr % MemSize.BYTE.size != 0) {
-            throw AlignmentError("Address: '" + addr.toString() + "' is not BYTE aligned!")
+            throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not BYTE aligned!")
         }
         if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.BYTE.size)..this.maxpc) {
             throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
@@ -177,7 +177,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
     fun storeHalfWordwCache(addr: Int, value: Int) {
         if (Driver.alignedMemory && addr % MemSize.HALF.size != 0) {
-            throw AlignmentError("Address: '" + addr.toString() + "' is not HALF WORD aligned!")
+            throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not HALF WORD aligned!")
         }
         if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.HALF.size)..this.maxpc) {
             throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
@@ -195,7 +195,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
     fun storeWordwCache(addr: Int, value: Int) {
         if (Driver.alignedMemory && addr % MemSize.WORD.size != 0) {
-            throw AlignmentError("Address: '" + addr.toString() + "' is not WORD aligned!")
+            throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not WORD aligned!")
         }
         if (!Driver.mutableText && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.WORD.size)..this.maxpc) {
             throw StoreError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
