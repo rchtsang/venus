@@ -140,12 +140,24 @@
                     <thead>
                     <tr>
                         <th><center>Save on Close</center></th>
+                        <th><center>Force Aligned Addressing?</center></th>
+                        <th><center>Mutable Text?</center></th>
                     </tr>
                     </thead>
                     <tr>
                         <th>
                             <center>
-                                <button id="sv" class="button" onclick="if(window.svclr&&this.value=='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
+                                <button id="sv" class="button" onclick="if(window.svclr&&this.value==='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                <button id="alignAddr" class="button" onclick="toggleThis(this);driver.setAlignedAddressing(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Aligned<br>Addressing</button>
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                <button id="mutableText" class="button is-primary" onclick="toggleThis(this);driver.setMutableText(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Mutable<br>Text</button>
                             </center>
                         </th>
                     </tr>
