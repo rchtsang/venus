@@ -2,6 +2,8 @@ package venus.simulator
 
 /* ktlint-disable no-wildcard-imports */
 
+import venus.glue.Driver
+import venus.glue.Renderer
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
@@ -121,6 +123,9 @@ class Simulator(val linkedProgram: LinkedProgram) {
 
     fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
     fun loadBytewCache(addr: Int): Int {
+        if (Driver.alignedMemory && addr % MemSize.BYTE.size != 0) {
+            throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not BYTE aligned!")
+        }
         preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
         state.cache.read(Address(addr, MemSize.BYTE))
         postInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
@@ -128,6 +133,9 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
     fun loadHalfWord(addr: Int): Int = state.mem.loadHalfWord(addr)
     fun loadHalfWordwCache(addr: Int): Int {
+        if (Driver.alignedMemory && addr % MemSize.HALF.size != 0) {
+            throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not HALF WORD aligned!")
+        }
         preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
         state.cache.read(Address(addr, MemSize.HALF))
         postInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
@@ -135,6 +143,9 @@ class Simulator(val linkedProgram: LinkedProgram) {
     }
     fun loadWord(addr: Int): Int = state.mem.loadWord(addr)
     fun loadWordwCache(addr: Int): Int {
+        if (Driver.alignedMemory && addr % MemSize.WORD.size != 0) {
+            throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not WORD aligned!")
+        }
         preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
         state.cache.read(Address(addr, MemSize.WORD))
         postInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
@@ -147,6 +158,12 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeBytewCache(addr: Int, value: Int) {
+        if (Driver.alignedMemory && addr % MemSize.BYTE.size != 0) {
+            throw AlignmentError("Address: '" + addr.toString() + "' is not BYTE aligned!")
+        }
+        if (!Driver.mutableProgram && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.BYTE.size)..this.maxpc) {
+            throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
+        }
         preInstruction.add(CacheDiff(Address(addr, MemSize.BYTE)))
         state.cache.write(Address(addr, MemSize.BYTE))
         this.storeByte(addr, value)
@@ -159,6 +176,12 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeHalfWordwCache(addr: Int, value: Int) {
+        if (Driver.alignedMemory && addr % MemSize.HALF.size != 0) {
+            throw AlignmentError("Address: '" + addr.toString() + "' is not HALF WORD aligned!")
+        }
+        if (!Driver.mutableProgram && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.HALF.size)..this.maxpc) {
+            throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
+        }
         preInstruction.add(CacheDiff(Address(addr, MemSize.HALF)))
         state.cache.write(Address(addr, MemSize.HALF))
         this.storeHalfWord(addr, value)
@@ -171,6 +194,12 @@ class Simulator(val linkedProgram: LinkedProgram) {
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
     }
     fun storeWordwCache(addr: Int, value: Int) {
+        if (Driver.alignedMemory && addr % MemSize.WORD.size != 0) {
+            throw AlignmentError("Address: '" + addr.toString() + "' is not WORD aligned!")
+        }
+        if (!Driver.mutableProgram && addr in (MemorySegments.TEXT_BEGIN + 1 - MemSize.WORD.size)..this.maxpc) {
+            throw SimulatorError("You are attempting to edit the text of the program though the program is set to immutable at address " + Renderer.toHex(addr) + "!")
+        }
         preInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
         state.cache.write(Address(addr, MemSize.WORD))
         this.storeWord(addr, value)

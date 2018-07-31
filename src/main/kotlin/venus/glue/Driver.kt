@@ -28,6 +28,8 @@ import kotlin.browser.window
     var sim: Simulator = Simulator(LinkedProgram())
     var tr: Tracer = Tracer(sim)
     var cache: CacheHandler = CacheHandler()
+    var alignedMemory = false
+    var mutableProgram = true
     private var timer: Int? = null
     val LS = LocalStorage()
     internal var useLS = false
@@ -122,9 +124,14 @@ import kotlin.browser.window
         if (currentlyRunning()) {
             runEnd()
         } else {
-            Renderer.setRunButtonSpinning(true)
-            timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
-            sim.step() // walk past breakpoint
+            try{
+                Renderer.setRunButtonSpinning(true)
+                timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
+                sim.step() // walk past breakpoint
+            } catch (e: Throwable) {
+                runEnd()
+                handleError("RunStart" , e)
+            }
         }
     }
 
@@ -143,23 +150,29 @@ import kotlin.browser.window
     internal const val TIMEOUT_CYCLES = 100
     internal const val TIMEOUT_TIME = 10
     internal fun runStart() {
-        var cycles = 0
-        while (cycles < TIMEOUT_CYCLES) {
-            if (sim.isDone() || sim.atBreakpoint()) {
-                runEnd()
-                Renderer.updateAll()
-                return
+        try {
+            var cycles = 0
+            while (cycles < TIMEOUT_CYCLES) {
+                if (sim.isDone() || sim.atBreakpoint()) {
+                    runEnd()
+                    Renderer.updateAll()
+                    return
+                }
+
+                sim.step()
+                Renderer.updateCache(Address(0, MemSize.WORD))
+                cycles++
             }
 
-            sim.step()
-            Renderer.updateCache(Address(0, MemSize.WORD))
-            cycles++
+            timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
+        } catch (e: Throwable) {
+            runEnd()
+            handleError("RunStart" , e)
         }
-
-        timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
     }
 
     internal fun runEnd() {
+        Renderer.updatePC(sim.getPC())
         Renderer.setRunButtonSpinning(false)
         timer?.let(window::clearTimeout)
         timer = null
