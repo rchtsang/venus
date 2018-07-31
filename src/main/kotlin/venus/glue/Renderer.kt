@@ -208,11 +208,11 @@ internal object Renderer {
 
     fun updateCache(a: Address) {
         //println("Need to implement the update cHandler feature!")
-        (document.getElementById("hit-count") as HTMLInputElement).value = sim.state.cache.getHitCount().toString()
-        val hr = sim.state.cache.getHitRate()
+        (document.getElementById("hit-count") as HTMLInputElement).value = Driver.cache.getHitCount().toString()
+        val hr = Driver.cache.getHitRate()
         (document.getElementById("hit-rate") as HTMLInputElement).value = (if (hr.isNaN()) "???" else hr).toString()
-        (document.getElementById("access-amt") as HTMLInputElement).value = sim.state.cache.memoryAccessCount().toString()
-        (document.getElementById("cacheDebug") as HTMLDivElement).innerHTML = sim.state.cache.getBlocksState().toString()
+        (document.getElementById("access-amt") as HTMLInputElement).value = Driver.cache.memoryAccessCount().toString()
+        (document.getElementById("cacheDebug") as HTMLDivElement).innerHTML = Driver.cache.getBlocksState().toString()
     }
 
     /**
