@@ -25,8 +25,7 @@ import kotlin.browser.window
     var sim: Simulator = Simulator(LinkedProgram())
     var tr: Tracer = Tracer(sim)
     var cache: CacheHandler = CacheHandler()
-    var alignedMemory = false
-    var mutableText = true
+    val simSettings = SimulatorSettings()
     private var timer: Int? = null
     val LS = LocalStorage()
     internal var useLS = false
@@ -107,6 +106,7 @@ import kotlin.browser.window
             this.cache.reset()
             sim.state.cache = this.cache
             tr = Tracer(sim)
+            sim.settings = this.simSettings
             return true
         } catch (e: AssemblerError) {
             Renderer.displayError(e)
@@ -393,11 +393,11 @@ import kotlin.browser.window
     }
 
     @JsName("setAlignedAddressing") fun setAlignedAddressing(b: Boolean) {
-        this.alignedMemory = b
+        this.simSettings.alignedAddress = b
     }
 
     @JsName("setMutableText") fun setMutableText(b: Boolean) {
-        this.mutableText = b
+        this.simSettings.mutableText = b
     }
 
     @JsName("trace") fun trace() {
@@ -485,8 +485,8 @@ import kotlin.browser.window
         /*Text Begin*/
         this.LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
         /*Other Settings*/
-        this.LS.set("aligned_memory", alignedMemory.toString())
-        this.LS.set("mutable_text", mutableText.toString())
+        this.LS.set("aligned_memory", simSettings.alignedAddress.toString())
+        this.LS.set("mutable_text", simSettings.mutableText.toString())
 
 
         /*Program*/
@@ -516,8 +516,8 @@ import kotlin.browser.window
         /*Text begin*/
         var txtStart = Renderer.intToString(MemorySegments.TEXT_BEGIN)
         /*Other Settings*/
-        var am = alignedMemory.toString()
-        var mt = mutableText.toString()
+        var am = simSettings.alignedAddress.toString()
+        var mt = simSettings.mutableText.toString()
 
         /*Program*/
         js("codeMirror.save()")
