@@ -15,12 +15,15 @@ class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: 
 
     private var hitcount = 0
 
+    var latestChange: ChangedBlockState
+
     init {
         if (default) {
             prevCacheState = this
             /*Since this is the first block, we must set it up properly*/
             currentInternalCache = InternalCache(cacheHandler)
             currentInternalCache.setup()
+            this.latestChange = ChangedBlockState(-1, BlockState.EMPTY, true)
         } else {
             /*Since this is not the default state, we can use the data made in the previous cacheHandler to set up this cacheHandler.*/
             prevCacheState = cacheHandler.currentState()
@@ -32,6 +35,12 @@ class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: 
                 this.wasHit = this.currentInternalCache.write(address)
             }
             hitcount += if (this.wasHit) 1 else 0
+            val b = this.getInternalChangedBlockState()
+            if (b.noChange) {
+                this.latestChange = prevCacheState.latestChange
+            } else {
+                this.latestChange = b
+            }
         }
     }
 
@@ -60,7 +69,7 @@ class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: 
     }
 
     var prevBlockStates = ArrayList<String>()
-    fun getChangedBlockState(): ChangedBlockState {
+    private fun getInternalChangedBlockState(): ChangedBlockState {
         val prevStates = prevCacheState.getBlocksState()
         val currentStates = currentInternalCache.getBlocksState()
         for (index in currentStates.indices) {
@@ -69,6 +78,22 @@ class CacheState(address: Address, cacheHandler: CacheHandler, rw: RW, default: 
             }
         }
         return ChangedBlockState(-1, BlockState.EMPTY, true)
+    }
+
+    fun getChangedBlockState(): ChangedBlockState {
+        val prevStates = prevCacheState.getBlocksState()
+        val currentStates = currentInternalCache.getBlocksState()
+        for (index in currentStates.indices) {
+            if (currentStates[index] != prevStates[index]) {
+                return ChangedBlockState(index, BlockState.valueOf(currentStates[index]))
+            }
+        }
+        return this.latestChange
+    }
+
+
+    fun getPrevChangedBlock(): Int {
+        return this.prevCacheState.getChangedBlockState().block
     }
 }
 
