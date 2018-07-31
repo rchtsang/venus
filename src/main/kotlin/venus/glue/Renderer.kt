@@ -8,7 +8,6 @@ import venus.riscv.insts.dsl.Instruction
 import venus.simulator.Diff
 import venus.simulator.Simulator
 import venus.simulator.cache.BlockState
-import venus.simulator.cache.CacheError
 import venus.simulator.diffs.CacheDiff
 import venus.simulator.diffs.MemoryDiff
 import venus.simulator.diffs.PCDiff
