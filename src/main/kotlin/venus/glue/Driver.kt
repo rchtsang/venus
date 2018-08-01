@@ -24,7 +24,11 @@ import kotlin.browser.window
 @JsName("Driver") object Driver {
     var sim: Simulator = Simulator(LinkedProgram())
     var tr: Tracer = Tracer(sim)
-    var cache: CacheHandler = CacheHandler()
+
+    val mainCache: CacheHandler = CacheHandler()
+    var cache: CacheHandler = this.mainCache
+    var cacheLevels: ArrayList<CacheHandler> = arrayListOf(this.mainCache)
+
     val simSettings = SimulatorSettings()
     private var timer: Int? = null
     val LS = LocalStorage()
@@ -103,8 +107,8 @@ import kotlin.browser.window
         try {
             val linked = Linker.link(listOf(prog))
             sim = Simulator(linked)
-            this.cache.reset()
-            sim.state.cache = this.cache
+            this.mainCache.reset()
+            sim.state.cache = this.mainCache
             tr = Tracer(sim)
             sim.settings = this.simSettings
             return true
@@ -315,6 +319,10 @@ import kotlin.browser.window
         } catch (e: Throwable) {
             handleError("Verify Text", e)
         }
+    }
+
+    @JsName("updateCacheLevel") fun updateCacheLevel(e: HTMLSelectElement) {
+        console.log("Need to implement cache level stuff!")
     }
 
     @JsName("updateCacheBlockSize") fun updateCacheBlockSize(e: HTMLInputElement) {
