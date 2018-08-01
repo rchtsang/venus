@@ -71,7 +71,9 @@ class CacheHandler {
     }
 
     fun reset() {
-        Math.seedrandom(seed)
+        try {
+            Math.seedrandom(seed)
+        } catch (e: Throwable) {}
         cacheList = ArrayList()
         cacheList.add(CacheState(Address(0, MemSize.WORD), this, RW.READ, true))
         addresses = ArrayList()
