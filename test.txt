@@ -1,0 +1,15 @@
+li s1 256
+li s0 36
+li s2 0x13
+b: beq s1 s0 e
+sb s2 0(s0)
+addi s0 s0 4
+j b
+e:
+li s3 0x73
+sb s3 0(s0)
+nop
+nop
+nop
+nop
+nop
