@@ -126,6 +126,10 @@ class CacheHandler {
         this.numberOfBlocks = i
         if (this.placementPol == PlacementPolicy.FULLY_ASSOCIATIVE) {
             this.setAssociativity(i, true)
+        } else if (this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE) {
+            if (i < this.associativity()) {
+                this.setAssociativity(i)
+            }
         }
         this.update()
     }
@@ -172,7 +176,11 @@ class CacheHandler {
     }
 
     fun setAssociativity(i: Int, override: Boolean = false) {
-        if ((this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE || override) && i <= cacheBlockSize) {
+        if ((this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE || override)) {
+            if (i !in 1..this.numberOfBlocks) {
+                return
+                //throw CacheError("Associativity must be greater than or equal to 1 but not greater than the number of blocks!")
+            }
             val d = Math.log2(i.toDouble())
             if (!isInt(d)) {
                 throw CacheError("Associativity must be a positive nonzero power of 2!")
