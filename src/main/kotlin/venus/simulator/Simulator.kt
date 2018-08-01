@@ -42,7 +42,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         breakpoints = Array<Boolean>(linkedProgram.prog.insts.size, { false })
     }
 
-    fun isDone(): Boolean = getPC() >= maxpc
+    fun isDone(): Boolean = getPC() >= if (settings.ecallOnlyExit) MemorySegments.STATIC_BEGIN else maxpc
 
     fun run() {
         while (!isDone()) {
