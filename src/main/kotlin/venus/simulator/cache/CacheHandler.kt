@@ -33,6 +33,8 @@ class CacheHandler {
         if (attached) {
             val c = CacheState(a, this, RW.READ)
             cacheList.add(c)
+        } else {
+            nextLevelCacheHandler?.read(a)
         }
     }
 
@@ -42,6 +44,8 @@ class CacheHandler {
         if (attached) {
             val c = CacheState(a, this, RW.WRITE)
             cacheList.add(c)
+        } else {
+            nextLevelCacheHandler?.write(a)
         }
     }
 
@@ -51,6 +55,8 @@ class CacheHandler {
         if (attached) {
             val c = CacheState(a, this, RW.READ)
             cacheList.add(c)
+        } else {
+            nextLevelCacheHandler?.access(a)
         }
     }
 
