@@ -223,6 +223,24 @@ internal object Renderer {
         }
     }
 
+    fun renderSetCacheLevel(i: Int) {
+        val clvl = document.getElementById("cacheLevel") as HTMLSelectElement
+        clvl.value = "L" + i.toString()
+    }
+
+    fun renderAddCacheLevel() {
+        val clvl = document.getElementById("cacheLevel") as HTMLSelectElement
+        val newCacheNumber = clvl.options.length + 1
+        val option = document.createElement("option") as HTMLOptionElement
+        option.innerHTML = "L" + newCacheNumber.toString()
+        clvl.options[clvl.options.length] = option
+    }
+
+    fun renderRemoveCacheLevel() {
+        val clvl = document.getElementById("cacheLevel") as HTMLSelectElement
+        clvl.options[clvl.options.length - 1] = null
+    }
+
     fun makeCacheBlocks() {
         val t = document.createElement("table")
         t.setAttribute("style", "border-collapse: collapse;border: 1px solid black;width:100%;")

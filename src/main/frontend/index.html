@@ -746,9 +746,19 @@
                       </div>
                     </div>
                   </div>
-                  <div id="" class="panel-block">
+                  <div id="numCacheLvls" class="panel-block">
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <label class="label is-small" for="setNumCacheLvls">Cache Levels</label>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <input id="setNumCacheLvls" type="number" class="input" onblur="driver.setNumberOfCacheLevels(parseInt(this.value))" spellcheck="false" value="1"></li>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel-block">
                     <div class="field is-horizontal" align="center">
-                      <table id="" class="table" style="width:50%; margin-bottom: 0;">
+                      <table class="table" style="width:50%; margin-bottom: 0;">
                         <thead>
                         <tr>
                           <th><center>Save on Close</center></th>

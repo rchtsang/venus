@@ -25,7 +25,7 @@ import kotlin.browser.window
     var sim: Simulator = Simulator(LinkedProgram())
     var tr: Tracer = Tracer(sim)
 
-    val mainCache: CacheHandler = CacheHandler()
+    val mainCache: CacheHandler = CacheHandler(1)
     var cache: CacheHandler = this.mainCache
     var cacheLevels: ArrayList<CacheHandler> = arrayListOf(this.mainCache)
 
@@ -321,11 +321,45 @@ import kotlin.browser.window
         }
     }
 
+    @JsName("setNumberOfCacheLevels") fun setNumberOfCacheLevels(i: Int) {
+        if (i < 1) {
+            (document.getElementById("setNumCacheLvls") as HTMLInputElement).value = this.cacheLevels.size.toString()
+            handleError("Set Number of Cache Levels (LT0)", CacheError("You must set the number of caches to at least 1! If you do not want to use any cache, set this to 1 and then disable the cache."), true)
+            return
+        }
+        if (i == this.cacheLevels.size) {
+            return
+        }
+        if (this.cacheLevels.size < i) {
+            while (this.cacheLevels.size < i) {
+                val newCache = CacheHandler(this.cacheLevels.size + 1)
+                this.cacheLevels[this.cacheLevels.size - 1].nextLevelCacheHandler = newCache
+                this.cacheLevels.add(newCache)
+                Renderer.renderAddCacheLevel()
+            }
+        } else if (this.cacheLevels.size > i) {
+            while (this.cacheLevels.size > i) {
+                val prevCacheIndex = this.cacheLevels.size - 1
+                val prevCache = this.cacheLevels[prevCacheIndex]
+                this.cacheLevels.removeAt(prevCacheIndex)
+                val lastCache = this.cacheLevels[this.cacheLevels.size - 1]
+                lastCache.nextLevelCacheHandler = null
+                if (this.cache.cacheLevel == prevCache.cacheLevel) {
+                    this.cache = lastCache
+                    Renderer.renderSetCacheLevel(this.cache.cacheLevel)
+                }
+                Renderer.renderRemoveCacheLevel()
+            }
+            setCacheSettings()
+        }
+    }
+
     @JsName("updateCacheLevel") fun updateCacheLevel(e: HTMLSelectElement) {
         try {
             val level = e.value.removePrefix("L").toInt()
             if (level in 1..cacheLevels.size) {
                 this.cache = cacheLevels[level - 1]
+                Renderer.renderSetCacheLevel(level)
                 setCacheSettings()
             } else {
                 handleError("Update Cache Level (LVL)", CacheError("Cache level '" + level + "' does not exist in your current cache!"), true)
