@@ -15,6 +15,8 @@ import venus.simulator.cache.CacheHandler
 import venus.simulator.cache.PlacementPolicy
 import kotlin.browser.document
 import kotlin.browser.window
+import kotlin.dom.addClass
+import kotlin.dom.removeClass
 
 /* ktlint-enable no-wildcard-imports */
 
@@ -354,6 +356,11 @@ import kotlin.browser.window
         }
     }
 
+    @JsName("setCacheEnabled") fun setCacheEnabled(enabled: Boolean) {
+        this.cache.attach(enabled)
+        Renderer.updateCache(Address(0, MemSize.WORD))
+    }
+
     @JsName("updateCacheLevel") fun updateCacheLevel(e: HTMLSelectElement) {
         try {
             val level = e.value.removePrefix("L").toInt()
@@ -440,6 +447,7 @@ import kotlin.browser.window
         val rp = cache.blockRepPolicy().toMyString()
         val cs = cache.cacheSize().toString()
         val cseed = cache.seed
+        val attached = cache.attached
         (document.getElementById("block-size-val") as HTMLInputElement).value = bs
         (document.getElementById("numblocks-val") as HTMLInputElement).value = nb
         (document.getElementById("associativity-val") as HTMLInputElement).value = av
@@ -447,6 +455,13 @@ import kotlin.browser.window
         (document.getElementById("replacementPolicy") as HTMLSelectElement).value = rp
         (document.getElementById("cache-size-val") as HTMLInputElement).value = cs
         (document.getElementById("cache-seed") as HTMLInputElement).value = cseed
+        val attachedButton = (document.getElementById("cacheEnabled") as HTMLButtonElement)
+        attachedButton.value = attached.toString()
+        if (attached) {
+            attachedButton.addClass("is-primary")
+        } else {
+            attachedButton.removeClass("is-primary")
+        }
         Renderer.makeCacheBlocks()
         Renderer.updateCache(Address(0, MemSize.WORD))
     }
@@ -552,6 +567,7 @@ import kotlin.browser.window
         this.LS.set("prog", getText())
 
         /*Cache*/
+        /*FIXME Save ALL cache levels!*/
         this.LS.set("cache_associativity", this.cache.associativity().toString())
         this.LS.set("cache_cacheBlockSize", this.cache.cacheBlockSize().toString())
         this.LS.set("cache_numberOfBlocks", this.cache.numberOfBlocks().toString())
@@ -603,6 +619,7 @@ import kotlin.browser.window
 
             /*Cache*/
             try {
+                /*@FIXME Make this so that it will load the multilevel cache system.*/
                 this.cache.setCacheBlockSize(LS.safeget("cache_cacheBlockSize", this.cache.cacheBlockSize().toString()).toInt())
                 this.cache.setNumberOfBlocks(LS.safeget("cache_numberOfBlocks", this.cache.numberOfBlocks().toString()).toInt())
                 this.cache.setBlockRepPolicy(BlockReplacementPolicy.valueOf(LS.safeget("cache_blockRepPolicy", this.cache.blockRepPolicy().toString())))
