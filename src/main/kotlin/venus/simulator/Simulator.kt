@@ -232,7 +232,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         val short0 = loadHalfWord(getPC())
         val length = getInstructionLength(short0)
         if (length != 4) {
-            throw SimulatorError("instruction length != 4 not supported")
+            throw SimulatorError("Instruction length != 4 not supported! (This may be due to you overriding parts of the text causing an invalid instruction)")
         }
 
         val short1 = loadHalfWord(getPC() + 2)
