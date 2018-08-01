@@ -329,6 +329,7 @@ import kotlin.dom.removeClass
             handleError("Set Number of Cache Levels (LT0)", CacheError("You must set the number of caches to at least 1! If you do not want to use any cache, set this to 1 and then disable the cache."), true)
             return
         }
+        (document.getElementById("setNumCacheLvls") as HTMLInputElement).value = i.toString()
         if (i == this.cacheLevels.size) {
             return
         }
@@ -364,15 +365,19 @@ import kotlin.dom.removeClass
     @JsName("updateCacheLevel") fun updateCacheLevel(e: HTMLSelectElement) {
         try {
             val level = e.value.removePrefix("L").toInt()
-            if (level in 1..cacheLevels.size) {
-                this.cache = cacheLevels[level - 1]
-                Renderer.renderSetCacheLevel(level)
-                setCacheSettings()
-            } else {
-                handleError("Update Cache Level (LVL)", CacheError("Cache level '" + level + "' does not exist in your current cache!"), true)
-            }
+            updateCacheLvl(level)
         } catch (e: NumberFormatException) {
             handleError("Update Cache Level (NFE)", e, true)
+        }
+    }
+
+    fun updateCacheLvl(level: Int) {
+        if (level in 1..cacheLevels.size) {
+            this.cache = cacheLevels[level - 1]
+            Renderer.renderSetCacheLevel(level)
+            setCacheSettings()
+        } else {
+            handleError("Update Cache Level (LVL)", CacheError("Cache level '" + level + "' does not exist in your current cache!"), true)
         }
     }
 
@@ -567,12 +572,30 @@ import kotlin.dom.removeClass
         this.LS.set("prog", getText())
 
         /*Cache*/
-        /*FIXME Save ALL cache levels!*/
-        this.LS.set("cache_associativity", this.cache.associativity().toString())
-        this.LS.set("cache_cacheBlockSize", this.cache.cacheBlockSize().toString())
-        this.LS.set("cache_numberOfBlocks", this.cache.numberOfBlocks().toString())
-        this.LS.set("cache_placementPol", this.cache.placementPol().toString())
-        this.LS.set("cache_blockRepPolicy", this.cache.blockRepPolicy().toString())
+        val numExtraCache = this.LS.safeget("cache_levels", "1").toInt()
+        if (this.cacheLevels.size < numExtraCache) {
+            for (i in (this.cacheLevels.size + 1)..numExtraCache) {
+                this.LS.remove("cache_L" + i + "_associativity")
+                this.LS.remove("cache_L" + i + "_cacheBlockSize")
+                this.LS.remove("cache_L" + i + "_numberOfBlocks")
+                this.LS.remove("cache_L" + i + "_placementPol")
+                this.LS.remove("cache_L" + i + "_blockRepPolicy")
+                this.LS.remove("cache_L" + i + "_seed")
+                this.LS.remove("cache_L" + i + "_attach")
+            }
+        }
+        this.LS.set("cache_levels", this.cacheLevels.size.toString())
+        this.LS.set("cache_current_level", this.cache.cacheLevel.toString())
+        for (i in this.cacheLevels.indices) {
+            val curCache = this.cacheLevels[i]
+            this.LS.set("cache_L" + (i + 1) + "_associativity", curCache.associativity().toString())
+            this.LS.set("cache_L" + (i + 1) + "_cacheBlockSize", curCache.cacheBlockSize().toString())
+            this.LS.set("cache_L" + (i + 1) + "_numberOfBlocks", curCache.numberOfBlocks().toString())
+            this.LS.set("cache_L" + (i + 1) + "_placementPol", curCache.placementPol().toString())
+            this.LS.set("cache_L" + (i + 1) + "_blockRepPolicy", curCache.blockRepPolicy().toString())
+            this.LS.set("cache_L" + (i + 1) + "_seed", curCache.seed)
+            this.LS.set("cache_L" + (i + 1) + "_attach", curCache.attached.toString())
+        }
     }
 
     /*If b is true, will load stored values else load default values.*/
@@ -619,12 +642,18 @@ import kotlin.dom.removeClass
 
             /*Cache*/
             try {
-                /*@FIXME Make this so that it will load the multilevel cache system.*/
-                this.cache.setCacheBlockSize(LS.safeget("cache_cacheBlockSize", this.cache.cacheBlockSize().toString()).toInt())
-                this.cache.setNumberOfBlocks(LS.safeget("cache_numberOfBlocks", this.cache.numberOfBlocks().toString()).toInt())
-                this.cache.setBlockRepPolicy(BlockReplacementPolicy.valueOf(LS.safeget("cache_blockRepPolicy", this.cache.blockRepPolicy().toString())))
-                this.cache.setPlacementPol(PlacementPolicy.valueOf(LS.safeget("cache_placementPol", this.cache.placementPol().toString())))
-                this.cache.setAssociativity(LS.safeget("cache_associativity", this.cache.associativity().toString()).toInt())
+                setNumberOfCacheLevels(LS.safeget("cache_levels", this.cacheLevels.size.toString()).toInt())
+                updateCacheLvl(LS.safeget("cache_current_level", this.cache.cacheLevel.toString()).toInt())
+                for (i in this.cacheLevels.indices) {
+                    val currentCache = this.cacheLevels[i]
+                    currentCache.setCacheBlockSize(LS.safeget("cache_L" + (i + 1) + "_cacheBlockSize", currentCache.cacheBlockSize().toString()).toInt())
+                    currentCache.setNumberOfBlocks(LS.safeget("cache_L" + (i + 1) + "_numberOfBlocks", currentCache.numberOfBlocks().toString()).toInt())
+                    currentCache.setBlockRepPolicy(BlockReplacementPolicy.valueOf(LS.safeget("cache_L" + (i + 1) + "_blockRepPolicy", currentCache.blockRepPolicy().toString())))
+                    currentCache.setPlacementPol(PlacementPolicy.valueOf(LS.safeget("cache_L" + (i + 1) + "_placementPol", currentCache.placementPol().toString())))
+                    currentCache.setAssociativity(LS.safeget("cache_L" + (i + 1) + "_associativity", currentCache.associativity().toString()).toInt())
+                    currentCache.attach(LS.safeget("cache_L" + (i + 1) + "_attach", currentCache.attached.toString()) == "true")
+                    currentCache.setSeed(LS.safeget("cache_L" + (i + 1) + "_seed", currentCache.seed))
+                }
             } catch (e: Throwable) {
                 console.warn("An error occurred when loading the cache data!")
                 console.warn(e)
@@ -654,7 +683,7 @@ import kotlin.dom.removeClass
         js("codeMirror.setValue(driver.p)")
         p = ""
 
-        cache.update()
+        mainCache.update()
         setCacheSettings()
     }
 }
