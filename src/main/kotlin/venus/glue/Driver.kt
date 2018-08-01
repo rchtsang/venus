@@ -295,6 +295,10 @@ import kotlin.dom.removeClass
         }
     }
 
+    @JsName("setOnlyEcallExit") fun setOnlyEcallExit(b: Boolean) {
+        this.simSettings.ecallOnlyExit = b
+    }
+
     @JsName("verifyText") fun verifyText(input: HTMLInputElement) {
         try {
             if (!currentlyRunning()) {
@@ -568,6 +572,7 @@ import kotlin.dom.removeClass
         /*Other Settings*/
         this.LS.set("aligned_memory", simSettings.alignedAddress.toString())
         this.LS.set("mutable_text", simSettings.mutableText.toString())
+        this.LS.set("ecall_exit_only", simSettings.ecallOnlyExit.toString())
 
         /*Program*/
         js("codeMirror.save()")
@@ -617,6 +622,7 @@ import kotlin.dom.removeClass
         /*Other Settings*/
         var am = simSettings.alignedAddress.toString()
         var mt = simSettings.mutableText.toString()
+        var eeo = simSettings.ecallOnlyExit.toString()
 
         /*Program*/
         js("codeMirror.save()")
@@ -638,6 +644,7 @@ import kotlin.dom.removeClass
             /*Other Settings*/
             am = LS.safeget("aligned_memory", am)
             mt = LS.safeget("mutable_text", mt)
+            eeo = LS.safeget("ecall_exit_only", eeo)
 
             /*Program*/
             this.p = LS.safeget("prog", this.p)
@@ -665,12 +672,19 @@ import kotlin.dom.removeClass
         }
         /*Trace Settings*/
         (document.getElementById("tregPattern") as HTMLTextAreaElement).value = fmt
+        tr.format = fmt
         (document.getElementById("tbase-val") as HTMLInputElement).value = bs
+        tr.base = bs.toInt()
         (document.getElementById("ttot-cmds-val") as HTMLInputElement).value = totC
+        tr.totCommands = totC.toInt()
         (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = ms
+        tr.maxSteps = ms.toInt()
         Renderer.renderButton(document.getElementById("tinst-first") as HTMLButtonElement, instf == "true")
+        tr.instFirst = instf == "true"
         Renderer.renderButton(document.getElementById("tPCWAddr") as HTMLButtonElement, wa == "true")
+        wordAddressed = wa == "true"
         Renderer.renderButton(document.getElementById("tTwoStage") as HTMLButtonElement, tws == "true")
+        tr.twoStage = tws == "true"
 
         /*Text Begin*/
         val ts = document.getElementById("text-start") as HTMLInputElement
@@ -679,7 +693,11 @@ import kotlin.dom.removeClass
 
         /*Other Settings*/
         Renderer.renderButton(document.getElementById("alignAddr") as HTMLButtonElement, am == "true")
+        simSettings.alignedAddress = am == "true"
         Renderer.renderButton(document.getElementById("mutableText") as HTMLButtonElement, mt == "true")
+        simSettings.mutableText = mt == "true"
+        Renderer.renderButton(document.getElementById("ecallExit") as HTMLButtonElement, eeo == "true")
+        simSettings.ecallOnlyExit = eeo == "true"
 
         /*Program*/
         js("codeMirror.setValue(driver.p)")
