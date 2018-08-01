@@ -48,6 +48,7 @@ class Cache
         var h = true
         var bs = BlockState.HIT
         if (!isInMemory(address)) {
+            c.nextLevelCacheHandler?.read(address)
             allocate(address.address)
             numReadMisses++
             h = false
@@ -68,6 +69,7 @@ class Cache
         var h = true
         var bs = BlockState.HIT
         if (!isInMemory(address)) {
+            c.nextLevelCacheHandler?.write(address)
             allocate(address.address)
             numWriteMisses++
             h = false
