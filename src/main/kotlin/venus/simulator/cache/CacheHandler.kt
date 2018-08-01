@@ -4,6 +4,7 @@ import venus.riscv.Address
 import venus.riscv.MemSize
 
 class CacheHandler {
+    var seed: String = Math.random().toString()
     private var numberOfBlocks: Int = 1
     /*This is in bytes*/
     private var cacheBlockSize: Int = 4
@@ -64,6 +65,7 @@ class CacheHandler {
     }
 
     fun reset() {
+        Math.seedrandom(seed)
         cacheList = ArrayList()
         cacheList.add(CacheState(Address(0, MemSize.WORD), this, RW.READ, true))
         addresses = ArrayList()
@@ -186,7 +188,7 @@ external class Math {
         fun log2(d: Double): Double
         fun log2(d: Int): Double
         fun floor(d: Double): Int
-        fun seedrandom(i: Int)
+        fun seedrandom(seed: String)
         fun random(): Double
     }
 }
