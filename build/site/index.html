@@ -181,6 +181,7 @@
                         <th><center>Save on Close</center></th>
                         <th><center>Force Aligned Addressing?</center></th>
                         <th><center>Mutable Text?</center></th>
+                        <th><center>Only Ecall Exit?</center></th>
                     </tr>
                     </thead>
                     <tr>
@@ -197,6 +198,11 @@
                         <th>
                             <center>
                                 <button id="mutableText" class="button is-primary" onclick="toggleThis(this);driver.setMutableText(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Mutable<br>Text</button>
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                <button id="ecallExit" class="button" onclick="toggleThis(this);driver.setOnlyEcallExit(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Only Ecall Exit</button>
                             </center>
                         </th>
                     </tr>
