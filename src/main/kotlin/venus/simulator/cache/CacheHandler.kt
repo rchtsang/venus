@@ -162,10 +162,10 @@ class CacheHandler {
     }
 
     fun setAssociativity(i: Int, override: Boolean = false) {
-        if ((this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE || override) && i <= this.numberOfBlocks) {
+        if ((this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE || override) && i <= cacheBlockSize) {
             val d = Math.log2(i.toDouble())
             if (!isInt(d)) {
-                throw CacheError("Associativity must be a power of 2!")
+                throw CacheError("Associativity must be a positive nonzero power of 2!")
             }
             this.associativity = i
             this.update()
@@ -186,6 +186,8 @@ external class Math {
         fun log2(d: Double): Double
         fun log2(d: Int): Double
         fun floor(d: Double): Int
+        fun seedrandom(i: Int)
+        fun random(): Double
     }
 }
 
