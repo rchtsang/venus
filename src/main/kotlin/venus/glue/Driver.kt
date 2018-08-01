@@ -375,6 +375,11 @@ import kotlin.browser.window
         setCacheSettings()
     }
 
+    @JsName("setCacheSeed") fun setCacheSeed(v: String) {
+        cache.setSeed(v)
+        setCacheSettings()
+    }
+
     fun setCacheSettings() {
         val bs = cache.cacheBlockSize().toString()
         val nb = cache.numberOfBlocks().toString()
@@ -382,12 +387,14 @@ import kotlin.browser.window
         val at = cache.placementPol().toMyString()
         val rp = cache.blockRepPolicy().toMyString()
         val cs = cache.cacheSize().toString()
+        val cseed = cache.seed
         (document.getElementById("block-size-val") as HTMLInputElement).value = bs
         (document.getElementById("numblocks-val") as HTMLInputElement).value = nb
         (document.getElementById("associativity-val") as HTMLInputElement).value = av
         (document.getElementById("associativity-type") as HTMLSelectElement).value = at
         (document.getElementById("replacementPolicy") as HTMLSelectElement).value = rp
         (document.getElementById("cache-size-val") as HTMLInputElement).value = cs
+        (document.getElementById("cache-seed") as HTMLInputElement).value = cseed
         Renderer.makeCacheBlocks()
         Renderer.updateCache(Address(0, MemSize.WORD))
     }

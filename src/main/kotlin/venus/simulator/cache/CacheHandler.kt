@@ -5,6 +5,7 @@ import venus.riscv.MemSize
 
 class CacheHandler {
     var seed: String = Math.random().toString()
+        private set
     private var numberOfBlocks: Int = 1
     /*This is in bytes*/
     private var cacheBlockSize: Int = 4
@@ -49,6 +50,11 @@ class CacheHandler {
             this.cacheList.removeAt(this.cacheList.size - 1)
             this.RorW.removeAt(this.RorW.size - 1)
         }
+    }
+
+    fun setSeed(v: String) {
+        this.seed = v
+        this.update()
     }
 
     fun update() {
