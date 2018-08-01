@@ -232,7 +232,7 @@ internal object Renderer {
             val tr = document.createElement("tr")
             val th = document.createElement("th")
             if (!b.noChange && b.block == i) {
-                tr.setAttribute("style", "border: 1.5px solid black;")
+                tr.setAttribute("style", "border: 2px solid black;")
             } else {
                 tr.setAttribute("style", "border: 1px solid black;")
             }
@@ -254,7 +254,7 @@ internal object Renderer {
                 prevelm?.parentElement?.setAttribute("style", "border: 1px solid black;")
             }
             val elm = document.getElementById("cache-block-" + b.block.toString())
-            elm?.parentElement?.setAttribute("style", "border: 1.5px solid black;")
+            elm?.parentElement?.setAttribute("style", "border: 2px solid black;")
             if (b.state == BlockState.HIT) {
                 elm?.innerHTML = b.block.toString() + ") HIT"
                 elm?.setAttribute("style", "background-color:#00d1b2;")
