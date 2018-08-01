@@ -3,7 +3,7 @@ package venus.simulator.cache
 import venus.riscv.Address
 import venus.riscv.MemSize
 
-class CacheHandler {
+class CacheHandler (var cacheLevel: Int) {
     var seed: String = Math.random().toString()
         private set
     private var numberOfBlocks: Int = 1
