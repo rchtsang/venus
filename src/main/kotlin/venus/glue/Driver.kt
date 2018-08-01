@@ -334,12 +334,14 @@ import kotlin.dom.removeClass
             return
         }
         if (this.cacheLevels.size < i) {
+            val lastCache = this.cacheLevels[this.cacheLevels.size - 1]
             while (this.cacheLevels.size < i) {
                 val newCache = CacheHandler(this.cacheLevels.size + 1)
                 this.cacheLevels[this.cacheLevels.size - 1].nextLevelCacheHandler = newCache
                 this.cacheLevels.add(newCache)
                 Renderer.renderAddCacheLevel()
             }
+            lastCache.update()
         } else if (this.cacheLevels.size > i) {
             while (this.cacheLevels.size > i) {
                 val prevCacheIndex = this.cacheLevels.size - 1
