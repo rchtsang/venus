@@ -18,30 +18,40 @@ class CacheHandler {
     private var addresses = ArrayList<Address>()
     private var RorW = ArrayList<RW>()
 
+    var nextLevelCacheHandler: CacheHandler? = null
+    var attached = true
+        private set
+
     init {
         this.reset()
     }
 
     /*@TODO Read and write do nothing special at the moment. Make it so that we can detect read and write hit/miss rate separately.*/
     fun read(a: Address) {
-        val c = CacheState(a, this, RW.READ)
         addresses.add(a)
-        cacheList.add(c)
         RorW.add(RW.READ)
+        if (attached) {
+            val c = CacheState(a, this, RW.READ)
+            cacheList.add(c)
+        }
     }
 
     fun write(a: Address) {
-        val c = CacheState(a, this, RW.WRITE)
         addresses.add(a)
-        cacheList.add(c)
         RorW.add(RW.WRITE)
+        if (attached) {
+            val c = CacheState(a, this, RW.WRITE)
+            cacheList.add(c)
+        }
     }
 
     fun access(a: Address) {
-        val c = CacheState(a, this, RW.READ)
         addresses.add(a)
-        cacheList.add(c)
         RorW.add(RW.READ)
+        if (attached) {
+            val c = CacheState(a, this, RW.READ)
+            cacheList.add(c)
+        }
     }
 
     fun undoAccess(addr: Address) {
@@ -70,6 +80,15 @@ class CacheHandler {
         }
     }
 
+    fun attach(attach: Boolean) {
+        this.attached = attach
+        if (attach) {
+            this.update()
+        } else {
+            this.reset()
+        }
+    }
+
     fun reset() {
         try {
             Math.seedrandom(seed)
@@ -78,6 +97,7 @@ class CacheHandler {
         cacheList.add(CacheState(Address(0, MemSize.WORD), this, RW.READ, true))
         addresses = ArrayList()
         RorW = ArrayList()
+        nextLevelCacheHandler?.reset()
     }
 
     fun getBlocksState(): ArrayList<String> {
