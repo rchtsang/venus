@@ -543,11 +543,11 @@ import kotlin.browser.window
             this.p = LS.safeget("prog", this.p)
 
             /*Cache*/
-            this.cache.setAssociativity(LS.safeget("cache_associativity", this.cache.associativity().toString()).toInt())
             this.cache.setCacheBlockSize(LS.safeget("cache_cacheBlockSize", this.cache.cacheBlockSize().toString()).toInt())
             this.cache.setNumberOfBlocks(LS.safeget("cache_numberOfBlocks", this.cache.numberOfBlocks().toString()).toInt())
-            this.cache.setPlacementPol(PlacementPolicy.valueOf(LS.safeget("cache_placementPol", this.cache.placementPol().toString())))
             this.cache.setBlockRepPolicy(BlockReplacementPolicy.valueOf(LS.safeget("cache_blockRepPolicy", this.cache.blockRepPolicy().toString())))
+            this.cache.setPlacementPol(PlacementPolicy.valueOf(LS.safeget("cache_placementPol", this.cache.placementPol().toString())))
+            this.cache.setAssociativity(LS.safeget("cache_associativity", this.cache.associativity().toString()).toInt())
         } else {
             console.log("Local Storage has been disabled!")
         }
