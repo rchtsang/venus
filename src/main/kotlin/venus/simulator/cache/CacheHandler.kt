@@ -91,18 +91,23 @@ class CacheHandler (var cacheLevel: Int) {
         if (attach) {
             this.update()
         } else {
-            this.reset()
+            this.reset(false)
+            nextLevelCacheHandler?.addresses = this.addresses
+            nextLevelCacheHandler?.RorW = this.RorW
+            nextLevelCacheHandler?.update()
         }
     }
 
-    fun reset() {
+    fun reset(full: Boolean = true) {
         try {
             Math.seedrandom(seed)
         } catch (e: Throwable) {}
         cacheList = ArrayList()
         cacheList.add(CacheState(Address(0, MemSize.WORD), this, RW.READ, true))
-        addresses = ArrayList()
-        RorW = ArrayList()
+        if (full) {
+            addresses = ArrayList()
+            RorW = ArrayList()
+        }
         nextLevelCacheHandler?.reset()
     }
 
