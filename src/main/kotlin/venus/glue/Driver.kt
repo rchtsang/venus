@@ -322,7 +322,17 @@ import kotlin.browser.window
     }
 
     @JsName("updateCacheLevel") fun updateCacheLevel(e: HTMLSelectElement) {
-        console.log("Need to implement cache level stuff!")
+        try {
+            val level = e.value.removePrefix("L").toInt()
+            if (level in 1..cacheLevels.size) {
+                this.cache = cacheLevels[level - 1]
+                setCacheSettings()
+            } else {
+                handleError("Update Cache Level (LVL)", CacheError("Cache level '" + level + "' does not exist in your current cache!"), true)
+            }
+        } catch (e: NumberFormatException) {
+            handleError("Update Cache Level (NFE)", e, true)
+        }
     }
 
     @JsName("updateCacheBlockSize") fun updateCacheBlockSize(e: HTMLInputElement) {
