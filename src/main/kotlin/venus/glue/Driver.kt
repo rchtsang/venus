@@ -8,6 +8,7 @@ import venus.assembler.AssemblerError
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.*
+import venus.riscv.insts.dsl.Instruction
 import venus.simulator.*
 import venus.simulator.cache.BlockReplacementPolicy
 import venus.simulator.cache.CacheError
@@ -162,6 +163,20 @@ import kotlin.dom.removeClass
                     return
                 }
 
+                if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.maxpc) until MemorySegments.STATIC_BEGIN) {
+                    val pcloc = (sim.maxpc) / 4
+                    sim.maxpc += 4
+                    var mcode = MachineCode(0)
+                    var progLine = ""
+                    try {
+                        mcode = sim.getNextInstruction()
+                        Renderer.addToProgramListing(pcloc, mcode, Instruction[mcode].disasm(mcode))
+                    } catch (e: SimulatorError){
+                        val short0 = sim.loadHalfWord(sim.getPC())
+                        val short1 = sim.loadHalfWord(sim.getPC() + 2)
+                        Renderer.addToProgramListing(pcloc, MachineCode((short1 shl 16) or short0), "Invalid Instruction", true)
+                    }
+                }
                 sim.step()
                 Renderer.updateCache(Address(0, MemSize.WORD))
                 cycles++
@@ -187,7 +202,28 @@ import kotlin.dom.removeClass
     @JsName("step") fun step() {
         try {
             val diffs = sim.step()
+            if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.maxpc)..MemorySegments.STATIC_BEGIN) {
+                val pcloc = (sim.maxpc) / 4
+                sim.maxpc += 4
+                var mcode = MachineCode(0)
+                var progLine = ""
+                try {
+                    mcode = sim.getNextInstruction()
+                    Renderer.addToProgramListing(pcloc, mcode, Instruction[mcode].disasm(mcode))
+                } catch (e: SimulatorError){
+                    val short0 = sim.loadHalfWord(sim.getPC())
+                    val short1 = sim.loadHalfWord(sim.getPC() + 2)
+                    Renderer.addToProgramListing(pcloc, MachineCode((short1 shl 16) or short0), "Invalid Instruction", true)
+                }
+            }
             Renderer.updateFromDiffs(diffs)
+            if (sim.settings.ecallOnlyExit && sim.getPC() >= MemorySegments.STATIC_BEGIN) {
+                sim.maxpc -= 4
+                try {
+                    val elm = document.getElementById("instruction-" + (sim.maxpc / 4).toString()) as HTMLTableRowElement
+                    elm.parentNode?.removeChild(elm)
+                } catch (e: Throwable){}
+            }
             Renderer.updateCache(Address(0, MemSize.WORD))
             Renderer.updateControlButtons()
         } catch (e: Throwable) {
