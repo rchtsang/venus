@@ -212,7 +212,6 @@ class Simulator(val linkedProgram: LinkedProgram) {
     fun storeTextOverrideCheck(addr: Int, value: Int, size: MemSize) {
         /*Here, we will check if we are writing to memory*/
         if (addr in (MemorySegments.TEXT_BEGIN until this.maxpc) || (addr + size.size - MemSize.BYTE.size) in (MemorySegments.TEXT_BEGIN until this.maxpc)) {
-            console.log("Writing to program!!!!")
             try {
                 val adjAddr = ((addr / MemSize.WORD.size) * MemSize.WORD.size)
                 val lowerAddr = adjAddr - MemorySegments.TEXT_BEGIN
@@ -222,7 +221,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
                     newInst = this.state.mem.loadWord(adjAddr + MemSize.WORD.size)
                     preInstruction.add(Renderer.updateProgramListing((lowerAddr / MemSize.WORD.size) + 1, newInst))
                 }
-            } catch (e: Throwable) {/*This is to not error the tests.*/}
+            } catch (e: Throwable) { /*This is to not error the tests.*/ }
         }
     }
 
