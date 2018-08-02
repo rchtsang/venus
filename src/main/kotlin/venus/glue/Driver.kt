@@ -538,6 +538,71 @@ import kotlin.dom.removeClass
         tr.twoStage = (document.getElementById("tTwoStage") as HTMLButtonElement).value == "true"
         wordAddressed = (document.getElementById("tPCWAddr") as HTMLButtonElement).value == "true"
     }
+    internal fun traceSt() {
+        try {
+            tr.traceStart()
+            window.setTimeout(Driver::traceLoop, TIMEOUT_TIME)
+        } catch (e : Throwable) {
+            handleError("Trace tr Start", e, e is AlignmentError || e is StoreError)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
+        }
+    }
+
+    internal fun traceLoop() {
+        try {
+            var cycles = 0
+            while (cycles < TIMEOUT_CYCLES) {
+                if (sim.isDone()) {
+                    runTrEnd()
+                    return
+                }
+                tr.traceStep()
+                cycles++
+            }
+            window.setTimeout(Driver::traceLoop, TIMEOUT_TIME)
+        } catch (e : Throwable) {
+            handleError("Trace tr Loop", e, e is AlignmentError || e is StoreError)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
+        }
+    }
+    internal fun runTrEnd() {
+        try {
+            tr.traceEnd()
+            tr.traceStringStart()
+            traceStringLoop()
+        } catch (e : Throwable) {
+            handleError("Trace Tr End", e, e is AlignmentError || e is StoreError)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
+        }
+    }
+
+    internal fun traceStringLoop() {
+        try {
+        var cycles = 0
+        while (cycles <  TIMEOUT_CYCLES) {
+            if (!tr.traceStringStep()) {
+                traceStringEnd()
+                return
+            }
+        }
+        window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
+        } catch (e : Throwable) {
+            handleError("Trace String Loop", e, e is AlignmentError || e is StoreError)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
+        }
+    }
+
+    internal fun traceStringEnd() {
+        try{
+            traceStringEnd()
+            Renderer.clearConsole()
+            Renderer.printConsole(tr.getString())
+        } catch (e : Throwable) {
+            handleError("Trace String End", e, e is AlignmentError || e is StoreError)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
+        }
+    }
+
     internal fun traceStart() {
         try {
             tr.trace()
