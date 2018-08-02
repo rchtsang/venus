@@ -523,19 +523,18 @@ import kotlin.dom.removeClass
     }
 
     @JsName("trace") fun trace() {
+        if (trTimer != null) {
+            Renderer.setNameButtonSpinning("simulator-trace", false)
+            trTimer?.let(window::clearTimeout)
+            trTimer = null
+            sim.reset()
+            return
+        }
         Renderer.setNameButtonSpinning("simulator-trace", true)
         Renderer.clearConsole()
         this.loadTraceSettings()
-        this.traceSt()
+        trTimer = window.setTimeout(Driver::traceSt, TIMEOUT_TIME)
     }
-
-    /*@JsName("trace") fun trace() {
-        //@todo make it so trace is better
-        Renderer.setNameButtonSpinning("simulator-trace", true)
-        Renderer.clearConsole()
-        this.loadTraceSettings()
-        window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
-    }*/
 
     private fun loadTraceSettings() {
         tr.format = (document.getElementById("tregPattern") as HTMLTextAreaElement).value
@@ -547,7 +546,7 @@ import kotlin.dom.removeClass
         wordAddressed = (document.getElementById("tPCWAddr") as HTMLButtonElement).value == "true"
     }
 
-    var trTimer = 0
+    var trTimer: Int? = null
     internal fun traceSt() {
         try {
             tr.traceStart()
@@ -555,6 +554,8 @@ import kotlin.dom.removeClass
         } catch (e : Throwable) {
             handleError("Trace tr Start", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
+            trTimer?.let(window::clearTimeout)
+            trTimer = null
         }
     }
 
@@ -563,7 +564,7 @@ import kotlin.dom.removeClass
             var cycles = 0
             while (cycles < TIMEOUT_CYCLES) {
                 if (sim.isDone()) {
-                    runTrEnd()
+                    trTimer = window.setTimeout(Driver::runTrEnd, TIMEOUT_TIME)
                     return
                 }
                 tr.traceStep()
@@ -573,16 +574,20 @@ import kotlin.dom.removeClass
         } catch (e : Throwable) {
             handleError("Trace tr Loop", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
+            trTimer?.let(window::clearTimeout)
+            trTimer = null
         }
     }
     internal fun runTrEnd() {
         try {
             tr.traceEnd()
             tr.traceStringStart()
-            traceStringLoop()
+            trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
         } catch (e : Throwable) {
             handleError("Trace Tr End", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
+            trTimer?.let(window::clearTimeout)
+            trTimer = null
         }
     }
 
@@ -591,7 +596,7 @@ import kotlin.dom.removeClass
         var cycles = 0
         while (cycles <  TIMEOUT_CYCLES) {
             if (!tr.traceStringStep()) {
-                traceStringEnd()
+                trTimer = window.setTimeout(Driver::traceStringEnd, TIMEOUT_TIME)
                 return
             }
         }
@@ -599,6 +604,8 @@ import kotlin.dom.removeClass
         } catch (e : Throwable) {
             handleError("Trace String Loop", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
+            trTimer?.let(window::clearTimeout)
+            trTimer = null
         }
     }
 
@@ -611,8 +618,17 @@ import kotlin.dom.removeClass
             handleError("Trace String End", e, e is AlignmentError || e is StoreError)
         }
         Renderer.setNameButtonSpinning("simulator-trace", false)
+        trTimer?.let(window::clearTimeout)
+        trTimer = null
     }
 
+    /*@JsName("trace") fun trace() {
+        //@todo make it so trace is better
+        Renderer.setNameButtonSpinning("simulator-trace", true)
+        Renderer.clearConsole()
+        this.loadTraceSettings()
+        window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
+    }*/
     internal fun traceStart() {
         try {
             tr.trace()
