@@ -648,6 +648,16 @@
                     </div>
                   </div>
                 </div>
+                <div id="cacheEnabled-div" class="panel-block">
+                  <div class="field is-horizontal">
+                    <div class="field-label">
+                      <label class="label is-small" for="hit-count">Cache Level Enabled</label>
+                    </div>
+                    <div class="field-body is-expanded">
+                      <button id="cacheEnabled" class="button is-primary" onclick="toggleThis(this);driver.setCacheEnabled(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Enable</button>
+                    </div>
+                  </div>
+                </div>
                 <div class="panel-block">
                   <div class="field is-narrow" style="margin-bottom:0px;">
                     <div class="control">
@@ -753,16 +763,6 @@
                       </div>
                       <div class="field-body is-expanded">
                         <input id="setNumCacheLvls" type="number" class="input" onblur="driver.setNumberOfCacheLevels(parseInt(this.value))" spellcheck="false" value="1"></li>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="cacheEnabled-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <label class="label is-small" for="hit-count">Cache Level Enabled</label>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <button id="cacheEnabled" class="button is-primary" onclick="toggleThis(this);driver.setCacheEnabled(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Enable</button>
                       </div>
                     </div>
                   </div>
