@@ -29,7 +29,9 @@ val ecall = Instruction(
                 17 -> exitWithCode(sim)
                 else -> Renderer.printConsole("Invalid ecall $whichCall")
             }
-            sim.incrementPC(mcode.length)
+            if (!(whichCall == 10 || whichCall == 17)) {
+                sim.incrementPC(mcode.length)
+            }
         },
         impl64 = NoImplementation,
         disasm = RawDisassembler { "ecall" }
