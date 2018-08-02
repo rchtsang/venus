@@ -110,55 +110,66 @@ class Tracer (val sim: Simulator) {
         return this.tr.str
     }
 
-    fun traceString() {
+    fun traceStringStart() {
         if (!this.tr.traced) {
             throw SimulatorError("You need to make the run the trace before you can get the trace string!")
         }
         this.tr.str = ""
         this.tr.stred = false
         val tr = this.tr.trace
-        var i = 0
+        this.tr.stringIndex = 0
         cleanFormat()
-        for (t in tr) {
-            if (twoStage && this.instFirst && t.branched) {
-                val pt = t.prevTrace
-                val flushed = pt?.copy() ?: this.getSingleTrace(-1)
-                var nextPC = flushed.pc + flushed.inst.length
-                flushed.pc = nextPC
-                nextPC -= MemorySegments.TEXT_BEGIN
-                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
-                flushed.line = i
-                this.tr.str += flushed.getString(format, base)
-                i++
-            }
-            t.line = i
-            this.tr.str += t.getString(format, base)
-            i++
-            /*@todo make this less gedo*/
-            if (twoStage && !this.instFirst && t.branched) {
-                val pt = t.prevTrace
-                val flushed = pt?.copy() ?: this.getSingleTrace(-1)
-                var nextPC = flushed.pc + flushed.inst.length
-                flushed.pc = nextPC
-                nextPC -= MemorySegments.TEXT_BEGIN
-                flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
-                flushed.line = i
-                this.tr.str += flushed.getString(format, base)
-                i++
-            }
-            if (this.totCommands > 0 && i >= this.totCommands) {
-                break
-            }
+        this.tr.reset()
+    }
+
+    fun traceStringStep(): Boolean {
+        val t = this.tr.getNextTrace()
+        if (twoStage && this.instFirst && t.branched) {
+            traceStringHelper(t)
         }
-        var t = tr[tr.size - 1]
-        while (i < this.totCommands) {
+        t.line = this.tr.stringIndex
+        this.tr.str += t.getString(format, base)
+        this.tr.stringIndex++
+        if (twoStage && !this.instFirst && t.branched) {
+            traceStringHelper(t)
+        }
+        if (this.totCommands > 0 && this.tr.stringIndex >= this.totCommands) {
+            return false
+        }
+        return this.tr.hasNext()
+    }
+
+    fun traceStringHelper(t: Trace) {
+        val pt = t.prevTrace
+        val flushed = pt?.copy() ?: this.getSingleTrace(-1)
+        var nextPC = flushed.pc + flushed.inst.length
+        flushed.pc = nextPC
+        nextPC -= MemorySegments.TEXT_BEGIN
+        flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
+        flushed.line = this.tr.stringIndex
+        this.tr.str += flushed.getString(format, base)
+        this.tr.stringIndex++
+    }
+
+    fun traceStringEnd() {
+        val tr = this.tr.trace
+        val t = tr[tr.size - 1]
+        while (this.tr.stringIndex < this.totCommands) {
             t.inst = MachineCode(0)
             t.line++
             t.pc = incPC(t.pc)
             this.tr.str += t.getString(format, base)
-            i++
+            this.tr.stringIndex++
         }
         this.tr.stred = true
+    }
+
+    fun traceString() {
+        traceStringStart()
+        while (tr.hasNext()) {
+            traceStringStep()
+        }
+        traceStringEnd()
     }
 
     private fun incPC(pc : Int) : Int {
@@ -182,5 +193,22 @@ class TraceEncapsulation () {
     var traceLine = 0
     var str: String = ""
     var stred = false
+    var stringIndex = 0
+
+    private var curLoc = 0
+    fun getNextTrace(): Trace {
+        if (!hasNext()) {
+            throw IndexOutOfBoundsException("There are no more items to iterate over!")
+        }
+        val t = trace[curLoc]
+        this.curLoc++
+        return t
+    }
+    fun reset() {
+        curLoc = 0
+    }
+    fun hasNext(): Boolean {
+        return curLoc < trace.size
+    }
 }
 var wordAddressed = false
