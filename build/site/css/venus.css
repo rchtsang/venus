@@ -8,3 +8,6 @@
 #tracer-settings-tab-view {
     display: none;
 }
+#simulator-trace.is-loading {
+    pointer-events: auto;
+}

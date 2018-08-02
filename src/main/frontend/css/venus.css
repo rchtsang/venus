@@ -127,6 +127,10 @@ body {
     pointer-events: auto;
 }
 
+#simulator-trace.is-loading {
+    pointer-events: auto;
+}
+
 #register-tab-view .input {
     font-family: Courier New, Courier, monospace;
     border-width: 2px;
