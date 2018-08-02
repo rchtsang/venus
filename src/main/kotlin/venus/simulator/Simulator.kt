@@ -156,6 +156,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         preInstruction.add(MemoryDiff(addr, loadWord(addr)))
         state.mem.storeByte(addr, value)
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
+        this.storeTextOverrideCheck(addr, value, MemSize.BYTE)
     }
     fun storeBytewCache(addr: Int, value: Int) {
         if (this.settings.alignedAddress && addr % MemSize.BYTE.size != 0) {
@@ -174,6 +175,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         preInstruction.add(MemoryDiff(addr, loadWord(addr)))
         state.mem.storeHalfWord(addr, value)
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
+        this.storeTextOverrideCheck(addr, value, MemSize.HALF)
     }
     fun storeHalfWordwCache(addr: Int, value: Int) {
         if (this.settings.alignedAddress && addr % MemSize.HALF.size != 0) {
@@ -192,6 +194,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
         preInstruction.add(MemoryDiff(addr, loadWord(addr)))
         state.mem.storeWord(addr, value)
         postInstruction.add(MemoryDiff(addr, loadWord(addr)))
+        this.storeTextOverrideCheck(addr, value, MemSize.WORD)
     }
     fun storeWordwCache(addr: Int, value: Int) {
         if (this.settings.alignedAddress && addr % MemSize.WORD.size != 0) {
@@ -204,6 +207,23 @@ class Simulator(val linkedProgram: LinkedProgram) {
         state.cache.write(Address(addr, MemSize.WORD))
         this.storeWord(addr, value)
         postInstruction.add(CacheDiff(Address(addr, MemSize.WORD)))
+    }
+
+    fun storeTextOverrideCheck(addr: Int, value: Int, size: MemSize) {
+        /*Here, we will check if we are writing to memory*/
+        if (addr in (MemorySegments.TEXT_BEGIN until this.maxpc) || (addr + size.size - MemSize.BYTE.size) in (MemorySegments.TEXT_BEGIN until this.maxpc)) {
+            console.log("Writing to program!!!!")
+            try {
+                val adjAddr = ((addr / MemSize.WORD.size) * MemSize.WORD.size)
+                val lowerAddr = adjAddr - MemorySegments.TEXT_BEGIN
+                var newInst = this.state.mem.loadWord(adjAddr)
+                preInstruction.add(Renderer.updateProgramListing(lowerAddr / MemSize.WORD.size, newInst))
+                if ((lowerAddr + MemorySegments.TEXT_BEGIN) != addr && (lowerAddr + MemSize.WORD.size - MemSize.BYTE.size) < this.maxpc) {
+                    newInst = this.state.mem.loadWord(adjAddr + MemSize.WORD.size)
+                    preInstruction.add(Renderer.updateProgramListing((lowerAddr / MemSize.WORD.size) + 1, newInst))
+                }
+            } catch (e: Throwable) {/*This is to not error the tests.*/}
+        }
     }
 
     fun getHeapEnd() = state.heapEnd

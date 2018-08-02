@@ -7,12 +7,10 @@ import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
 import venus.simulator.Diff
 import venus.simulator.Simulator
+import venus.simulator.SimulatorError
 import venus.simulator.cache.BlockState
 import venus.simulator.cache.ChangedBlockState
-import venus.simulator.diffs.CacheDiff
-import venus.simulator.diffs.MemoryDiff
-import venus.simulator.diffs.PCDiff
-import venus.simulator.diffs.RegisterDiff
+import venus.simulator.diffs.*
 import kotlin.browser.document
 
 /* ktlint-enable no-wildcard-imports */
@@ -120,6 +118,7 @@ internal object Renderer {
                 is PCDiff -> updatePC(diff.pc)
                 is MemoryDiff -> updateMemory(diff.addr)
                 is CacheDiff -> updateCache(diff.addr)
+                is InstructionDiff -> {}
                 else -> {
                     println("diff not yet implemented")
                 }
@@ -162,6 +161,21 @@ internal object Renderer {
         val line = newRow.insertCell(2)
         val lineText = document.createTextNode(progLine)
         line.appendChild(lineText)
+    }
+
+    fun updateProgramListing(idx: Int, inst: Int, orig: String? = null): InstructionDiff {
+        val instTab = document.getElementById("instruction-$idx")
+        val children = instTab?.children
+        val mcode = MachineCode(inst)
+        var code = "Invalid Instruction"
+        try {
+            code = Instruction[mcode].disasm(mcode)
+        } catch (e: SimulatorError) {}
+        val pre = InstructionDiff(idx, userStringToInt(children?.get(0)?.innerHTML ?: "-1"), children?.get(2)?.innerHTML ?: "")
+        children?.get(0)?.innerHTML = toHex(mcode[InstructionField.ENTIRE]) /*Machine Code*/
+        children?.get(1)?.innerHTML = code /*Basic Code*/
+        children?.get(2)?.innerHTML = orig ?: code /*Original Code*/
+        return pre
     }
 
     /**
