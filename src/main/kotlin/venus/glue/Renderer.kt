@@ -143,7 +143,7 @@ internal object Renderer {
      * @param mcode the machine code representation of the instruction
      * @param progLine the original assembly code
      */
-    fun addToProgramListing(idx: Int, mcode: MachineCode, progLine: String) {
+    fun addToProgramListing(idx: Int, mcode: MachineCode, progLine: String, invalidInst: Boolean = false) {
         val programTable = getElement("program-listing-body") as HTMLTableSectionElement
 
         val newRow = programTable.insertRow() as HTMLTableRowElement
@@ -156,7 +156,7 @@ internal object Renderer {
         machineCode.appendChild(machineCodeText)
 
         val basicCode = newRow.insertCell(1)
-        val basicCodeText = document.createTextNode(Instruction[mcode].disasm(mcode))
+        val basicCodeText = document.createTextNode(if (invalidInst) progLine else Instruction[mcode].disasm(mcode))
         basicCode.appendChild(basicCodeText)
 
         val line = newRow.insertCell(2)
