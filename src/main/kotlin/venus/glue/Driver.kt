@@ -594,7 +594,7 @@ import kotlin.dom.removeClass
     internal fun traceStringLoop() {
         try {
         var cycles = 0
-        while (cycles <  TIMEOUT_CYCLES) {
+        while (cycles < TIMEOUT_CYCLES) {
             if (!tr.traceStringStep()) {
                 trTimer = window.setTimeout(Driver::traceStringEnd, TIMEOUT_TIME)
                 return
@@ -610,7 +610,7 @@ import kotlin.dom.removeClass
     }
 
     internal fun traceStringEnd() {
-        try{
+        try {
             tr.traceStringEnd()
             Renderer.clearConsole()
             Renderer.printConsole(tr.getString())
