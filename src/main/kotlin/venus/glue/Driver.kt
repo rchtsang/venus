@@ -164,14 +164,14 @@ import kotlin.dom.removeClass
                 }
 
                 if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.maxpc) until MemorySegments.STATIC_BEGIN) {
-                    val pcloc = (sim.maxpc) / 4
+                    val pcloc = (sim.maxpc) / 4 - 1
                     sim.maxpc += 4
                     var mcode = MachineCode(0)
                     var progLine = ""
                     try {
                         mcode = sim.getNextInstruction()
                         Renderer.addToProgramListing(pcloc, mcode, Instruction[mcode].disasm(mcode))
-                    } catch (e: SimulatorError){
+                    } catch (e: SimulatorError) {
                         val short0 = sim.loadHalfWord(sim.getPC())
                         val short1 = sim.loadHalfWord(sim.getPC() + 2)
                         Renderer.addToProgramListing(pcloc, MachineCode((short1 shl 16) or short0), "Invalid Instruction", true)
@@ -203,14 +203,14 @@ import kotlin.dom.removeClass
         try {
             val diffs = sim.step()
             if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.maxpc)..MemorySegments.STATIC_BEGIN) {
-                val pcloc = (sim.maxpc) / 4
+                val pcloc = (sim.maxpc) / 4 - 1
                 sim.maxpc += 4
                 var mcode = MachineCode(0)
                 var progLine = ""
                 try {
                     mcode = sim.getNextInstruction()
                     Renderer.addToProgramListing(pcloc, mcode, Instruction[mcode].disasm(mcode))
-                } catch (e: SimulatorError){
+                } catch (e: SimulatorError) {
                     val short0 = sim.loadHalfWord(sim.getPC())
                     val short1 = sim.loadHalfWord(sim.getPC() + 2)
                     Renderer.addToProgramListing(pcloc, MachineCode((short1 shl 16) or short0), "Invalid Instruction", true)
@@ -220,9 +220,9 @@ import kotlin.dom.removeClass
             if (sim.settings.ecallOnlyExit && sim.getPC() >= MemorySegments.STATIC_BEGIN) {
                 sim.maxpc -= 4
                 try {
-                    val elm = document.getElementById("instruction-" + (sim.maxpc / 4).toString()) as HTMLTableRowElement
+                    val elm = document.getElementById("instruction-" + (sim.maxpc / 4 - 1).toString()) as HTMLTableRowElement
                     elm.parentNode?.removeChild(elm)
-                } catch (e: Throwable){}
+                } catch (e: Throwable) {}
             }
             Renderer.updateCache(Address(0, MemSize.WORD))
             Renderer.updateControlButtons()
