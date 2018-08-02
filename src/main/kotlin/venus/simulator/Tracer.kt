@@ -19,30 +19,57 @@ class Tracer (val sim: Simulator) {
     var twoStage = false
 
     fun trace() {
+        traceStart()
+        while (!sim.isDone()) {
+            traceStep()
+        }
+        traceEnd()
+    }
+
+    fun traceStart() {
         this.tr.traced = false
         sim.reset()
-        var tl = ArrayList<Trace>()
-        var prevTrace: Trace? = null
-        var i = 0
+        this.tr.trace = ArrayList()
+        this.tr.prevTrace = null
+        this.tr.traceLine = 0
         if (!this.instFirst && !sim.isDone()) {
             prevInst = sim.getNextInstruction()
             sim.step()
         }
-        while (!sim.isDone()) {
-            if (i > this.maxSteps && this.maxSteps > 0) {
-                throw SimulatorError("The max number of steps (" + this.maxSteps + ") in the tracer has been reached! You can increase this in the settings or disable it by setting it to 0 or less. This is the current safty for infinitely looping programs.")
-            }
-            var currentTrace = getSingleTrace(i)
-            currentTrace.prevTrace = prevTrace
-            tl.add(currentTrace)
-            prevTrace = currentTrace
-            sim.step()
-            i++
+    }
+
+    /*
+        addi x1 x1 1
+        addi x1 x1 1
+        beq x0 x0 hi
+        addi x1 x1 1
+        addi x1 x1 1
+        hi:addi x1 x1 1
+        addi x1 x1 1
+        addi x1 x1 1
+        addi x1 x1 1
+    */
+
+    fun traceStep() {
+        /*@FIXME There is a bug with pc right now*/
+        if (sim.isDone()) {
+            return
         }
-        var currentTrace = getSingleTrace(i)
-        currentTrace.prevTrace = prevTrace
-        tl.add(currentTrace)
-        this.tr.trace = tl
+        if (this.tr.traceLine > this.maxSteps && this.maxSteps > 0) {
+            throw SimulatorError("The max number of steps (" + this.maxSteps + ") in the tracer has been reached! You can increase this in the settings or disable it by setting it to 0 or less. This is the current safty for infinitely looping programs.")
+        }
+        val currentTrace = getSingleTrace(this.tr.traceLine)
+        currentTrace.prevTrace = this.tr.prevTrace
+        this.tr.trace.add(currentTrace)
+        this.tr.prevTrace = currentTrace
+        sim.step()
+        this.tr.traceLine++
+    }
+
+    fun traceEnd() {
+        val currentTrace = getSingleTrace(this.tr.traceLine)
+        currentTrace.prevTrace = this.tr.prevTrace
+        this.tr.trace.add(currentTrace)
         this.tr.traced = true
         sim.reset()
     }
@@ -151,6 +178,8 @@ class TraceEncapsulation () {
 
     lateinit var trace: ArrayList<Trace>
     var traced = false
+    var prevTrace: Trace? = null
+    var traceLine = 0
     var str: String = ""
     var stred = false
 }
