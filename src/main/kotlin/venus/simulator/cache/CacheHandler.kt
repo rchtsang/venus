@@ -63,8 +63,10 @@ class CacheHandler (var cacheLevel: Int) {
     fun undoAccess(addr: Address) {
         if (this.memoryAccessCount() > 0) {
             this.addresses.removeAt(this.addresses.size - 1)
-            this.cacheList.removeAt(this.cacheList.size - 1)
             this.RorW.removeAt(this.RorW.size - 1)
+            if (this.attached) {
+                this.cacheList.removeAt(this.cacheList.size - 1)
+            }
         }
     }
 
@@ -140,8 +142,12 @@ class CacheHandler (var cacheLevel: Int) {
     }
 
     fun currentState(): CacheState {
-        val clsize = this.cacheList.size
-        return this.cacheList[clsize - 1]
+        val clsize = this.cacheList.size - 1
+        if (clsize < 0) {
+            return this.cacheList[clsize]
+        } else {
+            return this.cacheList[0]
+        }
     }
 
     /*This is in bytes*/
