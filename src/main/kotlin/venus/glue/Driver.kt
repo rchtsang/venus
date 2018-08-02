@@ -523,12 +523,20 @@ import kotlin.dom.removeClass
     }
 
     @JsName("trace") fun trace() {
+        Renderer.setNameButtonSpinning("simulator-trace", true)
+        Renderer.clearConsole()
+        this.loadTraceSettings()
+        this.traceSt()
+    }
+
+    /*@JsName("trace") fun trace() {
         //@todo make it so trace is better
         Renderer.setNameButtonSpinning("simulator-trace", true)
         Renderer.clearConsole()
         this.loadTraceSettings()
         window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
-    }
+    }*/
+
     private fun loadTraceSettings() {
         tr.format = (document.getElementById("tregPattern") as HTMLTextAreaElement).value
         tr.base = (document.getElementById("tbase-val") as HTMLInputElement).value.toInt()
@@ -601,8 +609,8 @@ import kotlin.dom.removeClass
             Renderer.printConsole(tr.getString())
         } catch (e : Throwable) {
             handleError("Trace String End", e, e is AlignmentError || e is StoreError)
-            Renderer.setNameButtonSpinning("simulator-trace", false)
         }
+        Renderer.setNameButtonSpinning("simulator-trace", false)
     }
 
     internal fun traceStart() {
