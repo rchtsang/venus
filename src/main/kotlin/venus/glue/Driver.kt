@@ -42,6 +42,7 @@ import kotlin.dom.removeClass
 
     init {
         console.log("Loading driver...")
+        this.mainCache.attach(false)
 
         useLS = LS.get("venus") == "true"
         Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, useLS)
