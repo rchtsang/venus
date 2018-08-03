@@ -163,8 +163,16 @@ class Tracer (val sim: Simulator) {
         t.line = this.tr.stringIndex
         this.tr.str += t.getString(format, base)
         this.tr.stringIndex++
-        if (twoStage && !this.instFirst && t.branched) {
-            traceStringBranchHelper(t)
+        if (twoStage && !this.instFirst) {
+            if (t.branched) {
+                traceStringBranchHelper(t)
+            }
+            if (t.jumped) {
+                /*FIXME There need to make it work w/o inst first and two stage.*/
+                t.regs = this.tr.peak().regs.copyOf()
+                t.prevTrace?.regs = t.regs.copyOf()
+                traceStringJumpHelper(t)
+            }
         }
         if (this.totCommands > 0 && this.tr.stringIndex >= this.totCommands) {
             return false
