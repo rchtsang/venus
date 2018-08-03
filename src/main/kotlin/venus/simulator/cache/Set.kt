@@ -32,7 +32,7 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
     fun read(tag: Int, offset: Int, bs: BlockState) {
         val theBlock = findBlock(tag)
         theBlock?.blockState = bs
-        theBlock?.read(offset, ++useCounter) ?: 0
+        theBlock?.read(offset, ++useCounter)
     }
 
     fun write(tag: Int, offset: Int, /*data: Int, */bs: BlockState) {
