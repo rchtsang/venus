@@ -106,7 +106,7 @@
                 <button id="cacheEnabled" class="button is-primary" onclick="toggleThis(this);driver.setCacheEnabled(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Enable</button>
             </div>
             <div class="field-body is-expanded">
-                <label class="label" for="hit-count">Cache Level Enabled</label>
+                <label class="label" for="cacheEnabled">Cache Level Enabled</label>
             </div>
         </div>
     </div>
@@ -175,40 +175,44 @@
                 </div>
             </div>
         </div>
-        <div class="panel-block">
-            <div class="field is-horizontal" align="center">
-                <table class="table" style="width:50%; margin-bottom: 0;">
-                    <thead>
-                    <tr>
-                        <th><center>Save on Close</center></th>
-                        <th><center>Force Aligned Addressing?</center></th>
-                        <th><center>Mutable Text?</center></th>
-                        <th><center>Only Ecall Exit?</center></th>
-                    </tr>
-                    </thead>
-                    <tr>
-                        <th>
-                            <center>
-                                <button id="sv" class="button" onclick="if(window.svclr&&this.value==='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
-                            </center>
-                        </th>
-                        <th>
-                            <center>
-                                <button id="alignAddr" class="button" onclick="toggleThis(this);driver.setAlignedAddressing(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Aligned<br>Addressing</button>
-                            </center>
-                        </th>
-                        <th>
-                            <center>
-                                <button id="mutableText" class="button is-primary" onclick="toggleThis(this);driver.setMutableText(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Mutable<br>Text</button>
-                            </center>
-                        </th>
-                        <th>
-                            <center>
-                                <button id="ecallExit" class="button" onclick="toggleThis(this);driver.setOnlyEcallExit(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Only Ecall Exit</button>
-                            </center>
-                        </th>
-                    </tr>
-                </table>
+        <div id="sv-div" class="panel-block">
+            <div class="field is-horizontal">
+                <div class="field-label">
+                    <button id="sv" class="button" onclick="if(window.svclr&&this.value==='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Save on<br>Close</button>
+                </div>
+                <div class="field-body is-expanded">
+                    <label class="label" for="sv">Save on Close</label>
+                </div>
+            </div>
+        </div>
+        <div id="alignAddr-div" class="panel-block">
+            <div class="field is-horizontal">
+                <div class="field-label">
+                    <button id="alignAddr" class="button" onclick="toggleThis(this);driver.setAlignedAddressing(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Aligned<br>Addressing</button>
+                </div>
+                <div class="field-body is-expanded">
+                    <label class="label" for="alignAddr">Force Aligned Addressing?</label>
+                </div>
+            </div>
+        </div>
+        <div id="mutableText-div" class="panel-block">
+            <div class="field is-horizontal">
+                <div class="field-label">
+                    <button id="mutableText" class="button is-primary" onclick="toggleThis(this);driver.setMutableText(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Mutable<br>Text</button>
+                </div>
+                <div class="field-body is-expanded">
+                    <label class="label" for="mutableText">Mutable Text?</label>
+                </div>
+            </div>
+        </div>
+        <div id="ecallExit-div" class="panel-block">
+            <div class="field is-horizontal">
+                <div class="field-label">
+                    <button id="ecallExit" class="button" onclick="toggleThis(this);driver.setOnlyEcallExit(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Only Ecall Exit</button>
+                </div>
+                <div class="field-body is-expanded">
+                    <label class="label" for="ecallExit">Only Ecall Exit?</label>
+                </div>
             </div>
         </div>
     </div>
