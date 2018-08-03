@@ -335,6 +335,10 @@ import kotlin.dom.removeClass
         this.simSettings.ecallOnlyExit = b
     }
 
+    @JsName("setSetRegsOnInit") fun setSetRegsOnInit(b: Boolean) {
+        this.simSettings.setRegesOnInit = b
+    }
+
     @JsName("verifyText") fun verifyText(input: HTMLInputElement) {
         try {
             if (!currentlyRunning()) {
