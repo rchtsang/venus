@@ -42,20 +42,7 @@ class Tracer (val sim: Simulator) {
         }
     }
 
-    /*
-        addi x1 x1 1
-        addi x1 x1 1
-        beq x0 x0 hi
-        addi x1 x1 1
-        addi x1 x1 1
-        hi:addi x1 x1 1
-        addi x1 x1 1
-        addi x1 x1 1
-        addi x1 x1 1
-    */
-
     fun traceStep() {
-        /*@FIXME There is a bug with pc right now*/
         if (sim.isDone()) {
             return
         }
