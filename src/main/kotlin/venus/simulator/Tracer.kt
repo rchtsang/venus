@@ -154,7 +154,7 @@ class Tracer (val sim: Simulator) {
             if (this.tr.peak().branched) {
                 traceStringBranchHelper(t)
             }
-            if (this.tr.peak().jumped)  {
+            if (this.tr.peak().jumped) {
                 t.regs = this.tr.peak().regs.copyOf()
                 t.prevTrace?.regs = t.regs.copyOf()
                 traceStringJumpHelper(t)
