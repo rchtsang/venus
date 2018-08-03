@@ -32,7 +32,7 @@
                 <label class="label is-small" for="block-size-val">Block Size (Bytes)</label>
             </div>
             <div class="field-body is-expanded">
-                <input id="block-size-val" class="input is-small" onblur="driver.updateCacheBlockSize(this)" spellcheck="false">
+                <input id="block-size-val" type="number" class="input is-small" onblur="driver.updateCacheBlockSize(this)" spellcheck="false">
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
                 <label class="label is-small" for="numblocks-val">Number of Blocks</label>
             </div>
             <div class="field-body is-expanded">
-                <input id="numblocks-val" class="input is-small" onblur="driver.updateCacheNumberOfBlocks(this)" spellcheck="false">
+                <input id="numblocks-val" type="number" class="input is-small" onblur="driver.updateCacheNumberOfBlocks(this)" spellcheck="false">
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
                 <label class="label is-small" for="associativity-val">Associativity</label>
             </div>
             <div class="field-body is-expanded">
-                <input id="associativity-val" class="input is-small" onblur="driver.updateCacheAssociativity(this)" spellcheck="false">
+                <input id="associativity-val" type="number" class="input is-small" onblur="driver.updateCacheAssociativity(this)" spellcheck="false">
             </div>
         </div>
     </div>
@@ -78,7 +78,9 @@
                 </div>
             </div>
         </div>
-        <div class="field is-narrow" style="margin-bottom:0px;">
+    </div>
+    <div class="panel-block">
+        <div class="field is-narrow" style="margin-bottom:0px;width:auto;">
             <div class="control">
                 <div class="select">
                     <select id="replacementPolicy" onchange="driver.updateCacheReplacementPolicy(this)">

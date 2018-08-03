@@ -19,7 +19,7 @@ class CacheHandler (var cacheLevel: Int) {
     private var RorW = ArrayList<RW>()
 
     var nextLevelCacheHandler: CacheHandler? = null
-    var attached = true
+    var attached = false
         private set
 
     init {
@@ -142,11 +142,11 @@ class CacheHandler (var cacheLevel: Int) {
     }
 
     fun currentState(): CacheState {
-        val clsize = this.cacheList.size - 1
+        val clsize = this.cacheList.lastIndex
         if (clsize < 0) {
-            return this.cacheList[clsize]
-        } else {
             return this.cacheList[0]
+        } else {
+            return this.cacheList[clsize]
         }
     }
 
