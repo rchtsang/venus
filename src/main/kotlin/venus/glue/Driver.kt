@@ -110,11 +110,10 @@ import kotlin.dom.removeClass
         }
         try {
             val linked = Linker.link(listOf(prog))
-            sim = Simulator(linked)
+            sim = Simulator(linked, this.simSettings)
             this.mainCache.reset()
             sim.state.cache = this.mainCache
             tr = Tracer(sim)
-            sim.settings = this.simSettings
             return true
         } catch (e: AssemblerError) {
             Renderer.displayError(e)
@@ -702,6 +701,7 @@ import kotlin.dom.removeClass
         this.LS.set("aligned_memory", simSettings.alignedAddress.toString())
         this.LS.set("mutable_text", simSettings.mutableText.toString())
         this.LS.set("ecall_exit_only", simSettings.ecallOnlyExit.toString())
+        this.LS.set("set_regs_on_init", simSettings.setRegesOnInit.toString())
 
         /*Program*/
         js("codeMirror.save()")
@@ -752,6 +752,7 @@ import kotlin.dom.removeClass
         var am = simSettings.alignedAddress.toString()
         var mt = simSettings.mutableText.toString()
         var eeo = simSettings.ecallOnlyExit.toString()
+        var sroi = simSettings.setRegesOnInit.toString()
 
         /*Program*/
         js("codeMirror.save()")
@@ -774,6 +775,7 @@ import kotlin.dom.removeClass
             am = LS.safeget("aligned_memory", am)
             mt = LS.safeget("mutable_text", mt)
             eeo = LS.safeget("ecall_exit_only", eeo)
+            sroi = LS.safeget("set_regs_on_init", sroi)
 
             /*Program*/
             this.p = LS.safeget("prog", this.p)
@@ -827,6 +829,8 @@ import kotlin.dom.removeClass
         simSettings.mutableText = mt == "true"
         Renderer.renderButton(document.getElementById("ecallExit") as HTMLButtonElement, eeo == "true")
         simSettings.ecallOnlyExit = eeo == "true"
+        //Renderer.renderButton(document.getElementById("setRegsOnInit") as HTMLButtonElement, sroi == "true")
+        simSettings.setRegesOnInit = sroi == "true"
 
         /*Program*/
         js("codeMirror.setValue(driver.p)")
