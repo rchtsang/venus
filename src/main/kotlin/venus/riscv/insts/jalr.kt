@@ -37,6 +37,7 @@ val jalr = Instruction(
             val vrs1 = sim.getReg(rs1)
             sim.setReg(rd, sim.getPC() + mcode.length)
             sim.setPC(((vrs1 + imm) shr 1) shl 1)
+            sim.jumped = true
         },
         impl64 = NoImplementation,
         disasm = RawDisassembler { mcode ->
