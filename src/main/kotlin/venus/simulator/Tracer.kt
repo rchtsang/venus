@@ -32,6 +32,10 @@ class Tracer (val sim: Simulator) {
         this.tr.trace = ArrayList()
         this.tr.prevTrace = null
         this.tr.traceLine = 0
+        if (this.twoStage) {
+            this.tr.trace.add(Trace(didBrach(), didJump(), getecallMsg(), getRegs(), if (!sim.isDone()) sim.getNextInstruction() else MachineCode(0), this.tr.traceLine, sim.getPC()))
+            this.tr.traceLine++
+        }
         if (!this.instFirst && !sim.isDone()) {
             prevInst = sim.getNextInstruction()
             sim.step()
@@ -72,6 +76,25 @@ class Tracer (val sim: Simulator) {
         this.tr.trace.add(currentTrace)
         this.tr.traced = true
         sim.reset()
+        if (this.twoStage) {
+            var i = this.tr.trace.lastIndex
+            if (i < 0) {
+                return
+            }
+            var prevmc = MachineCode(0)
+            var prevpc = this.tr.trace[i].pc + prevmc.length
+            while (i > 0) {
+                /*FIXME Make this loop another call.*/
+                val cur = this.tr.trace[i]
+                val curmc = cur.inst
+                val curpc = cur.pc
+                cur.inst = prevmc
+                cur.pc = prevpc
+                prevmc = curmc
+                prevpc = curpc
+                i--
+            }
+        }
     }
 
     fun getSingleTrace(line : Int) : Trace {
@@ -80,11 +103,11 @@ class Tracer (val sim: Simulator) {
             mc = sim.getNextInstruction()
         }
         if (!this.instFirst) {
-            var t = mc
+            val t = mc
             mc = prevInst
             prevInst = t
         }
-        return Trace(didBrach(), getecallMsg(), getRegs(), mc, line, sim.getPC())
+        return Trace(didBrach(), didJump(), getecallMsg(), getRegs(), mc, line, sim.getPC())
     }
 
     fun getRegs(): IntArray {
@@ -97,6 +120,9 @@ class Tracer (val sim: Simulator) {
 
     fun didBrach(): Boolean {
         return sim.branched
+    }
+    fun didJump(): Boolean {
+        return sim.jumped
     }
 
     fun getecallMsg() : String {
@@ -124,14 +150,21 @@ class Tracer (val sim: Simulator) {
 
     fun traceStringStep(): Boolean {
         val t = this.tr.getNextTrace()
-        if (twoStage && this.instFirst && t.branched) {
-            traceStringHelper(t)
+        if (twoStage && this.instFirst) {
+            if (this.tr.peak().branched) {
+                traceStringBranchHelper(t)
+            }
+            if (this.tr.peak().jumped)  {
+                t.regs = this.tr.peak().regs.copyOf()
+                t.prevTrace?.regs = t.regs.copyOf()
+                traceStringJumpHelper(t)
+            }
         }
         t.line = this.tr.stringIndex
         this.tr.str += t.getString(format, base)
         this.tr.stringIndex++
         if (twoStage && !this.instFirst && t.branched) {
-            traceStringHelper(t)
+            traceStringBranchHelper(t)
         }
         if (this.totCommands > 0 && this.tr.stringIndex >= this.totCommands) {
             return false
@@ -139,7 +172,7 @@ class Tracer (val sim: Simulator) {
         return this.tr.hasNext()
     }
 
-    fun traceStringHelper(t: Trace) {
+    fun traceStringBranchHelper(t: Trace) {
         val pt = t.prevTrace
         val flushed = pt?.copy() ?: this.getSingleTrace(-1)
         var nextPC = flushed.pc + flushed.inst.length
@@ -147,6 +180,23 @@ class Tracer (val sim: Simulator) {
         nextPC -= MemorySegments.TEXT_BEGIN
         flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
         flushed.line = this.tr.stringIndex
+        if (this.instFirst) {
+            //flushed.regs = t.regs
+        }
+        this.tr.str += flushed.getString(format, base)
+        this.tr.stringIndex++
+    }
+    fun traceStringJumpHelper(t: Trace) {
+        val pt = t.prevTrace
+        val flushed = pt?.copy() ?: this.getSingleTrace(-1)
+        var nextPC = flushed.pc + flushed.inst.length
+        flushed.pc = nextPC
+        nextPC -= MemorySegments.TEXT_BEGIN
+        flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
+        flushed.line = this.tr.stringIndex
+        if (this.instFirst) {
+            //flushed.regs = t.regs
+        }
         this.tr.str += flushed.getString(format, base)
         this.tr.stringIndex++
     }
@@ -160,6 +210,14 @@ class Tracer (val sim: Simulator) {
             t.pc = incPC(t.pc)
             this.tr.str += t.getString(format, base)
             this.tr.stringIndex++
+        }
+        try {
+            if (this.twoStage && this.instFirst && this.tr.trace[2].jumped) {
+
+            }
+        } catch (e: Throwable) {
+            println("Internal error in traceString")
+            console.warn(e)
         }
         this.tr.stred = true
     }
@@ -203,6 +261,9 @@ class TraceEncapsulation () {
         val t = trace[curLoc]
         this.curLoc++
         return t
+    }
+    fun peak(): Trace {
+        return trace[minOf(curLoc, trace.lastIndex)]
     }
     fun reset() {
         curLoc = 0

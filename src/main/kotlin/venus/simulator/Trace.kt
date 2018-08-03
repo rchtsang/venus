@@ -6,8 +6,9 @@ import venus.riscv.MachineCode
  * Created by Thaumic on 7/14/2018.
  */
 
-class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : MachineCode, line : Int, pc : Int) {
+class Trace (branched: Boolean, jumped: Boolean, ecallMsg : String, regs : IntArray, inst : MachineCode, line : Int, pc : Int) {
     var branched = false
+    var jumped = false
     var ecallMsg = ""
     var regs = IntArray(0)
     var inst = MachineCode(0)
@@ -18,6 +19,7 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
     init {
         this.ecallMsg = ecallMsg
         this.branched = branched
+        this.jumped = jumped
         this.regs = regs
         this.inst = inst
         this.line = line
@@ -44,7 +46,7 @@ class Trace (branched : Boolean, ecallMsg : String, regs : IntArray, inst : Mach
 
     fun copy(): Trace {
         /*@fixme This is not a pure copy since modifing internal things in the copy still can affect the main.*/
-        return Trace(branched, ecallMsg, regs, inst, line, pc)
+        return Trace(branched, jumped, ecallMsg, regs.copyOf(), inst, line, pc)
     }
 
 }

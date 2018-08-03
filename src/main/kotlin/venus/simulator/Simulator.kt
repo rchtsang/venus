@@ -36,8 +36,10 @@ class Simulator(val linkedProgram: LinkedProgram) {
         }
 
         state.pc = linkedProgram.startPC ?: MemorySegments.TEXT_BEGIN
-        state.setReg(2, MemorySegments.STACK_BEGIN)
-        state.setReg(3, MemorySegments.STATIC_BEGIN)
+        /*Disabled for ease of testing atm! WILL FIX AFTER*/
+        println("SET INIT REGS DISABLED!")
+        //state.setReg(2, MemorySegments.STACK_BEGIN)
+        //state.setReg(3, MemorySegments.STATIC_BEGIN)
 
         breakpoints = Array<Boolean>(linkedProgram.prog.insts.size, { false })
     }
@@ -53,6 +55,7 @@ class Simulator(val linkedProgram: LinkedProgram) {
 
     fun step(): List<Diff> {
         this.branched = false
+        this.jumped = false
         this.ecallMsg = ""
         preInstruction.clear()
         postInstruction.clear()
@@ -74,11 +77,13 @@ class Simulator(val linkedProgram: LinkedProgram) {
 
     var ecallMsg = ""
     var branched = false
+    var jumped = false
     fun reset() {
         while (this.canUndo()) {
             this.undo()
         }
         this.branched = false
+        this.jumped = false
         this.ecallMsg = ""
     }
 
