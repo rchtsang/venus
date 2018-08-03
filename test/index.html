@@ -7,15 +7,17 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119121070-2"></script>
   <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
 
-      gtag('config', 'UA-119121070-2');
+	gtag('config', 'UA-119121070-2');
   </script>
   <title>venus</title>
-  <link rel="stylesheet" type="text/css" href="css/venus.css">
-  <link rel="icon" href="images/favicon.png">
+  <link rel="stylesheet" type="text/css" href="../src/main/frontend/css/bulma.css">
+  <link rel="stylesheet" type="text/css" href="../src/main/frontend/css/codemirror.css">
+  <link rel="stylesheet" type="text/css" href="../src/main/frontend/css/venus.css">
+  <link rel="icon" href="../src/main/frontend/images/favicon.png">
 </head>
 <body>
 <div class="tabs is-boxed is-centered">
@@ -658,6 +660,16 @@
                     </div>
                   </div>
                 </div>
+                <div id="cacheEnabled-div" class="panel-block">
+                  <div class="field is-horizontal">
+                    <div class="field-label">
+                      <button id="cacheEnabled" class="button is-primary" onclick="toggleThis(this);driver.setCacheEnabled(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Enable?</button>
+                    </div>
+                    <div class="field-body is-expanded">
+                      <label class="label" for="cacheEnabled">Enables current selected level of the cache.</label>
+                    </div>
+                  </div>
+                </div>
                 <div class="panel-block">
                   <div class="field is-narrow" style="margin-bottom:0px;">
                     <div class="control">
@@ -689,16 +701,6 @@
                           <option selected="">L1</option>
                         </select>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                <div id="cacheEnabled-div" class="panel-block">
-                  <div class="field is-horizontal">
-                    <div class="field-label">
-                      <button id="cacheEnabled" class="button is-primary" onclick="toggleThis(this);driver.setCacheEnabled(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Enable?</button>
-                    </div>
-                    <div class="field-body is-expanded">
-                      <label class="label" for="cacheEnabled">Enables current selected level of the cache.</label>
                     </div>
                   </div>
                 </div>
@@ -752,7 +754,6 @@
                   </div>
                 </div>
               </div>
-
               <nav id="settings-tab-view" class="panel">
                 <p class="panel-tabs"></a>
                   <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()" class="is-active">General Settings</a>
@@ -898,12 +899,12 @@
     </div>
   </div>
 </section>
-<script type="text/javascript" src="../../src/main/frontend/scripts/seedrandom.js"></script>
-<script type="text/javascript" src="../../src/main/frontend/scripts/helper.js"></script>
-<script type="text/javascript" src="../../src/main/frontend/js/codemirror.js"></script>
-<script type="text/javascript" src="../../src/main/frontend/js/risc-mode.js"></script>
-<script type="text/javascript" src="../classes/main/lib/kotlin.js"></script>
-<script type="text/javascript" src="../classes/main/venus_main.js"></script>
+<script type="text/javascript" src="../src/main/frontend/scripts/seedrandom.js"></script>
+<script type="text/javascript" src="../src/main/frontend/scripts/helper.js"></script>
+<script type="text/javascript" src="../src/main/frontend/js/codemirror.js"></script>
+<script type="text/javascript" src="../src/main/frontend/js/risc-mode.js"></script>
+<script type="text/javascript" src="../build/classes/main/lib/kotlin.js"></script>
+<script type="text/javascript" src="../build/classes/main/venus_main.js"></script>
 <script type="text/javascript">
     var driver = venus_main.venus.glue.Driver;
     var editor = document.getElementById("asm-editor");
