@@ -513,7 +513,8 @@ internal object Renderer {
      * @param row the HTML element of the row to render
      * @param rowAddr the new address of that row
      */
-    private fun renderMemoryRow(row: HTMLElement, rowAddr: Int) {
+    private fun renderMemoryRow(urow: HTMLElement, rowAddr: Int) {
+        val row = cleanTableRow(urow)
         val tdAddress = row.childNodes[0] as HTMLTableCellElement
         if (rowAddr >= 0) {
             tdAddress.innerText = toHex(rowAddr)
@@ -535,6 +536,15 @@ internal object Renderer {
                 tdByte.innerText = "--"
             }
         }
+    }
+
+    private fun cleanTableRow(row: HTMLElement): HTMLElement {
+        for (n in row.childNodes.asList()) {
+            if (n !is HTMLTableCellElement) {
+                row.removeChild(n)
+            }
+        }
+        return row
     }
 
     /** a map from integers to the corresponding hex digits */
