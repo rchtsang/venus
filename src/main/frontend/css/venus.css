@@ -140,6 +140,32 @@ body {
     width: 100%;
 }
 
+#cache-tab-view {
+    font-family: Courier New, Courier, monospace;
+    line-height: 1em;
+    font-size: 0.9em;
+}
+
+#cache-tab-view .input {
+    font-family: Courier New, Courier, monospace;
+    border-width: 2px;
+}
+
+#cache-tab-view .field.is-horizontal {
+    width: 100%;
+}
+
+#settings-tab-view {
+    font-family: Courier New, Courier, monospace;
+    line-height: 1em;
+    font-size: 0.9em;
+}
+
+#settings-tab-view .input {
+    font-family: Courier New, Courier, monospace;
+    border-width: 2px;
+}
+
 .input.is-modified {
     border-color: #3273dc;
 }

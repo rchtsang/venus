@@ -11,3 +11,29 @@
 #simulator-trace.is-loading {
     pointer-events: auto;
 }
+#cache-tab-view {
+    font-family: Courier New, Courier, monospace;
+    line-height: 1;
+}
+
+#cache-tab-view .input {
+    font-family: Courier New, Courier, monospace;
+    border-width: 2px;
+}
+
+#cache-tab-view .field.is-horizontal {
+    width: 100%;
+}
+
+#settings-tab-view {
+    font-family: Courier New, Courier, monospace;
+}
+
+#settings-tab-view .input {
+    font-family: Courier New, Courier, monospace;
+    border-width: 2px;
+}
+
+#settings-tab-view .field.is-horizontal {
+    width: 100%;
+}
