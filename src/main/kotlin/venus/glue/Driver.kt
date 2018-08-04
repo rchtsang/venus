@@ -191,13 +191,6 @@ import kotlin.dom.removeClass
             val diffs = sim.step()
             handleNotExitOver()
             Renderer.updateFromDiffs(diffs)
-            if (sim.settings.ecallOnlyExit && sim.getPC() >= MemorySegments.STATIC_BEGIN) {
-                sim.maxpc -= 4
-                try {
-                    val elm = document.getElementById("instruction-" + (sim.maxpc / 4 - 1).toString()) as HTMLTableRowElement
-                    elm.parentNode?.removeChild(elm)
-                } catch (e: Throwable) {}
-            }
             Renderer.updateCache(Address(0, MemSize.WORD))
             Renderer.updateControlButtons()
         } catch (e: Throwable) {
