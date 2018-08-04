@@ -26,7 +26,6 @@ class CacheHandler (var cacheLevel: Int) {
         this.reset()
     }
 
-    /*@TODO Read and write do nothing special at the moment. Make it so that we can detect read and write hit/miss rate separately.*/
     fun read(a: Address) {
         addresses.add(a)
         RorW.add(RW.READ)
@@ -49,23 +48,12 @@ class CacheHandler (var cacheLevel: Int) {
         }
     }
 
-    fun access(a: Address) {
-        addresses.add(a)
-        RorW.add(RW.READ)
-        if (attached) {
-            val c = CacheState(a, this, RW.READ)
-            cacheList.add(c)
-        } else {
-            nextLevelCacheHandler?.access(a)
-        }
-    }
-
     fun undoAccess(addr: Address) {
         if (this.memoryAccessCount() > 0) {
-            this.addresses.removeAt(this.addresses.size - 1)
-            this.RorW.removeAt(this.RorW.size - 1)
+            this.addresses.removeAt(this.addresses.lastIndex)
+            this.RorW.removeAt(this.RorW.lastIndex)
             if (this.attached) {
-                this.cacheList.removeAt(this.cacheList.size - 1)
+                this.cacheList.removeAt(this.cacheList.lastIndex)
             }
         }
     }
