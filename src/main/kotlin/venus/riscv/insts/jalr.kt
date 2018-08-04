@@ -30,6 +30,7 @@ val jalr = Instruction(
                 }
             }
         },
+        impl16 = NoImplementation,
         impl32 = RawImplementation { mcode, sim ->
             val rd = mcode[InstructionField.RD]
             val rs1 = mcode[InstructionField.RS1]
@@ -40,6 +41,7 @@ val jalr = Instruction(
             sim.jumped = true
         },
         impl64 = NoImplementation,
+        impl128 = NoImplementation,
         disasm = RawDisassembler { mcode ->
             val rd = mcode[InstructionField.RD]
             val rs1 = mcode[InstructionField.RS1]

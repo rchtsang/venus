@@ -12,8 +12,10 @@ open class Instruction(
         val name: String,
         val format: InstructionFormat,
         val parser: InstructionParser,
+        val impl16: InstructionImplementation,
         val impl32: InstructionImplementation,
         val impl64: InstructionImplementation,
+        val impl128: InstructionImplementation,
         val disasm: InstructionDisassembler
 ) {
     companion object {

@@ -30,6 +30,10 @@ internal fun getImmediate(str: String, min: Int, max: Int): Int {
     return imm
 }
 
+internal fun compareUnsignedShort(v1: Short, v2: Short): Short {
+    return ((v1.toInt() xor Short.MIN_VALUE.toInt()).toShort()).compareTo((v2.toInt() xor Short.MIN_VALUE.toInt()).toShort()).toShort()
+}
+
 internal fun compareUnsigned(v1: Int, v2: Int): Int {
     return (v1 xor Int.MIN_VALUE).compareTo(v2 xor Int.MIN_VALUE)
 }

@@ -18,6 +18,7 @@ val ecall = Instruction(
                 listOf(FieldEqual(InstructionField.ENTIRE, 0b000000000000_00000_000_00000_1110011))
         ),
         parser = DoNothingParser,
+        impl16 = NoImplementation,
         impl32 = RawImplementation { mcode, sim ->
             val whichCall = sim.getReg(10)
             when (whichCall) {
@@ -34,6 +35,7 @@ val ecall = Instruction(
             }
         },
         impl64 = NoImplementation,
+        impl128 = NoImplementation,
         disasm = RawDisassembler { "ecall" }
 )
 
