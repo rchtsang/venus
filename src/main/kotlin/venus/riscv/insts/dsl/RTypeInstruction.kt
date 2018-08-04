@@ -11,13 +11,17 @@ class RTypeInstruction(
         opcode: Int,
         funct3: Int,
         funct7: Int,
+        eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
         eval32: (Int, Int) -> Int,
-        eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") }
+        eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
+        eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
         format = RTypeFormat(opcode, funct3, funct7),
         parser = RTypeParser,
+        impl16 = NoImplementation,
         impl32 = RTypeImplementation32(eval32),
         impl64 = NoImplementation,
+        impl128 = NoImplementation,
         disasm = RTypeDisassembler
 )

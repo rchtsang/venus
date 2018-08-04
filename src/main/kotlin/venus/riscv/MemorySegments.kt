@@ -12,12 +12,10 @@ object MemorySegments {
     const val STATIC_BEGIN = 0x1000_0000
     /**
      * Memory address where the text segment starts
-     * @fixme FIXED??? a bug currently prevents TEXT_BEGIN from being anything other than 0
      */
     public var TEXT_BEGIN = 0x0000_0000
 
     fun setTextBegin(i: Int) {
-        /*@todo add this function!*/
         if (i < 0) {
             throw SimulatorError("The text location must be a positive number!")
         } else if (i >= MemorySegments.STATIC_BEGIN) {

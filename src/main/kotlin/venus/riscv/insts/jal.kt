@@ -21,6 +21,7 @@ val jal = Instruction(
             mcode[InstructionField.RD] = regNameToNumber(args[0])
             prog.addRelocation(JALRelocator, args[1])
         },
+        impl16 = NoImplementation,
         impl32 = RawImplementation { mcode, sim ->
             val rd = mcode[InstructionField.RD]
             val imm = constructJALImmediate(mcode)
@@ -29,6 +30,7 @@ val jal = Instruction(
             sim.jumped = true
         },
         impl64 = NoImplementation,
+        impl128 = NoImplementation,
         disasm = RawDisassembler { mcode ->
             val rd = mcode[InstructionField.RD]
             val imm = constructJALImmediate(mcode)
