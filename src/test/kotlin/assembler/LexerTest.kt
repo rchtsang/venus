@@ -89,10 +89,10 @@ class LexerTest {
     }
 
     @Test fun lexMultipleLabelsAndInstruction() {
-        val line = "hello: world: label: me: lui 2"
+        val line = "hello: world: label: me: venus.riscv.insts.integer.base.getLui 2"
         val (labels, args) = Lexer.lexLine(line)
         assertEquals(listOf("hello", "world", "label", "me"), labels)
-        assertEquals(listOf("lui", "2"), args)
+        assertEquals(listOf("venus.riscv.insts.integer.base.getLui", "2"), args)
     }
 
     @Test fun lexDelimiterInChar() {

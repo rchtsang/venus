@@ -15,7 +15,7 @@ class LinkerTest {
         addi x8 x8 1
         addi x9 x0 2
         beq x8 x9 skip
-        jal x0 start
+        venus.riscv.insts.integer.base.getJal x0 start
         skip:
         """)
         val linked = Linker.link(listOf(prog))
@@ -27,7 +27,7 @@ class LinkerTest {
     @Test fun linkTwoFiles() {
         val (prog1, _) = Assembler.assemble("""
         foo:
-            jal x0 bar
+            venus.riscv.insts.integer.base.getJal x0 bar
             addi x8 x0 8
         .globl foo
         """)
@@ -45,7 +45,7 @@ class LinkerTest {
     @Test fun privateLabel() {
         val (prog1, _) = Assembler.assemble("""
         foo:
-            jal x0 _bar
+            venus.riscv.insts.integer.base.getJal x0 _bar
             addi x8 x0 8
         .globl foo
         """)
