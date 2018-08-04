@@ -104,6 +104,9 @@ internal object Renderer {
         for (i in 0..31) {
             updateRegister(i, sim.getReg(i))
         }
+        for (i in 0..31) {
+            //updateFRegister(i, sim.getFReg(i))
+        }
     }
 
     /**
@@ -208,6 +211,28 @@ internal object Renderer {
             activeRegister?.classList?.remove("is-modified")
             register.classList.add("is-modified")
             activeRegister = register
+        }
+    }
+    /**
+     * Updates the register with the given id and value.
+     *
+     * @param id the ID of the floating register (e.g., f13 has ID 13)
+     * @param value the new value of the register
+     * @param setActive whether the register should be set to the active register (i.e., highlighted for the user)
+     */
+    fun updateFRegister(id: Int, value: Int, setActive: Boolean = false) {
+        val fregister = getElement("freg-$id-val") as HTMLInputElement
+        fregister.value = when (displayType) {
+            "Hex" -> toHex(value)
+            "Decimal" -> value.toString()
+            "Unsigned" -> toUnsigned(value)
+            "ASCII" -> toAscii(value)
+            else -> toHex(value)
+        }
+        if (setActive) {
+            activeRegister?.classList?.remove("is-modified")
+            fregister.classList.add("is-modified")
+            activeRegister = fregister
         }
     }
 
@@ -476,6 +501,16 @@ internal object Renderer {
     fun renderTracerSettingsTab() {
         tabSetVisibility("general-settings", "none")
         tabSetVisibility("tracer-settings", "block")
+    }
+
+    fun renderRegsTab() {
+        tabSetVisibility("regs", "block")
+        tabSetVisibility("fregs", "none")
+    }
+
+    fun renderFRegsTab() {
+        tabSetVisibility("regs", "none")
+        tabSetVisibility("fregs", "block")
     }
 
     /**

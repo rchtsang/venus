@@ -81,8 +81,13 @@ body {
     min-height: 95%;
 }
 
-#register-tab-view {
+#regs-tab-view {
     font-family: Courier New, Courier, monospace;
+}
+
+#fregs-tab-view {
+    font-family: Courier New, Courier, monospace;
+    display: none;
 }
 
 #memory-tab-view {
@@ -131,12 +136,21 @@ body {
     pointer-events: auto;
 }
 
-#register-tab-view .input {
+#regs-tab-view .input {
     font-family: Courier New, Courier, monospace;
     border-width: 2px;
 }
 
-#register-tab-view .field.is-horizontal {
+#regs-tab-view .field.is-horizontal {
+    width: 100%;
+}
+
+#fregs-tab-view .input {
+    font-family: Courier New, Courier, monospace;
+    border-width: 2px;
+}
+
+#fregs-tab-view .field.is-horizontal {
     width: 100%;
 }
 
