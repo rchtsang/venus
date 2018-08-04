@@ -242,6 +242,14 @@ import kotlin.dom.removeClass
         Renderer.renderRegisterTab()
     }
 
+    @JsName("openRegsTab") fun openRegsTab() {
+        Renderer.renderRegsTab()
+    }
+
+    @JsName("openFRegsTab") fun openFRegsTab() {
+        Renderer.renderFRegsTab()
+    }
+
     /**
      * Change to trace settings tab
      */
@@ -267,6 +275,19 @@ import kotlin.dom.removeClass
      * Save a register's value
      */
     @JsName("saveRegister") fun saveRegister(reg: HTMLInputElement, id: Int) {
+        if (!currentlyRunning()) {
+            try {
+                val input = reg.value
+                sim.setRegNoUndo(id, userStringToInt(input))
+            } catch (e: NumberFormatException) {
+                /* do nothing */
+            }
+        }
+        Renderer.updateRegister(id, sim.getReg(id))
+    }
+
+    @JsName("saveFRegister") fun saveFRegister(reg: HTMLInputElement, id: Int) {
+        throw NotImplementedError("I am working on adding the Floating point stuff rn.")
         if (!currentlyRunning()) {
             try {
                 val input = reg.value
