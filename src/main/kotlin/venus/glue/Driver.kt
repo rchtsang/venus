@@ -817,7 +817,7 @@ import kotlin.dom.removeClass
         simSettings.mutableText = mt == "true"
         Renderer.renderButton(document.getElementById("ecallExit") as HTMLButtonElement, eeo == "true")
         simSettings.ecallOnlyExit = eeo == "true"
-        //Renderer.renderButton(document.getElementById("setRegsOnInit") as HTMLButtonElement, sroi == "true")
+        Renderer.renderButton(document.getElementById("setRegsOnInit") as HTMLButtonElement, sroi == "true")
         simSettings.setRegesOnInit = sroi == "true"
 
         /*Program*/
