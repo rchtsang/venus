@@ -9,6 +9,7 @@ enum class InstructionField(val lo: Int, val hi: Int) {
     RS1(15, 20),
     RS2(20, 25),
     FUNCT7(25, 32),
+    FUNCT5(27, 32),
     IMM_11_0(20, 32),
     IMM_4_0(7, 12),
     IMM_11_5(25, 32),

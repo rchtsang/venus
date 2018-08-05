@@ -1,27 +1,29 @@
 package venus.riscv.insts.dsl
 
-import venus.riscv.insts.dsl.disasms.RTypeDisassembler
-import venus.riscv.insts.dsl.formats.RTypeFormat
+import venus.riscv.insts.dsl.disasms.AMORTypeDisassembler
+import venus.riscv.insts.dsl.formats.AMORTypeFormat
+import venus.riscv.insts.dsl.impls.AMORTypeImplementation32
 import venus.riscv.insts.dsl.impls.NoImplementation
-import venus.riscv.insts.dsl.impls.RTypeImplementation32
-import venus.riscv.insts.dsl.parsers.RTypeParser
+import venus.riscv.insts.dsl.parsers.AMORTypeParser
 
-class RTypeInstruction(
+class AMORTypeInstruction(
         name: String,
         opcode: Int,
         funct3: Int,
-        funct7: Int = 0b0,
+        aq: Int = 0,
+        rl: Int = 0,
+        funct5: Int,
         eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
         eval32: (Int, Int) -> Int,
         eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
         eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
-        format = RTypeFormat(opcode, funct3, funct7),
-        parser = RTypeParser,
+        format = AMORTypeFormat(opcode, funct3, funct5),
+        parser = AMORTypeParser,
         impl16 = NoImplementation,
-        impl32 = RTypeImplementation32(eval32),
+        impl32 = AMORTypeImplementation32(eval32),
         impl64 = NoImplementation,
         impl128 = NoImplementation,
-        disasm = RTypeDisassembler
+        disasm = AMORTypeDisassembler
 )

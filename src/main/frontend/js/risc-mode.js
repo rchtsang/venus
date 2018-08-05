@@ -49,6 +49,9 @@ CodeMirror.defineMode("riscv", function(config, parserConfig) {
         "sw",
         "xor",
         "xori",
+        /* Extensions */
+        /* Atomic */
+        "amoadd.w",
         /* pseudoinstructions */
         "beqz",
         "bgez",
