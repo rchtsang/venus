@@ -1,2 +1,2 @@
-package venus.riscv.insts.integer.extensions.atomic.R
+package venus.riscv.insts.integer.extensions.atomic.r
 

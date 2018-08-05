@@ -1,4 +1,4 @@
-package venus.riscv.insts.integer.base.U
+package venus.riscv.insts.integer.base.u
 
 import venus.riscv.InstructionField
 import venus.riscv.insts.dsl.UTypeInstruction

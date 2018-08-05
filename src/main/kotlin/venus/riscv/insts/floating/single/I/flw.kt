@@ -1,3 +1,3 @@
-package venus.riscv.insts.floating.single.I
+package venus.riscv.insts.floating.single.i
 
 /*Single-Precision*/
