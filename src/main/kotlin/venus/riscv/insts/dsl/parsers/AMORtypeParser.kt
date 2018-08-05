@@ -4,7 +4,6 @@ import venus.riscv.InstructionField
 import venus.riscv.MachineCode
 import venus.riscv.Program
 
-
 object AMORTypeParser : InstructionParser {
     override operator fun invoke(prog: Program, mcode: MachineCode, args: List<String>) {
         checkArgsLength(args.size, 3)

@@ -52,6 +52,14 @@ CodeMirror.defineMode("riscv", function(config, parserConfig) {
         /* Extensions */
         /* Atomic */
         "amoadd.w",
+        "amoand.w",
+        "amomax.w",
+        "amomaxu.w",
+        "amomin.w",
+        "amominu.w",
+        "amoor.w",
+        "amoswap.w",
+        "amoxor.w",
         /* pseudoinstructions */
         "beqz",
         "bgez",
