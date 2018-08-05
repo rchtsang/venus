@@ -8,13 +8,13 @@ import venus.linker.Linker
 class FunctionCallTest {
     @Test fun doubleJALR() {
         val (prog, _) = Assembler.assemble("""
-            venus.riscv.insts.integer.base.getJal x0 main
+            jal x0 main
         double:
             add a0 a0 a0
             jalr x0 ra 0
         main:
             addi a0 x0 5
-            venus.riscv.insts.integer.base.getJal ra double
+            jal ra double
             add x1 a0 x0
         """)
         val linked = Linker.link(listOf(prog))
@@ -25,7 +25,7 @@ class FunctionCallTest {
 
     @Test fun nestedJALR() {
         val (prog, _) = Assembler.assemble("""
-            venus.riscv.insts.integer.base.getJal x0 main
+            jal x0 main
         foo:
             addi s0 s0 1
             jalr x0 ra 0
@@ -33,14 +33,14 @@ class FunctionCallTest {
             addi sp sp -4
             sw ra 0(sp)
             addi s0 s0 2
-            venus.riscv.insts.integer.base.getJal ra foo
+            jal ra foo
             lw ra 0(sp)
             addi sp sp 4
             jalr x0 ra 0
         main:
             addi s0 s0 4
             addi sp sp 1000
-            venus.riscv.insts.integer.base.getJal ra bar
+            jal ra bar
         """)
         val linked = Linker.link(listOf(prog))
         val sim = Simulator(linked)
@@ -58,14 +58,14 @@ class FunctionCallTest {
             addi sp sp -4
             sw ra 0(sp)
             addi s0 s0 2
-            venus.riscv.insts.integer.base.getJal ra foo
+            jal ra foo
             lw ra 0(sp)
             addi sp sp 4
             ret
         main:
             addi s0 s0 4
             addi sp sp 1000
-            venus.riscv.insts.integer.base.getJal ra bar
+            jal ra bar
         """)
         val linked = Linker.link(listOf(prog))
         val sim = Simulator(linked)
