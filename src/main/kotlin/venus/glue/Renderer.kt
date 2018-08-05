@@ -105,7 +105,7 @@ internal object Renderer {
             updateRegister(i, sim.getReg(i))
         }
         for (i in 0..31) {
-            //updateFRegister(i, sim.getFReg(i))
+            updateFRegister(i, sim.getFReg(i))
         }
     }
 
@@ -118,6 +118,7 @@ internal object Renderer {
         for (diff in diffs) {
             when (diff) {
                 is RegisterDiff -> updateRegister(diff.id, diff.v, true)
+                is FRegisterDiff -> updateFRegister(diff.id, diff.v, true)
                 is PCDiff -> updatePC(diff.pc)
                 is MemoryDiff -> updateMemory(diff.addr)
                 is CacheDiff -> updateCache(diff.addr)
