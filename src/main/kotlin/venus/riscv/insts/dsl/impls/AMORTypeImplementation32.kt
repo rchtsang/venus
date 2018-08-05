@@ -14,8 +14,7 @@ class AMORTypeImplementation32(private val eval: (Int, Int) -> Int) : Instructio
 
         val data = sim.loadWordwCache(vrs1)
         sim.setReg(rd, data)
-        sim.storeWordwCache(vrs1,eval(data, vrs2))
-        
+        sim.storeWordwCache(vrs1, eval(data, vrs2))
         sim.incrementPC(mcode.length)
     }
 }
