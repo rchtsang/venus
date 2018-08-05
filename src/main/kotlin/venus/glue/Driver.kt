@@ -286,17 +286,16 @@ import kotlin.dom.removeClass
         Renderer.updateRegister(id, sim.getReg(id))
     }
 
-    @JsName("saveFRegister") fun saveFRegister(reg: HTMLInputElement, id: Int) {
-        throw NotImplementedError("I am working on adding the Floating point stuff rn.")
+    @JsName("saveFRegister") fun saveFRegister(freg: HTMLInputElement, id: Int) {
         if (!currentlyRunning()) {
             try {
-                val input = reg.value
-                sim.setRegNoUndo(id, userStringToInt(input))
+                val input = freg.value
+                sim.setFRegNoUndo(id, userStringToInt(input))
             } catch (e: NumberFormatException) {
                 /* do nothing */
             }
         }
-        Renderer.updateRegister(id, sim.getReg(id))
+        Renderer.updateFRegister(id, sim.getFReg(id))
     }
 
     @JsName("updateRegMemDisplay") fun updateRegMemDisplay() {

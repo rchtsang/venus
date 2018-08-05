@@ -103,6 +103,17 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     fun setRegNoUndo(id: Int, v: Int) {
         state.setReg(id, v)
     }
+    fun getFReg(id: Int) = state.getFReg(id)
+
+    fun setFReg(id: Int, v: Int) {
+        preInstruction.add(FRegisterDiff(id, state.getFReg(id)))
+        state.setFReg(id, v)
+        postInstruction.add(FRegisterDiff(id, state.getFReg(id)))
+    }
+
+    fun setFRegNoUndo(id: Int, v: Int) {
+        state.setFReg(id, v)
+    }
 
     fun toggleBreakpointAt(idx: Int): Boolean {
         breakpoints[idx] = !breakpoints[idx]
