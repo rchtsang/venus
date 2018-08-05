@@ -1,4 +1,4 @@
-package venus.riscv.insts.integer.base.S
+package venus.riscv.insts.integer.base.s
 
 import venus.riscv.insts.dsl.STypeInstruction
 import venus.simulator.Simulator

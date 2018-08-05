@@ -1,2 +1,2 @@
-package venus.riscv.insts.floating.single.R
+package venus.riscv.insts.floating.single.r
 

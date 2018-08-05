@@ -1,4 +1,4 @@
-package venus.riscv.insts.integer.base.SB
+package venus.riscv.insts.integer.base.sb
 
 import venus.riscv.insts.dsl.BTypeInstruction
 

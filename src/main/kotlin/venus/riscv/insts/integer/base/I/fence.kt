@@ -1,2 +1,2 @@
-package venus.riscv.insts.integer.base.I
+package venus.riscv.insts.integer.base.i
 

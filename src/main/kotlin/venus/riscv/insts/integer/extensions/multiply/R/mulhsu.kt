@@ -1,4 +1,4 @@
-package venus.riscv.insts.integer.extensions.multiply.R
+package venus.riscv.insts.integer.extensions.multiply.r
 
 import venus.riscv.insts.dsl.RTypeInstruction
 
