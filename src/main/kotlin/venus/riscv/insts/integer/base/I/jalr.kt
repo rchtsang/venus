@@ -4,12 +4,12 @@ import venus.assembler.AssemblerError
 import venus.riscv.InstructionField
 import venus.riscv.insts.dsl.Instruction
 import venus.riscv.insts.dsl.disasms.RawDisassembler
-import venus.riscv.insts.dsl.formats.ITypeFormat
+import venus.riscv.insts.dsl.formats.base.ITypeFormat
 import venus.riscv.insts.dsl.impls.NoImplementation
 import venus.riscv.insts.dsl.impls.RawImplementation
 import venus.riscv.insts.dsl.impls.signExtend
-import venus.riscv.insts.dsl.parsers.ITypeParser
-import venus.riscv.insts.dsl.parsers.LoadParser
+import venus.riscv.insts.dsl.parsers.base.ITypeParser
+import venus.riscv.insts.dsl.parsers.base.LoadParser
 import venus.riscv.insts.dsl.parsers.RawParser
 
 val jalr = Instruction(

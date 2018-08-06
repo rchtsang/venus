@@ -1,10 +1,10 @@
 package venus.riscv.insts.dsl
 
 import venus.riscv.MachineCode
-import venus.riscv.insts.dsl.disasms.UTypeDisassembler
-import venus.riscv.insts.dsl.formats.UTypeFormat
+import venus.riscv.insts.dsl.disasms.base.UTypeDisassembler
+import venus.riscv.insts.dsl.formats.base.UTypeFormat
 import venus.riscv.insts.dsl.impls.RawImplementation
-import venus.riscv.insts.dsl.parsers.UTypeParser
+import venus.riscv.insts.dsl.parsers.base.UTypeParser
 import venus.simulator.Simulator
 
 class UTypeInstruction(
