@@ -17,12 +17,41 @@ internal fun checkArgsLength(argsSize: Int, required: Int) {
  *
  * @throws AssemblerError if given an invalid register
  */
-internal fun regNameToNumber(reg: String): Int {
+internal fun regNameToNumber(reg: String, integer: Boolean = true): Int {
     if (reg.startsWith("x")) {
         val ret = reg.drop(1).toInt()
-        if (ret in 0..31) return ret
+        if (ret in 0..31) {
+            if (!integer) throw AssemblerError("Register $reg is not a floating point register")
+            return ret
+        }
         throw AssemblerError("register $reg not recognized")
     }
+    if (reg.matches("f\\d{1,2}")) {
+        val ret = reg.drop(1).toInt()
+        if (ret in 0..31) {
+            if (integer) throw AssemblerError("Register $reg is not an integer register")
+            return ret
+        }
+        throw AssemblerError("register $reg not recognized")
+    }
+    try {
+        if (integer) {
+            return checkInteger(reg)
+        } else {
+            return checkFloating(reg)
+        }
+    } catch (e: AssemblerError) {
+        if (integer) {
+            checkFloating(reg)
+            throw AssemblerError("Register $reg is not an integer register")
+        } else {
+            checkInteger(reg)
+            throw AssemblerError("Register $reg is not a floating point register")
+        }
+    }
+}
+
+fun checkInteger(reg: String): Int {
     return when (reg) {
         "zero" -> 0
         "ra" -> 1
@@ -59,3 +88,42 @@ internal fun regNameToNumber(reg: String): Int {
         else -> throw AssemblerError("register $reg not recognized")
     }
 }
+
+fun checkFloating(reg: String): Int {
+    return when (reg) {
+        "ft0" -> 0
+        "ft1" -> 1
+        "ft2" -> 2
+        "ft3" -> 3
+        "ft4" -> 4
+        "ft5" -> 5
+        "ft6" -> 6
+        "ft7" -> 7
+        "fs0" -> 8
+        "fs1" -> 9
+        "fa0" -> 10
+        "fa1" -> 11
+        "fa2" -> 12
+        "fa3" -> 13
+        "fa4" -> 14
+        "fa5" -> 15
+        "fa6" -> 16
+        "fa7" -> 17
+        "fs2" -> 18
+        "fs3" -> 19
+        "fs4" -> 20
+        "fs5" -> 21
+        "fs6" -> 22
+        "fs7" -> 23
+        "fs8" -> 24
+        "fs9" -> 25
+        "fs10" -> 26
+        "fs11" -> 27
+        "ft8" -> 28
+        "ft9" -> 29
+        "ft10" -> 30
+        "ft11" -> 31
+        else -> throw AssemblerError("register $reg not recognized")
+    }
+}
+
