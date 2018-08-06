@@ -16,5 +16,6 @@ object FRRTypeParser : InstructionParser {
 
         mcode[InstructionField.RD] = regNameToNumber(args[0])
         mcode[InstructionField.RS1] = regNameToNumber(args[1], false)
+        mcode[InstructionField.RS2] = 0
     }
 }
