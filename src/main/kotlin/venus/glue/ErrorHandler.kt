@@ -28,8 +28,8 @@ internal fun handleError(where: String, error: Throwable, handled: Boolean = fal
         } else {
             Renderer.printConsole("[ERROR] An uncaught error has occurred! Here are the details that may help solve this issue.\n\n")
         }
-        Renderer.printConsole("ID:\n'" + where + "'!\n\n")
         Renderer.printConsole("Error:\n`" + error.toString())
+        Renderer.printConsole("\n\nID:\n'" + where + "'!\n\n")
         if (!handled) {
             Renderer.printConsole("`\n\nData:\n" + t)
         }
