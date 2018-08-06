@@ -22,6 +22,29 @@ fun userStringToInt(s: String): Int {
     return noRadixString.toLong(radix).toInt()
 }
 
+fun userStringToFloat(s: String): Float {
+    /*@TODO FIXME*/
+    if (isCharacterLiteral(s)) {
+        return characterLiteralToFloat(s)
+    }
+
+    val radix = when {
+        s.startsWith("0x") -> 16
+        s.startsWith("0b") -> 2
+        s.drop(1).startsWith("0x") -> 16
+        s.drop(1).startsWith("0b") -> 2
+        else -> return s.toFloat()
+    }
+
+    val skipSign = when (s.first()) {
+        '+', '-' -> 1
+        else -> 0
+    }
+
+    val noRadixString = s.take(skipSign) + s.drop(skipSign + 2)
+    return noRadixString.toFloat()
+}
+
 private fun isCharacterLiteral(s: String) =
         s.first() == '\'' && s.last() == '\''
 
@@ -36,6 +59,22 @@ private fun characterLiteralToInt(s: String): Int {
         if (parsed.isEmpty()) throw NumberFormatException("character literal $s is empty")
         if (parsed.length > 1) throw NumberFormatException("character literal $s too long")
         return parsed[0].toInt()
+    } catch (e: Throwable) {
+        throw NumberFormatException("could not parse character literal $s")
+    }
+}
+
+private fun characterLiteralToFloat(s: String): Float {
+    val stripSingleQuotes = s.drop(1).dropLast(1)
+    if (stripSingleQuotes == "\\'") return '\''.toFloat()
+    if (stripSingleQuotes == "\"") return '"'.toFloat()
+
+    val jsonString = "\"$stripSingleQuotes\""
+    try {
+        val parsed = JSON.parse<String>(jsonString)
+        if (parsed.isEmpty()) throw NumberFormatException("character literal $s is empty")
+        if (parsed.length > 1) throw NumberFormatException("character literal $s too long")
+        return parsed[0].toFloat()
     } catch (e: Throwable) {
         throw NumberFormatException("could not parse character literal $s")
     }

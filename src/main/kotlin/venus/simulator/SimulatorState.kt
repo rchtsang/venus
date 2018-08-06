@@ -5,7 +5,7 @@ import venus.simulator.cache.CacheHandler
 
 class SimulatorState {
     private val regs = IntArray(32)
-    private val fregs = IntArray(32)
+    private val fregs = FloatArray(32)
     val mem = Memory()
     var cache = CacheHandler(1)
     var pc: Int = 0
@@ -13,5 +13,5 @@ class SimulatorState {
     fun getReg(i: Int) = regs[i]
     fun setReg(i: Int, v: Int) { if (i != 0) regs[i] = v }
     fun getFReg(i: Int) = fregs[i]
-    fun setFReg(i: Int, v: Int) { if (i != 0) fregs[i] = v }
+    fun setFReg(i: Int, v: Float) { fregs[i] = v }
 }

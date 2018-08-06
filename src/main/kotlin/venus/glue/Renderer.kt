@@ -221,15 +221,17 @@ internal object Renderer {
      * @param value the new value of the register
      * @param setActive whether the register should be set to the active register (i.e., highlighted for the user)
      */
-    fun updateFRegister(id: Int, value: Int, setActive: Boolean = false) {
+    fun updateFRegister(id: Int, value: Float, setActive: Boolean = false) {
         val fregister = getElement("freg-$id-val") as HTMLInputElement
-        fregister.value = when (displayType) {
-            "Hex" -> toHex(value)
-            "Decimal" -> value.toString()
-            "Unsigned" -> toUnsigned(value)
-            "ASCII" -> toAscii(value)
-            else -> toHex(value)
-        }
+//        fregister.value = when (displayType) {
+//            "Hex" -> toHex(value)
+//            "Decimal" -> value.toString()
+//            "Unsigned" -> toUnsigned(value)
+//            "ASCII" -> toAscii(value)
+//            else -> toHex(value)
+//        }
+        /*FIXME TO BE DYNAMIC*/
+        fregister.value = value.toString()
         if (setActive) {
             activeRegister?.classList?.remove("is-modified")
             fregister.classList.add("is-modified")
