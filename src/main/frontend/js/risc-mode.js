@@ -78,7 +78,7 @@ CodeMirror.defineMode("riscv", function(config, parserConfig) {
         "fcvt.wu.[s|d]",
         "fdiv.[s|d]",
         "feq.[s|d]",
-        "fle.[s|d]",
+        "fl[te].[s|d]",
         "fmadd.[s|d]",
         "fmax.[s|d]",
         "fmin.[s|d]",
