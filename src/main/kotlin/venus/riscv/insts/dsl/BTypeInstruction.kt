@@ -1,10 +1,10 @@
 package venus.riscv.insts.dsl
 
-import venus.riscv.insts.dsl.disasms.BTypeDisassembler
-import venus.riscv.insts.dsl.formats.BTypeFormat
-import venus.riscv.insts.dsl.impls.BTypeImplementation32
+import venus.riscv.insts.dsl.disasms.base.BTypeDisassembler
+import venus.riscv.insts.dsl.formats.base.BTypeFormat
+import venus.riscv.insts.dsl.impls.base.BTypeImplementation32
 import venus.riscv.insts.dsl.impls.NoImplementation
-import venus.riscv.insts.dsl.parsers.BTypeParser
+import venus.riscv.insts.dsl.parsers.base.BTypeParser
 
 class BTypeInstruction(
         name: String,

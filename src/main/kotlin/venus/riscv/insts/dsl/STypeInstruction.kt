@@ -1,10 +1,10 @@
 package venus.riscv.insts.dsl
 
-import venus.riscv.insts.dsl.disasms.STypeDisassembler
-import venus.riscv.insts.dsl.formats.STypeFormat
+import venus.riscv.insts.dsl.disasms.base.STypeDisassembler
+import venus.riscv.insts.dsl.formats.base.STypeFormat
 import venus.riscv.insts.dsl.impls.NoImplementation
-import venus.riscv.insts.dsl.impls.STypeImplementation32
-import venus.riscv.insts.dsl.parsers.STypeParser
+import venus.riscv.insts.dsl.impls.base.STypeImplementation32
+import venus.riscv.insts.dsl.parsers.base.STypeParser
 import venus.simulator.Simulator
 
 class STypeInstruction(

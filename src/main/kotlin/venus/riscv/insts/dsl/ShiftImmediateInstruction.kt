@@ -1,10 +1,10 @@
 package venus.riscv.insts.dsl
 
-import venus.riscv.insts.dsl.disasms.ShiftImmediateDisassembler
-import venus.riscv.insts.dsl.formats.RTypeFormat
+import venus.riscv.insts.dsl.disasms.base.ShiftImmediateDisassembler
+import venus.riscv.insts.dsl.formats.base.RTypeFormat
 import venus.riscv.insts.dsl.impls.NoImplementation
-import venus.riscv.insts.dsl.impls.ShiftImmediateImplementation32
-import venus.riscv.insts.dsl.parsers.ShiftImmediateParser
+import venus.riscv.insts.dsl.impls.base.ShiftImmediateImplementation32
+import venus.riscv.insts.dsl.parsers.base.ShiftImmediateParser
 
 class ShiftImmediateInstruction(
         name: String,
