@@ -290,7 +290,7 @@ import kotlin.dom.removeClass
         if (!currentlyRunning()) {
             try {
                 val input = freg.value
-                sim.setFRegNoUndo(id, userStringToInt(input))
+                sim.setFRegNoUndo(id, userStringToFloat(input))
             } catch (e: NumberFormatException) {
                 /* do nothing */
             }

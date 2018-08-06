@@ -105,13 +105,13 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     }
     fun getFReg(id: Int) = state.getFReg(id)
 
-    fun setFReg(id: Int, v: Int) {
+    fun setFReg(id: Int, v: Float) {
         preInstruction.add(FRegisterDiff(id, state.getFReg(id)))
         state.setFReg(id, v)
         postInstruction.add(FRegisterDiff(id, state.getFReg(id)))
     }
 
-    fun setFRegNoUndo(id: Int, v: Int) {
+    fun setFRegNoUndo(id: Int, v: Float) {
         state.setFReg(id, v)
     }
 
