@@ -2,8 +2,8 @@ group 'venus'
 version '0.1.0'
 
 buildscript {
-    ext.kotlin_version = '1.1.4'
-    ext.dokka_version = '0.9.14'
+    ext.kotlin_version = '1.2.60'
+    ext.dokka_version = '0.9.16'
     ext.ktlint_version = '0.27.0'
 
     repositories {
