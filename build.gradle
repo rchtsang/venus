@@ -32,6 +32,13 @@ repositories {
     jcenter()
 }
 
+compileKotlin2Js {
+    kotlinOptions.sourceMap = true
+    kotlinOptions.sourceMapEmbedSources = "always"
+
+    // remaining configuration options
+}
+
 task ktlint(type: JavaExec) {
     description = "Check Kotlin code style."
     main = "com.github.shyiko.ktlint.Main"
