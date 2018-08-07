@@ -29,7 +29,7 @@ configurations {
 
 repositories {
     //maven { url 'https://dl.bintray.com/kotlin/kotlin-1.1.4' }
-    maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib/$kotlin_version" }
+    //maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib/$kotlin_version" }
     mavenCentral()
     jcenter()
 }
