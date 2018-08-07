@@ -1,6 +1,7 @@
 package venus.simulator.cache
 
-import kotlin.js.Math
+import venus.simulator.cache.Math.Companion.random
+import kotlin.math.floor
 
 /**
  * Created by thaum on 7/29/2018.
@@ -65,10 +66,9 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
         return blocks[index]
     }
 
-    fun getRandomInt(min: Int, max: Int): Int {
-        val min = Math.ceil(min)
-        val max = Math.floor(max) + 1
-        return Math.min(Math.floor(Math.random() * (max - min)) + min)
+    fun getRandomInt(min: Int, vmax: Int): Int {
+        val max = vmax + 1
+        return minOf(floor(random() * (max - min)).toInt() + min, vmax)
     }
 
     // returns the Block if found, null otherwise

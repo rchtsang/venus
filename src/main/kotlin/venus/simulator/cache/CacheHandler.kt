@@ -2,6 +2,8 @@ package venus.simulator.cache
 
 import venus.riscv.Address
 import venus.riscv.MemSize
+import kotlin.math.floor
+import kotlin.math.log2
 
 class CacheHandler(var cacheLevel: Int) {
     var seed: String = Math.random().toString()
@@ -144,7 +146,7 @@ class CacheHandler(var cacheLevel: Int) {
     }
 
     fun setNumberOfBlocks(i: Int) {
-        val d = Math.log2(i.toDouble())
+        val d = log2(i.toDouble())
         if (!isInt(d)) {
             throw CacheError("Number of Blocks must be a power of 2!")
         }
@@ -164,7 +166,7 @@ class CacheHandler(var cacheLevel: Int) {
     }
 
     fun setCacheBlockSize(i: Int) {
-        val d = Math.log2(i.toDouble())
+        val d = log2(i.toDouble())
         if (!isInt(d)) {
             throw CacheError("CacheHandler Block Size must be a power of 2!")
         }
@@ -206,7 +208,7 @@ class CacheHandler(var cacheLevel: Int) {
                 return
                 // throw CacheError("Associativity must be greater than or equal to 1 but not greater than the number of blocks!")
             }
-            val d = Math.log2(i.toDouble())
+            val d = log2(i.toDouble())
             if (!isInt(d)) {
                 throw CacheError("Associativity must be a positive nonzero power of 2!")
             }
@@ -220,15 +222,12 @@ class CacheHandler(var cacheLevel: Int) {
     }
 
     internal fun isInt(d: Double): Boolean {
-        return !d.isNaN() && !d.isInfinite() && d == Math.floor(d).toDouble()
+        return !d.isNaN() && !d.isInfinite() && d == floor(d)
     }
 }
 
 external class Math {
     companion object {
-        fun log2(d: Double): Double
-        fun log2(d: Int): Double
-        fun floor(d: Double): Int
         fun seedrandom(seed: String)
         fun random(): Double
     }
