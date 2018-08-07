@@ -34,4 +34,5 @@ class MachineCode(private var encoding: Int) {
     }
 
     override fun toString() = encoding.toString()
+    fun toString(radix: Int) = encoding.toString(radix)
 }
