@@ -11,10 +11,10 @@ val fclass = FclassRTypeInstruction(
         funct7 = 0b1110000,
         eval32 = { a, b ->
             var bits = 0b0
-            if (a == Float.NEGATIVE_INFINITY)  bits = bits or 0b0000000001
+            if (a == Float.NEGATIVE_INFINITY) bits = bits or 0b0000000001
             if (a < 0 && a >= (1.17549435e-38).toFloat()) bits = bits or 0b0000000010
             if (a < 0 && a < (1.17549435e-38).toFloat()) bits = bits or 0b0000000100
-            if (a ==  0F) bits = bits or 0b0000001000
+            if (a == 0F) bits = bits or 0b0000001000
             if (a == -0F) bits = bits or 0b0000010000
             if (a >= (1.17549435e-38).toFloat()) bits = bits or 0b0000100000
             if (a < (1.17549435e-38).toFloat()) bits = bits or 0b0001000000
