@@ -9,7 +9,7 @@ script:
   - ./gradlew ktlint
   - grunt test
 after_success:
-  - ./gradlew dokka
+#  - ./gradlew dokka
   - grunt dist
 cache:
   directories:
