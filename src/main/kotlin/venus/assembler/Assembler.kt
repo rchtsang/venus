@@ -153,6 +153,7 @@ internal class AssemblerPassOne(private val text: String) {
         } catch (t: Throwable) {
             /* TODO: don't use throwable here */
             /* not a pseudoinstruction, or expansion failure */
+
             return parsePossibleMachineCode(tokens)
         }
     }
@@ -180,7 +181,9 @@ internal class AssemblerPassOne(private val text: String) {
                 errors.add(AssemblerError(currentLineNumber, e))
             }
         } catch (e: NumberFormatException) {
-            errors.add(AssemblerError(currentLineNumber, e))
+            if (c.startsWith("0x") || c.startsWith("0b") || c.matches("\\d+")) {
+                errors.add(AssemblerError(currentLineNumber, e))
+            }
         }
         return listOf(tokens)
     }
