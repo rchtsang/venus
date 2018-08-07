@@ -2,6 +2,7 @@ package venus.assembler
 
 import venus.assembler.pseudos.checkArgsLength
 import venus.glue.Renderer
+import venus.riscv.MachineCode
 import venus.riscv.MemorySegments
 import venus.riscv.Program
 import venus.riscv.insts.dsl.Instruction
@@ -152,8 +153,36 @@ internal class AssemblerPassOne(private val text: String) {
         } catch (t: Throwable) {
             /* TODO: don't use throwable here */
             /* not a pseudoinstruction, or expansion failure */
-            return listOf(tokens)
+            return parsePossibleMachineCode(tokens)
         }
+    }
+
+    private fun parsePossibleMachineCode(tokens: LineTokens): List<LineTokens> {
+        val c = getInstruction(tokens)
+        try {
+            var cmd = userStringToInt(c)
+            try {
+                val decoded = Instruction[MachineCode(cmd)].disasm(MachineCode(cmd))
+                val lex = Lexer.lexLine(decoded).second.toMutableList()
+                if (lex[0] == "jal") {
+                    val loc = getOffset() + lex[2].toInt()
+                    prog.addLabel("L" + loc.toString(), loc)
+                    lex[2] = "L" + loc.toString()
+                }
+                if (lex[0] in listOf("beq", "bge", "bgeu", "blt", "bltu", "bne")) {
+                    val loc = getOffset() + lex[3].toInt()
+                    prog.addLabel("L" + loc.toString(), loc)
+                    lex[3] = "L" + loc.toString()
+                }
+                val t = listOf(lex)
+                return t
+            } catch (e: SimulatorError) {
+                errors.add(AssemblerError(currentLineNumber, e))
+            }
+        } catch (e: NumberFormatException) {
+            errors.add(AssemblerError(currentLineNumber, e))
+        }
+        return listOf(tokens)
     }
 
     /**

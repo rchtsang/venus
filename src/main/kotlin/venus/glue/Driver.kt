@@ -313,7 +313,7 @@ import kotlin.dom.removeClass
         for (i in 0 until sim.linkedProgram.prog.insts.size) {
             val mcode = sim.linkedProgram.prog.insts[i]
             val hexRepresentation = Renderer.toHex(mcode[InstructionField.ENTIRE])
-            sb.append(hexRepresentation.removePrefix("0x"))
+            sb.append(hexRepresentation/*.removePrefix("0x")*/)
             sb.append("\n")
         }
         return sb.toString()
