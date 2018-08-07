@@ -1272,9 +1272,10 @@
 <script type="text/javascript" src="../src/main/frontend/scripts/helper.js"></script>
 <script type="text/javascript" src="../src/main/frontend/js/codemirror.js"></script>
 <script type="text/javascript" src="../src/main/frontend/js/risc-mode.js"></script>
-<script type="text/javascript" src="../build/classes/main/lib/kotlin.js"></script>
-<script type="text/javascript" src="../build/classes/main/venus_main.js"></script>
+<script type="text/javascript" src="../build/kotlin-js-min/main/kotlin.js"></script>
+<script type="text/javascript" src="../build/kotlin-js-min/main/venus.js"></script>
 <script type="text/javascript">
+    window.venus_main = window.venus;
     var driver = venus_main.venus.glue.Driver;
     var editor = document.getElementById("asm-editor");
     var codeMirror = CodeMirror.fromTextArea(editor,
