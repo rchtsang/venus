@@ -18,8 +18,8 @@ object BTypeParser : InstructionParser {
         mcode[InstructionField.RS2] = regNameToNumber(args[1])
 
         val label = args[2]
-        val imm = prog.getLabelOffset(label) ?:
-                throw AssemblerError("could not find label $label")
+        val imm = prog.getLabelOffset(label)
+                ?: throw AssemblerError("could not find label $label")
         if (imm !in B_TYPE_MIN..B_TYPE_MAX)
             throw AssemblerError("branch to $label too far")
 

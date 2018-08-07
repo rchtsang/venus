@@ -9,10 +9,10 @@ val scw = AMORTypeInstruction(
         funct5 = 0b00011,
         rl = 0b0,
         aq = 0b0,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> data xor vrs2 }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val scwaq = AMORTypeInstruction(
@@ -22,10 +22,10 @@ val scwaq = AMORTypeInstruction(
         funct5 = 0b00011,
         rl = 0b0,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> data xor vrs2 }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val scwrl = AMORTypeInstruction(
@@ -35,10 +35,10 @@ val scwrl = AMORTypeInstruction(
         funct5 = 0b00011,
         rl = 0b1,
         aq = 0b0,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> data xor vrs2 }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val scwaqrl = AMORTypeInstruction(
@@ -48,10 +48,10 @@ val scwaqrl = AMORTypeInstruction(
         funct5 = 0b00011,
         rl = 0b1,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> data xor vrs2 }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val scwrlaq = AMORTypeInstruction(
@@ -61,8 +61,8 @@ val scwrlaq = AMORTypeInstruction(
         funct5 = 0b00011,
         rl = 0b1,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> data xor vrs2 }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )

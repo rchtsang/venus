@@ -9,10 +9,10 @@ val amominuw = AMORTypeInstruction(
         funct5 = 0b11000,
         rl = 0b0,
         aq = 0b0,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amominuwaq = AMORTypeInstruction(
@@ -22,10 +22,10 @@ val amominuwaq = AMORTypeInstruction(
         funct5 = 0b11000,
         rl = 0b0,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amominuwrl = AMORTypeInstruction(
@@ -35,10 +35,10 @@ val amominuwrl = AMORTypeInstruction(
         funct5 = 0b11000,
         rl = 0b1,
         aq = 0b0,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amominuwaqrl = AMORTypeInstruction(
@@ -48,10 +48,10 @@ val amominuwaqrl = AMORTypeInstruction(
         funct5 = 0b11000,
         rl = 0b1,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amominuwrlaq = AMORTypeInstruction(
@@ -61,8 +61,8 @@ val amominuwrlaq = AMORTypeInstruction(
         funct5 = 0b11000,
         rl = 0b1,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )

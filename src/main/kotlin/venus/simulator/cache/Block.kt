@@ -44,7 +44,7 @@ class Block
      */
     var recentUse: Int = 0
         private set // higher values are more recently used
-    //private var words: IntArray? = null
+    // private var words: IntArray? = null
 
     init {
         isValid = false // doesn't contain valid data yet
@@ -64,7 +64,7 @@ class Block
      */
     fun read(address: Int, useCounter: Int) {
         recentUse = useCounter
-        //return words!![address % blocksize]
+        // return words!![address % blocksize]
     }
 
     /**
@@ -79,7 +79,7 @@ class Block
      */
     fun write(offset: Int, /*data: Int,*/ useCounter: Int) {
         recentUse = useCounter
-        //words!![offset] = data
+        // words!![offset] = data
         isValid = true
         isDirty = true
     }
@@ -93,7 +93,7 @@ class Block
      */
     fun writeBlock(tag: Int/*, words: IntArray*/) {
         this.tag = tag
-        //this.words = words
+        // this.words = words
         isValid = true
         isDirty = false
     }
@@ -114,7 +114,7 @@ class Block
         b.isDirty = this.isDirty
         b.recentUse = this.recentUse
         b.blockState = this.blockState
-        //b.words = this.words?.copyOf()
+        // b.words = this.words?.copyOf()
         return b
     }
 
@@ -122,11 +122,10 @@ class Block
      * Prints the block values to standard out.
      */
     override fun toString(): String {
-        var result = ((if (isValid) 1 else 0).toString() + "        " + Renderer.toHex(tag) + "   "
-                + (if (isDirty) 1 else 0) + "        ")
+        var result = ((if (isValid) 1 else 0).toString() + "        " + Renderer.toHex(tag) + "   " +
+                (if (isDirty) 1 else 0) + "        ")
 //        for (word in words!!)
 //            result += Renderer.toHex(word) + "     "
         return result
     }
-
 }

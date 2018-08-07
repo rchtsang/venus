@@ -6,7 +6,7 @@ import venus.riscv.MemorySegments
 /**
  * Created by Thaumic on 7/14/2018.
  */
-class Tracer (val sim: Simulator) {
+class Tracer(val sim: Simulator) {
     var version = "v2.0.1"
     var format = "%output%%0%\t%1%\t%2%\t%3%\t%4%\t%5%\t%6%\t%7%\t%8%\t%9%\t%10%\t%11%\t%12%\t%13%\t%14%\t%15%\t%16%\t%17%\t%18%\t%19%\t%20%\t%21%\t%22%\t%23%\t%24%\t%25%\t%26%\t%27%\t%28%\t%29%\t%30%\t%31%\t%line%\t%pc%\t%inst%\n"
     var amtReg = 32
@@ -84,7 +84,7 @@ class Tracer (val sim: Simulator) {
         }
     }
 
-    fun getSingleTrace(line : Int) : Trace {
+    fun getSingleTrace(line: Int): Trace {
         var mc = MachineCode(0)
         if (!sim.isDone()) {
             mc = sim.getNextInstruction()
@@ -112,7 +112,7 @@ class Tracer (val sim: Simulator) {
         return sim.jumped
     }
 
-    fun getecallMsg() : String {
+    fun getecallMsg(): String {
         return sim.ecallMsg
     }
 
@@ -176,7 +176,7 @@ class Tracer (val sim: Simulator) {
         flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
         flushed.line = this.tr.stringIndex
         if (this.instFirst) {
-            //flushed.regs = t.regs
+            // flushed.regs = t.regs
         }
         this.tr.str += flushed.getString(format, base)
         this.tr.stringIndex++
@@ -190,7 +190,7 @@ class Tracer (val sim: Simulator) {
         flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
         flushed.line = this.tr.stringIndex
         if (this.instFirst) {
-            //flushed.regs = t.regs
+            // flushed.regs = t.regs
         }
         this.tr.str += flushed.getString(format, base)
         this.tr.stringIndex++
@@ -208,7 +208,6 @@ class Tracer (val sim: Simulator) {
         }
         try {
             if (this.twoStage && this.instFirst && this.tr.trace[2].jumped) {
-
             }
         } catch (e: Throwable) {
             println("Internal error in traceString")
@@ -225,7 +224,7 @@ class Tracer (val sim: Simulator) {
         traceStringEnd()
     }
 
-    private fun incPC(pc : Int) : Int {
+    private fun incPC(pc: Int): Int {
         return pc + 4
     }
 
@@ -236,9 +235,8 @@ class Tracer (val sim: Simulator) {
     fun setWordAddressed(b: Boolean) {
         wordAddressed = b
     }
-
 }
-class TraceEncapsulation () {
+class TraceEncapsulation() {
 
     lateinit var trace: ArrayList<Trace>
     var traced = false

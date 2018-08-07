@@ -42,7 +42,7 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
             theBlock.blockState = bs
         } else {
             // this shouldn't happen ...
-            //throw CacheError("Could not find block with tag '" + tag.toString() + "'! This error should not have occurred since it should have been handled earlier in the code.")
+            // throw CacheError("Could not find block with tag '" + tag.toString() + "'! This error should not have occurred since it should have been handled earlier in the code.")
         }
     }
 
@@ -86,5 +86,4 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
             a.add(b.blockState.toString())
         }
     }
-
 }

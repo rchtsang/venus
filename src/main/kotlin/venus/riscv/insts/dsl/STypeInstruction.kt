@@ -8,13 +8,13 @@ import venus.riscv.insts.dsl.parsers.base.STypeParser
 import venus.simulator.Simulator
 
 class STypeInstruction(
-        name: String,
-        opcode: Int,
-        funct3: Int,
-        store16: (Simulator, Short, Short) -> Unit = { _, _, _ -> throw NotImplementedError("no rv16") },
-        store32: (Simulator, Int, Int) -> Unit,
-        store64: (Simulator, Long, Long) -> Unit = { _, _, _ -> throw NotImplementedError("no rv64") },
-        store128: (Simulator, Long, Long) -> Unit = { _, _, _ -> throw NotImplementedError("no rv128") }
+    name: String,
+    opcode: Int,
+    funct3: Int,
+    store16: (Simulator, Short, Short) -> Unit = { _, _, _ -> throw NotImplementedError("no rv16") },
+    store32: (Simulator, Int, Int) -> Unit,
+    store64: (Simulator, Long, Long) -> Unit = { _, _, _ -> throw NotImplementedError("no rv64") },
+    store128: (Simulator, Long, Long) -> Unit = { _, _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
         format = STypeFormat(opcode, funct3),

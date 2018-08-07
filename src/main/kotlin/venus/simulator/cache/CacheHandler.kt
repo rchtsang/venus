@@ -3,7 +3,7 @@ package venus.simulator.cache
 import venus.riscv.Address
 import venus.riscv.MemSize
 
-class CacheHandler (var cacheLevel: Int) {
+class CacheHandler(var cacheLevel: Int) {
     var seed: String = Math.random().toString()
         private set
     private var numberOfBlocks: Int = 1
@@ -187,16 +187,16 @@ class CacheHandler (var cacheLevel: Int) {
         this.update()
     }
 
-    fun placementPol (): PlacementPolicy {
+    fun placementPol(): PlacementPolicy {
         return this.placementPol
     }
 
-    fun setBlockRepPolicy (brp: BlockReplacementPolicy) {
+    fun setBlockRepPolicy(brp: BlockReplacementPolicy) {
         this.BlockRepPolicy = brp
         this.update()
     }
 
-    fun blockRepPolicy (): BlockReplacementPolicy {
+    fun blockRepPolicy(): BlockReplacementPolicy {
         return this.BlockRepPolicy
     }
 
@@ -204,7 +204,7 @@ class CacheHandler (var cacheLevel: Int) {
         if ((this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE || override)) {
             if (i !in 1..this.numberOfBlocks) {
                 return
-                //throw CacheError("Associativity must be greater than or equal to 1 but not greater than the number of blocks!")
+                // throw CacheError("Associativity must be greater than or equal to 1 but not greater than the number of blocks!")
             }
             val d = Math.log2(i.toDouble())
             if (!isInt(d)) {

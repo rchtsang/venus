@@ -8,14 +8,14 @@ import venus.riscv.insts.dsl.impls.extensions.FRTypeImplementation32
 import venus.riscv.insts.dsl.parsers.extensions.FRRTypeParser
 
 class FSRRTypeInstruction(
-        name: String,
-        opcode: Int,
-        funct7: Int,
-        rs2: Int,
-        //eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
-        eval32: (Float, Float) -> Float//,
-        //eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
-        //eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
+    name: String,
+    opcode: Int,
+    funct7: Int,
+    rs2: Int,
+        // eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
+    eval32: (Float, Float) -> Float // ,
+        // eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
+        // eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
         format = FSRS2TypeFormat(opcode, funct7, rs2),

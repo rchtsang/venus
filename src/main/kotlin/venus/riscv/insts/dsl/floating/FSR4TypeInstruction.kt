@@ -7,13 +7,13 @@ import venus.riscv.insts.dsl.impls.NoImplementation
 import venus.riscv.insts.dsl.impls.extensions.FR4TypeImplementation32
 import venus.riscv.insts.dsl.parsers.extensions.FR4TypeParser
 class FSR4TypeInstruction(
-        name: String,
-        opcode: Int,
-        funct2: Int,
-        //eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
-        eval32: (Float, Float, Float) -> Float//,
-        //eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
-        //eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
+    name: String,
+    opcode: Int,
+    funct2: Int,
+        // eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
+    eval32: (Float, Float, Float) -> Float // ,
+        // eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
+        // eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
         format = R4TypeFormat(opcode, funct2),

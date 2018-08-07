@@ -86,8 +86,8 @@ object Linker {
         }
 
         for ((relocator, offset, label) in toRelocate) {
-            val toAddress = globalTable.get(label) ?:
-                    throw AssemblerError("label $label used but not defined")
+            val toAddress = globalTable.get(label)
+                    ?: throw AssemblerError("label $label used but not defined")
 
             val mcode = linkedProgram.prog.insts[offset / 4]
             relocator(mcode, offset, toAddress)

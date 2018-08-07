@@ -7,13 +7,13 @@ import venus.riscv.insts.dsl.impls.NoImplementation
 import venus.riscv.insts.dsl.parsers.base.ITypeParser
 
 class ITypeInstruction(
-        name: String,
-        opcode: Int,
-        funct3: Int,
-        eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
-        eval32: (Int, Int) -> Int,
-        eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
-        eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
+    name: String,
+    opcode: Int,
+    funct3: Int,
+    eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
+    eval32: (Int, Int) -> Int,
+    eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
+    eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
         format = ITypeFormat(opcode, funct3),

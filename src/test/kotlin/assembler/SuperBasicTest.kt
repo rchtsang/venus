@@ -1,4 +1,6 @@
+/* ktlint-disable package-name */
 package venus.assembler
+/* ktlint-enable package-name */
 
 import venus.linker.Linker
 import venus.simulator.Simulator

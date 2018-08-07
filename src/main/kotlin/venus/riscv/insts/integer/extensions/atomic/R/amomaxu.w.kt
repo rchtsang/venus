@@ -9,11 +9,11 @@ val amomaxuw = AMORTypeInstruction(
         funct5 = 0b11100,
         rl = 0b0,
         aq = 0b0,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         /*todo test if this 'unsigned' conversion works*/
         eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amomaxuwaq = AMORTypeInstruction(
@@ -23,11 +23,11 @@ val amomaxuwaq = AMORTypeInstruction(
         funct5 = 0b11100,
         rl = 0b0,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         /*todo test if this 'unsigned' conversion works*/
         eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amomaxuwrl = AMORTypeInstruction(
@@ -37,11 +37,11 @@ val amomaxuwrl = AMORTypeInstruction(
         funct5 = 0b11100,
         rl = 0b1,
         aq = 0b0,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         /*todo test if this 'unsigned' conversion works*/
         eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amomaxuwaqrl = AMORTypeInstruction(
@@ -51,11 +51,11 @@ val amomaxuwaqrl = AMORTypeInstruction(
         funct5 = 0b11100,
         rl = 0b1,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         /*todo test if this 'unsigned' conversion works*/
         eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )
 
 val amomaxuwrlaq = AMORTypeInstruction(
@@ -65,9 +65,9 @@ val amomaxuwrlaq = AMORTypeInstruction(
         funct5 = 0b11100,
         rl = 0b1,
         aq = 0b1,
-        //eval16 = { a, b -> (a + b).toShort() },
+        // eval16 = { a, b -> (a + b).toShort() },
         /*todo test if this 'unsigned' conversion works*/
         eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
-        //eval64 = { a, b -> a + b },
-        //eval128 = { a, b -> a + b }
+        // eval64 = { a, b -> a + b },
+        // eval128 = { a, b -> a + b }
 )

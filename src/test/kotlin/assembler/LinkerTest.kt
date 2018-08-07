@@ -1,4 +1,6 @@
+/* ktlint-disable package-name */
 package venus.linker
+/* ktlint-enable package-name */
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
