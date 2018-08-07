@@ -11,50 +11,50 @@ class LexerTest {
     @Test fun basicLexing() {
         val line = "add x0 x0 x0"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(emptyList(), labels)
-        assertEquals(listOf("add", "x0", "x0", "x0"), args)
+        assertTrue(labels.isEmpty())
+        assertTrue(listOf("add", "x0", "x0", "x0").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexLabel() {
         val line = "start: add x2 x2 x3"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(listOf("start"), labels)
-        assertEquals(listOf("add", "x2", "x2", "x3"), args)
+        assertTrue(listOf("start").toTypedArray().contentDeepEquals(labels.toTypedArray()))
+        assertTrue(listOf("add", "x2", "x2", "x3").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexComment() {
         val line = "add x0 x0 x0 # hi: x0"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(emptyList(), labels)
-        assertEquals(listOf("add", "x0", "x0", "x0"), args)
+        assertTrue(labels.isEmpty())
+        assertTrue(listOf("add", "x0", "x0", "x0").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexComma() {
         val line = "add x0, x1, x2"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(emptyList(), labels)
-        assertEquals(listOf("add", "x0", "x1", "x2"), args)
+        assertTrue(labels.isEmpty())
+        assertTrue(listOf("add", "x0", "x1", "x2").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexLabelSpace() {
         val line = "  \t  start: add x0, x1, x2"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(listOf("start"), labels)
-        assertEquals(listOf("add", "x0", "x1", "x2"), args)
+        assertTrue(listOf("start").toTypedArray().contentDeepEquals(labels.toTypedArray()))
+        assertTrue(listOf("add", "x0", "x1", "x2").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexBaseDisplacement() {
         val line = "sw x1 0(x2)"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(emptyList(), labels)
-        assertEquals(listOf("sw", "x1", "0", "x2"), args)
+        assertTrue(labels.isEmpty())
+        assertTrue(listOf("sw", "x1", "0", "x2").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexNothing() {
         val line = ""
         val (label, args) = Lexer.lexLine(line)
-        assertEquals(emptyList(), label)
-        assertEquals(emptyList(), args)
+        assertTrue(label.isEmpty())
+        assertTrue(args.isEmpty())
     }
 
     @Test fun lexAsciizBadStrings() {
@@ -86,41 +86,41 @@ class LexerTest {
     @Test fun lexMultipleLabels() {
         val line = "hello: world: label: me:"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(listOf("hello", "world", "label", "me"), labels)
-        assertEquals(emptyList(), args)
+        assertTrue(listOf("hello", "world", "label", "me").toTypedArray().contentDeepEquals(labels.toTypedArray()))
+        assertTrue(args.isEmpty())
     }
 
     @Test fun lexMultipleLabelsAndInstruction() {
         val line = "hello: world: label: me: lui 2"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(listOf("hello", "world", "label", "me"), labels)
-        assertEquals(listOf("lui", "2"), args)
+        assertTrue(listOf("hello", "world", "label", "me").toTypedArray().contentDeepEquals(labels.toTypedArray()))
+        assertTrue(listOf("lui", "2").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexDelimiterInChar() {
         val line = "addi x0 x0 ':'"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(emptyList(), labels)
-        assertEquals(listOf("addi", "x0", "x0", "':'"), args)
+        assertTrue(labels.isEmpty())
+        assertTrue(listOf("addi", "x0", "x0", "':'").toTypedArray().contentDeepEquals(args.toTypedArray()))
     }
 
     @Test fun lexColonInComment() {
         val line = "#hello:"
         val (labels, args) = Lexer.lexLine(line)
-        assertEquals(emptyList(), labels)
-        assertEquals(emptyList(), args)
+        assertTrue(labels.isEmpty())
+        assertTrue(args.isEmpty())
     }
 
     @Test fun lexColonInAsciiz() {
         val line = """.asciiz "hi:"""
         val (labels, _) = Lexer.lexLine(line)
-        assertEquals(emptyList(), labels)
+        assertTrue(labels.isEmpty())
     }
 
     @Test fun lexLabelAndComment() {
         val line = "hello: # hi!"
         val (labels, _) = Lexer.lexLine(line)
-        assertEquals(listOf("hello"), labels)
+        assertTrue(listOf("hello").toTypedArray().contentDeepEquals(labels.toTypedArray()))
     }
 
     @Test fun labelInInstruction() {
