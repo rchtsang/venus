@@ -1271,6 +1271,7 @@
 <script type="text/javascript" src="js/codemirror.js"></script>
 <script type="text/javascript" src="venus.js"></script>
 <script type="text/javascript">
+    window.venus_main = window.venus;
     var driver = venus_main.venus.glue.Driver;
     var editor = document.getElementById("asm-editor");
     var codeMirror = CodeMirror.fromTextArea(editor,
