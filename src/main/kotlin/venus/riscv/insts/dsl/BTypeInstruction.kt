@@ -7,13 +7,13 @@ import venus.riscv.insts.dsl.impls.NoImplementation
 import venus.riscv.insts.dsl.parsers.base.BTypeParser
 
 class BTypeInstruction(
-        name: String,
-        opcode: Int,
-        funct3: Int,
-        cond16: (Short, Short) -> Boolean = { _, _ -> throw NotImplementedError("no rv64") },
-        cond32: (Int, Int) -> Boolean,
-        cond64: (Long, Long) -> Boolean = { _, _ -> throw NotImplementedError("no rv64") },
-        cond128: (Long, Long) -> Boolean = { _, _ -> throw NotImplementedError("no rv128") }
+    name: String,
+    opcode: Int,
+    funct3: Int,
+    cond16: (Short, Short) -> Boolean = { _, _ -> throw NotImplementedError("no rv64") },
+    cond32: (Int, Int) -> Boolean,
+    cond64: (Long, Long) -> Boolean = { _, _ -> throw NotImplementedError("no rv64") },
+    cond128: (Long, Long) -> Boolean = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
         format = BTypeFormat(opcode, funct3),

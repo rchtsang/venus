@@ -6,8 +6,10 @@ import venus.riscv.insts.dsl.impls.InstructionImplementation
 import venus.riscv.insts.dsl.impls.signExtend
 import venus.simulator.Simulator
 
-class LoadImplementation32(private val load: (Simulator, Int) -> Int,
-                           private val postLoad: (Int) -> Int) : InstructionImplementation {
+class LoadImplementation32(
+    private val load: (Simulator, Int) -> Int,
+    private val postLoad: (Int) -> Int
+) : InstructionImplementation {
     override operator fun invoke(mcode: MachineCode, sim: Simulator) {
         val rs1 = mcode[InstructionField.RS1]
         val rd = mcode[InstructionField.RD]

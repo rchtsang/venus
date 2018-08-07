@@ -1,11 +1,10 @@
 package venus.glue
 
 class LocalStorage {
-    //@todo convert this to js and use it externally instead.
+    // @todo convert this to js and use it externally instead.
     internal var lsm: LocalStorageManager = LocalStorageManager("venus")
 
     init {
-
     }
 
     fun get(key: String): String {
@@ -33,7 +32,7 @@ class LocalStorage {
     }
 }
 
-external class LocalStorageManager (name: String) {
+external class LocalStorageManager(name: String) {
     fun set(key: String, value: String)
     fun get(key: String): String
     fun remove(key: String)

@@ -251,12 +251,12 @@ internal object Renderer {
     }
     /*@TODO make it so I can detect between if I am continuing or not so I do not have to be too wasteful.*/
     fun updateCache(a: Address) {
-        //println("Need to implement the update cHandler feature!")
+        // println("Need to implement the update cHandler feature!")
         (document.getElementById("hit-count") as HTMLInputElement).value = Driver.cache.getHitCount().toString()
         val hr = Driver.cache.getHitRate()
         (document.getElementById("hit-rate") as HTMLInputElement).value = (if (hr.isNaN()) "???" else hr).toString()
         (document.getElementById("access-amt") as HTMLInputElement).value = Driver.cache.memoryAccessCount().toString()
-        //(document.getElementById("cacheDebug") as HTMLDivElement).innerHTML = Driver.cache.getBlocksState().toString()
+        // (document.getElementById("cacheDebug") as HTMLDivElement).innerHTML = Driver.cache.getBlocksState().toString()
         try {
             updateAllCacheBlocks()
         } catch (e: Throwable) {

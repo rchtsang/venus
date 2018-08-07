@@ -1,4 +1,4 @@
-package venus.riscv.insts.integer.base.UJ
+package venus.riscv.insts.integer.base.uj
 
 import venus.riscv.InstructionField
 import venus.riscv.MachineCode

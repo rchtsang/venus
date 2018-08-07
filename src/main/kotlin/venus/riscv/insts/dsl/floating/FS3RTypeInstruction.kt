@@ -11,14 +11,14 @@ import venus.riscv.insts.dsl.parsers.extensions.FRTypeParser
  * Created by thaum on 8/6/2018.
  */
 class FS3RTypeInstruction(
-        name: String,
-        opcode: Int,
-        funct7: Int,
-        funct3: Int,
-        //eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
-        eval32: (Float, Float) -> Float//,
-        //eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
-        //eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
+    name: String,
+    opcode: Int,
+    funct7: Int,
+    funct3: Int,
+        // eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
+    eval32: (Float, Float) -> Float // ,
+        // eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
+        // eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
         format = RTypeFormat(opcode, funct3, funct7),

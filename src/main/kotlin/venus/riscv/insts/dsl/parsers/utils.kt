@@ -126,4 +126,3 @@ fun checkFloating(reg: String): Int {
         else -> throw AssemblerError("register $reg not recognized")
     }
 }
-

@@ -134,7 +134,7 @@ import kotlin.dom.removeClass
                 sim.step() // walk past breakpoint
             } catch (e: Throwable) {
                 runEnd()
-                handleError("RunStart" , e, e is AlignmentError || e is StoreError)
+                handleError("RunStart", e, e is AlignmentError || e is StoreError)
             }
         }
     }
@@ -172,7 +172,7 @@ import kotlin.dom.removeClass
             timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
         } catch (e: Throwable) {
             runEnd()
-            handleError("RunStart" , e, e is AlignmentError || e is StoreError)
+            handleError("RunStart", e, e is AlignmentError || e is StoreError)
         }
     }
 
@@ -327,7 +327,7 @@ import kotlin.dom.removeClass
             ta.select()
             val success = document.execCommand("copy")
             if (success) {
-                //window.alert("Successfully copied machine code to clipboard")
+                // window.alert("Successfully copied machine code to clipboard")
                 console.log("Successfully copied machine code to clipboard")
             }
         } catch (e: Throwable) {
@@ -559,7 +559,7 @@ import kotlin.dom.removeClass
         try {
             tr.traceStart()
             traceLoop()
-        } catch (e : Throwable) {
+        } catch (e: Throwable) {
             handleError("Trace tr Start", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
@@ -579,7 +579,7 @@ import kotlin.dom.removeClass
                 cycles++
             }
             trTimer = window.setTimeout(Driver::traceLoop, TIMEOUT_TIME)
-        } catch (e : Throwable) {
+        } catch (e: Throwable) {
             handleError("Trace tr Loop", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
@@ -591,7 +591,7 @@ import kotlin.dom.removeClass
             tr.traceEnd()
             tr.traceStringStart()
             trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
-        } catch (e : Throwable) {
+        } catch (e: Throwable) {
             handleError("Trace Tr End", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
@@ -609,7 +609,7 @@ import kotlin.dom.removeClass
             }
         }
             trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
-        } catch (e : Throwable) {
+        } catch (e: Throwable) {
             handleError("Trace String Loop", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
@@ -622,7 +622,7 @@ import kotlin.dom.removeClass
             tr.traceStringEnd()
             Renderer.clearConsole()
             Renderer.printConsole(tr.getString())
-        } catch (e : Throwable) {
+        } catch (e: Throwable) {
             handleError("Trace String End", e, e is AlignmentError || e is StoreError)
         }
         Renderer.setNameButtonSpinning("simulator-trace", false)
@@ -641,7 +641,7 @@ import kotlin.dom.removeClass
         try {
             tr.trace()
             window.setTimeout(Driver::traceString, TIMEOUT_TIME)
-        } catch (e : Throwable) {
+        } catch (e: Throwable) {
             handleError("Trace Start", e, e is AlignmentError || e is StoreError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
         }
@@ -666,7 +666,7 @@ import kotlin.dom.removeClass
         } else {
             console.log("Persistent storage has been disabled!")
             this.LS.set("venus", "false")
-            //this.LS.reset()
+            // this.LS.reset()
         }
     }
 

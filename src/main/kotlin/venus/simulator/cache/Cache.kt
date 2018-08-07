@@ -31,13 +31,13 @@ class Cache
         numEvictions = 0
 
         // initialize values of the cHandler
-        //val s = arrayOfNulls<Set>(capacity / (associativity * blocksize))
+        // val s = arrayOfNulls<Set>(capacity / (associativity * blocksize))
         val s = arrayOfNulls<Set>(c.cacheSize() / (c.associativity() * c.cacheBlockSize()))
-        //sets = new Set[ this.capacity / (this.associativity * this.blocksize) ];
+        // sets = new Set[ this.capacity / (this.associativity * this.blocksize) ];
 
         // create the sets that make up this cHandler
         for (i in s.indices)
-            //s[i] = Set(this.associativity, this.blocksize)
+            // s[i] = Set(this.associativity, this.blocksize)
             s[i] = Set(c.associativity(), c.cacheBlockSize())
         sets = s.filterNotNull().toTypedArray()
     }
@@ -91,14 +91,14 @@ class Cache
     }
 
     private fun getTag(address: Int): Int {
-        //System.out.println((int) ( (double)address / ((double)sets.length * (double)blocksize)));
+        // System.out.println((int) ( (double)address / ((double)sets.length * (double)blocksize)));
         return address / (sets.size * this.c.cacheBlockSize())
     }
 
     // should only be called if we already know the address is not in cache
     private fun allocate(address: Int) {
 
-        //val index = address / blocksize % sets.size
+        // val index = address / blocksize % sets.size
         val index = address / c.cacheBlockSize() % sets.size
         val set = sets[index]
         var evictee: Block
@@ -112,12 +112,12 @@ class Cache
         // main memory.
         if (evictee.isDirty) {
             numEvictions++
-            //val evicteeAddress = (evictee.getTag() * sets.size + index) * blocksize
+            // val evicteeAddress = (evictee.getTag() * sets.size + index) * blocksize
             val evicteeAddress = (evictee.tag * sets.size + index) * c.cacheBlockSize()
         }
 
         // Then write the block with the data we need
-        //val SAddress = address / blocksize * blocksize
+        // val SAddress = address / blocksize * blocksize
         val SAddress = (address / c.cacheBlockSize()) * c.cacheBlockSize()
         evictee.writeBlock(getTag(address))
     }

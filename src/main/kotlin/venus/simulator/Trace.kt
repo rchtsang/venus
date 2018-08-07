@@ -6,7 +6,7 @@ import venus.riscv.MachineCode
  * Created by Thaumic on 7/14/2018.
  */
 
-class Trace (branched: Boolean, jumped: Boolean, ecallMsg : String, regs : IntArray, inst : MachineCode, line : Int, pc : Int) {
+class Trace(branched: Boolean, jumped: Boolean, ecallMsg: String, regs: IntArray, inst: MachineCode, line: Int, pc: Int) {
     var branched = false
     var jumped = false
     var ecallMsg = ""
@@ -26,7 +26,7 @@ class Trace (branched: Boolean, jumped: Boolean, ecallMsg : String, regs : IntAr
         this.pc = pc
     }
 
-    fun getString(format : String, base : Int) : String {
+    fun getString(format: String, base: Int): String {
         if (this.ecallMsg == "exiting the simulator") {
             return "exiting the simulator\n"
         }
@@ -48,9 +48,8 @@ class Trace (branched: Boolean, jumped: Boolean, ecallMsg : String, regs : IntAr
         /*@fixme This is not a pure copy since modifing internal things in the copy still can affect the main.*/
         return Trace(branched, jumped, ecallMsg, regs.copyOf(), inst, line, pc)
     }
-
 }
 /*
 * Takes in a base 10 integer and a base to convert it to and returns a string of what the number is.
 */
-external fun vnumToBase(curNumBase: Int, n : Int, length : Int, base : Int, signextend : Boolean) : String
+external fun vnumToBase(curNumBase: Int, n: Int, length: Int, base: Int, signextend: Boolean): String

@@ -110,7 +110,7 @@ private class InternalCache(cacheHandler: CacheHandler) {
 //    var tagSize = 0
     lateinit var cache: Cache
 
-    fun setup () {
+    fun setup() {
         /*@todo sets up this (for the default state)*/
 //        indexSize = Math.log2(cHandler.cacheSize().toDouble() / (cHandler.cacheBlockSize().toDouble() * cHandler.associativity())).toInt()
 //        offsetSize = Math.log2(this.cHandler.cacheBlockSize()).toInt()
@@ -118,12 +118,12 @@ private class InternalCache(cacheHandler: CacheHandler) {
         this.cache = Cache(cHandler)
     }
 
-    fun read (address: Address): Boolean {
+    fun read(address: Address): Boolean {
         /*@todo will update the current state and return if it was successful*/
         return cache.read(address)
     }
 
-    fun write (address: Address): Boolean {
+    fun write(address: Address): Boolean {
         /*@todo will update the current state and return if it was successful*/
         return cache.write(address)
     }
