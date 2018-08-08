@@ -1,11 +1,12 @@
 package venus.riscv.insts.floating.single.r
 
-import venus.riscv.insts.dsl.floating.FSRTypeInstruction
+import venus.riscv.insts.dsl.floating.FRTypeInstruction
+import venus.riscv.insts.floating.Decimal
 
 /*Single-Precision*/
-val fadds = FSRTypeInstruction(
+val fadds = FRTypeInstruction(
         name = "fadd.s",
         opcode = 0b1010011,
         funct7 = 0b0000000,
-        eval32 = { a, b -> a + b }
+        eval32 = { a, b -> Decimal(f = a.getFloat() + b.getFloat()) }
 )

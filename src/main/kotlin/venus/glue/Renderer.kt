@@ -5,6 +5,7 @@ import org.w3c.dom.*
 import venus.assembler.AssemblerError
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
+import venus.riscv.insts.floating.Decimal
 import venus.simulator.Diff
 import venus.simulator.Simulator
 import venus.simulator.SimulatorError
@@ -221,15 +222,14 @@ internal object Renderer {
      * @param value the new value of the register
      * @param setActive whether the register should be set to the active register (i.e., highlighted for the user)
      */
-    fun updateFRegister(id: Int, v: Float, setActive: Boolean = false) {
+    fun updateFRegister(id: Int, v: Decimal, setActive: Boolean = false) {
         val fregister = getElement("freg-$id-val") as HTMLInputElement
-        var value = v.toRawBits().toString(2).toInt(2)
         fregister.value = when (displayType) {
-            "Hex" -> toHex(value)
-            "Decimal" -> (if (v.toRawBits() == 0x80000000.toInt()) "-" else "") + v.toString()
-            "Unsigned" -> toUnsigned(value)
-            "ASCII" -> toAscii(value)
-            else -> toHex(value)
+            "Hex" -> v.toHex()
+            "Decimal" -> v.toDecimal()
+            "Unsigned" -> v.toUnsigned()
+            "ASCII" -> v.toAscii()
+            else -> v.toHex()
         }
         if (setActive) {
             activeRegister?.classList?.remove("is-modified")

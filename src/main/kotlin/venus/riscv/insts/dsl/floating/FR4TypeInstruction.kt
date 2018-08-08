@@ -1,30 +1,28 @@
 package venus.riscv.insts.dsl.floating
 
 import venus.riscv.insts.dsl.Instruction
-import venus.riscv.insts.dsl.disasms.extensions.FRTypeDisassembler
-import venus.riscv.insts.dsl.formats.extensions.FRTypeFormat
+import venus.riscv.insts.dsl.disasms.extensions.FR4TypeDisassembler
+import venus.riscv.insts.dsl.formats.extensions.R4TypeFormat
 import venus.riscv.insts.dsl.impls.NoImplementation
-import venus.riscv.insts.dsl.impls.extensions.FRTypeImplementation32
-import venus.riscv.insts.dsl.parsers.extensions.FRTypeParser
+import venus.riscv.insts.dsl.impls.extensions.FR4TypeImplementation32
+import venus.riscv.insts.dsl.parsers.extensions.FR4TypeParser
+import venus.riscv.insts.floating.Decimal
 
-/**
- * Created by thaum on 8/6/2018.
- */
-class FSRTypeInstruction(
+class FR4TypeInstruction(
     name: String,
     opcode: Int,
-    funct7: Int,
+    funct2: Int,
         // eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
-    eval32: (Float, Float) -> Float // ,
+    eval32: (Decimal, Decimal, Decimal) -> Decimal // ,
         // eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
         // eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
         name = name,
-        format = FRTypeFormat(opcode, funct7),
-        parser = FRTypeParser,
+        format = R4TypeFormat(opcode, funct2),
+        parser = FR4TypeParser,
         impl16 = NoImplementation,
-        impl32 = FRTypeImplementation32(eval32),
+        impl32 = FR4TypeImplementation32(eval32),
         impl64 = NoImplementation,
         impl128 = NoImplementation,
-        disasm = FRTypeDisassembler
+        disasm = FR4TypeDisassembler
 )
