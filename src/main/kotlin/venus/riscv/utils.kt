@@ -22,6 +22,28 @@ fun userStringToInt(s: String): Int {
     return noRadixString.toLong(radix).toInt()
 }
 
+fun userStringToLong(s: String): Long {
+    if (isCharacterLiteral(s)) {
+        return characterLiteralToLong(s)
+    }
+
+    val radix = when {
+        s.startsWith("0x") -> 16
+        s.startsWith("0b") -> 2
+        s.drop(1).startsWith("0x") -> 16
+        s.drop(1).startsWith("0b") -> 2
+        else -> return s.toLong()
+    }
+
+    val skipSign = when (s.first()) {
+        '+', '-' -> 1
+        else -> 0
+    }
+
+    val noRadixString = s.take(skipSign) + s.drop(skipSign + 2)
+    return noRadixString.toLong(radix)
+}
+
 fun userStringToFloat(s: String): Float {
     val radix = when {
         s.startsWith("0x") -> 16
@@ -32,6 +54,19 @@ fun userStringToFloat(s: String): Float {
     }
     var bits = userStringToInt(s)
     val v = Float.fromBits(bits)
+    return v
+}
+
+fun userStringToDouble(s: String): Double {
+    val radix = when {
+        s.startsWith("0x") -> 16
+        s.startsWith("0b") -> 2
+        s.drop(1).startsWith("0x") -> 16
+        s.drop(1).startsWith("0b") -> 2
+        else -> return s.toDouble()
+    }
+    var bits = userStringToLong(s)
+    val v = Double.fromBits(bits)
     return v
 }
 
@@ -53,6 +88,22 @@ private fun characterLiteralToInt(s: String): Int {
         if (parsed.isEmpty()) throw NumberFormatException("character literal $s is empty")
         if (parsed.length > 1) throw NumberFormatException("character literal $s too long")
         return parsed[0].toInt()
+    } catch (e: Throwable) {
+        throw NumberFormatException("could not parse character literal $s")
+    }
+}
+
+private fun characterLiteralToLong(s: String): Long {
+    val stripSingleQuotes = s.drop(1).dropLast(1)
+    if (stripSingleQuotes == "\\'") return '\''.toLong()
+    if (stripSingleQuotes == "\"") return '"'.toLong()
+
+    val jsonString = "\"$stripSingleQuotes\""
+    try {
+        val parsed = JSON.parse<String>(jsonString)
+        if (parsed.isEmpty()) throw NumberFormatException("character literal $s is empty")
+        if (parsed.length > 1) throw NumberFormatException("character literal $s too long")
+        return parsed[0].toLong()
     } catch (e: Throwable) {
         throw NumberFormatException("could not parse character literal $s")
     }
