@@ -1,7 +1,6 @@
 package venus.riscv.insts.floating
 
 import venus.riscv.insts.dsl.floating.FRRTypeInstruction
-import kotlin.math.sqrt
 
 val fcvtsd = FRRTypeInstruction(
         name = "fcvt.s.d",
