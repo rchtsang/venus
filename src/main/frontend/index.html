@@ -472,6 +472,16 @@
                   </div>
                 </div>
                 <div id="fregs-tab-view">
+                  <div id="floatORdouble-div" class="panel-block">
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <button id="fORd" class="button is-primary" onclick="toggleThis(this);driver.FReginputAsFloat = (this.value === 'true');if(this.value === 'true') {this.innerHTML = 'Float'} else {this.innerHTML = 'Double' }" value="true" style="text-align: center;height: auto;">Float</button>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <label class="label" for="fORd">Input type</label>
+                      </div>
+                    </div>
+                  </div>
                   <div id="freg-0" class="panel-block">
                     <div class="field is-horizontal">
                       <div class="field-label">
