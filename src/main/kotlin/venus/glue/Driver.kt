@@ -40,6 +40,7 @@ import kotlin.dom.removeClass
     private var saveInterval: Int? = null
     var p = ""
     private var ready = false
+    @JsName("FReginputAsFloat") var FReginputAsFloat = true
 
     init {
 
@@ -292,7 +293,7 @@ import kotlin.dom.removeClass
         if (!currentlyRunning()) {
             try {
                 val input = freg.value
-                val d = Decimal(f = userStringToFloat(input), d = userStringToDouble(input))
+                val d = Decimal(f = userStringToFloat(input), d = userStringToDouble(input), isF = this.FReginputAsFloat)
                 sim.setFRegNoUndo(id, d)
             } catch (e: NumberFormatException) {
                 /* do nothing */
