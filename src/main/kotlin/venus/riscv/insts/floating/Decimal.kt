@@ -53,13 +53,59 @@ class Decimal(f: Float = 0F, d: Double = 0.0, isF: Boolean = true) {
         /*FIXME make it convert to hex correctly*/
         var s: String
         if (this.isFloat) {
-            s = this.float.toRawBits().toString(16)
+            var isNeg = false
+            val f = if (this.float < 0) {
+                isNeg = true
+                this.float * -1
+            } else {
+                this.float
+            }
+            val b = f.toRawBits()
+            s = b.toString(16)
             s = s.removePrefix("-")
-            s = "0x" + s + "0".repeat(8 - s.length)
+            s = "0".repeat(8 - s.length) + s
+            if (isNeg) {
+                val new: Char = when (s[0]) {
+                    '0' -> '8'
+                    '1' -> '9'
+                    '2' -> 'a'
+                    '3' -> 'b'
+                    '4' -> 'c'
+                    '5' -> 'd'
+                    '6' -> 'e'
+                    '7' -> 'f'
+                    else -> s[0]
+                }
+                s = new + s.removeRange(0..0)
+            }
+            s = "0x" + s
         } else {
-            s = this.double.toRawBits().toString(16)
+            var isNeg = false
+            val d = if (this.double < 0) {
+                isNeg = true
+                this.double * -1
+            } else {
+                this.double
+            }
+            val b = d.toRawBits()
+            s = b.toString(16)
             s = s.removePrefix("-")
-            s = "0x" + s + "0".repeat(16 - s.length)
+            s = "0".repeat(16 - s.length) + s
+            if (isNeg) {
+                val new: Char = when (s[0]) {
+                    '0' -> '8'
+                    '1' -> '9'
+                    '2' -> 'a'
+                    '3' -> 'b'
+                    '4' -> 'c'
+                    '5' -> 'd'
+                    '6' -> 'e'
+                    '7' -> 'f'
+                    else -> s[0]
+                }
+                s = new + s.removeRange(0..0)
+            }
+            s = "0x" + s
         }
         return s
     }

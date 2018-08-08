@@ -23,6 +23,13 @@ fun userStringToInt(s: String): Int {
 }
 
 fun userStringToFloat(s: String): Float {
+    val radix = when {
+        s.startsWith("0x") -> 16
+        s.startsWith("0b") -> 2
+        s.drop(1).startsWith("0x") -> 16
+        s.drop(1).startsWith("0b") -> 2
+        else -> return s.toFloat()
+    }
     var bits = userStringToInt(s)
     val v = Float.fromBits(bits)
     return v
