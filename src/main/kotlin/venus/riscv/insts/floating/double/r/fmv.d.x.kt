@@ -2,7 +2,6 @@ package venus.riscv.insts.floating.double.r
 
 import venus.riscv.insts.InstructionNotSupportedError
 import venus.riscv.insts.dsl.floating.RtFTypeInstruction
-import venus.riscv.insts.floating.Decimal
 
 val fmvdx = RtFTypeInstruction(
         name = "fmv.d.x",
