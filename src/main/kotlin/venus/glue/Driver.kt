@@ -292,9 +292,7 @@ import kotlin.dom.removeClass
         if (!currentlyRunning()) {
             try {
                 val input = freg.value
-                val d = Decimal()
-                /*TODO FIX SO IT CAN BE DOUBLE OR NOT.*/
-                d.set(userStringToFloat(input))
+                val d = Decimal(f = userStringToFloat(input), d = userStringToDouble(input))
                 sim.setFRegNoUndo(id, d)
             } catch (e: NumberFormatException) {
                 /* do nothing */
