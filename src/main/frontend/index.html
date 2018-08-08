@@ -1305,12 +1305,13 @@
         `loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js', "", "");`
       );
     }
-    window.onload = function(){
-      loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js',
-        `alert("Could not load the tracer! Please refresh and try again!"); loadDecoder();`,
-        `loadDecoder();`
-      );
-    };
+    loadDecoder();
+    // window.onload = function(){
+    //   loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js',
+    //     `alert("Could not load the tracer! Please refresh and try again!"); loadDecoder();`,
+    //     `loadDecoder();`
+    //   );
+    // };
 </script>
 </body>
 </html>
