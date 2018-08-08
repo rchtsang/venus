@@ -1,1 +1,12 @@
 package venus.riscv.insts.floating
+
+import venus.riscv.insts.dsl.floating.FRRTypeInstruction
+import kotlin.math.sqrt
+
+val fcvtds = FRRTypeInstruction(
+        name = "fcvt.d.s",
+        opcode = 0b1010011,
+        funct7 = 0b0100001,
+        rs2 = 0b00000,
+        eval32 = { a, b -> Decimal(d = a.getFloat().toDouble(), isF = false) }
+)

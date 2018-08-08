@@ -38,7 +38,7 @@ class Decimal(f: Float = 0F, d: Double = 0.0, isF: Boolean = true) {
         }
     }
 
-    fun getDecimal(): Double {
+    fun getDouble(): Double {
         if (this.isFloat) {
             var s = this.float.toRawBits().toString(16)
             s += "0".repeat(8 - s.length)
