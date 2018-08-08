@@ -4,7 +4,7 @@ import venus.riscv.insts.dsl.floating.FclassRTypeInstruction
 
 /*Single-Precision*/
 /*TODO fix so this is better.*/
-val fclass = FclassRTypeInstruction(
+val fclasss = FclassRTypeInstruction(
         name = "fclass.s",
         opcode = 0b1010011,
         funct3 = 0b001,
