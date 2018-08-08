@@ -42,7 +42,7 @@ fun userStringToFloat(s: String): Float {
     }
 
     val noRadixString = s.take(skipSign) + s.drop(skipSign + 2)
-    return Float.fromBits(noRadixString.toLong(radix).toInt())
+    return Float.fromBits(noRadixString.toInt(radix))
 }
 
 private fun isCharacterLiteral(s: String) =

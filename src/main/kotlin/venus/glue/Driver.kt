@@ -9,6 +9,7 @@ import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
+import venus.riscv.insts.floating.Decimal
 import venus.simulator.*
 import venus.simulator.cache.BlockReplacementPolicy
 import venus.simulator.cache.CacheError
@@ -290,7 +291,10 @@ import kotlin.dom.removeClass
         if (!currentlyRunning()) {
             try {
                 val input = freg.value
-                sim.setFRegNoUndo(id, userStringToFloat(input))
+                val d = Decimal()
+                /*TODO FIX SO IT CAN BE DOUBLE OR NOT.*/
+                d.set(userStringToFloat(input))
+                sim.setFRegNoUndo(id, d)
             } catch (e: NumberFormatException) {
                 /* do nothing */
             }

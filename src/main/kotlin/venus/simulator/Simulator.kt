@@ -6,6 +6,7 @@ import venus.glue.Renderer
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
+import venus.riscv.insts.floating.Decimal
 import venus.simulator.diffs.*
 
 /* ktlint-enable no-wildcard-imports */
@@ -105,13 +106,13 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     }
     fun getFReg(id: Int) = state.getFReg(id)
 
-    fun setFReg(id: Int, v: Float) {
+    fun setFReg(id: Int, v: Decimal) {
         preInstruction.add(FRegisterDiff(id, state.getFReg(id)))
         state.setFReg(id, v)
         postInstruction.add(FRegisterDiff(id, state.getFReg(id)))
     }
 
-    fun setFRegNoUndo(id: Int, v: Float) {
+    fun setFRegNoUndo(id: Int, v: Decimal) {
         state.setFReg(id, v)
     }
 

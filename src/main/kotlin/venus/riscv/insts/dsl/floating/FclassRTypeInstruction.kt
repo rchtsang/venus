@@ -6,6 +6,7 @@ import venus.riscv.insts.dsl.formats.base.RTypeFormat
 import venus.riscv.insts.dsl.impls.NoImplementation
 import venus.riscv.insts.dsl.impls.extensions.FFRRTypeImplementation32
 import venus.riscv.insts.dsl.parsers.extensions.FRRTypeParser
+import venus.riscv.insts.floating.Decimal
 
 class FclassRTypeInstruction(
     name: String,
@@ -13,7 +14,7 @@ class FclassRTypeInstruction(
     funct3: Int,
     funct7: Int,
         // eval16: (Short, Short) -> Short = { _, _ -> throw NotImplementedError("no rv16") },
-    eval32: (Float, Float) -> Int // ,
+    eval32: (Decimal, Decimal) -> Int // ,
         // eval64: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv64") },
         // eval128: (Long, Long) -> Long = { _, _ -> throw NotImplementedError("no rv128") }
 ) : Instruction(
