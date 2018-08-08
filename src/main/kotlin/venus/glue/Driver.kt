@@ -42,6 +42,7 @@ import kotlin.dom.removeClass
     private var ready = false
 
     init {
+
         console.log("Loading driver...")
         this.mainCache.attach(false)
 

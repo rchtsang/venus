@@ -50,7 +50,6 @@ class Decimal(f: Float = 0F, d: Double = 0.0, isF: Boolean = true) {
     }
 
     fun toHex(): String {
-        return this.toDecimal()
         /*FIXME make it convert to hex correctly*/
         var s: String
         if (this.isFloat) {
