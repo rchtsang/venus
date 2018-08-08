@@ -10,10 +10,10 @@ import venus.riscv.insts.floating.Decimal
 import venus.simulator.Simulator
 
 class FITypeInstruction(
-        name: String,
-        opcode: Int,
-        funct3: Int,
-        eval32: (Int, Simulator) -> Decimal
+    name: String,
+    opcode: Int,
+    funct3: Int,
+    eval32: (Int, Simulator) -> Decimal
 ) : Instruction(
         name = name,
         format = ITypeFormat(opcode, funct3),
