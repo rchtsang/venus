@@ -18,7 +18,7 @@ object FITypeParser : InstructionParser {
         checkArgsLength(args.size, 3)
 
         mcode[InstructionField.RD] = regNameToNumber(args[0], false)
-        mcode[InstructionField.RS1] = regNameToNumber(args[1])
-        mcode[InstructionField.IMM_11_0] = getImmediate(args[2], I_TYPE_MIN, I_TYPE_MAX)
+        mcode[InstructionField.RS1] = regNameToNumber(args[2])
+        mcode[InstructionField.IMM_11_0] = getImmediate(args[1], I_TYPE_MIN, I_TYPE_MAX)
     }
 }
