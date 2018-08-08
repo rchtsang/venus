@@ -6,7 +6,7 @@ import venus.riscv.insts.dsl.floating.FFRRTypeInstruction
 val flts = FFRRTypeInstruction(
         name = "flt.s",
         opcode = 0b1010011,
-        funct3 = 0b000,
+        funct3 = 0b001,
         funct7 = 0b1010000,
         eval32 = { a, b -> if (a.getFloat() < b.getFloat()) 1 else 0 }
 )
