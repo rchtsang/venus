@@ -21,6 +21,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     private val preInstruction = ArrayList<Diff>()
     private val postInstruction = ArrayList<Diff>()
     private val breakpoints: Array<Boolean>
+    var ebreak = false
 
     init {
         for (inst in linkedProgram.prog.insts) {
@@ -56,6 +57,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     fun step(): List<Diff> {
         this.branched = false
         this.jumped = false
+        this.ebreak = false
         this.ecallMsg = ""
         preInstruction.clear()
         postInstruction.clear()
@@ -121,7 +123,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         return breakpoints[idx]
     }
 
-    fun atBreakpoint() = breakpoints[(state.pc - MemorySegments.TEXT_BEGIN) / 4]
+    fun atBreakpoint() = breakpoints[(state.pc - MemorySegments.TEXT_BEGIN) / 4] || ebreak
 
     fun getPC() = state.pc
 
