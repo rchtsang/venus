@@ -5,8 +5,9 @@ import venus.riscv.insts.floating.Decimal
 import venus.simulator.cache.CacheHandler
 
 class SimulatorState {
-    private val regs = IntArray(32)
-    private val fregs = Array(32, { i: Int -> Decimal() })
+    /*Register 33 is the special register.*/
+    private val regs = IntArray(33)
+    private val fregs = Array(33, { i: Int -> Decimal() })
     val mem = Memory()
     var cache = CacheHandler(1)
     var pc: Int = 0
