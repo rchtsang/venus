@@ -502,6 +502,7 @@ import kotlin.dom.removeClass
         val bs = cache.cacheBlockSize().toString()
         val nb = cache.numberOfBlocks().toString()
         val av = cache.associativity().toString()
+        val avenabled = cache.canSetAssociativity()
         val at = cache.placementPol().toMyString()
         val rp = cache.blockRepPolicy().toMyString()
         val cs = cache.cacheSize().toString()
@@ -509,7 +510,9 @@ import kotlin.dom.removeClass
         val attached = cache.attached
         (document.getElementById("block-size-val") as HTMLInputElement).value = bs
         (document.getElementById("numblocks-val") as HTMLInputElement).value = nb
-        (document.getElementById("associativity-val") as HTMLInputElement).value = av
+        val ave = (document.getElementById("associativity-val") as HTMLInputElement)
+        ave.value = av
+        ave.disabled = !avenabled
         (document.getElementById("associativity-type") as HTMLSelectElement).value = at
         (document.getElementById("replacementPolicy") as HTMLSelectElement).value = rp
         (document.getElementById("cache-size-val") as HTMLInputElement).value = cs
