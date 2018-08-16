@@ -1,6 +1,7 @@
 package venus.riscv.insts.integer.extensions.atomic.r
 
 import venus.riscv.insts.dsl.AMORTypeInstruction
+val lrweval32 = { data: Int, vrs2: Int -> data }
 /*@FIXME*/
 val lrw = AMORTypeInstruction(
         name = "lr.w",
@@ -10,7 +11,7 @@ val lrw = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data }
+        eval32 = lrweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -23,7 +24,7 @@ val lrwaq = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data }
+        eval32 = lrweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -36,7 +37,7 @@ val lrwrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data }
+        eval32 = lrweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -49,7 +50,7 @@ val lrwaqrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data }
+        eval32 = lrweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -62,7 +63,7 @@ val lrwrlaq = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data }
+        eval32 = lrweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )

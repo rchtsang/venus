@@ -2,6 +2,8 @@ package venus.riscv.insts.integer.extensions.atomic.r
 
 import venus.riscv.insts.dsl.AMORTypeInstruction
 
+val amominweval32 = { data: Int, vrs2: Int -> minOf(data, vrs2) }
+
 val amominw = AMORTypeInstruction(
         name = "amomin.w",
         opcode = 0b0101111,
@@ -10,7 +12,7 @@ val amominw = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data, vrs2) }
+        eval32 = amominweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -23,7 +25,7 @@ val amominwaq = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data, vrs2) }
+        eval32 = amominweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -49,7 +51,7 @@ val amominwaqrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data, vrs2) }
+        eval32 = amominweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -62,7 +64,7 @@ val amominwrlaq = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data, vrs2) }
+        eval32 = amominweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )

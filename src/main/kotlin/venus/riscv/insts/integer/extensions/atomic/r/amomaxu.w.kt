@@ -2,6 +2,9 @@ package venus.riscv.insts.integer.extensions.atomic.r
 
 import venus.riscv.insts.dsl.AMORTypeInstruction
 
+/*todo test if this 'unsigned' conversion works*/
+val amomaxuweval32 = { data: Int, vrs2: Int -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+
 val amomaxuw = AMORTypeInstruction(
         name = "amomaxu.w",
         opcode = 0b0101111,
@@ -10,8 +13,7 @@ val amomaxuw = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        /*todo test if this 'unsigned' conversion works*/
-        eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amomaxuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -24,8 +26,7 @@ val amomaxuwaq = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        /*todo test if this 'unsigned' conversion works*/
-        eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amomaxuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -38,8 +39,7 @@ val amomaxuwrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        /*todo test if this 'unsigned' conversion works*/
-        eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amomaxuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -52,8 +52,7 @@ val amomaxuwaqrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        /*todo test if this 'unsigned' conversion works*/
-        eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amomaxuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -66,8 +65,7 @@ val amomaxuwrlaq = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        /*todo test if this 'unsigned' conversion works*/
-        eval32 = { data, vrs2 -> maxOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amomaxuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
