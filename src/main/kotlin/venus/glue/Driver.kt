@@ -180,6 +180,7 @@ import kotlin.dom.removeClass
     }
 
     internal fun runEnd() {
+        handleNotExitOver()
         Renderer.updatePC(sim.getPC())
         Renderer.setRunButtonSpinning(false)
         timer?.let(window::clearTimeout)
@@ -203,7 +204,7 @@ import kotlin.dom.removeClass
 
     private fun handleNotExitOver() {
         if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.maxpc) until MemorySegments.STATIC_BEGIN) {
-            val pcloc = (sim.maxpc) / 4
+            val pcloc = (sim.maxpc - MemorySegments.TEXT_BEGIN) / 4
             sim.maxpc += 4
             var mcode = MachineCode(0)
             var progLine = ""
