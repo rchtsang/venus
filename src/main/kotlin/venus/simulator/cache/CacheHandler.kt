@@ -202,6 +202,10 @@ class CacheHandler(var cacheLevel: Int) {
         return this.BlockRepPolicy
     }
 
+    fun canSetAssociativity(): Boolean {
+        return this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE
+    }
+
     fun setAssociativity(i: Int, override: Boolean = false) {
         if ((this.placementPol == PlacementPolicy.NWAY_SET_ASSOCIATIVE || override)) {
             if (i !in 1..this.numberOfBlocks) {
