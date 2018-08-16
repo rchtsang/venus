@@ -148,7 +148,9 @@ internal class AssemblerPassOne(private val text: String) {
     private fun replacePseudoInstructions(tokens: LineTokens): List<LineTokens> {
         try {
             val cmd = getInstruction(tokens)
-            val pw = PseudoDispatcher.valueOf(cmd).pw
+            // This is meant to allow for cmds with periods since the pseudodispatcher does not allow for special chars.
+            val cleanedCMD = cmd.replace(".", "")
+            val pw = PseudoDispatcher.valueOf(cleanedCMD).pw
             return pw(tokens, this)
         } catch (t: Throwable) {
             /* TODO: don't use throwable here */
