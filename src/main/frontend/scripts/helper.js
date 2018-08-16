@@ -127,11 +127,12 @@ function toggleThis(e) {
     var end;
     var delta;
     var button = document.getElementById("sv");
+    var buttonfor = document.getElementById("forsv");
     var maxtime = 1000;
     window.svtmot = -1;
     window.svclr = false;
 
-    button.addEventListener("mousedown", function(){
+    var bmd = function(){
         start = new Date();
         clearTimeout(window.svtmot);
         window.svtmot = setTimeout(function(date){
@@ -139,9 +140,13 @@ function toggleThis(e) {
                 button.style.backgroundColor = "red"
             }
         }, maxtime, start);
-    });
+    }
 
-    button.addEventListener("mouseup", function() {
+    button.addEventListener("mousedown", bmd);
+
+    buttonfor.addEventListener("mousedown", bmd);
+
+    var bmu = function() {
         window.svtmot = -1;
         clearTimeout(window.svtmot);
         end = new Date();
@@ -151,7 +156,12 @@ function toggleThis(e) {
             driver.psReset();
         }
         button.style.backgroundColor = "";
-    });
+    }
+
+    button.addEventListener("mouseup", bmu);
+
+    buttonfor.addEventListener("mouseup", bmu);
+
 })(window, document);
 
 var LocalStorageManager = class LocalStorageManager{
