@@ -2,6 +2,8 @@ package venus.riscv.insts.integer.extensions.atomic.r
 
 import venus.riscv.insts.dsl.AMORTypeInstruction
 
+val amominuweval32 = { data: Int, vrs2: Int -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+
 val amominuw = AMORTypeInstruction(
         name = "amominu.w",
         opcode = 0b0101111,
@@ -10,7 +12,7 @@ val amominuw = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amominuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -23,7 +25,7 @@ val amominuwaq = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amominuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -36,7 +38,7 @@ val amominuwrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amominuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -49,7 +51,7 @@ val amominuwaqrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amominuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -62,7 +64,7 @@ val amominuwrlaq = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> minOf(data xor Int.MIN_VALUE, vrs2 xor Int.MIN_VALUE) }
+        eval32 = amominuweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )

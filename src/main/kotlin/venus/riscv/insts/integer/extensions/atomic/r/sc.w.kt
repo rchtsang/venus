@@ -2,6 +2,8 @@ package venus.riscv.insts.integer.extensions.atomic.r
 
 import venus.riscv.insts.dsl.AMORTypeInstruction
 /*@FIXME*/
+val scweval32 = { data: Int, vrs2: Int -> data xor vrs2 }
+
 val scw = AMORTypeInstruction(
         name = "sc.w",
         opcode = 0b0101111,
@@ -10,7 +12,7 @@ val scw = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data xor vrs2 }
+        eval32 = scweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -23,7 +25,7 @@ val scwaq = AMORTypeInstruction(
         rl = 0b0,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data xor vrs2 }
+        eval32 = scweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -36,7 +38,7 @@ val scwrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b0,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data xor vrs2 }
+        eval32 = scweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -49,7 +51,7 @@ val scwaqrl = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data xor vrs2 }
+        eval32 = scweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
@@ -62,7 +64,7 @@ val scwrlaq = AMORTypeInstruction(
         rl = 0b1,
         aq = 0b1,
         // eval16 = { a, b -> (a + b).toShort() },
-        eval32 = { data, vrs2 -> data xor vrs2 }
+        eval32 = scweval32
         // eval64 = { a, b -> a + b },
         // eval128 = { a, b -> a + b }
 )
