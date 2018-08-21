@@ -542,6 +542,7 @@ import kotlin.dom.removeClass
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
+            tr.traceFullReset()
             sim.reset()
             Renderer.updateControlButtons()
             return
