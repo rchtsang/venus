@@ -26,12 +26,19 @@ class Tracer(val sim: Simulator) {
         traceEnd()
     }
 
-    fun traceStart() {
+    fun traceFullReset() {
         this.tr.traced = false
-        sim.reset()
         this.tr.trace = ArrayList()
         this.tr.prevTrace = null
         this.tr.traceLine = 0
+        this.tr.str = ""
+        this.tr.stred = false
+        this.tr.stringIndex = 0
+    }
+
+    fun traceStart() {
+        traceFullReset()
+        sim.reset()
         if (this.twoStage) {
             this.tr.trace.add(Trace(didBrach(), didJump(), getecallMsg(), getRegs(), if (!sim.isDone()) sim.getNextInstruction() else MachineCode(0), this.tr.traceLine, sim.getPC()))
             this.tr.traceLine++
@@ -127,10 +134,7 @@ class Tracer(val sim: Simulator) {
         if (!this.tr.traced) {
             throw SimulatorError("You need to make the run the trace before you can get the trace string!")
         }
-        this.tr.str = ""
-        this.tr.stred = false
         val tr = this.tr.trace
-        this.tr.stringIndex = 0
         cleanFormat()
         this.tr.reset()
     }
@@ -236,7 +240,7 @@ class Tracer(val sim: Simulator) {
         wordAddressed = b
     }
 }
-class TraceEncapsulation() {
+class TraceEncapsulation {
 
     lateinit var trace: ArrayList<Trace>
     var traced = false
