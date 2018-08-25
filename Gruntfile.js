@@ -34,6 +34,10 @@ module.exports = function(grunt) {
                         cwd: 'src/main/frontend/scripts',
                         src: '**',
                         dest: 'out/js/',},
+                    {expand: true,
+                        cwd: 'src/main/frontend/packages',
+                        src: '**',
+                        dest: 'out/packages/',},
                 ]
 		  	},
 		},

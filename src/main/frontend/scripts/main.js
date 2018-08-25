@@ -1,5 +1,5 @@
 function setup_venus() {
-    console.log("----------THIS IS THE END OF THE GET ERRORS!----------");
+    console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
     window.venus_main = window.venus;
     window.driver = venus_main.venus.glue.Driver;
     window.editor = document.getElementById("asm-editor");
