@@ -52,10 +52,6 @@ import kotlin.dom.removeClass
         useLS = LS.get("venus") == "true"
         Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, useLS)
 
-        if (!useLS) {
-            ScriptManager.addPackage("packages/disassembler.js")
-        }
-
         window.setTimeout(Driver::initTimeout, 5)
 
         console.log("Finished loading driver!")
@@ -895,8 +891,8 @@ import kotlin.dom.removeClass
         mainCache.update()
         setCacheSettings()
 
-        if (useLS) {
-            ScriptManager.loadPackages()
-        }
+
+        ScriptManager.loadDefaults()
+        ScriptManager.loadPackages()
     }
 }

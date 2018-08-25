@@ -2,6 +2,7 @@ package venus.glue
 
 import org.w3c.dom.get
 import kotlin.browser.document
+import kotlin.browser.window
 
 /**
 * This is used to add and remove external packages.
@@ -16,6 +17,10 @@ import kotlin.browser.document
 
     var packages = HashMap<String, venuspackage>()
 
+    fun loadDefaults() {
+        ScriptManager.addPackage("packages/disassembler.js", enabled = true, removable = false)
+    }
+
     fun loadScript(url: String, onfail: String, onload: String) {
         val urlelm = document.getElementById(url)
         urlelm?.parentNode?.removeChild(urlelm)
@@ -27,14 +32,19 @@ import kotlin.browser.document
         document.getElementsByTagName("head")[0]?.appendChild(script)
     }
 
-    fun addPackage(url: String, enabled: Boolean = true) {
+    fun addPackage(url: String, enabled: Boolean = true, removable: Boolean = true) {
         val onfail = "window.VenusScriptManager.addPackageFailure('$url');"
-        val onload = "window.VenusScriptManager.addPackageSuccess('$url', $enabled);"
+        val onload = "window.VenusScriptManager.addPackageSuccess('$url', $enabled, $removable);"
         loadScript(url, onfail, onload)
     }
 
-    @JsName("addPackageSuccess") fun addPackageSuccess(url: String, enabled: Boolean = true) {
+    @JsName("addPackageSuccess") fun addPackageSuccess(url: String, enabled: Boolean = true, removable: Boolean = true) {
         if (packages.containsKey(venuspackage.id)) {
+            val orig = packages.get(venuspackage.id)
+            if (!orig!!.removable) {
+                js("window.venuspackage = undefined")
+                throw Throwable("Cannot update a default script!")
+            }
             removePackage(venuspackage.id)
         }
         if (venuspackage == undefined) {
@@ -55,7 +65,7 @@ import kotlin.browser.document
         }
         if (worked) {
             venuspackage.enabled = enabled
-            Renderer.rendererAddPackage(venuspackage.id, enabled)
+            Renderer.rendererAddPackage(venuspackage.id, enabled, removable)
             packages.put(venuspackage.id, venuspackage)
             updateLS()
             console.log("Loaded script ($url)!")
@@ -164,6 +174,7 @@ import kotlin.browser.document
             n.id = p.id
             n.url = p.url
             n.enabled = p.enabled
+            n.removable = p.removable
             l.add(n)
         }
         Driver.LS.set("script_manager", JSON.stringify(l))
@@ -175,8 +186,24 @@ import kotlin.browser.document
         var i = 0
         while (js("i < pkgs.length")) {
             val p = js("pkgs[i]")
-            addPackage(p.url, p.enabled)
+            if (p.removable) {
+                addPackage(p.url, p.enabled)
+            } else {
+                loadPKGTimeout(p.id, p.enabled)
+            }
             i++
+        }
+    }
+
+    fun loadPKGTimeout(id: String, enabled: Boolean) {
+        if (packages.containsKey(id)) {
+            if (enabled) {
+                enablePackage(id)
+            } else {
+                disablePackage(id)
+            }
+        } else {
+            window.setTimeout(ScriptManager::loadPKGTimeout, 100, id, enabled)
         }
     }
 }
@@ -185,12 +212,14 @@ object pkg {
     var id: String = ""
     var url: String = ""
     var enabled: Boolean = false
+    var removable: Boolean = true
 }
 
 external object venuspackage {
     val id: String
     var url: String
     var enabled: Boolean
+    var removable: Boolean
     val load: Function<Unit>
     val unload: Function<Unit>
 }
