@@ -891,7 +891,6 @@ import kotlin.dom.removeClass
         mainCache.update()
         setCacheSettings()
 
-
         ScriptManager.loadDefaults()
         ScriptManager.loadPackages()
     }
