@@ -237,4 +237,16 @@ var LocalStorageManager = class LocalStorageManager{
             console.log("Could not remove any more elements! If this was called by set, then you should clear your localStorage and try again.")
         }
     }
+};
+
+function loadStylesheet(url) {
+    var urlelm = document.getElementById(url);
+    if (urlelm) {
+        urlelm.parentNode.removeChild(urlelm)
+    }
+    var css = document.createElement('link');
+    css.setAttribute("rel", "stylesheet");
+    css.setAttribute("href", url);
+    css.setAttribute("id", url);
+    document.getElementsByTagName("head")[0].appendChild(css);
 }

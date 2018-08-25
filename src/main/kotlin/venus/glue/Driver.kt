@@ -18,6 +18,7 @@ import venus.simulator.cache.PlacementPolicy
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.dom.addClass
+import kotlin.dom.hasClass
 import kotlin.dom.removeClass
 
 /* ktlint-enable no-wildcard-imports */
@@ -41,6 +42,7 @@ import kotlin.dom.removeClass
     var p = ""
     private var ready = false
     @JsName("FReginputAsFloat") var FReginputAsFloat = true
+    @JsName("ScriptManager") var ScriptManager = venus.glue.ScriptManager
 
     init {
 
@@ -49,6 +51,10 @@ import kotlin.dom.removeClass
 
         useLS = LS.get("venus") == "true"
         Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, useLS)
+
+        if (!useLS) {
+            ScriptManager.addPackage("packages/disassembler.js")
+        }
 
         window.setTimeout(Driver::initTimeout, 5)
 
@@ -259,6 +265,10 @@ import kotlin.dom.removeClass
      */
     @JsName("openTracerSettingsTab") fun openTracerSettingsTab() {
         Renderer.renderTracerSettingsTab()
+    }
+
+    @JsName("openPackagesTab") fun openPackagesTab() {
+        Renderer.renderPackagesTab()
     }
 
     @JsName("openCacheTab") fun openCacheTab() {
@@ -535,6 +545,35 @@ import kotlin.dom.removeClass
 
     @JsName("setMutableText") fun setMutableText(b: Boolean) {
         this.simSettings.mutableText = b
+    }
+
+    @JsName("addPackage") fun addPackage(button: HTMLButtonElement) {
+        if (!button.hasClass("is-loading")) {
+            button.addClass("is-loading")
+            js("window.venuspackage = {id:'LOADING!'}")
+            val purlinput = document.getElementById("package-url-val") as HTMLInputElement
+            val url = purlinput.value
+            ScriptManager.addPackage(url)
+            window.setTimeout(Driver::packageLoaded, 100, button)
+        } else {
+            console.log("Cannot add a new package until the previous package has finished!")
+        }
+    }
+
+    @JsName("togglePackage") fun togglePackage(packageID: String) {
+        window.setTimeout(ScriptManager::togglePackage, TIMEOUT_TIME, packageID)
+    }
+
+    @JsName("removePackage") fun removePackage(packageID: String) {
+        window.setTimeout(ScriptManager::removePackage, TIMEOUT_TIME, packageID)
+    }
+
+    fun packageLoaded(b: HTMLButtonElement) {
+        if (venuspackage == undefined) {
+            b.removeClass("is-loading")
+            return
+        }
+        window.setTimeout(Driver::packageLoaded, 100, b)
     }
 
     @JsName("trace") fun trace() {
@@ -855,5 +894,9 @@ import kotlin.dom.removeClass
 
         mainCache.update()
         setCacheSettings()
+
+        if (useLS) {
+            ScriptManager.loadPackages()
+        }
     }
 }

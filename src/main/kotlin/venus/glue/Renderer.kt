@@ -13,6 +13,8 @@ import venus.simulator.cache.BlockState
 import venus.simulator.cache.ChangedBlockState
 import venus.simulator.diffs.*
 import kotlin.browser.document
+import kotlin.dom.addClass
+import kotlin.dom.removeClass
 
 /* ktlint-enable no-wildcard-imports */
 
@@ -495,6 +497,7 @@ internal object Renderer {
     fun renderGeneralSettingsTab() {
         tabSetVisibility("general-settings", "block")
         tabSetVisibility("tracer-settings", "none")
+        tabSetVisibility("packages", "none")
     }
 
     /**
@@ -503,6 +506,13 @@ internal object Renderer {
     fun renderTracerSettingsTab() {
         tabSetVisibility("general-settings", "none")
         tabSetVisibility("tracer-settings", "block")
+        tabSetVisibility("packages", "none")
+    }
+
+    fun renderPackagesTab() {
+        tabSetVisibility("general-settings", "none")
+        tabSetVisibility("tracer-settings", "none")
+        tabSetVisibility("packages", "block")
     }
 
     fun renderRegsTab() {
@@ -513,6 +523,54 @@ internal object Renderer {
     fun renderFRegsTab() {
         tabSetVisibility("regs", "none")
         tabSetVisibility("fregs", "block")
+    }
+
+    fun rendererAddPackage(pid: String, enabled: Boolean) {
+        val rp = document.createElement("div")
+        rp.addClass("panel-block")
+        rp.id = "package-$pid"
+
+        val name = document.createElement("div")
+        name.innerHTML = pid
+
+        val enabledButton = document.createElement("button")
+        enabledButton.id = "penable-button-$pid"
+        enabledButton.addClass("button")
+        if (enabled) {
+            enabledButton.addClass("is-primary")
+        }
+        enabledButton.setAttribute("onclick", "this.classList.add('is-loading');driver.togglePackage('$pid')")
+        enabledButton.innerHTML = "Enabled"
+
+        val deleteButton = document.createElement("button")
+        deleteButton.id = "pdelete-button-$pid"
+        deleteButton.addClass("button")
+        deleteButton.setAttribute("onclick", "this.classList.add('is-loading');driver.removePackage('$pid')")
+        deleteButton.setAttribute("style", "background-color: red;")
+        deleteButton.innerHTML = "Delete"
+
+        rp.appendChild(name)
+        rp.appendChild(enabledButton)
+        rp.appendChild(deleteButton)
+        document.getElementById("package-list")?.appendChild(rp)
+    }
+
+    fun rendererRemovePackage(pid: String) {
+        document.getElementById("package-$pid")?.remove()
+    }
+
+    fun rendererUpdatePackage(pid: String, state: Boolean) {
+        val p = document.getElementById("penable-button-$pid")
+        if (p != null) {
+            if (state) {
+                p.addClass("is-primary")
+            } else {
+                p.removeClass("is-primary")
+            }
+            p.removeClass("is-loading")
+        } else {
+            console.log("Could not find package '$pid!'")
+        }
     }
 
     /**
