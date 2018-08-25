@@ -65,6 +65,7 @@ import kotlin.browser.window
         }
         if (worked) {
             venuspackage.enabled = enabled
+            venuspackage.removable = removable
             Renderer.rendererAddPackage(venuspackage.id, enabled, removable)
             packages.put(venuspackage.id, venuspackage)
             updateLS()
@@ -170,11 +171,7 @@ import kotlin.browser.window
     fun updateLS() {
         val l = ArrayList<pkg>()
         for (p in packages.values) {
-            val n = pkg
-            n.id = p.id
-            n.url = p.url
-            n.enabled = p.enabled
-            n.removable = p.removable
+            val n = pkg(p.id, p.url, p.enabled, p.removable)
             l.add(n)
         }
         Driver.LS.set("script_manager", JSON.stringify(l))
@@ -187,7 +184,7 @@ import kotlin.browser.window
         while (js("i < pkgs.length")) {
             val p = js("pkgs[i]")
             if (p.removable) {
-                addPackage(p.url, p.enabled)
+                addPackage(p.url, p.enabled, p.removable)
             } else {
                 loadPKGTimeout(p.id, p.enabled)
             }
@@ -208,12 +205,12 @@ import kotlin.browser.window
     }
 }
 
-object pkg {
-    var id: String = ""
-    var url: String = ""
-    var enabled: Boolean = false
+class pkg(
+    var id: String = "",
+    var url: String = "",
+    var enabled: Boolean = false,
     var removable: Boolean = true
-}
+)
 
 external object venuspackage {
     val id: String
