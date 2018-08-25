@@ -12,8 +12,11 @@
 	gtag('js', new Date());
 
 	gtag('config', 'UA-119121070-2');
+	console.log("----------DO NOT WORRY ABOUT THE GET ERRORS BELOW!----------");
   </script>
   <title>venus</title>
+  <link rel="stylesheet" type="text/css" href="css/bulma.css">
+  <link rel="stylesheet" type="text/css" href="css/codemirror.css">
   <link rel="stylesheet" type="text/css" href="css/venus.css">
   <link rel="icon" href="images/favicon.png">
 </head>
@@ -1123,8 +1126,9 @@
               </div>
               <nav id="settings-tab-view" class="panel">
                 <p class="panel-tabs"></a>
-                  <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()" class="is-active">General Settings</a>
-                  <a id="tracer-settings-tab" onclick="driver.openTracerSettingsTab()">Tracer Settings</a>
+                  <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()" class="is-active">General</a>
+                  <a id="tracer-settings-tab" onclick="driver.openTracerSettingsTab()">Tracer</a>
+                  <a id="packages-tab" onclick="driver.openPackagesTab()">Packages</a>
                 </p>
                 <div id="general-settings-tab-view">
                   <div id="textStart" class="panel-block">
@@ -1245,6 +1249,14 @@
                     <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
                   </div>
                 </div>
+                <div id="packages-tab-view">
+                  <div id="" class="panel-block">
+                    <input id="package-url-val" type="text" class="input is-small" onblur="" onkeydown="if((event.keyCode ? event.keyCode : event.which) === 13){document.getElementById('addpkg').click()}" value="" placeholder="Package URL" spellcheck="false">
+                    <button id="addpkg" class="button is-primary" onclick="driver.addPackage(this)">Add Package</button>
+                  </div>
+                  <div id="package-list">
+                  </div>
+                </div>
               </nav>
             </nav>
           </article>
@@ -1276,52 +1288,26 @@
     </div>
   </div>
 </section>
-<script type="text/javascript" src="js/seedrandom.js"></script>
-<script type="text/javascript" src="js/helper.js"></script>
-<script type="text/javascript" src="js/codemirror.js"></script>
-<script type="text/javascript" src="venus.js"></script>
-<script type="text/javascript">
-    window.venus_main = window.venus;
-    var driver = venus_main.venus.glue.Driver;
-    var editor = document.getElementById("asm-editor");
-    var codeMirror = CodeMirror.fromTextArea(editor,
-        {
-            lineNumbers: true,
-            mode: "riscv",
-            indentUnit: 4,
-            autofocus: true,
-            lint: true
-        }
-    );
-    codeMirror.setSize("100%", "88vh");
+<script>
     /*
       Make script tag and load it to page
     */
     function loadScript(url, onfail, onload) {
-      var urlelm = document.getElementById(url);
-      if (urlelm) {
-        urlelm.parentNode.removeChild(urlelm)
-      }
-      var script = document.createElement('script');
-      script.setAttribute("onerror", onfail);
-      script.setAttribute("onload", onload);
-      script.setAttribute("src", url);
-      script.setAttribute("id", url);
-      document.getElementsByTagName("head")[0].appendChild(script);
+        var urlelm = document.getElementById(url);
+        if (urlelm) {
+            urlelm.parentNode.removeChild(urlelm)
+        }
+        var script = document.createElement('script');
+        script.setAttribute("onerror", onfail);
+        script.setAttribute("onload", onload);
+        script.setAttribute("src", url);
+        script.setAttribute("id", url);
+        document.getElementsByTagName("head")[0].appendChild(script);
     }
-    function loadDecoder(){
-      loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js', 
-        `alert("Could not load the decoder! Please try to reload the page to get it to load.");` ,
-        `loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js', "", "");`
-      );
-    }
-    loadDecoder();
-    // window.onload = function(){
-    //   loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.tracer.js',
-    //     `alert("Could not load the tracer! Please refresh and try again!"); loadDecoder();`,
-    //     `loadDecoder();`
-    //   );
-    // };
 </script>
+<script type="text/javascript" src="js/helper.js" onerror="loadScript('scripts/helper.js', '', '')"></script>
+<script type="text/javascript" src="js/seedrandom.js" onerror="loadScript('scripts/seedrandom.js', '', '')"></script>
+<script type="text/javascript" src="js/codemirror.js" onerror=""></script>
+<script type="text/javascript" src="js/main.js" onerror="loadScript('scripts/main.js', '', '')"></script>
 </body>
 </html>

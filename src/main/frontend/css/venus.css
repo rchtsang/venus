@@ -105,6 +105,10 @@ body {
     display: none;
 }
 
+#packages-tab-view {
+    display: none;
+}
+
 #memory-table {
     font-family: Courier New, Courier, monospace;
     margin: auto;
