@@ -13,6 +13,7 @@ import venus.simulator.cache.BlockState
 import venus.simulator.cache.ChangedBlockState
 import venus.simulator.diffs.*
 import kotlin.browser.document
+import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.dom.removeClass
 
@@ -573,6 +574,20 @@ internal object Renderer {
         } else {
             console.log("Could not find package '$pid!'")
         }
+    }
+
+    var pkgmsgTimeout: Int? = null
+    fun pkgMsg(m: String) {
+        if (pkgmsgTimeout != null) {
+            window.clearTimeout(pkgmsgTimeout ?: -1)
+        }
+        val d = document.getElementById("package-msgs")
+        d?.innerHTML = m
+        pkgmsgTimeout = window.setTimeout(Renderer::clearPkgMsg, 10000)
+    }
+
+    fun clearPkgMsg() {
+        document.getElementById("package-msgs")?.innerHTML = ""
     }
 
     /**

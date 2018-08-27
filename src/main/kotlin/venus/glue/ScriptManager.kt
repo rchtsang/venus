@@ -50,7 +50,9 @@ import kotlin.browser.window
                 while (i > 0) {
                     var k = js("venuspackage.requires[i - 1]")
                     if (!packages.containsKey(k)) {
-                        console.warn("This package requires '$k' which was not found in the currently installed packages! Thus it cannot be loaded!")
+                        val msg = "This package requires '$k' which was not found in the currently installed packages! Thus it cannot be loaded!"
+                        Renderer.pkgMsg(msg)
+                        console.warn(msg)
                         addPackageFailure(url)
                         return
                     }
@@ -76,7 +78,9 @@ import kotlin.browser.window
         while (i > 0) {
             val k = js("window.venuspackage.requires[i - 1]") as String
             if (!((packages.get(k))?.enabled ?: true)) {
-                console.warn("Could not enable package '${venuspackage.id}' because it requires a package which has been disabled ($k)!")
+                val msg = "Could not enable package '${venuspackage.id}' because it requires a package which has been disabled ($k)!"
+                Renderer.pkgMsg(msg)
+                console.warn(msg)
                 enabled = false
             }
             i--
@@ -198,7 +202,9 @@ import kotlin.browser.window
         while (i > 0) {
             val k = js("p.requires[i - 1]") as String
             if (!((packages.get(k))?.enabled ?: true)) {
-                console.warn("Could not enable package '${p?.id}' because it requires a package which has been disabled ($k)!")
+                val msg = "Could not enable package '${p?.id}' because it requires a package which has been disabled ($k)!"
+                Renderer.pkgMsg(msg)
+                console.warn(msg)
                 Renderer.rendererUpdatePackage(id, false)
                 return
             }
