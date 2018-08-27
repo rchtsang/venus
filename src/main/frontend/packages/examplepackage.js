@@ -1,0 +1,16 @@
+'use strict';
+/**
+ * You must make sure you have use strict in your package.
+ * Also you must make sure the id is unique from other packages.
+ * You need to make sure venuspackage is the name of the dictionary since Venus assumes that it is called that
+ * and contains id (String), load (function()), and unload (function()). If you do not have one of these fields, Venus will error!
+ */
+var venuspackage = {
+  id: "examplepackage",
+  load: function() {
+      alert("I have loaded the example package! This is the stage which would apply all of the hooks and code to interact with Venus.");
+  },
+  unload: function() {
+      alert("I have unloaded the test package! This is the stage which all of the changes and hooks should be undone.")
+  }
+};
