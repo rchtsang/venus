@@ -109,20 +109,28 @@ import kotlin.browser.window
             Renderer.rendererAddPackage(venuspackage.id, enabled, removable)
             packages.put(venuspackage.id, venuspackage)
             updateLS()
-            console.log("Loaded script ($url)!")
+            val msg = "Loaded script ($url)!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
             js("window.venuspackage = undefined")
         }
     }
 
     @JsName("addPackageFailure") fun addPackageFailure(url: String) {
-        console.log("Could not load the script ($url)!")
+        val msg = "Could not load the script ($url)!"
+        Renderer.pkgMsg(msg)
+        console.warn(msg)
         js("window.venuspackage = undefined")
     }
 
     fun removePackage(id: String) {
-        console.log("Removing package '$id'!")
+        var msg = "Removing package '$id'!"
+        Renderer.pkgMsg(msg)
+        console.log(msg)
         if (!packages.containsKey(id)) {
-            console.log("Could not find package '$id'")
+            msg = "Could not find package '$id'"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
             return
         }
         disablePackage(id)
@@ -150,18 +158,26 @@ import kotlin.browser.window
         }
         updateLS()
         Renderer.rendererRemovePackage(id)
-        console.log("Package '$id' uninstalled successfully!")
+        msg = "Package '$id' uninstalled successfully!"
+        Renderer.pkgMsg(msg)
+        console.log(msg)
     }
 
     fun disablePackage(id: String) {
-        console.log("Disabling package '$id'!")
+        var msg = "Disabling package '$id'!"
+        Renderer.pkgMsg(msg)
+        console.log(msg)
         if (!packages.containsKey(id)) {
-            console.log("Could not find package '$id'")
+            msg = "Could not find package '$id'"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
             return
         }
         val p = packages.get(id)
         if (p?.enabled == false) {
-            console.log("Package '$id' is already disabled!")
+            msg = "Package '$id' is already disabled!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
             return
         }
         var worked = true
@@ -170,7 +186,6 @@ import kotlin.browser.window
                 p.unload();
             } catch (e) {
                 worked = false;
-                console.log("Could not disable package '" + id + "'!");
             }
             """)
         if (worked) {
@@ -183,19 +198,31 @@ import kotlin.browser.window
                 disablePackage(k)
                 i--
             }
-            console.log("Successfully disable package '$id'!")
+            msg = "Successfully disable package '$id'!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
+        } else {
+            msg = "Could not disable package '$id'!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
         }
     }
 
     fun enablePackage(id: String) {
-        console.log("Enabling package '$id'!")
+        var msg = "Enabling package '$id'!"
+        Renderer.pkgMsg(msg)
+        console.log(msg)
         if (!packages.containsKey(id)) {
-            console.log("Could not find package '$id'")
+            msg = "Could not find package '$id'"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
             return
         }
         val p = packages.get(id)
         if (p?.enabled == true) {
-            console.log("Package '$id' is already enabled!")
+            msg = "Package '$id' is already enabled!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
             return
         }
         var i = js("p.requires.length") as Int
@@ -216,21 +243,30 @@ import kotlin.browser.window
                 p.load();
             } catch (e) {
                 worked = false;
-                console.log("Could not enable package '" + id + "'!");
             }
             """)
         if (worked) {
             p?.enabled = true
             Renderer.rendererUpdatePackage(id, true)
             updateLS()
-            console.log("Successfully enabled package '$id'!")
+            msg = "Successfully enabled package '$id'!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
+        } else {
+            msg = "Could not enable package '$id'!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
         }
     }
 
     fun togglePackage(id: String) {
-        console.log("Toggling package '$id'!")
+        var msg = "Toggling package '$id'!"
+        Renderer.pkgMsg(msg)
+        console.log(msg)
         if (!packages.containsKey(id)) {
-            console.log("Could not find package '$id'")
+            msg = "Could not find package '$id'"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
             return
         }
         val p = packages.get(id)
