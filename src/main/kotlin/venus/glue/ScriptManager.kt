@@ -38,7 +38,31 @@ import kotlin.browser.window
         loadScript(url, onfail, onload)
     }
 
-    @JsName("addPackageSuccess") fun addPackageSuccess(url: String, enabled: Boolean = true, removable: Boolean = true) {
+    @JsName("addPackageSuccess") fun addPackageSuccess(url: String, en: Boolean = true, removable: Boolean = true) {
+        var enabled = en
+        if (venuspackage == undefined) {
+            addPackageFailure(url)
+            return
+        }
+        if (jsTypeOf(venuspackage.requires) != "undefined") {
+            if (js("venuspackage.requires.constructor === Array")) {
+                var i = js("venuspackage.requires.length")
+                while (i > 0) {
+                    var k = js("venuspackage.requires[i - 1]")
+                    if (!packages.containsKey(k)) {
+                        console.warn("This package requires '$k' which was not found in the currently installed packages! Thus it cannot be loaded!")
+                        addPackageFailure(url)
+                        return
+                    }
+                    i--
+                }
+            } else {
+                venuspackage.requires = js("[]")
+            }
+        } else {
+            venuspackage.requires = js("[]")
+        }
+        venuspackage.dependent = js("[]")
         if (packages.containsKey(venuspackage.id)) {
             val orig = packages.get(venuspackage.id)
             if (!orig!!.removable) {
@@ -47,11 +71,16 @@ import kotlin.browser.window
             }
             removePackage(venuspackage.id)
         }
-        if (venuspackage == undefined) {
-            addPackageFailure(url)
-            return
-        }
         venuspackage.url = url
+        var i = js("window.venuspackage.requires.length") as Int
+        while (i > 0) {
+            val k = js("window.venuspackage.requires[i - 1]") as String
+            if (!((packages.get(k))?.enabled ?: true)) {
+                console.warn("Could not enable package '${venuspackage.id}' because it requires a package which has been disabled ($k)!")
+                enabled = false
+            }
+            i--
+        }
         var worked = true
         if (enabled) {
             js("""
@@ -66,6 +95,13 @@ import kotlin.browser.window
         if (worked) {
             venuspackage.enabled = enabled
             venuspackage.removable = removable
+            var i = js("venuspackage.requires.length") as Int
+            while (i > 0) {
+                val k = js("venuspackage.requires[i - 1]")
+                val p = packages[k]
+                js("p.dependent.push(venuspackage.id)")
+                i--
+            }
             Renderer.rendererAddPackage(venuspackage.id, enabled, removable)
             packages.put(venuspackage.id, venuspackage)
             updateLS()
@@ -91,6 +127,21 @@ import kotlin.browser.window
             val s = document.getElementById(p.url)
             if (s != null) {
                 s.parentElement?.removeChild(s)
+            }
+            var i = js("p.requires.length") as Int
+            while (i > 0) {
+                val k = js("p.requires[i - 1]")
+                val pk = packages[k]
+                js("""try {
+                        pk.dependent.pop(k);
+                    } catch (e) {}""")
+                i--
+            }
+            i = js("p.dependent.length") as Int
+            while (i > 0) {
+                val k = js("p.dependent[i - 1]")
+                removePackage(k)
+                i--
             }
         }
         updateLS()
@@ -122,6 +173,12 @@ import kotlin.browser.window
             p?.enabled = false
             Renderer.rendererUpdatePackage(id, false)
             updateLS()
+            var i = js("p.dependent.length") as Int
+            while (i > 0) {
+                val k = js("p.dependent[i - 1]")
+                disablePackage(k)
+                i--
+            }
             console.log("Successfully disable package '$id'!")
         }
     }
@@ -136,6 +193,16 @@ import kotlin.browser.window
         if (p?.enabled == true) {
             console.log("Package '$id' is already enabled!")
             return
+        }
+        var i = js("p.requires.length") as Int
+        while (i > 0) {
+            val k = js("p.requires[i - 1]") as String
+            if (!((packages.get(k))?.enabled ?: true)) {
+                console.warn("Could not enable package '${p?.id}' because it requires a package which has been disabled ($k)!")
+                Renderer.rendererUpdatePackage(id, false)
+                return
+            }
+            i--
         }
         var worked = true
         js("""
@@ -219,4 +286,6 @@ external object venuspackage {
     var removable: Boolean
     val load: Function<Unit>
     val unload: Function<Unit>
+    var requires: List<String>
+    var dependent: MutableList<String>
 }
