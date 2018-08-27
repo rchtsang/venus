@@ -7,10 +7,11 @@
  */
 var venuspackage = {
   id: "examplepackage",
+    requires: undefined,
   load: function() {
-      alert("I have loaded the example package! This is the stage which would apply all of the hooks and code to interact with Venus.");
+      console.warn("I have loaded the example package! This is the stage which would apply all of the hooks and code to interact with Venus.");
   },
   unload: function() {
-      alert("I have unloaded the test package! This is the stage which all of the changes and hooks should be undone.")
+      console.warn("I have unloaded the test package! This is the stage which all of the changes and hooks should be undone.")
   }
 };
