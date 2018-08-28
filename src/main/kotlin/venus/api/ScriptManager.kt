@@ -1,8 +1,10 @@
-package venus.glue
+package venus.api
 
 import org.w3c.dom.get
+import venus.glue.Driver
 import kotlin.browser.document
 import kotlin.browser.window
+import venus.glue.Renderer
 
 /**
 * This is used to add and remove external packages.
@@ -12,7 +14,7 @@ import kotlin.browser.window
     init {
         js("""
             window.VenusScriptManager = this;
-                """)
+            """)
     }
 
     var packages = HashMap<String, venuspackage>()

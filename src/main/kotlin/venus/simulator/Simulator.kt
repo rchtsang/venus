@@ -13,7 +13,7 @@ import venus.simulator.diffs.*
 
 /** Right now, this is a loose wrapper around SimulatorState
     Eventually, it will support debugging. */
-class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSettings = SimulatorSettings()) {
+class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSettings = SimulatorSettings(), val simulatorID: Int = 0) {
     val state = SimulatorState()
     var maxpc = MemorySegments.TEXT_BEGIN
     private var cycles = 0

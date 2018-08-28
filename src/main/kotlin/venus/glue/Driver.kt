@@ -3,6 +3,7 @@ package venus.glue
 /* ktlint-disable no-wildcard-imports */
 
 import org.w3c.dom.*
+import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
 import venus.linker.LinkedProgram
@@ -42,7 +43,7 @@ import kotlin.dom.removeClass
     var p = ""
     private var ready = false
     @JsName("FReginputAsFloat") var FReginputAsFloat = true
-    @JsName("ScriptManager") var ScriptManager = venus.glue.ScriptManager
+    @JsName("ScriptManager") var ScriptManager = venus.api.ScriptManager
 
     init {
 
