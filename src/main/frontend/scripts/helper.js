@@ -276,8 +276,34 @@ function selectText(containerid) {
 }
 
 function setUpURL() {
-    var u = driver.makeCustomURL();
+    var u = generateURL();
     var a = document.getElementById('generatedurl');
     a.href = u;
     a.innerText = u;
+}
+
+function unparseString(s) {
+    let ps = s.replace("\n", "\\n")
+        .replace("\t", "\\t");
+    return ps
+}
+
+function generateURL(){
+    var location = window.location.origin + window.location.pathname + "?";
+    var e = document.getElementById("urloptions-save");
+    if (!e || e.value === "true") {
+        var e = document.getElementById("urloptions-save-choice");
+        if (!e || e.value === "true") {
+            location += "save=true&"
+        } else {
+            location += "save=false&"
+        }
+    }
+    var e = document.getElementById("urloptions-code");
+    if (!e || e.value === "true") {
+        codeMirror.save();
+        location += "code=" + encodeURIComponent(unparseString(document.getElementById("asm-editor").value)) + "&";
+    }
+
+    return location;
 }
