@@ -29,6 +29,17 @@ if (url.searchParams.get("clear") === "true") {
     window.location.replace(removeURLParameter(window.location.href, "clear"))
 }
 
+document.addEventListener("keydown", function(e) {
+    if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
+        if (document.getElementById("editor-tab").classList.contains("is-active")) {
+            e.preventDefault();
+            // Process the event here (such as click on submit button)
+            codeMirror.save();
+            downloadtrace('asm-editor', 'code.s', true);
+        }
+    }
+}, false);
+
 function vgetBaseLog(x, y) {
     return Math.log(y) / Math.log(x);
 }
