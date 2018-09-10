@@ -261,3 +261,23 @@ function loadStylesheet(url) {
     css.setAttribute("id", url);
     document.getElementsByTagName("head")[0].appendChild(css);
 }
+
+function selectText(containerid) {
+    if (document.selection) { // IE
+        var range = document.body.createTextRange();
+        range.moveToElementText(document.getElementById(containerid));
+        range.select();
+    } else if (window.getSelection) {
+        var range = document.createRange();
+        range.selectNode(document.getElementById(containerid));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+    }
+}
+
+function setUpURL() {
+    var u = driver.makeCustomURL();
+    var a = document.getElementById('generatedurl');
+    a.href = u;
+    a.innerText = u;
+}
