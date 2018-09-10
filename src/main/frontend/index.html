@@ -1320,10 +1320,18 @@
         </div>
         <div class="field is-horizontal">
           <div class="field-label">
-            <button id="urloptions-code" class="button" onclick="toggleThis(this);setUpURL();" value="false">Add Code</button>
+            <button id="urloptions-code" class="button" onclick="toggleThis(this);setUpURL();document.getElementById('urloptions-code-override-div').style.display = (this.value === 'true') ? 'block':'none';" value="false">Add Code</button>
           </div>
           <div class="field-body is-expanded">
             <label class="label" for="urloptions-code">Auto set the code</label>
+          </div>
+        </div>
+        <div class="field is-horizontal" id="urloptions-code-override-div" style="display: none;">
+          <div class="field-label">
+            <button id="urloptions-code-override" class="button" onclick="toggleThis(this);setUpURL();" value="false">Add Code Override</button>
+          </div>
+          <div class="field-body is-expanded">
+            <label class="label" for="urloptions-code-override">Auto set the code without a prompt.</label>
           </div>
         </div>
         <br><br>
