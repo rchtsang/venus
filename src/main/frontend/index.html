@@ -30,6 +30,7 @@
     </li>
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
+    <li id="urlmaker-tab"><a onclick="driver.openURLMaker()">URL Maker</a></li>
   </ul>
 </div>
 <div class="container is-fluid">
@@ -1291,6 +1292,19 @@
     </div>
   </div>
 </section>
+<div class="container is-fluid">
+  <section class="section" id="urlmaker-tab-view">
+    <div class="field">
+      <div class="control">
+        This feature is currently a work in progress! You will soon be able to edit what goes into the url. For now, it is just the code you set in the editor.<br>
+        <button class="button is-primary" onclick="">Generate</button><br><br>
+        <div style="overflow:scroll;" id="urltxt" onclick="selectText(this.id)">
+          <a id="generatedurl" href=""></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 <script>
     /*
       Make script tag and load it to page

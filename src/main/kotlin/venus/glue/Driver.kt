@@ -162,6 +162,11 @@ import kotlin.dom.removeClass
         Renderer.renderEditor()
     }
 
+    @JsName("openURLMaker") fun openURLMaker() {
+        js("setUpURL();")
+        Renderer.renderURLMaker()
+    }
+
     /**
      * Gets the text from the textarea editor.
      */

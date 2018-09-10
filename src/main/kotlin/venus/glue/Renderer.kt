@@ -44,6 +44,7 @@ internal object Renderer {
      */
     fun renderSimulator(displaySim: Simulator) {
         tabSetVisibility("simulator", "block")
+        tabSetVisibility("urlmaker", "none")
         tabSetVisibility("editor", "none")
         sim = displaySim
         setRunButtonSpinning(false)
@@ -55,7 +56,14 @@ internal object Renderer {
     /** Shows the editor tab and hides other tabs */
     fun renderEditor() {
         tabSetVisibility("simulator", "none")
+        tabSetVisibility("urlmaker", "none")
         tabSetVisibility("editor", "block")
+    }
+
+    fun renderURLMaker() {
+        tabSetVisibility("simulator", "none")
+        tabSetVisibility("editor", "none")
+        tabSetVisibility("urlmaker", "block")
     }
 
     /**

@@ -10,6 +10,10 @@ body {
     display: none;
 }
 
+#urlmaker-tab-view {
+    display: none;
+}
+
 #editor-tab-view {
     overflow: hidden;
     width: 100%;
