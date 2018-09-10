@@ -3,6 +3,7 @@ package venus.glue
 /* ktlint-disable no-wildcard-imports */
 
 import org.w3c.dom.*
+import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
@@ -85,6 +86,51 @@ import kotlin.dom.removeClass
         } else {
             window.setTimeout(Driver::openSimulator, 100)
         }
+    }
+
+    @JsName("checkURLParams") fun checkURLParams() {
+        var clearparams = false
+        val currentURL = URL(window.location.href)
+
+        var s = currentURL.searchParams.get("code")
+        if (s != null) {
+            s = parseString(s)
+            js("codeMirror.save();")
+            if (getText() != "") {
+                if (getText() != s) {
+                    val choice = window.confirm("You have some saved code already in venus! Do you want to override it with the code in your url?")
+                    if (choice) {
+                        js("codeMirror.setValue(s);")
+                        clearparams = true
+                    }
+                }
+            } else {
+                js("codeMirror.setValue(s);")
+                clearparams = true
+            }
+        }
+
+        s = currentURL.searchParams.get("save")
+        if (jsTypeOf(s) != undefined) {
+            s = parseString(s.toString())
+            if (s.toLowerCase() == "true") {
+                s
+            }
+        }
+        if (clearparams) {
+            clearURLParams()
+        }
+    }
+
+    fun clearURLParams() {
+        val location = window.location.origin + window.location.pathname
+        js("window.history.replaceState({}, document.title, location)")
+    }
+
+    fun parseString(s: String): String {
+        var ps = s.replace("\\n", "\n")
+                .replace("\\t", "\t")
+        return ps
     }
 
     /**
@@ -894,5 +940,7 @@ import kotlin.dom.removeClass
 
         ScriptManager.loadDefaults()
         ScriptManager.loadPackages()
+
+        checkURLParams()
     }
 }
