@@ -15,6 +15,7 @@ import kotlin.math.log2
  *
  * @throws IllegalArgumentException if the wrong number of arguments is given
  */
+var getImmWarning = ""
 internal fun getImmediate(str: String, min: Int, max: Int): Int {
     var imm = try {
         userStringToInt(str)
@@ -29,10 +30,11 @@ internal fun getImmediate(str: String, min: Int, max: Int): Int {
     if (imm !in min..max) {
         val imm_range = max - min + 1
         if (min < 0 && imm > 0 && imm < imm_range) {
-            val topbit = imm and (1 shl ceil(log2(imm_range.toDouble())).toInt())
+            val topbit = imm and (1 shl (ceil(log2(imm_range.toDouble())).toInt() - 1))
             val mask = topbit.inv()
             imm = imm and mask
             imm -= topbit
+            getImmWarning = """The value that was given was larger than the max allowed value ($max) but smaller than the unsigned range ($imm_range) so it will be interpreted just as bits ($imm)."""
         } else {
             val largeimm = if (min < 0 && imm > 0) " or between 0 and $imm_range to fill the bits using twos complement" else ""
             throw AssemblerError("immediate $str (= $imm) out of range (should be between $min and $max$largeimm)")

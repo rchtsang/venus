@@ -109,7 +109,7 @@ import kotlin.dom.removeClass
      * @param text the assembly code.
      */
     internal fun assemble(text: String): Boolean {
-        val (prog, errors) = Assembler.assemble(text)
+        val (prog, errors, warnings) = Assembler.assemble(text)
         if (errors.isNotEmpty()) {
             Renderer.displayError(errors.first())
             return false

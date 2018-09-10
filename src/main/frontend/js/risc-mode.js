@@ -229,10 +229,22 @@ CodeMirror.registerHelper("lint", "riscv", function (text) {
                      severity: "error",
                      message: err.message});
     };
+    var parseWarning = function(war) {
+        var line = war.lineNumber;
+        errors.push({from: CodeMirror.Pos(line - 1, 0),
+            to: CodeMirror.Pos(line, 0),
+            severity: "warning",
+            message: war.message});
+    };
 
     var res = window.venus_main.venus.assembler.Linter.lint(text);
     for (var i = 0; i < res.length; i++) {
-        parseError(res[i]);
+        info = res[i]
+        if (info.isError) {
+            parseError(info);
+        } else {
+            parseWarning(info);
+        }
     }
     return errors;
 });

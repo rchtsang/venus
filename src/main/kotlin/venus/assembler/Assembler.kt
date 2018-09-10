@@ -6,6 +6,7 @@ import venus.riscv.MachineCode
 import venus.riscv.MemorySegments
 import venus.riscv.Program
 import venus.riscv.insts.dsl.Instruction
+import venus.riscv.insts.dsl.getImmWarning
 import venus.riscv.insts.dsl.relocators.Relocator
 import venus.riscv.userStringToInt
 import venus.simulator.SimulatorError
@@ -35,7 +36,7 @@ object Assembler {
         }*/
 
         if (passOneErrors.isNotEmpty()) {
-            return AssemblerOutput(passOneProg, passOneErrors)
+            return AssemblerOutput(passOneProg, passOneErrors, ArrayList<AssemblerWarning>())
         }
         var passTwoOutput = AssemblerPassTwo(passOneProg, talInstructions).run()
         if (passTwoOutput.prog.textSize + MemorySegments.TEXT_BEGIN > MemorySegments.STATIC_BEGIN) {
@@ -47,7 +48,7 @@ object Assembler {
                 passOneErrors = pone.errors
                 talInstructions = pone.talInstructions
                 if (passOneErrors.isNotEmpty()) {
-                    return AssemblerOutput(passOneProg, passOneErrors)
+                    return AssemblerOutput(passOneProg, passOneErrors, ArrayList<AssemblerWarning>())
                 }
                 passTwoOutput = AssemblerPassTwo(passOneProg, talInstructions).run()
             } catch (e: SimulatorError) {
@@ -65,7 +66,7 @@ data class PassOneOutput(
     val talInstructions: List<DebugInstruction>,
     val errors: List<AssemblerError>
 )
-data class AssemblerOutput(val prog: Program, val errors: List<AssemblerError>)
+data class AssemblerOutput(val prog: Program, val errors: List<AssemblerError>, val warnings: List<AssemblerWarning>)
 
 /**
  * Pass #1 of our two pass assembler.
@@ -269,17 +270,23 @@ internal class AssemblerPassOne(private val text: String) {
  */
 internal class AssemblerPassTwo(val prog: Program, val talInstructions: List<DebugInstruction>) {
     private val errors = ArrayList<AssemblerError>()
+    private val warnings = ArrayList<AssemblerWarning>()
     fun run(): AssemblerOutput {
         for ((dbg, inst) in talInstructions) {
             try {
                 addInstruction(inst)
                 prog.addDebugInfo(dbg)
+                if (getImmWarning != "") {
+                    val (lineNumber, _) = dbg
+                    warnings.add(AssemblerWarning(lineNumber, AssemblerWarning(getImmWarning)))
+                    getImmWarning = ""
+                }
             } catch (e: AssemblerError) {
                 val (lineNumber, _) = dbg
                 errors.add(AssemblerError(lineNumber, e))
             }
         }
-        return AssemblerOutput(prog, errors)
+        return AssemblerOutput(prog, errors, warnings)
     }
 
     /**

@@ -1,6 +1,6 @@
 package venus.assembler
 
-@JsName("LintError") data class LintError(val lineNumber: Int, val message: String)
+@JsName("LintError") data class LintError(val lineNumber: Int, val message: String, val isError: Boolean = true)
 
 /**
  * Linter for RISC-V code
@@ -16,10 +16,13 @@ package venus.assembler
      * @fixme this relies on Kotlin using JS array for Array, but it will probably remain that way
      */
     @JsName("lint") fun lint(text: String): Array<LintError> {
-        val (_, errors) = Assembler.assemble(text)
+        val (_, errors, warnings) = Assembler.assemble(text)
         val linterErrors = ArrayList<LintError>()
         for (error in errors) {
             linterErrors.add(LintError(error.line ?: -1, error.message ?: ""))
+        }
+        for (warning in warnings) {
+            linterErrors.add(LintError(warning.line ?: -1, warning.message ?: "", false))
         }
         return linterErrors.toTypedArray()
     }
