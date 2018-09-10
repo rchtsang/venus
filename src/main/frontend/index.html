@@ -1297,7 +1297,36 @@
     <div class="field">
       <div class="control">
         This feature is currently a work in progress! You will soon be able to edit what goes into the url. For now, it is just the code you set in the editor.<br>
-        <button class="button is-primary" onclick="">Generate</button><br><br>
+
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <button id="urloptions-save" class="button" onclick="toggleThis(this);setUpURL();document.getElementById('urloptions-save-choice-div').style.display = (this.value === 'true') ? 'block':'none';" value="false">Set Save State</button>
+          </div>
+          <div class="field-body is-expanded">
+            <label class="label" for="urloptions-save">Auto set save</label>
+          </div>
+        </div>
+        <br>
+        <div id="urloptions-save-choice-div" style="display: none;">
+          <div class="field is-horizontal">
+            <div class="field-label">
+              <button id="urloptions-save-choice" class="button" onclick="toggleThis(this);setUpURL();" value="false">Save State</button>
+            </div>
+            <div class="field-body is-expanded">
+              <label class="label" for="urloptions-save-choice">Save State</label>
+            </div>
+          </div>
+          <br>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <button id="urloptions-code" class="button" onclick="toggleThis(this);setUpURL();" value="false">Add Code</button>
+          </div>
+          <div class="field-body is-expanded">
+            <label class="label" for="urloptions-code">Auto set the code</label>
+          </div>
+        </div>
+        <br><br>
         <div style="overflow:scroll;" id="urltxt" onclick="selectText(this.id)">
           <a id="generatedurl" href=""></a>
         </div>
@@ -1305,7 +1334,7 @@
     </div>
   </section>
 </div>
-<script>
+<script type="text/javascript">
     /*
       Make script tag and load it to page
     */
@@ -1322,6 +1351,7 @@
         document.getElementsByTagName("head")[0].appendChild(script);
     }
 </script>
+
 <script type="text/javascript" src="js/helper.js" onerror="loadScript('scripts/helper.js', '', '')"></script>
 <script type="text/javascript" src="js/seedrandom.js" onerror="loadScript('scripts/seedrandom.js', '', '')"></script>
 <script type="text/javascript" src="js/codemirror.js" onerror=""></script>

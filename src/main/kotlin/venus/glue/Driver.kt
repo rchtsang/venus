@@ -147,13 +147,6 @@ import kotlin.dom.removeClass
         return ps
     }
 
-    @JsName("makeCustomURL") fun makeCustomURL(): String {
-        var location = window.location.origin + window.location.pathname + "?"
-        js("codeMirror.save();")
-        location += "code=" + encodeURIComponent(unparseString(getText()), "utf-8") + "&"
-        return location
-    }
-
     /**
      * Opens and renders the editor.
      */
