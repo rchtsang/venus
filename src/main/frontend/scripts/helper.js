@@ -291,16 +291,20 @@ function unparseString(s) {
 function generateURL(){
     var location = window.location.origin + window.location.pathname + "?";
     var e = document.getElementById("urloptions-save");
-    if (!e || e.value === "true") {
+    if (e && e.value === "true") {
         var e = document.getElementById("urloptions-save-choice");
-        if (!e || e.value === "true") {
+        if (e && e.value === "true") {
             location += "save=true&"
         } else {
             location += "save=false&"
         }
     }
     var e = document.getElementById("urloptions-code");
-    if (!e || e.value === "true") {
+    if (e && e.value === "true") {
+        var e = document.getElementById("urloptions-code-override");
+        if (e) {
+            location += "override=" + e.value + "&";
+        }
         codeMirror.save();
         location += "code=" + encodeURIComponent(unparseString(document.getElementById("asm-editor").value)) + "&";
     }
