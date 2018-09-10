@@ -34,9 +34,9 @@ internal fun getImmediate(str: String, min: Int, max: Int): Int {
             val mask = topbit.inv()
             imm = imm and mask
             imm -= topbit
-            getImmWarning = """The value that was given was larger than the max allowed value ($max) but smaller than the unsigned range ($imm_range) so it will be interpreted just as bits ($imm)."""
+            getImmWarning = """The value that was given was larger than the max allowed value ($max) but within a valid unsigned range (0 to ${imm_range - 1}) so it will be interpreted just as two's complement bits ($imm)."""
         } else {
-            val largeimm = if (min < 0 && imm > 0) " or between 0 and $imm_range to fill the bits using twos complement" else ""
+            val largeimm = if (min < 0 && imm > 0) " or between 0 and $imm_range to fill the bits using two's complement" else ""
             throw AssemblerError("immediate $str (= $imm) out of range (should be between $min and $max$largeimm)")
         }
     }
