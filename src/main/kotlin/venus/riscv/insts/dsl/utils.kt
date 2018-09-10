@@ -2,6 +2,8 @@ package venus.riscv.insts.dsl
 
 import venus.assembler.AssemblerError
 import venus.riscv.userStringToInt
+import kotlin.math.ceil
+import kotlin.math.log2
 
 /**
  * Gets the immediate from a string, checking if it is in range.
@@ -14,7 +16,7 @@ import venus.riscv.userStringToInt
  * @throws IllegalArgumentException if the wrong number of arguments is given
  */
 internal fun getImmediate(str: String, min: Int, max: Int): Int {
-    val imm = try {
+    var imm = try {
         userStringToInt(str)
     } catch (e: NumberFormatException) {
         val hint = when {
@@ -24,8 +26,18 @@ internal fun getImmediate(str: String, min: Int, max: Int): Int {
         throw AssemblerError("invalid number, got $str$hint")
     }
 
-    if (imm !in min..max)
-        throw AssemblerError("immediate $str (= $imm) out of range (should be between $min and $max)")
+    if (imm !in min..max) {
+        val imm_range = max - min + 1
+        if (min < 0 && imm > 0 && imm < imm_range) {
+            val topbit = imm and (1 shl ceil(log2(imm_range.toDouble())).toInt())
+            val mask = topbit.inv()
+            imm = imm and mask
+            imm -= topbit
+        } else {
+            val largeimm = if (min < 0 && imm > 0) " or between 0 and $imm_range to fill the bits using twos complement" else ""
+            throw AssemblerError("immediate $str (= $imm) out of range (should be between $min and $max$largeimm)")
+        }
+    }
 
     return imm
 }
