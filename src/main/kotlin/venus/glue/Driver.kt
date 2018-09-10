@@ -89,7 +89,7 @@ import kotlin.dom.removeClass
     }
 
     @JsName("checkURLParams") fun checkURLParams() {
-        var clearparams = false
+        var clearparams = true
         val currentURL = URL(window.location.href)
 
         var s = currentURL.searchParams.get("code")
@@ -98,15 +98,17 @@ import kotlin.dom.removeClass
             js("codeMirror.save();")
             if (getText() != "") {
                 if (getText() != s) {
-                    val choice = window.confirm("You have some saved code already in venus! Do you want to override it with the code in your url?")
+                    val override = currentURL.searchParams.get("override")
+                    val overrideb = override != null && override.toLowerCase() == "true"
+                    val choice = if (overrideb) { true } else { window.confirm("You have some saved code already in venus! Do you want to override it with the code in your url?") }
                     if (choice) {
                         js("codeMirror.setValue(s);")
-                        clearparams = true
+                    } else {
+                        clearparams = false
                     }
                 }
             } else {
                 js("codeMirror.setValue(s);")
-                clearparams = true
             }
         }
 
@@ -114,7 +116,13 @@ import kotlin.dom.removeClass
         if (jsTypeOf(s) != undefined) {
             s = parseString(s.toString())
             if (s.toLowerCase() == "true") {
-                s
+                persistentStorage(true)
+                Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, true)
+            }
+
+            if (s.toLowerCase() == "false") {
+                persistentStorage(false)
+                Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, false)
             }
         }
         if (clearparams) {
@@ -128,9 +136,22 @@ import kotlin.dom.removeClass
     }
 
     fun parseString(s: String): String {
-        var ps = s.replace("\\n", "\n")
+        val ps = s.replace("\\n", "\n")
                 .replace("\\t", "\t")
         return ps
+    }
+
+    fun unparseString(s: String): String {
+        val ps = s.replace("\n", "\\n")
+                .replace("\t", "\\t")
+        return ps
+    }
+
+    @JsName("makeCustomURL") fun makeCustomURL(): String {
+        var location = window.location.origin + window.location.pathname + "?"
+        js("codeMirror.save();")
+        location += "code=" + encodeURIComponent(unparseString(getText()), "utf-8") + "&"
+        return location
     }
 
     /**
@@ -944,3 +965,4 @@ import kotlin.dom.removeClass
         checkURLParams()
     }
 }
+external fun encodeURIComponent(s: String, encoding: String): String
