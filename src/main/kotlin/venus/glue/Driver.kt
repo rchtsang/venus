@@ -112,6 +112,12 @@ import kotlin.dom.removeClass
             }
         }
 
+        s = currentURL.searchParams.get("target")
+        if (s != null) {
+            s = parseString(s)
+            js("loadfromtarget(s);")
+        }
+
         s = currentURL.searchParams.get("save")
         if (jsTypeOf(s) != undefined) {
             s = parseString(s.toString())

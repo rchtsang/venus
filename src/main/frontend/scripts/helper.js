@@ -311,3 +311,25 @@ function generateURL(){
 
     return location;
 }
+
+function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    };
+    xmlHttp.onerror = function () {
+        console.log(xmlHttp);
+    };
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous
+    xmlHttp.send(null);
+}
+
+function loadfromtarget(t) {
+    httpGetAsync("https://cors.io/?" + t, lftcallback);
+}
+
+function lftcallback(resp) {
+    codeMirror.setValue(resp);
+}
