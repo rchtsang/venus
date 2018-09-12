@@ -3,6 +3,7 @@
 /bin/
 /out/
 /.settings/
+Cache-Simulator-master/
 
 # Ignore Gradle GUI config
 gradle-app.setting
