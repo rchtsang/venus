@@ -37,15 +37,27 @@ internal object Renderer {
     /* The way the information in the registers is displayed*/
     private var displayType = "hex"
 
+    @JsName("renderTab") fun renderTab(tab: String, tabs: List<String>) {
+        if (!tabs.contains(tab)) {
+            return
+        }
+        for (t in tabs) {
+            var disp = "none"
+            if (t.equals(tab)) {
+                disp = "block"
+            }
+            tabSetVisibility(t, disp)
+        }
+    }
+
+    var mainTabs: ArrayList<String> = arrayListOf("simulator", "urlmaker", "editor")
     /**
      * Shows the simulator tab and hides other tabs
      *
      * @param displaySim the simulator to show
      */
     fun renderSimulator(displaySim: Simulator) {
-        tabSetVisibility("simulator", "block")
-        tabSetVisibility("urlmaker", "none")
-        tabSetVisibility("editor", "none")
+        renderTab("simulator", mainTabs)
         sim = displaySim
         setRunButtonSpinning(false)
         renderProgramListing()
@@ -55,15 +67,11 @@ internal object Renderer {
 
     /** Shows the editor tab and hides other tabs */
     fun renderEditor() {
-        tabSetVisibility("simulator", "none")
-        tabSetVisibility("urlmaker", "none")
-        tabSetVisibility("editor", "block")
+        renderTab("editor", mainTabs)
     }
 
     fun renderURLMaker() {
-        tabSetVisibility("simulator", "none")
-        tabSetVisibility("editor", "none")
-        tabSetVisibility("urlmaker", "block")
+        renderTab("urlmaker", mainTabs)
     }
 
     /**
