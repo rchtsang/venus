@@ -969,4 +969,3 @@ import kotlin.dom.removeClass
         checkURLParams()
     }
 }
-external fun encodeURIComponent(s: String, encoding: String): String

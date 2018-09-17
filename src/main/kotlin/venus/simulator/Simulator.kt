@@ -21,6 +21,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     private val preInstruction = ArrayList<Diff>()
     private val postInstruction = ArrayList<Diff>()
     private val breakpoints: Array<Boolean>
+    private val args = ArrayList<String>()
     var ebreak = false
 
     init {
@@ -75,6 +76,22 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
             diff(state)
         }
         return diffs
+    }
+
+    @JsName("addArg") fun addArg(arg: String) {
+        if (arg == "") {
+            return
+        }
+        args.add(arg)
+        for (c in arg.reversed()) {
+            val spv = getReg(2) - 1
+            storeByte(spv, c.toInt())
+            setReg(2, spv)
+        }
+        try {
+            Renderer.updateRegister(2, getReg(2))
+            Renderer.updateMemory(Renderer.activeMemoryAddress)
+        } catch (e: Throwable) {}
     }
 
     var ecallMsg = ""
