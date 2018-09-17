@@ -20,7 +20,7 @@ import venus.glue.Renderer
     var packages = HashMap<String, venuspackage>()
 
     fun loadDefaults() {
-        val defpkgs = hashMapOf(Pair("packages/disassembler.js", true))
+        val defpkgs = hashMapOf(Pair("packages/tester.js", true), Pair("packages/disassembler.js", true))
 
         val pstr = Driver.LS.safeget("script_manager", "[]")
         val pkgs = JSON.parse<ArrayList<pkg>>(pstr)
@@ -103,9 +103,9 @@ import venus.glue.Renderer
             i--
         }
         val state = if (en) {
-            "enabled"
+            "initenabled"
         } else {
-            "disabled"
+            "initdisabled"
         }
         var worked = true
         if (enabled) {
@@ -236,6 +236,7 @@ import venus.glue.Renderer
             Renderer.pkgMsg(msg)
             console.log(msg)
         } else {
+            Renderer.rendererUpdatePackage(id, true)
             msg = "Could not disable package '$id'!"
             Renderer.pkgMsg(msg)
             console.log(msg)
@@ -287,6 +288,7 @@ import venus.glue.Renderer
             Renderer.pkgMsg(msg)
             console.log(msg)
         } else {
+            Renderer.rendererUpdatePackage(id, false)
             msg = "Could not enable package '$id'!"
             Renderer.pkgMsg(msg)
             console.log(msg)

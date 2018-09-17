@@ -2,7 +2,6 @@
 var venuspackage = {
   id: "disassembler",
   load: function(setting) {
-      console.log(setting);
       if (setting === "enabled") {
           loadDecoder();
       }
