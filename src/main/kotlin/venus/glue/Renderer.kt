@@ -31,7 +31,7 @@ internal object Renderer {
     /** The instruction currently being highlighted */
     private var activeInstruction: HTMLElement? = null
     /** The memory location currently centered */
-    private var activeMemoryAddress: Int = 0
+    var activeMemoryAddress: Int = 0
     /** The simulator being rendered */
     private lateinit var sim: Simulator
     /* The way the information in the registers is displayed*/
@@ -605,7 +605,7 @@ internal object Renderer {
      *
      * @param addr the address to update around
      */
-    private fun updateMemory(addr: Int) {
+    fun updateMemory(addr: Int) {
         val wordAddress = (addr shr 2) shl 2
         if (mustMoveMemoryDisplay(wordAddress)) {
             activeMemoryAddress = wordAddress

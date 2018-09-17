@@ -1132,13 +1132,24 @@
                   <a id="packages-tab" onclick="driver.openPackagesTab()">Packages</a>
                 </p>
                 <div id="general-settings-tab-view">
+                  <div id="addArgs-div" class="panel-block">
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <label class="label is-small" for="addArgs">Add Args</label>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <input id="addArgs" class="input" spellcheck="false">
+                        <button id="addArgsBtn" class="button" onclick="e = document.getElementById('addArgs'); driver.sim.addArg(e.value); e.value = ''" style="text-align: center;height: 45px;">Add</button>
+                      </div>
+                    </div>
+                  </div>
                   <div id="textStart" class="panel-block">
                     <div class="field is-horizontal">
                       <div class="field-label">
                         <label class="label is-small" for="text-start">Text Start</label>
                       </div>
                       <div class="field-body is-expanded">
-                        <input id="text-start" class="input" onblur="driver.verifyText(this)" spellcheck="false"></li>
+                        <input id="text-start" class="input" onblur="driver.verifyText(this)" spellcheck="false">
                       </div>
                     </div>
                   </div>
