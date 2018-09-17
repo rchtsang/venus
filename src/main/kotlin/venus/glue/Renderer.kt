@@ -50,6 +50,22 @@ internal object Renderer {
         }
     }
 
+    @JsName("addTab") fun addTab(tabName: String, tabList: ArrayList<String>): Boolean {
+        if (!tabList.contains(tabName)) {
+            tabList.add(tabName)
+            return true
+        }
+        return false
+    }
+
+    @JsName("removeTab") fun removeTab(tabName: String, tabList: ArrayList<String>): Boolean {
+        if (!tabList.contains(tabName)) {
+            tabList.remove(tabName)
+            return true
+        }
+        return false
+    }
+
     var mainTabs: ArrayList<String> = arrayListOf("simulator", "urlmaker", "editor")
     /**
      * Shows the simulator tab and hides other tabs
