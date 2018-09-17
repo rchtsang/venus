@@ -1,10 +1,14 @@
 'use strict';
 var venuspackage = {
   id: "disassembler",
-  load: function() {
-      loadDecoder();
+  load: function(setting) {
+      console.log(setting);
+      if (setting === "enabled") {
+          loadDecoder();
+      }
   },
-  unload: function() {
+  unload: function(setting) {
+      console.log(setting);
       removeDecoder();
   }
 };

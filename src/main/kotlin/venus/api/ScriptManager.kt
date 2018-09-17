@@ -91,7 +91,7 @@ import venus.glue.Renderer
         if (enabled) {
             js("""
             try {
-                window.venuspackage.load();
+                window.venuspackage.load('enabled');
             } catch (e) {
                 worked = false
                 window.VenusScriptManager.addPackageFailure();
@@ -158,11 +158,23 @@ import venus.glue.Renderer
                 i--
             }
         }
-        updateLS()
-        Renderer.rendererRemovePackage(id)
-        msg = "Package '$id' uninstalled successfully!"
-        Renderer.pkgMsg(msg)
-        console.log(msg)
+        var worked = true
+        js("""
+            try {
+                p.unload('remove');
+            } catch (e) {
+                worked = false;
+            }
+            """)
+        if (worked) {
+            msg = "Package '$id' uninstalled successfully!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
+        } else {
+            msg = "Could not remove package '$id'!"
+            Renderer.pkgMsg(msg)
+            console.log(msg)
+        }
     }
 
     fun disablePackage(id: String) {
@@ -185,7 +197,7 @@ import venus.glue.Renderer
         var worked = true
         js("""
             try {
-                p.unload();
+                p.unload('disable');
             } catch (e) {
                 worked = false;
             }
@@ -242,7 +254,7 @@ import venus.glue.Renderer
         var worked = true
         js("""
             try {
-                p.load();
+                p.load('enabled');
             } catch (e) {
                 worked = false;
             }
