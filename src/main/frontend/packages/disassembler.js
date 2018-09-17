@@ -8,7 +8,6 @@ var venuspackage = {
       }
   },
   unload: function(setting) {
-      console.log(setting);
       removeDecoder();
   }
 };

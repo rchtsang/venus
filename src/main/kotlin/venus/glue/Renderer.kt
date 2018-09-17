@@ -59,7 +59,7 @@ internal object Renderer {
     }
 
     @JsName("removeTab") fun removeTab(tabName: String, tabList: ArrayList<String>): Boolean {
-        if (!tabList.contains(tabName)) {
+        if (tabList.contains(tabName)) {
             tabList.remove(tabName)
             return true
         }
