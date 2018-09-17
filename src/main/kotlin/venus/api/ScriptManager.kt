@@ -20,7 +20,22 @@ import venus.glue.Renderer
     var packages = HashMap<String, venuspackage>()
 
     fun loadDefaults() {
-        ScriptManager.addPackage("packages/disassembler.js", enabled = true, removable = false)
+        val defpkgs = hashMapOf(Pair("packages/disassembler.js", true))
+
+        val pstr = Driver.LS.safeget("script_manager", "[]")
+        val pkgs = JSON.parse<ArrayList<pkg>>(pstr)
+        var i = 0
+        while (js("i < pkgs.length")) {
+            val p = js("pkgs[i]")
+            if (defpkgs.containsKey(p.url)) {
+                defpkgs.set(p.url, p.enabled)
+            }
+            i++
+        }
+
+        for (pk in defpkgs) {
+            ScriptManager.addPackage(pk.key, enabled = pk.value, removable = false)
+        }
     }
 
     fun loadScript(url: String, onfail: String, onload: String) {
@@ -87,11 +102,16 @@ import venus.glue.Renderer
             }
             i--
         }
+        val state = if (en) {
+            "enabled"
+        } else {
+            "disabled"
+        }
         var worked = true
         if (enabled) {
             js("""
             try {
-                window.venuspackage.load('enabled');
+                window.venuspackage.load(state);
             } catch (e) {
                 worked = false
                 window.VenusScriptManager.addPackageFailure();
