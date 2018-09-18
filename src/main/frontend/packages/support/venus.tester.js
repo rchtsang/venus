@@ -42,7 +42,24 @@ var tester = {
             }
             return false;
         },
-        testAll(baseSim) {
+        testAll(program) {
+            var results = [];
+            var passed = true;
+            var i = 0;
+            while (i < this.testCases.length) {
+                var sim = driver.externalAssemble(program);
+                if (!sim[0]) {
+                    return [false, ["ERROR! Could not assemble text!", false]];
+                }
+                let tmp = this.testCases[i].testAll(sim[1]);
+                passed = passed && tmp[0];
+                results.push(tmp);
+                document.getElementById("console-output").value = "";
+                i++;
+            }
+            return [passed].concat(results);
+        },
+        testAllWithSim(baseSim) {
             var results = [];
             var passed = true;
             var i = 0;
