@@ -1,4 +1,5 @@
 var tester = {
+    /*This code is used to initialize, enable, and disable the testing environment.*/
     initialize: function(state) {
         if (state === "enabled") {
             this.enable();
@@ -28,6 +29,8 @@ var tester = {
         document.getElementById("tester-tab").remove();
         document.getElementById("tester-tab-view").remove();
     },
+
+    /*This is the code to manage the tab view.*/
     openTester: function() {
         venus_main.venus.glue.Renderer.renderTab("tester", venus_main.venus.glue.Renderer.mainTabs);
     },
@@ -40,6 +43,7 @@ var tester = {
       <div class="tile is-parent">
           <article class="tile is-child is-primary" align="center">
             <font size="6px">Venus Tester</font><br>
+            This is currently a work in progress. Please give me time!
           </article>
         </center>
       </div>
