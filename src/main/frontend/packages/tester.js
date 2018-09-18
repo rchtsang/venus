@@ -3,7 +3,7 @@ var venuspackage = {
   id: "tester",
   requires: undefined,
   load: function(setting) {
-      if (setting.includes("init")) {
+      if (setting.includes("init") || typeof tester === "undefined") {
           var state = "disabled";
           if (setting.includes("enabled")) {
               state = "enabled"

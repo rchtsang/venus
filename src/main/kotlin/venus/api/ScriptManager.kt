@@ -133,7 +133,9 @@ import venus.glue.Renderer
             updateLS()
             val msg = "Loaded script ($url)!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
             js("window.venuspackage = undefined")
         }
     }
@@ -148,11 +150,15 @@ import venus.glue.Renderer
     fun removePackage(id: String) {
         var msg = "Removing package '$id'!"
         Renderer.pkgMsg(msg)
-        console.log(msg)
+        if (Driver.debug) {
+            console.log(msg)
+        }
         if (!packages.containsKey(id)) {
             msg = "Could not find package '$id'"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
             return
         }
         disablePackage(id)
@@ -187,31 +193,43 @@ import venus.glue.Renderer
             }
             """)
         if (worked) {
+            Renderer.rendererRemovePackage(id)
             msg = "Package '$id' uninstalled successfully!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
         } else {
+            Renderer.rendererUpdatePackage(id, false)
             msg = "Could not remove package '$id'!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
         }
     }
 
     fun disablePackage(id: String) {
         var msg = "Disabling package '$id'!"
         Renderer.pkgMsg(msg)
-        console.log(msg)
+        if (Driver.debug) {
+            console.log(msg)
+        }
         if (!packages.containsKey(id)) {
             msg = "Could not find package '$id'"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
             return
         }
         val p = packages.get(id)
         if (p?.enabled == false) {
             msg = "Package '$id' is already disabled!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
             return
         }
         var worked = true
@@ -234,30 +252,40 @@ import venus.glue.Renderer
             }
             msg = "Successfully disable package '$id'!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
         } else {
             Renderer.rendererUpdatePackage(id, true)
             msg = "Could not disable package '$id'!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
         }
     }
 
     fun enablePackage(id: String) {
         var msg = "Enabling package '$id'!"
         Renderer.pkgMsg(msg)
-        console.log(msg)
+        if (Driver.debug) {
+            console.log(msg)
+        }
         if (!packages.containsKey(id)) {
             msg = "Could not find package '$id'"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
             return
         }
         val p = packages.get(id)
         if (p?.enabled == true) {
             msg = "Package '$id' is already enabled!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
             return
         }
         var i = js("p.requires.length") as Int
@@ -286,23 +314,31 @@ import venus.glue.Renderer
             updateLS()
             msg = "Successfully enabled package '$id'!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
         } else {
             Renderer.rendererUpdatePackage(id, false)
             msg = "Could not enable package '$id'!"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
         }
     }
 
     fun togglePackage(id: String) {
         var msg = "Toggling package '$id'!"
         Renderer.pkgMsg(msg)
-        console.log(msg)
+        if (Driver.debug) {
+            console.log(msg)
+        }
         if (!packages.containsKey(id)) {
             msg = "Could not find package '$id'"
             Renderer.pkgMsg(msg)
-            console.log(msg)
+            if (Driver.debug) {
+                console.log(msg)
+            }
             return
         }
         val p = packages.get(id)

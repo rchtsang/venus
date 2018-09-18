@@ -45,6 +45,7 @@ import kotlin.dom.removeClass
     private var ready = false
     @JsName("FReginputAsFloat") var FReginputAsFloat = true
     @JsName("ScriptManager") var ScriptManager = venus.api.ScriptManager
+    @JsName("debug") var debug = false
 
     init {
 

@@ -30,6 +30,8 @@ var tester = {
         document.getElementById("tester-tab-view").remove();
     },
 
+
+
     /*This is the code to manage the tab view.*/
     openTester: function() {
         venus_main.venus.glue.Renderer.renderTab("tester", venus_main.venus.glue.Renderer.mainTabs);
@@ -42,7 +44,7 @@ var tester = {
     <div class="tile">
       <div class="tile is-parent">
           <article class="tile is-child is-primary" align="center">
-            <font size="6px">Venus Tester</font><br>
+            <font size="6px">Venus Code Tester</font><br>
             This is currently a work in progress. Please give me time!
           </article>
         </center>
