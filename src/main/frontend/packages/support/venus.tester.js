@@ -30,6 +30,34 @@ var tester = {
         document.getElementById("tester-tab-view").remove();
     },
 
+    testingEnv: {
+        testCases: [],
+        addTestCase(testCase) {
+            return this.testCases.push(testCase);
+        },
+        removeTestCase(index) {
+            if (index >= 0 && index < this.testCases.length) {
+                this.testCases.splice(index, 1);
+                return true;
+            }
+            return false;
+        },
+        testAll(baseSim) {
+            var results = [];
+            var passed = true;
+            var i = 0;
+            while (i < this.testCases.length) {
+                let tmp = this.testCases[i].testAll(baseSim);
+                passed = passed && tmp[0];
+                results.push(tmp);
+                baseSim.reset();
+                document.getElementById("console-output").value = "";
+                i++;
+            }
+            return [passed].concat(results);
+        }
+    },
+
     testCase: class testCase{
 
         /**
@@ -129,8 +157,9 @@ var tester = {
         testAll(sim) {
             /**
              * First step is to get the simulator into the correct state.
+             * I am not resetting the sim since it assumes the sim is in the correct initial state. It will then add
+             * args and process it.
              */
-            sim.reset();
             for (let arg of this.args) {
                 sim.addArg(arg);
             }
