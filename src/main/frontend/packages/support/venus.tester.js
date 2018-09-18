@@ -268,6 +268,10 @@ var tester = {
     },
 
     /*This is the code to manage the tab view.*/
+    displayTest(testCase) {
+
+    },
+
     infoTabs: ["add-testCase", "testCases"],
     openTestCases: function() {
         this.openTab("testCases", this.infoTabs);
@@ -304,7 +308,10 @@ var tester = {
                 <button id="tester-testSelected" class="button" onclick="">Test Selected</button>
               </div>
               <div class="control">
-                <button id="tester-exportTest" class="button" onclick="">Export Test</button>
+                <button id="tester-exportSelectedTest" class="button" onclick="">Export Selected Test</button>
+              </div>
+              <div class="control">
+                <button id="tester-exportAllTests" class="button is-primary" onclick="">Export All Tests</button>
               </div>
             </div>
           </article>
@@ -339,6 +346,7 @@ var tester = {
               <tr>
                 <th>Arg ID</th>
                 <th>Argument</th>
+                <th>Remove?</th>
               </tr>
               </thead>
               <tbody id="testCase-Args-body">
@@ -354,8 +362,9 @@ var tester = {
               <tr>
                 <th>Test ID</th>
                 <th>Testing What</th>
-                <th>With ID</th>
+                <th>At Location</th>
                 <th>Expected Value</th>
+                <th>Remove?</th>
               </tr>
               </thead>
               <tbody id="testCase-Test-body">
