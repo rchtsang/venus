@@ -2,7 +2,7 @@
 var venuspackage = {
   id: "disassembler",
   load: function(setting) {
-      if (setting === "enabled") {
+      if (setting.includes("enabled")) {
           loadDecoder();
       }
   },
@@ -10,7 +10,7 @@ var venuspackage = {
       removeDecoder();
   }
 };
-function loadScript(url, onfail, onload) {
+function dissassemblerloadScript(url, onfail, onload) {
     var urlelm = document.getElementById(url);
     if (urlelm) {
         urlelm.parentNode.removeChild(urlelm)
@@ -23,7 +23,7 @@ function loadScript(url, onfail, onload) {
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 function loadDecoder(){
-    loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js',
+    dissassemblerloadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js',
         `alert("Could not load the decoder! Please try to reload the page to get it to load.");` ,
         `loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js', "", "");`
     );
