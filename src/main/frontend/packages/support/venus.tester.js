@@ -30,7 +30,63 @@ var tester = {
         document.getElementById("tester-tab-view").remove();
     },
 
+    testCase: class testCase{
 
+        /*When = number of steps before test check or 'end'*/
+        constructor(descriptor) {
+            this.descriptor = descriptor;
+            this.tests = {};
+        }
+
+        addTest(id, description,  assertion, arg1, arg2) {
+            if (typeof this.tests[id] !== "undefined") {
+                return false;
+            }
+            this.tests.push(id, [description, assertion, arg1, arg2]);
+            return true;
+        }
+
+        removeTest(id) {
+            if (typeof this.tests[id] === "undefined") {
+                return false;
+            }
+            delete this.tests[id];
+            return true;
+        }
+
+        listTests() {
+            return this.tests;
+        }
+
+        testAll() {
+            let details = [];
+            for (let testid in Object.keys(this.tests)) {
+                let test = this.tests[testid];
+                let f = test[1];
+                let a = test[2];
+                let b = test[3];
+                details.push([testid, f(a, b)]);
+            }
+            return details;
+        }
+    },
+
+    assertRegister: function(regID, expected){
+        return driver.sim.getReg(regID) === expected;
+    },
+
+    assertFRegister: function(regID, expected) {
+      return driver.sim.getFReg(regID) === expected;
+    },
+
+    assertOutput: function(_, expected){
+        var console = document.getElementById("console-output");
+        return console && console.value === expected;
+    },
+
+    assertMemory: function(address, expected) {
+        return driver.sim.loadByte(address) === expected;
+    },
 
     /*This is the code to manage the tab view.*/
     openTester: function() {
