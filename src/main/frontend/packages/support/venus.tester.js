@@ -42,6 +42,20 @@ var tester = {
             }
             return false;
         },
+        exportTests() {
+            return JSON.stringify(this.testCases);
+        },
+        /**
+         * This imports the JSON stringify tests
+         * @param tests -> A json (so it is a string) list of testCases as strings
+         */
+        importTests(tests) {
+            tcs = JSON.parse(tests);
+            for (t of tcs) {
+                let tc = window.tester.testCase.parseTestCase(t);
+                this.addTestCase(tc);
+            }
+        },
         testAll(program) {
             var results = [];
             var passed = true;
@@ -119,7 +133,11 @@ var tester = {
         }
 
         static parseTestCase(jsonString) {
-            var obj = JSON.parse(jsonString);
+            if (typeof jsonString === "string") {
+                var obj = JSON.parse(jsonString);
+            } else if(typeof jsonString === "object") {
+                var obj = jsonString;
+            }
             var tc = new window.tester.testCase(obj.descriptor, obj.args, obj.when, obj.maxcycles);
             tc.tests = obj.tests;
             return tc;
