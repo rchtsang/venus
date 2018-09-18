@@ -14,6 +14,7 @@ venus is [available online](https://ThaumicMekanism.github.io/venus/).
 * View machine code and original instructions side-by-side
 * Several `ecall`s: including `print` and `sbrk`
 * Memory visualization
+* Basic External Package Management System
 
 ## Resources
 
