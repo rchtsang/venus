@@ -14,6 +14,10 @@ class Memory {
      */
     private val memory = HashMap<Int, Byte>()
 
+    fun removeByte(addr: Int) {
+        memory.remove(addr)
+    }
+
     /**
      * Loads an unsigned byte from memory
      *

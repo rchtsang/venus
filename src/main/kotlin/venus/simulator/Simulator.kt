@@ -21,7 +21,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     private val preInstruction = ArrayList<Diff>()
     private val postInstruction = ArrayList<Diff>()
     private val breakpoints: Array<Boolean>
-    private val args = ArrayList<String>()
+    @JsName("args") var args = ArrayList<String>()
     var ebreak = false
 
     init {
@@ -80,6 +80,28 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         return diffs
     }
 
+    @JsName("removeAllArgsFromMem") fun removeAllArgsFromMem() {
+        var sp = getReg(2)
+        while (sp < MemorySegments.STACK_BEGIN) {
+            this.state.mem.removeByte(sp)
+            sp++
+            setReg(2, sp)
+        }
+    }
+
+    @JsName("removeAllArgs") fun removeAllArgs() {
+        removeAllArgsFromMem()
+        this.args.removeAll(this.args)
+    }
+
+    @JsName("removeArg") fun removeArg(index: Int) {
+        if (index in 0 until this.args.size) {
+            this.args.removeAt(index)
+            this.removeAllArgsFromMem()
+            addArgsToMem()
+        }
+    }
+
     @JsName("addArg") fun addArg(arg: String) {
         if (arg == "") {
             return
@@ -89,6 +111,20 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
             val spv = getReg(2) - 1
             storeByte(spv, c.toInt())
             setReg(2, spv)
+        }
+        try {
+            Renderer.updateRegister(2, getReg(2))
+            Renderer.updateMemory(Renderer.activeMemoryAddress)
+        } catch (e: Throwable) {}
+    }
+
+    @JsName("addArgsToMem") fun addArgsToMem() {
+        for (arg in args) {
+            for (c in arg.reversed()) {
+                val spv = getReg(2) - 1
+                storeByte(spv, c.toInt())
+                setReg(2, spv)
+            }
         }
         try {
             Renderer.updateRegister(2, getReg(2))
@@ -107,6 +143,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         this.jumped = false
         this.ecallMsg = ""
         cycles = 0
+        removeAllArgs()
     }
 
     fun trace(): Tracer {
