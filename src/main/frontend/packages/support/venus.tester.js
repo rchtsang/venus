@@ -42,6 +42,9 @@ var tester = {
             }
             return false;
         },
+        removeAllTestCases() {
+            this.testCases = [];
+        },
         exportTests() {
             return JSON.stringify(this.testCases);
         },
