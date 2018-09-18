@@ -32,17 +32,80 @@ var tester = {
 
     testCase: class testCase{
 
-        /*When = number of steps before test check or 'end'*/
-        constructor(descriptor) {
+        /**
+         * descriptor is a string which is used to see what the testCase is meant to test.
+         * args should be a string or a list of strings
+         * when is either a number of steps you want the sim to make or 'end' to run till the end (End = -1).
+         * maxcycles should be used to stop the test if there may be an inf loop.
+         */
+        constructor(descriptor, args, when, maxcycles) {
             this.descriptor = descriptor;
+            if (typeof args === "string") {
+                this.args = [args];
+            } else if (Array.isArray(args)) {
+                for (let i in args) {
+                    if (typeof args[i] !== "string") {
+                        args[i] = args[i].toString();
+                    }
+                }
+                this.args = args;
+            } else {
+                this.args = [];
+            }
             this.tests = {};
+            if (typeof when === "undefined") {
+                this.when = -1;
+            } else {
+                if (typeof when === "number") {
+                    this.when = when;
+                } else {
+                    this.when = -1;
+                }
+            }
+            if (typeof maxcycles === "undefined") {
+                this.maxcycles = -1;
+            } else {
+                if (typeof maxcycles === "number") {
+                    this.maxcycles = maxcycles;
+                } else {
+                    this.maxcycles = -1;
+                }
+            }
         }
 
-        addTest(id, description,  assertion, arg1, arg2) {
+        addArg(arg) {
+            if (typeof arg === "string") {
+                this.args.push(arg);
+                return true;
+            } else if (Array.isArray(arg)) {
+                for (let i in arg) {
+                    if (typeof arg[i] !== "string") {
+                        arg[i] = arg[i].toString()
+                    }
+                }
+                this.args = this.args.concat(arg);
+                return true;
+            }
+            return false;
+        }
+
+        removeArgAt(index) {
+            if (index >= 0 && index < this.args.length) {
+                this.args.splice(index, 1);
+                return true;
+            }
+            return false;
+        }
+
+        removeArg(arg) {
+            return this.removeArgAt(this.args.indexOf(arg))
+        }
+
+        addTest(id, assertion, arg1, arg2) {
             if (typeof this.tests[id] !== "undefined") {
                 return false;
             }
-            this.tests.push(id, [description, assertion, arg1, arg2]);
+            this.tests[id] = [assertion, arg1, arg2];
             return true;
         }
 
@@ -58,34 +121,57 @@ var tester = {
             return this.tests;
         }
 
-        testAll() {
-            let details = [];
-            for (let testid in Object.keys(this.tests)) {
-                let test = this.tests[testid];
-                let f = test[1];
-                let a = test[2];
-                let b = test[3];
-                details.push([testid, f(a, b)]);
+        /**
+         * The first thing it returns is if all of the tests succeeded. Then there is a list of the test which passed/failed.
+         * @param sim - A venus simulator object.
+         * @returns {boolean, [testid, boolean] ... }
+         */
+        testAll(sim) {
+            /**
+             * First step is to get the simulator into the correct state.
+             */
+            sim.reset();
+            for (let arg of this.args) {
+                sim.addArg(arg);
             }
-            return details;
+            while( !sim.isDone() && (sim.cycles < this.when || this.when === -1) && (sim.cycles < this.maxcycles || this.maxcycles === -1)) {
+                sim.step();
+            }
+
+            /**
+             * This part of the code will actually do the comparisons with the simulator.
+             * @type {Array}
+             */
+            let details = [];
+            var state = true;
+            for (let testid of Object.keys(this.tests)) {
+                let test = this.tests[testid];
+                let f = test[0];
+                let a = test[1];
+                let b = test[2];
+                let assertion = f(sim, a, b);
+                state = state && assertion;
+                details.push([testid, assertion]);
+            }
+            return [state].concat(details);
         }
     },
 
-    assertRegister: function(regID, expected){
-        return driver.sim.getReg(regID) === expected;
+    assertRegister: function(sim, regID, expected){
+        return sim.getReg(regID) === expected;
     },
 
-    assertFRegister: function(regID, expected) {
-      return driver.sim.getFReg(regID) === expected;
+    assertFRegister: function(sim, regID, expected) {
+      return sim.getFReg(regID) === expected;
     },
 
-    assertOutput: function(_, expected){
+    assertOutput: function(sim, _, expected){
         var console = document.getElementById("console-output");
         return console && console.value === expected;
     },
 
-    assertMemory: function(address, expected) {
-        return driver.sim.loadByte(address) === expected;
+    assertMemory: function(sim, address, expected) {
+        return sim.loadByte(address) === expected;
     },
 
     /*This is the code to manage the tab view.*/
@@ -101,7 +187,8 @@ var tester = {
       <div class="tile is-parent">
           <article class="tile is-child is-primary" align="center">
             <font size="6px">Venus Code Tester</font><br>
-            This is currently a work in progress. Please give me time!
+            This is currently a work in progress. Please give me time!<br>
+            The backend of this is what is mostly in, the front end will come with time (though I suck at front end :'( ).
           </article>
         </center>
       </div>

@@ -16,7 +16,7 @@ import venus.simulator.diffs.*
 class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSettings = SimulatorSettings(), val simulatorID: Int = 0) {
     val state = SimulatorState()
     var maxpc = MemorySegments.TEXT_BEGIN
-    private var cycles = 0
+    @JsName("cycles") var cycles = 0
     private val history = History()
     private val preInstruction = ArrayList<Diff>()
     private val postInstruction = ArrayList<Diff>()
@@ -46,20 +46,21 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         breakpoints = Array<Boolean>(linkedProgram.prog.insts.size, { false })
     }
 
-    fun isDone(): Boolean = getPC() >= if (settings.ecallOnlyExit) MemorySegments.STATIC_BEGIN else maxpc
+    @JsName("isDone") fun isDone(): Boolean = getPC() >= if (settings.ecallOnlyExit) MemorySegments.STATIC_BEGIN else maxpc
 
-    fun run() {
+    @JsName("run") fun run() {
         while (!isDone()) {
             step()
             cycles++
         }
     }
 
-    fun step(): List<Diff> {
+    @JsName("step") fun step(): List<Diff> {
         this.branched = false
         this.jumped = false
         this.ebreak = false
         this.ecallMsg = ""
+        cycles++
         preInstruction.clear()
         postInstruction.clear()
         /* TODO: abstract away instruction length */
@@ -69,12 +70,13 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         return postInstruction.toList()
     }
 
-    fun undo(): List<Diff> {
+    @JsName("undo") fun undo(): List<Diff> {
         if (!canUndo()) return emptyList() /* TODO: error here? */
         val diffs = history.pop()
         for (diff in diffs) {
             diff(state)
         }
+        cycles--
         return diffs
     }
 
@@ -97,13 +99,14 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     var ecallMsg = ""
     var branched = false
     var jumped = false
-    fun reset() {
+    @JsName("reset") fun reset() {
         while (this.canUndo()) {
             this.undo()
         }
         this.branched = false
         this.jumped = false
         this.ecallMsg = ""
+        cycles = 0
     }
 
     fun trace(): Tracer {
