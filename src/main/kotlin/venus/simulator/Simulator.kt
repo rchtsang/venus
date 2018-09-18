@@ -112,7 +112,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
 
     fun canUndo() = !history.isEmpty()
 
-    fun getReg(id: Int) = state.getReg(id)
+    @JsName("getReg") fun getReg(id: Int) = state.getReg(id)
 
     fun setReg(id: Int, v: Int) {
         preInstruction.add(RegisterDiff(id, state.getReg(id)))
@@ -123,7 +123,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     fun setRegNoUndo(id: Int, v: Int) {
         state.setReg(id, v)
     }
-    fun getFReg(id: Int) = state.getFReg(id)
+    @JsName("getFReg") fun getFReg(id: Int) = state.getFReg(id)
 
     fun setFReg(id: Int, v: Decimal) {
         preInstruction.add(FRegisterDiff(id, state.getFReg(id)))
@@ -156,7 +156,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         postInstruction.add(PCDiff(state.pc))
     }
 
-    fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
+    @JsName("loadByte") fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
     fun loadBytewCache(addr: Int): Int {
         if (this.settings.alignedAddress && addr % MemSize.BYTE.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not BYTE aligned!")
