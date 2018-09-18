@@ -199,6 +199,27 @@ import kotlin.dom.removeClass
         }
     }
 
+    @JsName("externalAssemble") fun externalAssemble(text: String): Any {
+        var success = true
+        var errs = ""
+        var sim = js("undefined;")
+        val (prog, errors, warnings) = Assembler.assemble(text)
+        if (errors.isNotEmpty()) {
+            errs = errors.first().toString()
+            success = false
+        } else {
+            try {
+                val linked = Linker.link(listOf(prog))
+                sim = Simulator(linked, this.simSettings)
+            } catch (e: AssemblerError) {
+                errs = e.toString()
+                success = false
+            }
+        }
+
+        return js("[success, sim, errs, warnings]")
+    }
+
     /**
      * Runs the simulator until it is done, or until the run button is pressed again.
      */
