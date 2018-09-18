@@ -118,6 +118,17 @@ var tester = {
             }
         }
 
+        static parseTestCase(jsonString) {
+            var obj = JSON.parse(jsonString);
+            var tc = new window.tester.testCase(obj.descriptor, obj.args, obj.when, obj.maxcycles);
+            tc.tests = obj.tests;
+            return tc;
+        }
+
+        toString() {
+            return JSON.stringify(this);
+        }
+
         addArg(arg) {
             if (typeof arg === "string") {
                 this.args.push(arg);
@@ -195,7 +206,22 @@ var tester = {
                 let f = test[0];
                 let a = test[1];
                 let b = test[2];
-                let assertion = f(sim, a, b);
+                switch (f) {
+                    case "reg":
+                        var assertion = tester.assertRegister(sim, a, b);
+                        break;
+                    case "freg":
+                        var assertion = tester.assertFRegister(sim, a, b);
+                        break;
+                    case "out":
+                        var assertion = tester.assertOutput(sim, a, b);
+                        break;
+                    case "mem":
+                        var assertion = tester.assertMemory(sim, a, b);
+                        break;
+                    default:
+                        var assertion = false;
+                }
                 state = state && assertion;
                 details.push([testid, assertion]);
             }
