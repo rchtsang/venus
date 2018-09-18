@@ -112,6 +112,10 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
             storeByte(spv, c.toInt())
             setReg(2, spv)
         }
+        /*Got to add the null terminator as well!*/
+        val spv = getReg(2) - 1
+        storeByte(spv, 0)
+        setReg(2, spv)
         try {
             Renderer.updateRegister(2, getReg(2))
             Renderer.updateMemory(Renderer.activeMemoryAddress)
@@ -125,6 +129,10 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
                 storeByte(spv, c.toInt())
                 setReg(2, spv)
             }
+            /*Got to add the null terminator as well!*/
+            val spv = getReg(2) - 1
+            storeByte(spv, 0)
+            setReg(2, spv)
         }
         try {
             Renderer.updateRegister(2, getReg(2))
