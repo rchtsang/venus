@@ -268,25 +268,175 @@ var tester = {
     },
 
     /*This is the code to manage the tab view.*/
+    infoTabs: ["add-testCase", "testCases"],
+    openTestCases: function() {
+        this.openTab("testCases", this.infoTabs);
+    },
+    openAddTestCase: function() {
+        this.openTab("add-testCase", this.infoTabs);
+    },
+    openTab: function(tabName, tabsList) {
+        for (t of tabsList) {
+            if (t === tabName) {
+                venus_main.venus.glue.Renderer.tabSetVisibility(t, "block");
+            } else {
+                venus_main.venus.glue.Renderer.tabSetVisibility(t, "none");
+            }
+        }
+    },
     openTester: function() {
         venus_main.venus.glue.Renderer.renderTab("tester", venus_main.venus.glue.Renderer.mainTabs);
     },
     insertAfter: function(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     },
-    tab: `<center><div class="tile is-ancestor">
-  <div class="tile is-vertical">
-    <div class="tile">
-      <div class="tile is-parent">
-          <article class="tile is-child is-primary" align="center">
-            <font size="6px">Venus Code Tester</font><br>
-            This is currently a work in progress. Please give me time!<br>
-            The backend of this is what is mostly in, the front end will come with time (though I suck at front end :'( ).
+    tab: `
+  <div class="tile is-ancestor">
+    <div class="tile is-vertical is-8">
+      <div class="tile">
+        <div class="tile is-parent">
+          <article class="tile is-child is-primary" id="simulator-controls-container">
+            <div class="field is-grouped is-grouped-centered">
+              <div class="control">
+                <button id="tester-testAll" class="button is-primary" onclick="">Test All</button>
+              </div>
+              <div class="control">
+                <button id="tester-testSelected" class="button" onclick="">Test Selected</button>
+              </div>
+              <div class="control">
+                <button id="tester-exportTest" class="button" onclick="">Export Test</button>
+              </div>
+            </div>
           </article>
-        </center>
+        </div>
+      </div>
+      <div class="tile">
+        <div class="tile is-parent">
+          <article class="tile is-child is-primary" id="program-listing-container">
+            <table id="testCase-Base" class="table">
+              <colgroup>
+                <col id="mc-column">
+                <col id="bc-column">
+                <col id="oc-column">
+              </colgroup>
+              <thead>
+              <tr>
+                <th>Description</th>
+                <th>When To Test</th>
+                <th>Maximum Cycles</th>
+              </tr>
+              </thead>
+              <tbody id="testCase-Base-body">
+              </tbody>
+            </table>
+            <table id="testCase-Args" class="table">
+              <colgroup>
+                <col id="mc-column">
+                <col id="bc-column">
+                <col id="oc-column">
+              </colgroup>
+              <thead>
+              <tr>
+                <th>Arg ID</th>
+                <th>Argument</th>
+              </tr>
+              </thead>
+              <tbody id="testCase-Args-body">
+              </tbody>
+            </table>
+            <table id="testCase-Test" class="table">
+              <colgroup>
+                <col id="mc-column">
+                <col id="bc-column">
+                <col id="oc-column">
+              </colgroup>
+              <thead>
+              <tr>
+                <th>Test ID</th>
+                <th>Testing What</th>
+                <th>With ID</th>
+                <th>Expected Value</th>
+              </tr>
+              </thead>
+              <tbody id="testCase-Test-body">
+              </tbody>
+            </table>
+          </article>
+        </div>
+      </div>
+      <div class="tile is-parent" align="center">
+        <article class="tile is-child">
+          <!--<a onclick="CopyToClipboard('console-output')">Copy!</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a onclick="downloadtrace('console-output', 'console.out', true)">Download!</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a onclick="document.getElementById('console-output').value=''">Clear!</a>
+          <br>
+          <textarea id="console-output" class="textarea" placeholder="console output" readonly></textarea>
+          <br>
+        </article>-->
       </div>
     </div>
-    <br><br>
-   </div>
-  </div></center>`
+    <div class="tile is-ancestor">
+      <div class="tile is-vertical">
+        <div class="tile is-parent">
+          <article class="tile is-child" id="sidebar-listings-container">
+            <nav class="panel">
+              <p class="panel-tabs">
+                <a id="add-testCase-tab" class="is-active" onclick="window.tester.openAddTestCase();">Add Test Case</a>
+                <a id="testCases-tab" onclick="window.tester.openTestCases();">Test Cases</a>
+              </p>
+              <nav id="add-testCase-tab-view" class="panel">
+                  <div id="reg-0b" class="panel-block">
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <label class="label is-small" for="reg-0-vaal">azero</label>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <input id="reg-0-vaal" class="input is-small" onblur="" spellcheck="false">
+                      </div>
+                    </div>
+                  </div>
+              </nav>
+              <nav id="testCases-tab-view" class="panel" style="display: none;">
+                  <div id="reg-0c" class="panel-block">
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <label class="label is-small" for="reg-0-vacl">bzero</label>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <input id="reg-0-vacl" class="input is-small" onblur="" spellcheck="false">
+                      </div>
+                    </div>
+                  </div>
+              </nav>
+            </nav>
+          </article>
+        </div>
+        <!--<div class="tile is-parent">
+          <article class="tile is-child">
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Display Settings</label>
+              </div>
+              <div class="field-body">
+                <div class="control">
+                  <div class="field">
+                    <div class="select is-small">
+                      <select id="display-settings" onchange="driver.updateRegMemDisplay()">
+                        <option selected>Hex</option>
+                        <option>Decimal</option>
+                        <option>Unsigned</option>
+                        <option>ASCII</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>-->
+      </div>
+    </div>
+  </div>`
 };

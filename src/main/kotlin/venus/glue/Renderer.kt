@@ -97,7 +97,7 @@ internal object Renderer {
      *
      * @param tab the name of the tab (currently "editor" or "simulator")
      */
-    private fun tabSetVisibility(tab: String, display: String) {
+    @JsName("tabSetVisibility") private fun tabSetVisibility(tab: String, display: String) {
         val tabView = document.getElementById("$tab-tab-view") as HTMLElement
         val tabDisplay = document.getElementById("$tab-tab") as HTMLElement
         tabView.style.display = display
