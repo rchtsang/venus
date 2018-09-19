@@ -129,8 +129,8 @@ var tester = {
          * when is either a number of steps you want the sim to make or 'end' to run till the end (End = -1).
          * maxcycles should be used to stop the test if there may be an inf loop.
          */
-        constructor(descriptor, args, when, maxcycles) {
-            this.id = descriptor;
+        constructor(id, args, when, maxcycles) {
+            this.id = id;
             if (typeof args === "string") {
                 this.args = [args];
             } else if (Array.isArray(args)) {
@@ -210,6 +210,10 @@ var tester = {
 
         removeArg(arg) {
             return this.removeArgAt(this.args.indexOf(arg))
+        }
+
+        hasTestID(id) {
+            return typeof this.tests[id] !== "undefined";
         }
 
         addTest(id, assertion, arg1, arg2) {
@@ -350,7 +354,7 @@ var tester = {
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
             inpt.setAttribute("spellcheck", "false");
-            inpt.value = "?";
+            inpt.value = "";
 
             id.appendChild(inpt);
             t.appendChild(id);
@@ -384,7 +388,7 @@ var tester = {
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
             inpt.setAttribute("spellcheck", "false");
-            //inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.setAttribute("type", "number");
             inpt.value = "";
             loc.appendChild(inpt);
             t.appendChild(loc);
@@ -392,14 +396,13 @@ var tester = {
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
             inpt.setAttribute("spellcheck", "false");
-            //inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
             inpt.value = "";
             exp.appendChild(inpt);
             t.appendChild(exp);
             var rm = document.createElement("td");
             var btn = document.createElement("button");
             btn.classList.add("button", "is-primary");
-            btn.setAttribute("onclick", "tester.saveTest(this.parentElement.parentElement);");
+            btn.setAttribute("onclick", "tester.saveSubTest(this.parentElement.parentElement);");
             btn.innerHTML = "Save";
             rm.appendChild(btn);
             var btn = document.createElement("button");
@@ -548,6 +551,10 @@ var tester = {
         document.getElementById("testCases-list").appendChild(odiv);
     },
 
+    importNewTestCase() {
+        this.consoleOut("Import feature coming soon!");
+    },
+
     saveID(elm) {
         if (this.activeTest === null) {
             this.consoleOut("NO ACTIVE TESTS!");
@@ -620,6 +627,98 @@ var tester = {
                 elm.value = elm.prevValue;
                 this.consoleOut(e.toString());
             }
+        }
+    },
+
+    saveSubTest(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            var testidelm = elm.children[0].children[0];
+            var testid = testidelm.value;
+            if (testid === "") {
+                this.consoleOut("The SubTestID must not be blank!");
+                return;
+            }
+            if (this.activeTest.hasTestID(testid) === false) {
+                var sel = elm.children[1].children[0].children[0];
+                var testingWhat =  sel.options[sel.selectedIndex].value;
+                var locelm = elm.children[2].children[0];
+                var location;
+                var expelm = elm.children[3].children[0];
+                var expected;
+                switch (testingWhat) {
+                    case "register":
+                        location = parseInt(locelm.value);
+                        if (isNaN(location) || location < 0 || location > 31) {
+                            this.consoleOut("You must select a register value within [0, 31]");
+                            return;
+                        }
+                        expected = parseInt(expelm.value);
+                        if (isNaN(expected) || expected < 0) {
+                            this.consoleOut("You must have a positive integer value (for now);");
+                            return;
+                        }
+                        break;
+                    case "fregister":
+                        location = parseInt(locelm.value);
+                        if (isNaN(location) || location < 0 || location > 31) {
+                            this.consoleOut("You must select a floating register value within [0, 31]");
+                            return;
+                        }
+                        expected = parseInt(expelm.value);
+                        if (isNaN(expected) || expected < 0) {
+                            this.consoleOut("You must have a positive integer value (for now);");
+                            return;
+                        }
+                        break;
+                    case "output":
+                        location = locelm.value;
+                        expected = expelm.value;
+                        break;
+                    case "memory":
+                        location = parseInt(locelm.value);
+                        if (isNaN(location) || location < 0) {
+                            this.consoleOut("You must select a valid memory address [0, MaxMemSpace).");
+                            return;
+                        }
+                        expected = parseInt(expelm.value);
+                        if (isNaN(expected) || expected < 0) {
+                            this.consoleOut("You must have a positive integer value (for now);");
+                            return;
+                        }
+                        break;
+                    default:
+                        this.consoleOut("Unknown thing to test!");
+                        return;
+                }
+
+                testidelm.prevValue = testid;
+
+                testidelm.setAttribute("onblur", "tester.saveSubTestID(this);");
+                expelm.prevValue = expected;
+                expelm.setAttribute("onblur", "tester.saveSubTestExpected(this);");
+                locelm.prevValue = location;
+                locelm.setAttribute("onblur", "tester.saveSubTestLocation(this);");
+                sel.prevValue = testingWhat;
+                sel.setAttribute("onchange", "tester.saveSubTestSelect(this);");
+                elm.children[4].removeChild(elm.children[4].children[0]);
+                elm.children[4].children[0].setAttribute("onclick", "tester.removeSubTest(this);")
+                this.activeTest.addTest(testid, testingWhat, location, expected);
+            } else {
+                this.consoleOut("Your SubTestID must be unique;");
+            }
+        }
+    },
+
+    removeSubTest(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            var node = elm.parentNode.parentNode;
+            var id = node.children[0].children[0].value;
+            this.activeTest.removeTest(id);
+            node.parentNode.removeChild(node);
         }
     },
 
@@ -760,14 +859,14 @@ var tester = {
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
             inpt.setAttribute("spellcheck", "false");
-            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.setAttribute("onblur", "tester.saveSubTestID(this);");
             inpt.value = i;
 
             id.appendChild(inpt);
             t.appendChild(id);
 
             var sel = document.createElement("select");
-            sel.setAttribute("onchange", "tester.consoleOut('wip');");
+            sel.setAttribute("onchange", "tester.saveSubTestSelect(this);");
 
             var r = document.createElement("option");
             r.innerText = "register";
@@ -810,7 +909,8 @@ var tester = {
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
             inpt.setAttribute("spellcheck", "false");
-            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.setAttribute("type", "number");
+            inpt.setAttribute("onblur", "tester.saveSubTestLocation(this);");
             inpt.value = testCase.tests[i][1];
             loc.appendChild(inpt);
             t.appendChild(loc);
@@ -818,7 +918,7 @@ var tester = {
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
             inpt.setAttribute("spellcheck", "false");
-            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.setAttribute("onblur", "tester.saveSubTestExpected(this);");
             inpt.value = testCase.tests[i][2];
             exp.appendChild(inpt);
             t.appendChild(exp);
@@ -826,7 +926,7 @@ var tester = {
             var btn = document.createElement("button");
             btn.classList.add("button", "is-primary");
             btn.style.backgroundColor = "red";
-            btn.setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME');");
+            btn.setAttribute("onclick", "tester.removeSubTest(this);");
             btn.innerHTML = "Remove";
             rm.appendChild(btn);
             t.appendChild(rm);
