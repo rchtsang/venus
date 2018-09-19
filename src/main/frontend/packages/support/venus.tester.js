@@ -425,6 +425,22 @@ var tester = {
         }
     },
 
+    saveArg(parentelm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            argID = parentelm.children[0];
+            argELM = parentelm.children[1];
+            argBTN = parentelm.children[2];
+
+            if (this.activeTest.addArg(argELM.children[0].value)) {
+                argID.innerHTML = this.activeTest.args.length - 1;
+                argBTN.children[1].setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME')");
+                argBTN.removeChild(argBTN.children[0]);
+            }
+        }
+    },
+
     addNewTestCase() {
         var newTest = new this.testCase("Test", [], -1, -1);
         this.activeTest = newTest;
@@ -728,7 +744,7 @@ var tester = {
               <tr>
                 <th>Arg ID</th>
                 <th>Argument</th>
-                <th>Remove?</th>
+                <th></th>
               </tr>
               </thead>
               <tbody id="testCase-Args-body">
@@ -747,7 +763,7 @@ var tester = {
                 <th>Testing What</th>
                 <th>At Location</th>
                 <th>Expected Value</th>
-                <th>Remove?</th>
+                <th></th>
               </tr>
               </thead>
               <tbody id="testCase-Test-body">
