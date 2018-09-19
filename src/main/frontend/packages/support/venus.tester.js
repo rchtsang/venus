@@ -722,6 +722,55 @@ var tester = {
         }
     },
 
+    saveSubTestID(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            var newID = elm.value;
+            var prevID = elm.prevValue;
+            if (newID === prevID) {
+                return;
+            }
+            if (this.activeTest.hasTestID(newID) === false) {
+                var tc = this.activeTest.tests[prevID];
+                if (tc === undefined) {
+                    this.consoleOut("The testid could not be changed because it could not be found!");
+                    return;
+                }
+                delete this.activeTest.tests[prevID];
+                this.activeTest.tests[newID] = tc;
+                elm.prevValue = newID;
+            } else {
+                elm.value = elm.prevValue;
+                this.consoleOut("The newID must be unique!");
+            }
+        }
+    },
+
+    saveSubTestSelect(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+
+        }
+    },
+
+    saveSubTestLocation(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+
+        }
+    },
+
+    saveSubTestExpected(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+
+        }
+    },
+
     consoleOut(text) {
         document.getElementById("console-out").value = text;
     },
@@ -827,7 +876,7 @@ var tester = {
         inpt.setAttribute("min", "-1");
         inpt.setAttribute("onblur", "tester.saveWhen(this);");
         inpt.value = testCase.when;
-        inpt.pValue = inpt.value;
+        inpt.prevValue = inpt.value;
 
         when.appendChild(inpt);
         b.appendChild(when);
@@ -842,7 +891,7 @@ var tester = {
         inpt.setAttribute("min", "-1");
         inpt.setAttribute("onblur", "tester.saveMaxSteps(this);");
         inpt.value = testCase.maxcycles;
-        inpt.pValue = inpt.value;
+        inpt.prevValue = inpt.value;
 
         maxr.appendChild(inpt);
         b.appendChild(maxr);
