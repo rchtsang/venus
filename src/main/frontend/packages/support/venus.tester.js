@@ -747,11 +747,25 @@ var tester = {
         }
     },
 
+
+    validSelectElms: new Set(["register", "fregister", "output", "memory"]),
     saveSubTestSelect(elm) {
         if (this.activeTest === null) {
             this.consoleOut("NO ACTIVE TESTS!");
         } else {
-
+            var activeVal = elm.options[elm.selectedIndex].value;
+            if (this.validSelectElms.has(activeVal)) {
+                var id = elm.parentNode.parentNode.parentNode.children[0].children[0].value;
+                var tc = this.activeTest.tests[id];
+                if (tc === undefined) {
+                    this.consoleOut("The testid could not be found!");
+                    return;
+                }
+                tc[0] = activeVal;
+                elm.prevValue = activeVal;
+            } else {
+                this.consoleOut("Unrecognized Selection!")
+            }
         }
     },
 
