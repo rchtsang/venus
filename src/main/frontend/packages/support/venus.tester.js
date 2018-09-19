@@ -435,7 +435,7 @@ var tester = {
 
             if (this.activeTest.addArg(argELM.children[0].value)) {
                 argID.innerHTML = this.activeTest.args.length - 1;
-                argBTN.children[1].setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME')");
+                argBTN.children[1].setAttribute("onclick", "tester.displayRemoveArg(this.parentElement.parentElement);");
                 argBTN.removeChild(argBTN.children[0]);
             }
         }
@@ -527,13 +527,32 @@ var tester = {
             var btn = document.createElement("button");
             btn.classList.add("button", "is-primary");
             btn.style.backgroundColor = "red";
-            btn.setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME');");
+            btn.setAttribute("onclick", "tester.displayRemoveArg(this.parentElement.parentElement);");
             btn.innerHTML = "Remove";
             rm.appendChild(btn);
             a.appendChild(rm);
 
             argsBody.appendChild(a);
             i++;
+        }
+    },
+
+    displayRemoveArg(parentelm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            argID = parentelm.children[0];
+            argELM = parentelm.children[1];
+            argBTN = parentelm.children[2];
+
+            this.activeTest.removeArgAt(argID.innerHTML);
+
+            this.displayRemoveAllArgs(true);
+            var argsBody = document.getElementById("testCase-Args-body");
+            var temp = argsBody.innerHTML;
+            argsBody.innerHTML = "";
+            this.displayArgs(this.activeTest.args);
+            argsBody.insertAdjacentHTML('beforeend', temp);
         }
     },
 
