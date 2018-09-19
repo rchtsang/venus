@@ -268,6 +268,14 @@ var tester = {
     },
 
     /*This is the code to manage the tab view.*/
+    addNewTestCheck() {
+        if (this.activeTest === null) {
+            console.log("NO ACTIVE TESTS!");
+        } else {
+
+        }
+    },
+
     activeTest: null,
     addNewArg() {
         if (this.activeTest === null) {
@@ -278,11 +286,57 @@ var tester = {
     },
 
     addNewTestCase() {
-        if (this.activeTest === null) {
-            console.log("NO ACTIVE TESTS!");
-        } else {
+        var newTest = new this.testCase("Test", [], -1, -1);
+        this.activeTest = newTest;
+        var id = this.testingEnv.testCases.length;
+        this.testingEnv.addTestCase(newTest);
+        this.displayTest(newTest);
+        this.addTestToSideBar(newTest, id);
+    },
 
-        }
+    addTestToSideBar(testCase, id) {
+        idd = "testCase-" + id;
+        var odiv = document.createElement("div");
+        odiv.id = idd + "-div";
+        odiv.classList.add("panel-block");
+
+        var mdiv = document.createElement("div");
+        mdiv.classList.add("field");
+        mdiv.classList.add("is-horizontal");
+
+        var inadiv = document.createElement("div");
+        inadiv.classList.add("field-label");
+
+        var lab = document.createElement("label");
+        lab.classList.add("label");
+        lab.classList.add("is-small");
+        lab.for = idd;
+        lab.innerHTML = id;
+        inadiv.appendChild(lab);
+        mdiv.appendChild(inadiv);
+
+        var inbdiv = document.createElement("div");
+        inbdiv.classList.add("field-body");
+        inbdiv.classList.add("is-expanded");
+
+        var btnShow = document.createElement("button");
+        btnShow.classList.add("button");
+        btnRemove.setAttribute("onclick", "tester.showTest(" + id + ");");
+        btnShow.innerHTML = "Show";
+        var btnRemove = document.createElement("button");
+        btnRemove.classList.add("button");
+        btnRemove.classList.add("is-primary");
+        btnRemove.style.backgroundColor = "red";
+        btnRemove.innerHTML = "Remove";
+        btnRemove.setAttribute("onclick", "tester.removeTest(" + id + ");");
+
+        inbdiv.appendChild(btnShow);
+        inbdiv.appendChild(btnRemove);
+
+        mdiv.appendChild(inbdiv);
+        odiv.appendChild(mdiv);
+
+        document.getElementById("testCases-list").appendChild(odiv);
     },
 
     consoleOut(text) {
@@ -430,12 +484,9 @@ var tester = {
         this.activeTestID = null;
     },
 
-    infoTabs: ["add-testCase", "testCases"],
+    infoTabs: ["testCases"],
     openTestCases: function() {
         this.openTab("testCases", this.infoTabs);
-    },
-    openAddTestCase: function() {
-        this.openTab("add-testCase", this.infoTabs);
     },
     openTab: function(tabName, tabsList) {
         for (t of tabsList) {
@@ -460,16 +511,16 @@ var tester = {
           <article class="tile is-child is-primary" id="simulator-controls-container">
             <div class="field is-grouped is-grouped-centered">
               <div class="control">
-                <button id="tester-testAll" class="button is-primary" onclick="">Test All</button>
+                <button id="tester-testAll" class="button is-primary" onclick="tester.testAll();">Test All</button>
               </div>
               <div class="control">
-                <button id="tester-testSelected" class="button" onclick="">Test Selected</button>
+                <button id="tester-testSelected" class="button" onclick="tester.testCurrent();">Test Selected</button>
               </div>
               <div class="control">
-                <button id="tester-exportSelectedTest" class="button" onclick="">Export Selected Test</button>
+                <button id="tester-exportSelectedTest" class="button" onclick="tester.exportCurrentTest();">Export Selected Test</button>
               </div>
               <div class="control">
-                <button id="tester-exportAllTests" class="button is-primary" onclick="">Export All Tests</button>
+                <button id="tester-exportAllTests" class="button is-primary" onclick="tester.exportAllTests();">Export All Tests</button>
               </div>
             </div>
           </article>
@@ -529,7 +580,7 @@ var tester = {
               <tbody id="testCase-Test-body">
               </tbody>
             </table>
-              <button class="button is-primary" onclick="window.tester.addNewTestCase();">Add</button>
+              <button class="button is-primary" onclick="window.tester.addNewTestCheck();">Add</button>
           </article>
         </div>
       </div>
@@ -552,31 +603,21 @@ var tester = {
           <article class="tile is-child" id="sidebar-listings-container">
             <nav class="panel">
               <p class="panel-tabs">
-                <a id="add-testCase-tab" class="is-active" onclick="window.tester.openAddTestCase();">Add Test Case</a>
-                <a id="testCases-tab" onclick="window.tester.openTestCases();">Test Cases</a>
+                <a id="testCases-tab" class="is-active" onclick="window.tester.openTestCases();">Test Cases</a>
               </p>
-              <nav id="add-testCase-tab-view" class="panel">
-                  <div id="reg-0b" class="panel-block">
+              <nav id="testCases-tab-view" class="panel">
+                <div id="reg-0c" class="panel-block">
                     <div class="field is-horizontal">
                       <div class="field-label">
-                        <label class="label is-small" for="reg-0-vaal">azero</label>
+                        <label class="label is-small" for="reg-0-vacl">Add Test Case</label>
                       </div>
-                      <div class="field-body is-expanded">
-                        <input id="reg-0-vaal" class="input is-small" onblur="" spellcheck="false">
+                      <div class="field-body is-expanded" style="flex-grow: inherit;">
+                        <button class="button is-primary" onclick="tester.addNewTestCase();">Add</button>
                       </div>
                     </div>
                   </div>
-              </nav>
-              <nav id="testCases-tab-view" class="panel" style="display: none;">
-                  <div id="reg-0c" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <label class="label is-small" for="reg-0-vacl">bzero</label>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <input id="reg-0-vacl" class="input is-small" onblur="" spellcheck="false">
-                      </div>
-                    </div>
+                  <div id="testCases-list">
+                      
                   </div>
               </nav>
             </nav>

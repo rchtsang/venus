@@ -170,7 +170,7 @@ import kotlin.dom.removeClass
     /**
      * Gets the text from the textarea editor.
      */
-    internal fun getText(): String {
+    @JsName("getText") internal fun getText(): String {
         val editor = document.getElementById("asm-editor") as HTMLTextAreaElement
         return editor.value
     }
