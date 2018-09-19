@@ -1240,12 +1240,12 @@ var tester = {
       <div class="tile is-vertical">
         <div class="tile is-parent">
           <article class="tile is-child" id="sidebar-listings-container">
-            <nav class="panel">
-              <p class="panel-tabs">
+            <nav class="panel" id="tester-panel">
+              <p class="panel-tabs" id="tester-panel-tabs">
                 <a id="testCases-tab" class="is-active" onclick="window.tester.openTestCases();">Test Cases</a>
               </p>
               <nav id="testCases-tab-view" class="panel">
-                <div id="reg-0c" class="panel-block">
+                <div id="add-test-case-div" class="panel-block">
                     <div class="field is-horizontal">
                       <div class="field-label">
                         <label class="label is-small" for="reg-0-vacl">Add Test Case</label>
