@@ -92,15 +92,17 @@ var tester = {
         }
     },
 
+    testcounter: 0,
+
     testCase: class testCase{
         /**
-         * descriptor is a string which is used to see what the testCase is meant to test.
+         * id is a string which is used to see what the testCase is meant to test.
          * args should be a string or a list of strings
          * when is either a number of steps you want the sim to make or 'end' to run till the end (End = -1).
          * maxcycles should be used to stop the test if there may be an inf loop.
          */
         constructor(descriptor, args, when, maxcycles) {
-            this.descriptor = descriptor;
+            this.id = descriptor;
             if (typeof args === "string") {
                 this.args = [args];
             } else if (Array.isArray(args)) {
@@ -142,7 +144,7 @@ var tester = {
             } else if(typeof jsonString === "object") {
                 var obj = jsonString;
             }
-            var tc = new window.tester.testCase(obj.descriptor, obj.args, obj.when, obj.maxcycles);
+            var tc = new window.tester.testCase(obj.id, obj.args, obj.when, obj.maxcycles);
             tc.tests = obj.tests;
             return tc;
         }
@@ -274,9 +276,44 @@ var tester = {
     },
 
     /*This is the code to manage the tab view.*/
+    exportAllTests() {
+        var tsts = this.testingEnv.exportTests();
+        this.consoleOut(tsts);
+    },
+
+    exportCurrentTest() {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            var tst = this.activeTest.toString();
+            this.consoleOut(tst);
+        }
+    },
+
+    testCurrent() {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            codeMirror.save();
+            var prog = driver.getText();
+            var sim = driver.externalAssemble(prog);
+            if (!sim[0]) {
+                this.consoleOut("ERROR! Could not assemble text!");
+                return;
+            }
+            this.consoleOut(JSON.stringify(this.activeTest.testAll(sim[1])));
+        }
+    },
+
+    testAll() {
+        codeMirror.save();
+        var prog = driver.getText();
+        this.consoleOut(JSON.stringify(this.testingEnv.testAll(prog)));
+    },
+
     addNewTestCheck() {
         if (this.activeTest === null) {
-            console.log("NO ACTIVE TESTS!");
+            this.consoleOut("NO ACTIVE TESTS!");
         } else {
             var t = document.createElement("tr");
 
@@ -285,7 +322,6 @@ var tester = {
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
             inpt.setAttribute("spellcheck", "false");
-            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
             inpt.value = "?";
 
             id.appendChild(inpt);
@@ -293,10 +329,28 @@ var tester = {
             var type = document.createElement("td");
 
             var sel = document.createElement("select");
-            //sel.setAttribute("onchange", "tester.consoleOut('wip');");
 
+            var r = document.createElement("option");
+            r.innerText = "register";
+            r.selected = true;
+            sel.appendChild(r);
+            var fr = document.createElement("option");
+            fr.innerText = "fregister";
+            sel.appendChild(fr);
+            var o = document.createElement("option");
+            o.innerText = "output";
+            sel.appendChild(o);
+            var m = document.createElement("option");
+            m.innerText = "memory";
+            sel.appendChild(m);
 
-            type.innerHTML = "";
+            var seltd = document.createElement("td");
+            var seldiv = document.createElement("div");
+
+            seldiv.setAttribute("class", "select is-small");
+
+            seldiv.appendChild(sel);
+            type.appendChild(seldiv);
             t.appendChild(type);
             var loc = document.createElement("td");
             var inpt = document.createElement("input");
@@ -331,11 +385,11 @@ var tester = {
             document.getElementById("testCase-Test-body").appendChild(t);
         }
     },
-
     activeTest: null,
+
     addNewArg() {
         if (this.activeTest === null) {
-            console.log("NO ACTIVE TESTS!");
+            this.consoleOut("NO ACTIVE TESTS!");
         } else {
             var a = document.createElement("tr");
 
@@ -446,7 +500,7 @@ var tester = {
         inpt.setAttribute("class", "input is-small");
         inpt.setAttribute("spellcheck", "false");
         inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
-        inpt.value = testCase.descriptor;
+        inpt.value = testCase.id;
 
         des.appendChild(inpt);
         b.appendChild(des);
@@ -520,7 +574,6 @@ var tester = {
 
             id.appendChild(inpt);
             t.appendChild(id);
-            var type = document.createElement("td");
 
             var sel = document.createElement("select");
             sel.setAttribute("onchange", "tester.consoleOut('wip');");
@@ -657,7 +710,7 @@ var tester = {
               </colgroup>
               <thead>
               <tr>
-                <th>Description</th>
+                <th>ID</th>
                 <th>When To Test</th>
                 <th>Maximum Cycles</th>
               </tr>
@@ -743,29 +796,6 @@ var tester = {
             </nav>
           </article>
         </div>
-        <!--<div class="tile is-parent">
-          <article class="tile is-child">
-            <div class="field is-horizontal">
-              <div class="field-label is-small">
-                <label class="label">Display Settings</label>
-              </div>
-              <div class="field-body">
-                <div class="control">
-                  <div class="field">
-                    <div class="select is-small">
-                      <select id="display-settings" onchange="driver.updateRegMemDisplay()">
-                        <option selected>Hex</option>
-                        <option>Decimal</option>
-                        <option>Unsigned</option>
-                        <option>ASCII</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>-->
       </div>
     </div>
   </div>`
