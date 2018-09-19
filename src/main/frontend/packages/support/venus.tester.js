@@ -154,7 +154,7 @@ var tester = {
         }
 
         addArg(arg) {
-            if (typeof arg === "string") {
+            if (typeof arg === "string" && arg !== "") {
                 this.args.push(arg);
                 this.numArgs++;
                 return true;
@@ -503,6 +503,57 @@ var tester = {
         return document.getElementById("console-out").value;
     },
 
+    displayArgs(args) {
+        var argsBody = document.getElementById("testCase-Args-body");
+        var i = 0;
+        while (i < args.length) {
+            var a = document.createElement("tr");
+
+            var id = document.createElement("td");
+            id.innerHTML = i;
+            a.appendChild(id);
+            var ag = document.createElement("td");
+
+
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = args[i];
+
+            ag.appendChild(inpt);
+            a.appendChild(ag);
+            var rm = document.createElement("td");
+            var btn = document.createElement("button");
+            btn.classList.add("button", "is-primary");
+            btn.style.backgroundColor = "red";
+            btn.setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME');");
+            btn.innerHTML = "Remove";
+            rm.appendChild(btn);
+            a.appendChild(rm);
+
+            argsBody.appendChild(a);
+            i++;
+        }
+    },
+
+    displayRemoveAllArgs(onlyActive) {
+        var argsBody = document.getElementById("testCase-Args-body");
+        if (onlyActive) {
+            var childrenToRemove = [];
+            for (child of argsBody.children) {
+                if (child.children[2].children[0].innerText !== "Save") {
+                    childrenToRemove.push(child);
+                }
+            }
+            for (child of childrenToRemove) {
+                argsBody.removeChild(child);
+            }
+        } else {
+            argsBody.innerHTML = "";
+        }
+    },
+
     displayTest(testCase) {
         this.clearTestDisplay();
         var base = document.getElementById("testCase-Base-body");
@@ -546,36 +597,7 @@ var tester = {
 
         base.appendChild(b);
 
-        var i = 0;
-        while (i < testCase.args.length) {
-            var a = document.createElement("tr");
-
-            var id = document.createElement("td");
-            id.innerHTML = i;
-            a.appendChild(id);
-            var ag = document.createElement("td");
-
-
-            var inpt = document.createElement("input");
-            inpt.setAttribute("class", "input is-small");
-            inpt.setAttribute("spellcheck", "false");
-            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
-            inpt.value = testCase.args[i];
-
-            ag.appendChild(inpt);
-            a.appendChild(ag);
-            var rm = document.createElement("td");
-            var btn = document.createElement("button");
-            btn.classList.add("button", "is-primary");
-            btn.style.backgroundColor = "red";
-            btn.setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME');");
-            btn.innerHTML = "Remove";
-            rm.appendChild(btn);
-            a.appendChild(rm);
-
-            args.appendChild(a);
-            i++;
-        }
+        this.displayArgs(testCase.args);
 
         for (i of Object.keys(testCase.tests)) {
             var t = document.createElement("tr");
@@ -802,6 +824,7 @@ var tester = {
                       </div>
                       <div class="field-body is-expanded" style="flex-grow: inherit;">
                         <button class="button is-primary" onclick="tester.addNewTestCase();">Add</button>
+                        <button class="button" onclick="tester.importNewTestCase();">Import</button>
                       </div>
                     </div>
                   </div>
