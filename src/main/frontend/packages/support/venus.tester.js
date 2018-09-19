@@ -269,7 +269,73 @@ var tester = {
 
     /*This is the code to manage the tab view.*/
     displayTest(testCase) {
+        this.clearTestDisplay();
+        var base = document.getElementById("testCase-Base-body");
+        var args = document.getElementById("testCase-Args-body");
+        var test = document.getElementById("testCase-Test-body");
 
+        var b = document.createElement("tr");
+        var des = document.createElement("td");
+        des.innerHTML = testCase.descriptor;
+        b.appendChild(des);
+        var when = document.createElement("td");
+        when.innerHTML = testCase.when;
+        b.appendChild(when);
+        var maxr = document.createElement("td");
+        maxr.innerHTML = testCase.maxcycles;
+        b.appendChild(maxr);
+
+        base.appendChild(b);
+
+        var i = 0;
+        while (i < testCase.args.length) {
+            var a = document.createElement("tr");
+
+            var id = document.createElement("td");
+            id.innerHTML = i;
+            a.appendChild(id);
+            var ag = document.createElement("td");
+            ag.innerHTML = testCase.args[i];
+            a.appendChild(ag);
+            var rm = document.createElement("td");
+            rm.innerHTML = "REMOVE BUTTON HERE";
+            a.appendChild(rm);
+
+            args.appendChild(a);
+            i++;
+        }
+
+        for (i of Object.keys(testCase.tests)) {
+            var t = document.createElement("tr");
+
+            var id = document.createElement("td");
+            id.innerHTML = i;
+            t.appendChild(id);
+            var type = document.createElement("td");
+            type.innerHTML = testCase.tests[i][0];
+            t.appendChild(type);
+            var loc = document.createElement("td");
+            loc.innerHTML = testCase.tests[i][1];
+            t.appendChild(loc);
+            var exp = document.createElement("td");
+            exp.innerHTML = testCase.tests[i][2];
+            t.appendChild(exp);
+            var rm = document.createElement("td");
+            rm.innerHTML = "REMOVE BUTTON HERE";
+            t.appendChild(rm);
+
+            test.appendChild(t);
+        }
+    },
+
+    clearTestDisplay() {
+        var base = document.getElementById("testCase-Base-body");
+        var args = document.getElementById("testCase-Args-body");
+        var test = document.getElementById("testCase-Test-body");
+
+        base.innerHTML = "";
+        args.innerHTML = "";
+        test.innerHTML = "";
     },
 
     infoTabs: ["add-testCase", "testCases"],
