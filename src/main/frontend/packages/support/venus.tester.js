@@ -441,15 +441,15 @@ var tester = {
       </div>
       <div class="tile is-parent" align="center">
         <article class="tile is-child">
-          <!--<a onclick="CopyToClipboard('console-output')">Copy!</a>
+          <a onclick="CopyToClipboard('console-out')">Copy!</a>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <a onclick="downloadtrace('console-output', 'console.out', true)">Download!</a>
+          <a onclick="downloadtrace('console-out', 'console.out', true)">Download!</a>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <a onclick="document.getElementById('console-output').value=''">Clear!</a>
+          <a onclick="document.getElementById('console-out').value=''">Clear!</a>
           <br>
-          <textarea id="console-output" class="textarea" placeholder="console output" readonly></textarea>
+          <textarea id="console-out" class="textarea" placeholder="console output" readonly></textarea>
           <br>
-        </article>-->
+        </article>
       </div>
     </div>
     <div class="tile is-ancestor">
