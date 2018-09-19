@@ -773,7 +773,39 @@ var tester = {
         if (this.activeTest === null) {
             this.consoleOut("NO ACTIVE TESTS!");
         } else {
-
+            var newLoc = elm.value;
+            var id = elm.parentNode.parentNode.children[0].children[0].value;
+            var tc = this.activeTest.tests[id];
+            switch (tc[0]) {
+                case "register":
+                    newLoc = parseInt(newLoc);
+                    if(isNaN(newLoc) || newLoc < 0 || newLoc > 31) {
+                        this.consoleOut("The register must be in range!");
+                        elm.value = elm.prevValue;
+                        return;
+                    }
+                    break;
+                case "fregister":
+                    newLoc = parseInt(newLoc);
+                    if(isNaN(newLoc) || newLoc < 0 || newLoc > 31) {
+                        this.consoleOut("The floating register must be in range!");
+                        elm.value = elm.prevValue;
+                        return;
+                    }
+                    break;
+                case "memory":
+                    newLoc = parseInt(newLoc);
+                    if(isNaN(newLoc) || newLoc < 0) {
+                        this.consoleOut("The register must be a positive integer!");
+                        elm.value = elm.prevValue;
+                        return;
+                    }
+                    break;
+                default:
+            }
+            tc[1] = newLoc;
+            elm.value = newLoc;
+            elm.prevValue = newLoc;
         }
     },
 
@@ -781,7 +813,39 @@ var tester = {
         if (this.activeTest === null) {
             this.consoleOut("NO ACTIVE TESTS!");
         } else {
-
+            var newExp = elm.value;
+            var id = elm.parentNode.parentNode.children[0].children[0].value;
+            var tc = this.activeTest.tests[id];
+            switch (tc[0]) {
+                case "register":
+                    newExp = parseInt(newExp);
+                    if(isNaN(newExp) || newExp < 0) {
+                        this.consoleOut("The register must be a positive integer.");
+                        elm.value = elm.prevValue;
+                        return;
+                    }
+                    break;
+                case "fregister":
+                    newExp = parseFloat(newExp);
+                    if(isNaN(newExp)) {
+                        this.consoleOut("The floating register must be a valid float!");
+                        elm.value = elm.prevValue;
+                        return;
+                    }
+                    break;
+                case "memory":
+                    newExp = parseInt(newExp);
+                    if(isNaN(newExp) || newExp < 0) {
+                        this.consoleOut("The register must be a positive integer!");
+                        elm.value = elm.prevValue;
+                        return;
+                    }
+                    break;
+                default:
+            }
+            tc[2] = newExp;
+            elm.value = newExp;
+            elm.prevValue = newExp;
         }
     },
 
