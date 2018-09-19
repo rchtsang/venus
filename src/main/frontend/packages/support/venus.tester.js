@@ -248,7 +248,7 @@ var tester = {
             for (let arg of this.args) {
                 sim.addArg(arg);
             }
-            while( !sim.isDone() && (sim.cycles < this.when || this.when === -1) && (sim.cycles < this.maxcycles || this.maxcycles === -1)) {
+            while( !sim.isDone() && (sim.cycles < this.when || this.when < 0) && (sim.cycles < this.maxcycles || this.maxcycles < 0)) {
                 sim.step();
             }
 
@@ -500,9 +500,9 @@ var tester = {
     },
 
     addTestToSideBar(testCase) {
-        idd = "testCase-" + testCase.id;
+        idd = "testCase-div-" + testCase.id;
         var odiv = document.createElement("div");
-        odiv.id = idd + "-div";
+        odiv.id = idd;
         odiv.classList.add("panel-block");
 
         var mdiv = document.createElement("div");
@@ -542,6 +542,56 @@ var tester = {
         odiv.appendChild(mdiv);
 
         document.getElementById("testCases-list").appendChild(odiv);
+    },
+
+    saveID(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            this.consoleOut("IMPL ME!");
+        }
+    },
+
+    saveWhen(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            try {
+                var w = parseInt(elm.value);
+
+                if (isNaN(w)) {
+                    throw EvalError("Could not parse the input!");
+                }
+
+                this.activeTest.when = w;
+                elm.value = w;
+                elm.prevValue = w;
+            } catch (e) {
+                elm.value = elm.prevValue;
+                this.consoleOut(e.toString());
+            }
+        }
+    },
+
+    saveMaxSteps(elm) {
+        if (this.activeTest === null) {
+            this.consoleOut("NO ACTIVE TESTS!");
+        } else {
+            try {
+                var w = parseInt(elm.value);
+
+                if (isNaN(w)) {
+                    throw EvalError("Could not parse the input!");
+                }
+
+                this.activeTest.maxcycles = w;
+                elm.value = w;
+                elm.prevValue = w;
+            } catch (e) {
+                elm.value = elm.prevValue;
+                this.consoleOut(e.toString());
+            }
+        }
     },
 
     consoleOut(text) {
@@ -634,8 +684,9 @@ var tester = {
         var inpt = document.createElement("input");
         inpt.setAttribute("class", "input is-small");
         inpt.setAttribute("spellcheck", "false");
-        inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+        inpt.setAttribute("onblur", "tester.saveID(this);");
         inpt.value = testCase.id;
+        inpt.pValue = inpt.value;
 
         des.appendChild(inpt);
         b.appendChild(des);
@@ -645,8 +696,10 @@ var tester = {
         inpt.setAttribute("class", "input is-small");
         inpt.setAttribute("spellcheck", "false");
         inpt.setAttribute("type", "number");
-        inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+        inpt.setAttribute("min", "-1");
+        inpt.setAttribute("onblur", "tester.saveWhen(this);");
         inpt.value = testCase.when;
+        inpt.pValue = inpt.value;
 
         when.appendChild(inpt);
         b.appendChild(when);
@@ -657,8 +710,11 @@ var tester = {
         var inpt = document.createElement("input");
         inpt.setAttribute("class", "input is-small");
         inpt.setAttribute("spellcheck", "false");
-        inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+        inpt.setAttribute("type", "number");
+        inpt.setAttribute("min", "-1");
+        inpt.setAttribute("onblur", "tester.saveMaxSteps(this);");
         inpt.value = testCase.maxcycles;
+        inpt.pValue = inpt.value;
 
         maxr.appendChild(inpt);
         b.appendChild(maxr);
@@ -782,8 +838,7 @@ var tester = {
     insertAfter: function(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     },
-    tab: `
-  <div class="tile is-ancestor">
+    tab: `<div class="tile is-ancestor">
     <div class="tile is-vertical is-8">
       <div class="tile">
         <div class="tile is-parent">
