@@ -298,7 +298,12 @@ var tester = {
             ag.innerHTML = testCase.args[i];
             a.appendChild(ag);
             var rm = document.createElement("td");
-            rm.innerHTML = "REMOVE BUTTON HERE";
+            var btn = document.createElement("button");
+            btn.classList.add("button", "is-primary");
+            btn.style.backgroundColor = "red";
+            btn.setAttribute("onclick", "console.log('TODO: REMOVE ME');");
+            btn.innerHTML = "Remove";
+            rm.appendChild(btn);
             a.appendChild(rm);
 
             args.appendChild(a);
@@ -321,7 +326,12 @@ var tester = {
             exp.innerHTML = testCase.tests[i][2];
             t.appendChild(exp);
             var rm = document.createElement("td");
-            rm.innerHTML = "REMOVE BUTTON HERE";
+            var btn = document.createElement("button");
+            btn.classList.add("button", "is-primary");
+            btn.style.backgroundColor = "red";
+            btn.setAttribute("onclick", "console.log('TODO: REMOVE ME');");
+            btn.innerHTML = "Remove";
+            rm.appendChild(btn);
             t.appendChild(rm);
 
             test.appendChild(t);
