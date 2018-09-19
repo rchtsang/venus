@@ -93,7 +93,6 @@ var tester = {
     },
 
     testCase: class testCase{
-
         /**
          * descriptor is a string which is used to see what the testCase is meant to test.
          * args should be a string or a list of strings
@@ -115,6 +114,8 @@ var tester = {
                 this.args = [];
             }
             this.tests = {};
+            this.numTests = 0;
+            this.numArgs = 0;
             if (typeof when === "undefined") {
                 this.when = -1;
             } else {
@@ -153,12 +154,14 @@ var tester = {
         addArg(arg) {
             if (typeof arg === "string") {
                 this.args.push(arg);
+                this.numArgs++;
                 return true;
             } else if (Array.isArray(arg)) {
                 for (let i in arg) {
                     if (typeof arg[i] !== "string") {
                         arg[i] = arg[i].toString()
                     }
+                    this.numArgs++;
                 }
                 this.args = this.args.concat(arg);
                 return true;
@@ -169,6 +172,7 @@ var tester = {
         removeArgAt(index) {
             if (index >= 0 && index < this.args.length) {
                 this.args.splice(index, 1);
+                this.numArgs--;
                 return true;
             }
             return false;
@@ -183,6 +187,7 @@ var tester = {
                 return false;
             }
             this.tests[id] = [assertion, arg1, arg2];
+            this.numTests++;
             return true;
         }
 
@@ -191,6 +196,7 @@ var tester = {
                 return false;
             }
             delete this.tests[id];
+            this.numTests--;
             return true;
         }
 
@@ -272,7 +278,57 @@ var tester = {
         if (this.activeTest === null) {
             console.log("NO ACTIVE TESTS!");
         } else {
+            var t = document.createElement("tr");
 
+            var id = document.createElement("td");
+
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = "?";
+
+            id.appendChild(inpt);
+            t.appendChild(id);
+            var type = document.createElement("td");
+
+            var sel = document.createElement("select");
+            //sel.setAttribute("onchange", "tester.consoleOut('wip');");
+
+
+            type.innerHTML = "";
+            t.appendChild(type);
+            var loc = document.createElement("td");
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            //inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = "";
+            loc.appendChild(inpt);
+            t.appendChild(loc);
+            var exp = document.createElement("td");
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            //inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = "";
+            exp.appendChild(inpt);
+            t.appendChild(exp);
+            var rm = document.createElement("td");
+            var btn = document.createElement("button");
+            btn.classList.add("button", "is-primary");
+            btn.setAttribute("onclick", "tester.saveTest(this.parentElement.parentElement);");
+            btn.innerHTML = "Save";
+            rm.appendChild(btn);
+            var btn = document.createElement("button");
+            btn.classList.add("button", "is-primary");
+            btn.setAttribute("onclick", "var elm = this.parentElement.parentElement;elm.parentNode.removeChild(elm);");
+            btn.innerHTML = "Remove";
+            btn.style.backgroundColor = "red";
+            rm.appendChild(btn);
+            t.appendChild(rm);
+
+            document.getElementById("testCase-Test-body").appendChild(t);
         }
     },
 
@@ -281,7 +337,37 @@ var tester = {
         if (this.activeTest === null) {
             console.log("NO ACTIVE TESTS!");
         } else {
+            var a = document.createElement("tr");
 
+            var id = document.createElement("td");
+            id.innerHTML = "?";
+            a.appendChild(id);
+            var ag = document.createElement("td");
+
+
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            //inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = "";
+
+            ag.appendChild(inpt);
+            a.appendChild(ag);
+            var rm = document.createElement("td");
+            var btn = document.createElement("button");
+            btn.classList.add("button", "is-primary");
+            btn.setAttribute("onclick", "tester.saveArg(this.parentElement.parentElement);");
+            btn.innerHTML = "Save";
+            rm.appendChild(btn);
+            var btn = document.createElement("button");
+            btn.classList.add("button", "is-primary");
+            btn.setAttribute("onclick", "var elm = this.parentElement.parentElement;elm.parentNode.removeChild(elm)");
+            btn.innerHTML = "Remove";
+            btn.style.backgroundColor = "red";
+            rm.appendChild(btn);
+            a.appendChild(rm);
+
+            document.getElementById("testCase-Args-body").appendChild(a);
         }
     },
 
@@ -321,7 +407,7 @@ var tester = {
 
         var btnShow = document.createElement("button");
         btnShow.classList.add("button");
-        btnRemove.setAttribute("onclick", "tester.showTest(" + id + ");");
+        btnShow.setAttribute("onclick", "tester.showTest(" + id + ");");
         btnShow.innerHTML = "Show";
         var btnRemove = document.createElement("button");
         btnRemove.classList.add("button");
