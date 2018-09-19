@@ -570,16 +570,30 @@ var tester = {
             try{
                 var jsonparsed = JSON.parse(testortests);
                 if (typeof jsonparsed === "object") {
+                    var parseTC = function(jsontc) {
+                        var tc = tester.testCase.parseTestCase(jsontc);
+                        if (tester.testingEnv.addTestCase(tc) === false) {
+                            var pconsole = tester.getConsoleOut();
+                            tester.consoleOut(pconsole + "Could not add test!\n" + JSON.stringify(tc) + "\n")
+                        } else {
+                            tester.addTestToSideBar(tc);
+                        }
+                    };
+                    tester.consoleOut("");
                     if (Array.isArray(jsonparsed)) {
                         //This is a batch of tests for env
+                        for (var tc of jsonparsed) {
+                            try {
+                                parseTC(tc);
+                            } catch (e) {
+                                console.error(e);
+                                var pconsole = this.getConsoleOut();
+                                this.consoleOut(pconsole + "Could not parse some of the tests!\n");
+                            }
+                        }
                     } else {
                         //This is a single test for env
-                        var tc = this.testCase.parseTestCase(jsonparsed);
-                        if (this.testingEnv.addTestCase(tc) === false) {
-                            this.consoleOut("Could not add test!")
-                        } else {
-                            this.addTestToSideBar(tc);
-                        }
+                        parseTC(jsonparsed);
                     }
                 } else {
                     this.consoleOut("Unknown import data!");
