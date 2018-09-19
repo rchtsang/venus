@@ -33,12 +33,40 @@ var tester = {
     testingEnv: {
         testCases: [],
         addTestCase(testCase) {
-            return this.testCases.push(testCase);
+            if (this.hasTestID(testCase.id) === false) {
+                return this.testCases.push(testCase);
+            }
+            return false;
         },
+        removeTestID(id) {
+            for (var i = 0; i < this.testCases.length; i++) {
+                if (id === this.testCases[i].id) {
+                    return this.removeTestCase(i);
+                }
+            }
+            return false;
+        },
+
+        hasTestID(id) {
+            for (var i = 0; i < this.testCases.length; i++) {
+                if (id === this.testCases[i].id) {
+                    return i;
+                }
+            }
+            return false
+        },
+
+        getTestFromId(id){
+            var index = this.hasTestID(id);
+            if (index !== false) {
+                return this.testCases[index];
+            }
+            return false;
+        },
+
         removeTestCase(index) {
             if (index >= 0 && index < this.testCases.length) {
-                this.testCases.splice(index, 1);
-                return true;
+                return this.testCases.splice(index, 1);
             }
             return false;
         },
@@ -425,6 +453,25 @@ var tester = {
         }
     },
 
+    removeTest(elm) {
+        var id = elm.children[0].children[0].children[0].innerHTML;
+        var rtc = this.testingEnv.removeTestID(id)[0];
+        if (rtc !== false && rtc == this.activeTest) {
+            this.clearTestDisplay();
+        }
+        elm.parentNode.removeChild(elm);
+    },
+
+    showTest(elm) {
+        var id = elm.children[0].children[0].children[0].innerHTML;
+        var tstcs = this.testingEnv.getTestFromId(id);
+        if (tstcs === false) {
+            this.consoleOut("Cound not find element in ENV!");
+        } else {
+            this.displayTest(tstcs);
+        }
+    },
+
     saveArg(parentelm) {
         if (this.activeTest === null) {
             this.consoleOut("NO ACTIVE TESTS!");
@@ -442,16 +489,18 @@ var tester = {
     },
 
     addNewTestCase() {
-        var newTest = new this.testCase("Test", [], -1, -1);
+        this.testcounter++;
+        var newTest = new this.testCase("Test-" + this.testcounter, [], -1, -1);
         this.activeTest = newTest;
-        var id = this.testingEnv.testCases.length;
-        this.testingEnv.addTestCase(newTest);
-        this.displayTest(newTest);
-        this.addTestToSideBar(newTest, id);
+        var success = this.testingEnv.addTestCase(newTest);
+        if (success !== false) {
+            this.displayTest(newTest);
+            this.addTestToSideBar(newTest);
+        }
     },
 
-    addTestToSideBar(testCase, id) {
-        idd = "testCase-" + id;
+    addTestToSideBar(testCase) {
+        idd = "testCase-" + testCase.id;
         var odiv = document.createElement("div");
         odiv.id = idd + "-div";
         odiv.classList.add("panel-block");
@@ -467,7 +516,7 @@ var tester = {
         lab.classList.add("label");
         lab.classList.add("is-small");
         lab.for = idd;
-        lab.innerHTML = id;
+        lab.innerHTML = testCase.id;
         inadiv.appendChild(lab);
         mdiv.appendChild(inadiv);
 
@@ -477,14 +526,14 @@ var tester = {
 
         var btnShow = document.createElement("button");
         btnShow.classList.add("button");
-        btnShow.setAttribute("onclick", "tester.showTest(" + id + ");");
+        btnShow.setAttribute("onclick", "tester.showTest(this.parentElement.parentElement.parentElement);");
         btnShow.innerHTML = "Show";
         var btnRemove = document.createElement("button");
         btnRemove.classList.add("button");
         btnRemove.classList.add("is-primary");
         btnRemove.style.backgroundColor = "red";
         btnRemove.innerHTML = "Remove";
-        btnRemove.setAttribute("onclick", "tester.removeTest(" + id + ");");
+        btnRemove.setAttribute("onclick", "tester.removeTest(this.parentElement.parentElement.parentElement);");
 
         inbdiv.appendChild(btnShow);
         inbdiv.appendChild(btnRemove);
