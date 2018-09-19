@@ -489,8 +489,12 @@ var tester = {
     },
 
     addNewTestCase() {
-        this.testcounter++;
-        var newTest = new this.testCase("Test-" + this.testcounter, [], -1, -1);
+        var testID;
+        do {
+            this.testcounter++;
+            testID = "Test-" + this.testcounter;
+        } while(this.testingEnv.hasTestID(testID) !== false);
+        var newTest = new this.testCase(testID, [], -1, -1);
         this.activeTest = newTest;
         var success = this.testingEnv.addTestCase(newTest);
         if (success !== false) {
@@ -548,7 +552,24 @@ var tester = {
         if (this.activeTest === null) {
             this.consoleOut("NO ACTIVE TESTS!");
         } else {
-            this.consoleOut("IMPL ME!");
+            var newID = elm.value;
+            var prevID = elm.prevValue;
+            if (newID !== elm.prevValue) {
+                if (this.testingEnv.hasTestID(newID) === false) {
+                    elm.prevValue = newID;
+
+                    this.activeTest.id = newID;
+
+                    var sidebarelm = document.getElementById("testCase-div-" + prevID);
+                    sidebarelm.id = "testCase-div-" + newID;
+                    sidebarelm.children[0].children[0].children[0].innerHTML = newID;
+                } else {
+                    this.consoleOut("The Test ID already exists! ID's must be unique!");
+                    elm.value = prevID;
+                }
+            } else {
+                elm.value = prevID;
+            }
         }
     },
 
@@ -694,7 +715,7 @@ var tester = {
         inpt.setAttribute("spellcheck", "false");
         inpt.setAttribute("onblur", "tester.saveID(this);");
         inpt.value = testCase.id;
-        inpt.pValue = inpt.value;
+        inpt.prevValue = testCase.id;
 
         des.appendChild(inpt);
         b.appendChild(des);
