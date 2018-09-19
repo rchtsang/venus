@@ -565,7 +565,29 @@ var tester = {
     },
 
     importNewTestCase() {
-        this.consoleOut("Import feature coming soon!");
+        var testortests = prompt("Please enter the test case or cases to import. Leave blank to do nothing");
+        if (testortests !== "") {
+            try{
+                var jsonparsed = JSON.parse(testortests);
+                if (typeof jsonparsed === "object") {
+                    if (Array.isArray(jsonparsed)) {
+                        //This is a batch of tests for env
+                    } else {
+                        //This is a single test for env
+                        var tc = this.testCase.parseTestCase(jsonparsed);
+                        if (this.testingEnv.addTestCase(tc) === false) {
+                            this.consoleOut("Could not add test!")
+                        } else {
+                            this.addTestToSideBar(tc);
+                        }
+                    }
+                } else {
+                    this.consoleOut("Unknown import data!");
+                }
+            } catch (e) {
+                this.consoleOut("Could not parse the input!");
+            }
+        }
     },
 
     saveID(elm) {
