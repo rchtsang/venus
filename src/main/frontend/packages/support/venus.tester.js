@@ -560,7 +560,11 @@ var tester = {
                 var w = parseInt(elm.value);
 
                 if (isNaN(w)) {
-                    throw EvalError("Could not parse the input!");
+                    if (elm.value === "") {
+                        elm.value = elm.prevValue;
+                    } else {
+                        throw EvalError("Could not parse the input!");
+                    }
                 }
 
                 this.activeTest.when = w;
@@ -581,7 +585,11 @@ var tester = {
                 var w = parseInt(elm.value);
 
                 if (isNaN(w)) {
-                    throw EvalError("Could not parse the input!");
+                    if (elm.value === "") {
+                        elm.value = elm.prevValue;
+                    } else {
+                        throw EvalError("Could not parse the input!");
+                    }
                 }
 
                 this.activeTest.maxcycles = w;
