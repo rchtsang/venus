@@ -27,7 +27,13 @@ val ecall = Instruction(
                 9 -> sbrk(sim)
                 10 -> exit(sim)
                 11 -> printChar(sim)
+                // a0=13,a1=filename,a2=permissionbits
+                13 -> openFile(sim)
+                14 -> readFile(sim)
+                15 -> writeFile(sim)
+                16 -> closeFile(sim)
                 17 -> exitWithCode(sim)
+                34 -> printHex(sim)
                 else -> Renderer.printConsole("Invalid ecall $whichCall")
             }
             if (!(whichCall == 10 || whichCall == 17)) {
@@ -39,10 +45,32 @@ val ecall = Instruction(
         disasm = RawDisassembler { "ecall" }
 )
 
+private fun openFile(sim: Simulator) {
+    // WIP
+}
+
+private fun readFile(sim: Simulator) {
+    // WIP
+}
+
+private fun writeFile(sim: Simulator) {
+    // WIP
+}
+
+private fun closeFile(sim: Simulator) {
+    // WIP
+}
+
+private fun printHex(sim: Simulator) {
+    val arg = sim.getReg(11)
+    sim.ecallMsg = Renderer.toHex(arg)
+    Renderer.printConsole(sim.ecallMsg)
+}
+
 private fun printInteger(sim: Simulator) {
     val arg = sim.getReg(11)
     sim.ecallMsg = arg.toString()
-    Renderer.printConsole(arg)
+    Renderer.printConsole(sim.ecallMsg)
 }
 
 private fun printString(sim: Simulator) {
