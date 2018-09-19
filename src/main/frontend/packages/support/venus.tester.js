@@ -228,16 +228,16 @@ var tester = {
                 let a = test[1];
                 let b = test[2];
                 switch (f) {
-                    case "reg":
+                    case "register":
                         var assertion = tester.assertRegister(sim, a, b);
                         break;
-                    case "freg":
+                    case "fregegister":
                         var assertion = tester.assertFRegister(sim, a, b);
                         break;
-                    case "out":
+                    case "output":
                         var assertion = tester.assertOutput(sim, a, b);
                         break;
-                    case "mem":
+                    case "memory":
                         var assertion = tester.assertMemory(sim, a, b);
                         break;
                     default:
@@ -268,6 +268,31 @@ var tester = {
     },
 
     /*This is the code to manage the tab view.*/
+    activeTest: null,
+    addNewArg() {
+        if (this.activeTest === null) {
+            console.log("NO ACTIVE TESTS!");
+        } else {
+
+        }
+    },
+
+    addNewTestCase() {
+        if (this.activeTest === null) {
+            console.log("NO ACTIVE TESTS!");
+        } else {
+
+        }
+    },
+
+    consoleOut(text) {
+        document.getElementById("console-out").value = text;
+    },
+
+    getConsoleOut() {
+        return document.getElementById("console-out").value;
+    },
+
     displayTest(testCase) {
         this.clearTestDisplay();
         var base = document.getElementById("testCase-Base-body");
@@ -276,13 +301,37 @@ var tester = {
 
         var b = document.createElement("tr");
         var des = document.createElement("td");
-        des.innerHTML = testCase.descriptor;
+
+        var inpt = document.createElement("input");
+        inpt.setAttribute("class", "input is-small");
+        inpt.setAttribute("spellcheck", "false");
+        inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+        inpt.value = testCase.descriptor;
+
+        des.appendChild(inpt);
         b.appendChild(des);
         var when = document.createElement("td");
-        when.innerHTML = testCase.when;
+
+        var inpt = document.createElement("input");
+        inpt.setAttribute("class", "input is-small");
+        inpt.setAttribute("spellcheck", "false");
+        inpt.setAttribute("type", "number");
+        inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+        inpt.value = testCase.when;
+
+        when.appendChild(inpt);
         b.appendChild(when);
+
         var maxr = document.createElement("td");
-        maxr.innerHTML = testCase.maxcycles;
+
+
+        var inpt = document.createElement("input");
+        inpt.setAttribute("class", "input is-small");
+        inpt.setAttribute("spellcheck", "false");
+        inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+        inpt.value = testCase.maxcycles;
+
+        maxr.appendChild(inpt);
         b.appendChild(maxr);
 
         base.appendChild(b);
@@ -295,13 +344,21 @@ var tester = {
             id.innerHTML = i;
             a.appendChild(id);
             var ag = document.createElement("td");
-            ag.innerHTML = testCase.args[i];
+
+
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = testCase.args[i];
+
+            ag.appendChild(inpt);
             a.appendChild(ag);
             var rm = document.createElement("td");
             var btn = document.createElement("button");
             btn.classList.add("button", "is-primary");
             btn.style.backgroundColor = "red";
-            btn.setAttribute("onclick", "console.log('TODO: REMOVE ME');");
+            btn.setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME');");
             btn.innerHTML = "Remove";
             rm.appendChild(btn);
             a.appendChild(rm);
@@ -314,28 +371,51 @@ var tester = {
             var t = document.createElement("tr");
 
             var id = document.createElement("td");
-            id.innerHTML = i;
+
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = i;
+
+            id.appendChild(inpt);
             t.appendChild(id);
             var type = document.createElement("td");
+
+            var sel = document.createElement("select");
+            sel.setAttribute("onchange", "tester.consoleOut('wip');");
+
+
             type.innerHTML = testCase.tests[i][0];
             t.appendChild(type);
             var loc = document.createElement("td");
-            loc.innerHTML = testCase.tests[i][1];
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = testCase.tests[i][1];
+            loc.appendChild(inpt);
             t.appendChild(loc);
             var exp = document.createElement("td");
-            exp.innerHTML = testCase.tests[i][2];
+            var inpt = document.createElement("input");
+            inpt.setAttribute("class", "input is-small");
+            inpt.setAttribute("spellcheck", "false");
+            inpt.setAttribute("onblur", "tester.consoleOut('WIP');");
+            inpt.value = testCase.tests[i][2];
+            exp.appendChild(inpt);
             t.appendChild(exp);
             var rm = document.createElement("td");
             var btn = document.createElement("button");
             btn.classList.add("button", "is-primary");
             btn.style.backgroundColor = "red";
-            btn.setAttribute("onclick", "console.log('TODO: REMOVE ME');");
+            btn.setAttribute("onclick", "tester.consoleOut('TODO: REMOVE ME');");
             btn.innerHTML = "Remove";
             rm.appendChild(btn);
             t.appendChild(rm);
 
             test.appendChild(t);
         }
+        this.activeTest = testCase;
     },
 
     clearTestDisplay() {
@@ -346,6 +426,8 @@ var tester = {
         base.innerHTML = "";
         args.innerHTML = "";
         test.innerHTML = "";
+
+        this.activeTestID = null;
     },
 
     infoTabs: ["add-testCase", "testCases"],
@@ -428,6 +510,7 @@ var tester = {
               <tbody id="testCase-Args-body">
               </tbody>
             </table>
+              <button class="button is-primary" onclick="window.tester.addNewArg();">Add</button>
             <table id="testCase-Test" class="table">
               <colgroup>
                 <col id="mc-column">
@@ -446,6 +529,7 @@ var tester = {
               <tbody id="testCase-Test-body">
               </tbody>
             </table>
+              <button class="button is-primary" onclick="window.tester.addNewTestCase();">Add</button>
           </article>
         </div>
       </div>
