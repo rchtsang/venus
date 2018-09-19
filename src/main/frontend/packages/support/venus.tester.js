@@ -525,9 +525,43 @@ var tester = {
             var sel = document.createElement("select");
             sel.setAttribute("onchange", "tester.consoleOut('wip');");
 
+            var r = document.createElement("option");
+            r.innerText = "register";
+            sel.appendChild(r);
+            var fr = document.createElement("option");
+            fr.innerText = "fregister";
+            sel.appendChild(fr);
+            var o = document.createElement("option");
+            o.innerText = "output";
+            sel.appendChild(o);
+            var m = document.createElement("option");
+            m.innerText = "memory";
+            sel.appendChild(m);
+            
+            switch (testCase.tests[i][0]) {
+                case "fregister":
+                    fr.selected = true;
+                    break;
+                case "output":
+                    o.selected = true;
+                    break;
+                case "memory":
+                    m.selected = true;
+                    break;
+                default:
+                    r.selected = true;
+            }
 
-            type.innerHTML = testCase.tests[i][0];
-            t.appendChild(type);
+            var seltd = document.createElement("td");
+            var seldiv = document.createElement("div");
+
+            seldiv.setAttribute("class", "select is-small");
+
+            seldiv.appendChild(sel);
+            seltd.appendChild(seldiv);
+
+            t.appendChild(seltd);
+
             var loc = document.createElement("td");
             var inpt = document.createElement("input");
             inpt.setAttribute("class", "input is-small");
@@ -567,7 +601,7 @@ var tester = {
         args.innerHTML = "";
         test.innerHTML = "";
 
-        this.activeTestID = null;
+        this.activeTest = null;
     },
 
     infoTabs: ["testCases"],
