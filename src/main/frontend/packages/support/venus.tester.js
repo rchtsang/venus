@@ -283,28 +283,41 @@ var tester = {
                     default:
                         var assertion = false;
                 }
-                state = state && assertion;
-                details.push([testid, assertion]);
+                state = state && assertion[0];
+                var result = [testid, assertion[0]];
+                if (!assertion[0]) {
+                    result.push("Expected: " + b + "; Actual: " + assertion[1] + ";");
+                }
+                details.push(result);
             }
-            return [state].concat(details);
+            return [state, this.id].concat([details]);
         }
     },
 
     assertRegister: function(sim, regID, expected){
-        return sim.getReg(regID) === expected;
+        var result = [sim.getReg(regID) === expected, sim.getReg(regID)];
+        return result;
     },
 
     assertFRegister: function(sim, regID, expected) {
-      return sim.getFReg(regID) === expected;
+        var result = [sim.getFReg(regID) === expected, sim.getFReg(regID)];
+        return result;
     },
 
     assertOutput: function(sim, _, expected){
         var console = document.getElementById("console-output");
-        return console && console.value === expected;
+        var result = [console && console.value === expected];
+        if (!console) {
+            result.push("Could not find console output!");
+        } else {
+            result.push(console.value);
+        }
+        return result;
     },
 
     assertMemory: function(sim, address, expected) {
-        return sim.loadByte(address) === expected;
+        var result = [sim.loadByte(address) === expected, sim.loadByte(address)];
+        return result;
     },
 
     /*This is the code to manage the tab view.*/
