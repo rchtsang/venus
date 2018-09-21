@@ -113,11 +113,18 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
             setReg(2, spv)
         }
         /*Got to add the null terminator as well!*/
-        val spv = getReg(2) - 1
+        var spv = getReg(2) - 1
         storeByte(spv, 0)
+        /**
+         * We need to store a0 (x10) to the argc and a1 (x11) to argv.
+         */
+        setReg(10, args.size)
+        setReg(11, spv)
         setReg(2, spv)
         try {
             Renderer.updateRegister(2, getReg(2))
+            Renderer.updateRegister(10, getReg(10))
+            Renderer.updateRegister(11, getReg(11))
             Renderer.updateMemory(Renderer.activeMemoryAddress)
         } catch (e: Throwable) {}
     }
@@ -130,12 +137,19 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
                 setReg(2, spv)
             }
             /*Got to add the null terminator as well!*/
-            val spv = getReg(2) - 1
+            var spv = getReg(2) - 1
             storeByte(spv, 0)
+            /**
+             * We need to store a0 (x10) to the argc and a1 (x11) to argv.
+             */
+            setReg(10, args.size)
+            setReg(11, spv)
             setReg(2, spv)
         }
         try {
             Renderer.updateRegister(2, getReg(2))
+            Renderer.updateRegister(10, getReg(10))
+            Renderer.updateRegister(11, getReg(11))
             Renderer.updateMemory(Renderer.activeMemoryAddress)
         } catch (e: Throwable) {}
     }
