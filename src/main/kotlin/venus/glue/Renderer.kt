@@ -193,16 +193,20 @@ internal object Renderer {
         newRow.id = "instruction-$idx"
         newRow.onclick = { Driver.addBreakpoint(idx) }
 
+        val pcline = newRow.insertCell(0)
+        val pcText = document.createTextNode("0x" + (idx * 4).toString(16))
+        pcline.appendChild(pcText)
+
         val hexRepresention = toHex(mcode[InstructionField.ENTIRE])
-        val machineCode = newRow.insertCell(0)
+        val machineCode = newRow.insertCell(1)
         val machineCodeText = document.createTextNode(hexRepresention)
         machineCode.appendChild(machineCodeText)
 
-        val basicCode = newRow.insertCell(1)
+        val basicCode = newRow.insertCell(2)
         val basicCodeText = document.createTextNode(if (invalidInst) progLine else Instruction[mcode].disasm(mcode))
         basicCode.appendChild(basicCodeText)
 
-        val line = newRow.insertCell(2)
+        val line = newRow.insertCell(3)
         val lineText = document.createTextNode(progLine)
         line.appendChild(lineText)
     }
