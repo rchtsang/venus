@@ -57,7 +57,7 @@ object Linker {
                         throw AssemblerError("label $label defined global in two different files")
                     }
                     if (label == "main") {
-                        linkedProgram.startPC = location
+                        linkedProgram.startPC = location + MemorySegments.TEXT_BEGIN
                     }
                 }
             }

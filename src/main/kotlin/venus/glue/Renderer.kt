@@ -194,7 +194,7 @@ internal object Renderer {
         newRow.onclick = { Driver.addBreakpoint(idx) }
 
         val pcline = newRow.insertCell(0)
-        val pcText = document.createTextNode("0x" + (idx * 4).toString(16))
+        val pcText = document.createTextNode("0x" + ((idx * 4) + MemorySegments.TEXT_BEGIN).toString(16))
         pcline.appendChild(pcText)
 
         val hexRepresention = toHex(mcode[InstructionField.ENTIRE])
