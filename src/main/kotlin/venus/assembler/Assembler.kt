@@ -1,15 +1,13 @@
 package venus.assembler
-
+/* ktlint-disable no-wildcard-imports */
 import venus.assembler.pseudos.checkArgsLength
 import venus.glue.Renderer
-import venus.riscv.MachineCode
-import venus.riscv.MemorySegments
-import venus.riscv.Program
+import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
 import venus.riscv.insts.dsl.getImmWarning
 import venus.riscv.insts.dsl.relocators.Relocator
-import venus.riscv.userStringToInt
 import venus.simulator.SimulatorError
+/* ktlint-enable no-wildcard-imports */
 
 /**
  * This singleton implements a simple two-pass assembler to transform files into programs.
@@ -89,6 +87,7 @@ internal class AssemblerPassOne(private val text: String) {
     private var currentLineNumber = 0
     /** List of all errors encountered */
     private val errors = ArrayList<AssemblerError>()
+    private val warnings = ArrayList<AssemblerWarning>()
 
     fun run(): PassOneOutput {
         doPassOne()
@@ -163,29 +162,49 @@ internal class AssemblerPassOne(private val text: String) {
 
     private fun parsePossibleMachineCode(tokens: LineTokens): List<LineTokens> {
         val c = getInstruction(tokens)
-        try {
-            var cmd = userStringToInt(c)
+        if (c in listOf("beq", "bge", "bgeu", "blt", "bltu", "bne")) {
             try {
-                val decoded = Instruction[MachineCode(cmd)].disasm(MachineCode(cmd))
-                val lex = Lexer.lexLine(decoded).second.toMutableList()
-                if (lex[0] == "jal") {
-                    val loc = getOffset() + lex[2].toInt()
-                    prog.addLabel("L" + loc.toString(), loc)
-                    lex[2] = "L" + loc.toString()
-                }
-                if (lex[0] in listOf("beq", "bge", "bgeu", "blt", "bltu", "bne")) {
-                    val loc = getOffset() + lex[3].toInt()
-                    prog.addLabel("L" + loc.toString(), loc)
-                    lex[3] = "L" + loc.toString()
-                }
-                val t = listOf(lex)
-                return t
-            } catch (e: SimulatorError) {
-                errors.add(AssemblerError(currentLineNumber, e))
+                val loc = getOffset() + userStringToInt(tokens[3])
+                prog.addLabel(venusInternalLabels + loc.toString(), loc)
+//                warnings.add(AssemblerWarning("Interpreting label as immediate"))
+//                return listOf(listOf(tokens[0], tokens[1], tokens[2], "L" + loc.toString()))
+            } catch (e: Throwable) {
+                //
             }
-        } catch (e: NumberFormatException) {
-            if (c.startsWith("0x") || c.startsWith("0b") || c.matches("\\d+")) {
-                errors.add(AssemblerError(currentLineNumber, e))
+        } else if (c == "jal") {
+            try {
+                val loc = getOffset() + userStringToInt(tokens[2])
+                prog.addLabel(venusInternalLabels + loc.toString(), loc)
+//                warnings.add(AssemblerWarning("Interpreting label as immediate"))
+//                return listOf(listOf(tokens[0], tokens[1], "L" + loc.toString()))
+            } catch (e: Throwable) {
+                //
+            }
+        } else {
+            try {
+                var cmd = userStringToInt(c)
+                try {
+                    val decoded = Instruction[MachineCode(cmd)].disasm(MachineCode(cmd))
+                    val lex = Lexer.lexLine(decoded).second.toMutableList()
+                    if (lex[0] == "jal") {
+                        val loc = getOffset() + lex[2].toInt()
+                        prog.addLabel("L" + loc.toString(), loc)
+                        lex[2] = "L" + loc.toString()
+                    }
+                    if (lex[0] in listOf("beq", "bge", "bgeu", "blt", "bltu", "bne")) {
+                        val loc = getOffset() + lex[3].toInt()
+                        prog.addLabel("L" + loc.toString(), loc)
+                        lex[3] = "L" + loc.toString()
+                    }
+                    val t = listOf(lex)
+                    return t
+                } catch (e: SimulatorError) {
+                    errors.add(AssemblerError(currentLineNumber, e))
+                }
+            } catch (e: NumberFormatException) {
+                if (c.startsWith("0x") || c.startsWith("0b") || c.matches("\\d+")) {
+                    errors.add(AssemblerError(currentLineNumber, e))
+                }
             }
         }
         return listOf(tokens)
