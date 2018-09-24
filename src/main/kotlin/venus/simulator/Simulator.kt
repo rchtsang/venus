@@ -107,20 +107,25 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
             return
         }
         args.add(arg)
+        var spv = if (getReg(2) == MemorySegments.STACK_BEGIN) {
+            getReg(2)
+        } else {
+            getReg(11)
+        } - 1
+        storeByte(spv, 0)
+        setReg(2, spv)
         for (c in arg.reversed()) {
-            val spv = getReg(2) - 1
+            spv = getReg(2) - 1
             storeByte(spv, c.toInt())
             setReg(2, spv)
         }
         /*Got to add the null terminator as well!*/
-        var spv = getReg(2) - 1
-        storeByte(spv, 0)
         /**
          * We need to store a0 (x10) to the argc and a1 (x11) to argv.
          */
         setReg(10, args.size)
         setReg(11, spv)
-        setReg(2, spv)
+        setReg(2, spv - (spv % 4))
         try {
             Renderer.updateRegister(2, getReg(2))
             Renderer.updateRegister(10, getReg(10))
@@ -130,22 +135,28 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     }
 
     @JsName("addArgsToMem") fun addArgsToMem() {
+        var spv = if (getReg(2) == MemorySegments.STACK_BEGIN) {
+            getReg(2)
+        } else {
+            getReg(11)
+        } - 1
         for (arg in args) {
+            spv = getReg(2) - 1
+            storeByte(spv, 0)
+            setReg(2, spv)
             for (c in arg.reversed()) {
-                val spv = getReg(2) - 1
+                spv = getReg(2) - 1
                 storeByte(spv, c.toInt())
                 setReg(2, spv)
             }
             /*Got to add the null terminator as well!*/
-            var spv = getReg(2) - 1
-            storeByte(spv, 0)
             /**
              * We need to store a0 (x10) to the argc and a1 (x11) to argv.
              */
             setReg(10, args.size)
             setReg(11, spv)
-            setReg(2, spv)
         }
+        setReg(2, spv - (spv % 4))
         try {
             Renderer.updateRegister(2, getReg(2))
             Renderer.updateRegister(10, getReg(10))

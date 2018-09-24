@@ -7,6 +7,7 @@ import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.*
@@ -64,6 +65,10 @@ import kotlin.dom.removeClass
         loadAll(useLS)
         this.saveInterval = window.setInterval(Driver::saveIntervalFn, 5000)
         this.ready = true
+    }
+
+    @JsName("newVFS") fun newVFS(): VirtualFileSystem {
+        return VirtualFileSystem()
     }
 
     /**
