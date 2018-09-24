@@ -1,6 +1,6 @@
 package venus.glue.vfs
 
-class VFSFile(var name: String) : VFSObject {
+class VFSFile(var name: String, override var parent: VFSObject?) : VFSObject {
     val innerTxt = "innertext"
     override val type = VFSType.File
     override var label = name
