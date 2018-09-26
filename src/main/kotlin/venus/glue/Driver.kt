@@ -413,6 +413,15 @@ import kotlin.dom.removeClass
 
     @JsName("moveMemoryDown") fun moveMemoryDown() = Renderer.moveMemoryDown()
 
+    @JsName("moveMemoryLocation") fun moveMemoryLocation(address: String) {
+        try {
+            val addr = userStringToInt(address)
+            Renderer.updateMemory(addr)
+        } catch (e: Throwable) {
+            handleError("MoveMemLoc", e, true)
+        }
+    }
+
     fun getInstructionDump(): String {
         val sb = StringBuilder()
         for (i in 0 until sim.linkedProgram.prog.insts.size) {
