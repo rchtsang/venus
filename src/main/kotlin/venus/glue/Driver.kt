@@ -7,6 +7,7 @@ import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.*
@@ -47,8 +48,9 @@ import kotlin.dom.removeClass
     @JsName("ScriptManager") var ScriptManager = venus.api.ScriptManager
     @JsName("debug") var debug = false
 
-    init {
+    @JsName("VFS") var VFS = VirtualFileSystem("v")
 
+    init {
         console.log("Loading driver...")
         this.mainCache.attach(false)
 
