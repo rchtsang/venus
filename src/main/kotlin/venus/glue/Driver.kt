@@ -48,10 +48,9 @@ import kotlin.dom.removeClass
     @JsName("ScriptManager") var ScriptManager = venus.api.ScriptManager
     @JsName("debug") var debug = false
 
-    @JsName("VFS") var VFS = VirtualFileSystem("Venus")
+    @JsName("VFS") var VFS = VirtualFileSystem("v")
 
     init {
-
         console.log("Loading driver...")
         this.mainCache.attach(false)
 
