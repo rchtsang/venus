@@ -1,8 +1,7 @@
 package venus.glue.vfs
 
-class VFSDrive(val n: String) : VFSFolder(n, null) {
+class VFSDrive(val n: String, override var parent: VFSObject) : VFSFolder(n, parent) {
     override val type = VFSType.Drive
-    override var parent: VFSObject? = null
     init {
         //
     }

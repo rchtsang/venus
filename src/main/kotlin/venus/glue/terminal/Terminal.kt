@@ -1,3 +1,3 @@
 package venus.glue.terminal
 
-class Terminal {}
+class Terminal
