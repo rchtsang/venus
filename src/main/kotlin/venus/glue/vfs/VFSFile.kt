@@ -1,11 +1,12 @@
 package venus.glue.vfs
 
-class VFSFile(var name: String, override var parent: VFSObject?) : VFSObject {
-    val innerTxt = "innertext"
+class VFSFile(override var label: String, override var parent: VFSObject) : VFSObject {
     override val type = VFSType.File
-    override var label = name
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()
+    companion object {
+        val innerTxt = "innertext"
+    }
     init {
         contents[innerTxt] = ""
     }

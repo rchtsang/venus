@@ -48,6 +48,8 @@ import kotlin.dom.removeClass
     @JsName("ScriptManager") var ScriptManager = venus.api.ScriptManager
     @JsName("debug") var debug = false
 
+    @JsName("VFS") var VFS = VirtualFileSystem("Venus")
+
     init {
 
         console.log("Loading driver...")
@@ -65,10 +67,6 @@ import kotlin.dom.removeClass
         loadAll(useLS)
         this.saveInterval = window.setInterval(Driver::saveIntervalFn, 5000)
         this.ready = true
-    }
-
-    @JsName("newVFS") fun newVFS(): VirtualFileSystem {
-        return VirtualFileSystem()
     }
 
     /**

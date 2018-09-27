@@ -5,9 +5,9 @@ interface VFSObject {
     var label: String
     var contents: HashMap<String, Any>
     var permissions: VFSPermissions
-    var parent: VFSObject?
+    var parent: VFSObject
     fun isValidName(name: String): Boolean {
-        return true
+        return !name.contains(separator())
     }
     fun separator(): String {
         return "/"
@@ -20,5 +20,22 @@ interface VFSObject {
             node = node.parent
         }
         return node?.label ?: "c:" + path
+    }
+
+    fun addChild(child: VFSObject): Boolean {
+        if (this.contents.containsKey(child.label) || !isValidName(child.label)) {
+            return false
+        } else {
+            this.contents.put(child.label, child)
+            return true
+        }
+    }
+
+    fun removeChild(name: String): Boolean {
+        if (!contents.containsKey(name) || name == ".." || name == ".") {
+            return false
+        }
+        contents.remove(name)
+        return true
     }
 }
