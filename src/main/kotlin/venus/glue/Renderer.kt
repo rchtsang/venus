@@ -219,10 +219,10 @@ internal object Renderer {
         try {
             code = Instruction[mcode].disasm(mcode)
         } catch (e: SimulatorError) {}
-        val pre = InstructionDiff(idx, userStringToInt(children?.get(1)?.innerHTML ?: "-1"), children?.get(3)?.innerHTML ?: "")
-        children?.get(1)?.innerHTML = toHex(mcode[InstructionField.ENTIRE]) /*Machine Code*/
-        children?.get(2)?.innerHTML = code /*Basic Code*/
-        children?.get(3)?.innerHTML = orig ?: code /*Original Code*/
+        val pre = InstructionDiff(idx, userStringToInt(children?.get(0)?.innerHTML ?: "-1"), children?.get(2)?.innerHTML ?: "")
+        children?.get(0)?.innerHTML = toHex(mcode[InstructionField.ENTIRE]) /*Machine Code*/
+        children?.get(1)?.innerHTML = code /*Basic Code*/
+        children?.get(2)?.innerHTML = orig ?: code /*Original Code*/
         return pre
     }
 
