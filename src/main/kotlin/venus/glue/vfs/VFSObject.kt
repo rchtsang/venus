@@ -7,19 +7,20 @@ interface VFSObject {
     var permissions: VFSPermissions
     var parent: VFSObject
     fun isValidName(name: String): Boolean {
-        return !name.contains(separator())
+        return !name.contains(separator) && !name.contains(":")
     }
-    fun separator(): String {
-        return "/"
+    companion object {
+        const val separator = "/"
     }
+
     fun getPath(): String {
         var path = ""
         var node: VFSObject? = this
         while (node != null && node.type != VFSType.Drive) {
-            path += this.separator() + node.label
+            path = separator + node.label + path
             node = node.parent
         }
-        return node?.label ?: "c:" + path
+        return ((node?.label ?: "v:") + path)
     }
 
     fun addChild(child: VFSObject): Boolean {
