@@ -134,6 +134,7 @@ body {
 
 #console-output {
     height: 100%;
+    font-family: Courier New, Courier, monospace;
 }
 
 .tabs {
