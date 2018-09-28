@@ -9,10 +9,6 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
 
   var cmdLine_ = document.querySelector(cmdLineContainer);
   var output_ = document.querySelector(outputContainer);
-
-  const CMDS_ = [
-    'cat', 'clear', 'clock', 'date', 'echo', 'help', 'uname', 'whoami'
-  ];
   
   var fs_ = null;
   var cwd_ = null;
@@ -85,29 +81,22 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
       input.readOnly = true;
       output_.appendChild(line);
 
+      _CMDS = ['clear', 'clock', 'date', 'exit', 'help', 'uname'];
+
       if (this.value && this.value.trim()) {
         var args = this.value.split(' ').filter(function(val, i) {
           return val;
         });
         var cmd = args[0].toLowerCase();
-        args = args.splice(1); // Remove cmd from arg list.
+        //args = args.splice(1); // Remove cmd from arg list.
       }
 
       switch (cmd) {
-        case 'cat':
-          var url = args.join(' ');
-          if (!url) {
-            output('Usage: ' + cmd + ' https://s.codepen.io/...');
-            output('Example: ' + cmd + ' https://s.codepen.io/AndrewBarfield/pen/LEbPJx.js');
-            break;
-          }
-          $.get( url, function(data) {
-            var encodedStr = data.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
-               return '&#'+i.charCodeAt(0)+';';
-            });
-            output('<pre>' + encodedStr + '</pre>');
-          });          
-          break;
+        case 'exit':
+            output_.innerHTML = '';
+            this.value = '';
+          window.term.init()
+          return;
         case 'clear':
           output_.innerHTML = '';
           this.value = '';
@@ -120,24 +109,15 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
         case 'date':
           output( new Date() );
           break;
-        case 'echo':
-          output( args.join(' ') );
-          break;
         case 'help':
-          output('<div class="ls-files">' + CMDS_.join('<br>') + '</div>');
+          output('<div class="ls-files">' + _CMDS.join('<br>') + '<br>' + driver.terminal.getCommands().join('<br>') + '</div>');
           break;
         case 'uname':
           output(navigator.appVersion);
           break;
-        case 'whoami':
-          var result = "<img src=\"" + codehelper_ip["Flag"]+ "\"><br><br>";
-          for (var prop in codehelper_ip)
-            result += prop + ": " + codehelper_ip[prop] + "<br>";
-          output(result);
-          break;
         default:
           if (cmd) {
-            output(cmd + ': command not found');
+            output(driver.terminal.processInput(args.join(' ')));
           }
       };
 
