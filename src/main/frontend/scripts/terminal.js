@@ -141,7 +141,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
           }
       };
 
-      window.scrollTo(0, getDocHeight_());
+      document.getElementById("container").scrollTo(0, getDocHeight_());
       this.value = ''; // Clear/setup line for next input.
     }
   }
@@ -172,6 +172,12 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
 
   // Cross-browser impl to get document's height.
   function getDocHeight_() {
+    var d = document.getElementById("container");
+    return Math.max(
+        d.scrollHeight,
+        d.offsetHeight,
+        d.clientHeight
+    );
     var d = document;
     return Math.max(
         Math.max(d.body.scrollHeight, d.documentElement.scrollHeight),
@@ -191,12 +197,6 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
 
 $(function() {
 
-  initalizeTerminal();
-
-});
-
-function initalizeTerminal() {
-
     // Set the command-line prompt to include the user's IP Address
     //$('.prompt').html('[' + codehelper_ip["IP"] + '@HTML5] # ');
     $('.prompt').html('[user@venus] # ');
@@ -215,4 +215,5 @@ function initalizeTerminal() {
         r("min", 6*d.getMinutes())
         r("hour", 30*(d.getHours()%12) + d.getMinutes()/2)
     }, 1000);
-}
+
+});
