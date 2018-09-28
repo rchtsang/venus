@@ -164,6 +164,10 @@ import kotlin.dom.removeClass
         Renderer.renderEditor()
     }
 
+    @JsName("openVenus") fun openVenus() {
+        Renderer.renderVenus()
+    }
+
     @JsName("openURLMaker") fun openURLMaker() {
         js("setUpURL();")
         Renderer.renderURLMaker()

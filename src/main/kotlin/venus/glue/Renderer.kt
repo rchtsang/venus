@@ -3,6 +3,7 @@ package venus.glue
 
 import org.w3c.dom.*
 import venus.assembler.AssemblerError
+import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
 import venus.riscv.insts.floating.Decimal
@@ -33,7 +34,7 @@ internal object Renderer {
     /** The memory location currently centered */
     var activeMemoryAddress: Int = 0
     /** The simulator being rendered */
-    private lateinit var sim: Simulator
+    private var sim: Simulator = Simulator(LinkedProgram())
     /* The way the information in the registers is displayed*/
     private var displayType = "hex"
 
@@ -66,7 +67,7 @@ internal object Renderer {
         return false
     }
 
-    var mainTabs: ArrayList<String> = arrayListOf("simulator", "urlmaker", "editor")
+    var mainTabs: ArrayList<String> = arrayListOf("simulator", "urlmaker", "editor", "venus")
     /**
      * Shows the simulator tab and hides other tabs
      *
@@ -84,6 +85,10 @@ internal object Renderer {
     /** Shows the editor tab and hides other tabs */
     fun renderEditor() {
         renderTab("editor", mainTabs)
+    }
+
+    fun renderVenus() {
+        renderTab("venus", mainTabs)
     }
 
     fun renderURLMaker() {
