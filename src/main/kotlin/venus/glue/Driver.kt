@@ -7,6 +7,7 @@ import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
+import venus.glue.terminal.Terminal
 import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
@@ -49,6 +50,7 @@ import kotlin.dom.removeClass
     @JsName("debug") var debug = false
 
     @JsName("VFS") var VFS = VirtualFileSystem("v")
+    @JsName("terminal") var terminal = Terminal(VFS)
 
     init {
         console.log("Loading driver...")
