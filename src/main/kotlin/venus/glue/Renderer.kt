@@ -198,16 +198,20 @@ internal object Renderer {
         newRow.id = "instruction-$idx"
         newRow.onclick = { Driver.addBreakpoint(idx) }
 
+        val pcline = newRow.insertCell(0)
+        val pcText = document.createTextNode("0x" + ((idx * 4) + MemorySegments.TEXT_BEGIN).toString(16))
+        pcline.appendChild(pcText)
+
         val hexRepresention = toHex(mcode[InstructionField.ENTIRE])
-        val machineCode = newRow.insertCell(0)
+        val machineCode = newRow.insertCell(1)
         val machineCodeText = document.createTextNode(hexRepresention)
         machineCode.appendChild(machineCodeText)
 
-        val basicCode = newRow.insertCell(1)
+        val basicCode = newRow.insertCell(2)
         val basicCodeText = document.createTextNode(if (invalidInst) progLine else Instruction[mcode].disasm(mcode))
         basicCode.appendChild(basicCodeText)
 
-        val line = newRow.insertCell(2)
+        val line = newRow.insertCell(3)
         val lineText = document.createTextNode(progLine)
         line.appendChild(lineText)
     }
@@ -220,10 +224,10 @@ internal object Renderer {
         try {
             code = Instruction[mcode].disasm(mcode)
         } catch (e: SimulatorError) {}
-        val pre = InstructionDiff(idx, userStringToInt(children?.get(0)?.innerHTML ?: "-1"), children?.get(2)?.innerHTML ?: "")
-        children?.get(0)?.innerHTML = toHex(mcode[InstructionField.ENTIRE]) /*Machine Code*/
-        children?.get(1)?.innerHTML = code /*Basic Code*/
-        children?.get(2)?.innerHTML = orig ?: code /*Original Code*/
+        val pre = InstructionDiff(idx, userStringToInt(children?.get(1)?.innerHTML ?: "-1"), children?.get(3)?.innerHTML ?: "")
+        children?.get(1)?.innerHTML = toHex(mcode[InstructionField.ENTIRE]) /*Machine Code*/
+        children?.get(2)?.innerHTML = code /*Basic Code*/
+        children?.get(3)?.innerHTML = orig ?: code /*Original Code*/
         return pre
     }
 

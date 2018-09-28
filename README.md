@@ -28,5 +28,5 @@ venus is [available online](https://ThaumicMekanism.github.io/venus/).
 
 ## Credit
 
-* Origionally made by [kvakil](https://github.com/kvakil/venus)
+* Originally made by [kvakil](https://github.com/kvakil/venus)
 * With edits by [ThaumicMekanism](https://github.com/ThaumicMekanism/venus)
