@@ -7,7 +7,7 @@ interface VFSObject {
     var permissions: VFSPermissions
     var parent: VFSObject
     fun isValidName(name: String): Boolean {
-        return !name.contains(separator) && !name.contains(":")
+        return !name.contains(Regex("[" + separator + ":\"><]"))
     }
     companion object {
         const val separator = "/"
