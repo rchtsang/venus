@@ -5,7 +5,7 @@ import venus.glue.terminal.Terminal
 
 var rm = Command(
         name = "rm",
-        execute = fun (args: MutableList<String>, t: Terminal): String {
+        execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.remove(args.joinToString(" "))
         }
 )

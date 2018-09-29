@@ -2,7 +2,7 @@ package venus.glue.terminal
 
 open class Command(
     val name: String,
-    val execute: (MutableList<String>, Terminal) -> String
+    val execute: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> String
 ) {
     companion object {
         private val allCommands = arrayListOf<Command>()

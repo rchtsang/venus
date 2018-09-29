@@ -5,7 +5,7 @@ import venus.glue.terminal.Terminal
 
 var cat = Command(
         name = "cat",
-        execute = fun (args: MutableList<String>, t: Terminal): String {
+        execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.cat(args.joinToString(" "))
         }
 )

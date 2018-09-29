@@ -23,6 +23,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     private val breakpoints: Array<Boolean>
     @JsName("args") var args = ArrayList<String>()
     var ebreak = false
+    var stdout = ""
 
     init {
         for (inst in linkedProgram.prog.insts) {
@@ -49,9 +50,11 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     @JsName("isDone") fun isDone(): Boolean = getPC() >= if (settings.ecallOnlyExit) MemorySegments.STATIC_BEGIN else maxpc
 
     @JsName("run") fun run() {
-        while (!isDone()) {
+        while (!isDone() && cycles <= settings.maxSteps) {
             step()
-            cycles++
+        }
+        if (cycles > settings.maxSteps) {
+            throw SimulatorError("Ran for more than max allowed steps!")
         }
     }
 
@@ -67,6 +70,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         val mcode: MachineCode = getNextInstruction()
         Instruction[mcode].impl32(mcode, this)
         history.add(preInstruction)
+        this.stdout += this.ecallMsg
         return postInstruction.toList()
     }
 
@@ -175,6 +179,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
         this.branched = false
         this.jumped = false
         this.ecallMsg = ""
+        this.stdout = ""
         cycles = 0
         removeAllArgs()
     }
