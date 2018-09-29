@@ -95,6 +95,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
         var input = line.querySelector('input.cmdline');
         input.autofocus = false;
         input.readOnly = true;
+        line.hidden = true;
         output_.appendChild(line);
 
         _CMDS = ['clear', 'clock', 'date', 'exit', 'help', 'uname'];
@@ -117,10 +118,12 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                   window.term.init();
                   driver.VFS.reset();
                   setDir();
+                  line.hidden = false;
                   return;
               case 'clear':
                   output_.innerHTML = '';
                   this.value = '';
+                  line.hidden = false;
                   return;
               case 'clock':
                   var appendDiv = jQuery($('.clock-container')[0].outerHTML);
@@ -148,6 +151,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
 
       document.getElementById("container").scrollTo(0, getDocHeight_());
       this.value = ''; // Clear/setup line for next input.
+      line.hidden = false;
     }
   }
 
@@ -208,7 +212,7 @@ $(function() {
 
     // Set the command-line prompt to include the user's IP Address
     //$('.prompt').html('[' + codehelper_ip["IP"] + '@HTML5] # ');
-    $('.prompt').html('[user@venus] v:/ # ');
+    $('.prompt').html('[user@venus] v:/# ');
 
     // Initialize a new terminal object
     window.term = new Terminal('#input-line .cmdline', '#container output');
