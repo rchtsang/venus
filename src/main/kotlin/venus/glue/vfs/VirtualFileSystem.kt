@@ -7,9 +7,9 @@ package venus.glue.vfs
         currentLocation.parent = currentLocation
     }
 
-    @JsName("mkdir") fun mkdir(dirName: String): Boolean {
+    @JsName("mkdir") fun mkdir(dirName: String): String {
         val newdir = VFSFolder(dirName, currentLocation)
-        return currentLocation.addChild(newdir)
+        return currentLocation.addChild(newdir).toString()
     }
 
     @JsName("cd") fun cd(dir: String): String {
@@ -36,9 +36,10 @@ package venus.glue.vfs
         return ""
     }
 
-    @JsName("touch") fun touch(filename: String): Boolean {
+    @JsName("touch") fun touch(filename: String): String {
         val newfile = VFSFile(filename, currentLocation)
-        return currentLocation.addChild(newfile)
+        currentLocation.addChild(newfile)
+        return ""
     }
 
     @JsName("ls") fun ls(): String {

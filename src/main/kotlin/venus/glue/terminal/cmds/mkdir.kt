@@ -3,9 +3,9 @@ package venus.glue.terminal.cmds
 import venus.glue.terminal.Command
 import venus.glue.terminal.Terminal
 
-var cd = Command(
-        name = "cd",
+var mkdir = Command(
+        name = "mkdir",
         execute = fun (args: MutableList<String>, t: Terminal): String {
-            return t.vfs.cd(args.joinToString(" "))
+            return t.vfs.mkdir(args.joinToString(" "))
         }
 )

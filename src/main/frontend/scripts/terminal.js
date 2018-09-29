@@ -67,59 +67,63 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
       // Implement tab suggest.
     } else if (e.keyCode == 13) { // enter
       // Save shell history.
-      if (this.value) {
-        history_[history_.length] = this.value;
-        histpos_ = history_.length;
+        try {
+        if (this.value) {
+          history_[history_.length] = this.value;
+          histpos_ = history_.length;
+        }
+
+        // Duplicate current input and append to output section.
+        var line = this.parentNode.parentNode.cloneNode(true);
+        line.removeAttribute('id')
+        line.classList.add('line');
+        var input = line.querySelector('input.cmdline');
+        input.autofocus = false;
+        input.readOnly = true;
+        output_.appendChild(line);
+
+        _CMDS = ['clear', 'clock', 'date', 'exit', 'help', 'uname'];
+
+        if (this.value && this.value.trim()) {
+          var args = this.value.split(' ').filter(function(val, i) {
+            return val;
+          });
+          var cmd = args[0].toLowerCase();
+            //args = args.splice(1); // Remove cmd from arg list.
+        }
+
+          switch (cmd) {
+              case 'exit':
+                  output_.innerHTML = '';
+                  this.value = '';
+                  window.term.init()
+                  return;
+              case 'clear':
+                  output_.innerHTML = '';
+                  this.value = '';
+                  return;
+              case 'clock':
+                  var appendDiv = jQuery($('.clock-container')[0].outerHTML);
+                  appendDiv.attr('style', 'display:inline-block');
+                  output_.appendChild(appendDiv[0]);
+                  break;
+              case 'date':
+                  output( new Date() );
+                  break;
+              case 'help':
+                  output('<div class="ls-files">' + _CMDS.concat(driver.terminal.getCommands()).sort().join('<br>') + '</div>');
+                  break;
+              case 'uname':
+                  output(navigator.appVersion);
+                  break;
+              default:
+                  if (cmd) {
+                      output(driver.terminal.processInput(args.join(' ')));
+                  }
+          };
+      } catch (e) {
+        output("UNKNOWN INTERNAL ERROR:" + e.toString())
       }
-
-      // Duplicate current input and append to output section.
-      var line = this.parentNode.parentNode.cloneNode(true);
-      line.removeAttribute('id')
-      line.classList.add('line');
-      var input = line.querySelector('input.cmdline');
-      input.autofocus = false;
-      input.readOnly = true;
-      output_.appendChild(line);
-
-      _CMDS = ['clear', 'clock', 'date', 'exit', 'help', 'uname'];
-
-      if (this.value && this.value.trim()) {
-        var args = this.value.split(' ').filter(function(val, i) {
-          return val;
-        });
-        var cmd = args[0].toLowerCase();
-        //args = args.splice(1); // Remove cmd from arg list.
-      }
-
-      switch (cmd) {
-        case 'exit':
-            output_.innerHTML = '';
-            this.value = '';
-          window.term.init()
-          return;
-        case 'clear':
-          output_.innerHTML = '';
-          this.value = '';
-          return;
-        case 'clock':
-          var appendDiv = jQuery($('.clock-container')[0].outerHTML);
-          appendDiv.attr('style', 'display:inline-block');
-          output_.appendChild(appendDiv[0]);
-          break;
-        case 'date':
-          output( new Date() );
-          break;
-        case 'help':
-          output('<div class="ls-files">' + _CMDS.join('<br>') + '<br>' + driver.terminal.getCommands().join('<br>') + '</div>');
-          break;
-        case 'uname':
-          output(navigator.appVersion);
-          break;
-        default:
-          if (cmd) {
-            output(driver.terminal.processInput(args.join(' ')));
-          }
-      };
 
       document.getElementById("container").scrollTo(0, getDocHeight_());
       this.value = ''; // Clear/setup line for next input.
@@ -147,7 +151,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
 
   //
   function output(html) {
-    output_.insertAdjacentHTML('beforeEnd', '<p>' + html + '</p>');
+    output_.insertAdjacentHTML('beforeEnd', '<p>' + html.replace(/\n/g, "<br/>") + '</p>');
   }
 
   // Cross-browser impl to get document's height.
