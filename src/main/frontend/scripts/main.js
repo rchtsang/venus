@@ -13,6 +13,7 @@ function setup_venus() {
         }
     );
     window.codeMirror.setSize("100%", "88vh");
+
 }
 
 function local_riscv() {
