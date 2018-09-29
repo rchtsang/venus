@@ -6,10 +6,10 @@ interface VFSObject {
     var contents: HashMap<String, Any>
     var permissions: VFSPermissions
     var parent: VFSObject
-    fun isValidName(name: String): Boolean {
-        return !name.contains(Regex("[" + separator + ":\"><]"))
-    }
     companion object {
+        fun isValidName(name: String): Boolean {
+            return !name.contains(Regex("[" + separator + ":\"><]"))
+        }
         const val separator = "/"
     }
 

@@ -21,8 +21,8 @@ object Assembler {
      * @see venus.linker.Linker
      * @see venus.simulator.Simulator
      */
-    fun assemble(text: String): AssemblerOutput {
-        var (passOneProg, talInstructions, passOneErrors) = AssemblerPassOne(text).run()
+    fun assemble(text: String, name: String = "anonymous"): AssemblerOutput {
+        var (passOneProg, talInstructions, passOneErrors) = AssemblerPassOne(text, name).run()
 
         /* This will force pc to be word aligned. Removed it because I guess you could custom it.
         if (passOneProg.insts.size > 0) {
@@ -72,9 +72,9 @@ data class AssemblerOutput(val prog: Program, val errors: List<AssemblerError>, 
  * It parses labels, expands pseudo-instructions and follows assembler directives.
  * It populations [talInstructions], which is then used by [AssemblerPassTwo] in order to actually assemble the code.
  */
-internal class AssemblerPassOne(private val text: String) {
+internal class AssemblerPassOne(private val text: String, name: String = "anonymous") {
     /** The program we are currently assembling */
-    private val prog = Program()
+    private val prog = Program(name)
     /** The text offset where the next instruction will be written */
     private var currentTextOffset = 0 // MemorySegments.TEXT_BEGIN
     /** The data offset where more data will be written */

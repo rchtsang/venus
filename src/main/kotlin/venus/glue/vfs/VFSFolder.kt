@@ -1,5 +1,7 @@
 package venus.glue.vfs
 
+import venus.glue.vfs.VFSObject.Companion.isValidName
+
 open class VFSFolder(var name: String, override var parent: VFSObject) : VFSObject {
     override val type = VFSType.Folder
     override var label = name

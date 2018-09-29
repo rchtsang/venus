@@ -63,6 +63,18 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   function processNewCommand_(e) {
 
     if (e.keyCode == 9) { // tab
+        // Duplicate current input and append to output section.
+        var line = this.parentNode.parentNode.cloneNode(true);
+        line.removeAttribute('id');
+        try {
+            line.children[0].removeAttribute('id');
+        } catch (e) {}
+        line.classList.add('line');
+        var input = line.querySelector('input.cmdline');
+        input.autofocus = false;
+        input.readOnly = true;
+        output_.appendChild(line);
+        output("Tabs are still a work in progress");
       e.preventDefault();
       // Implement tab suggest.
     } else if (e.keyCode == 13) { // enter
@@ -93,6 +105,9 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
           });
           var cmd = args[0].toLowerCase();
             //args = args.splice(1); // Remove cmd from arg list.
+        }
+        if (cmd === "sudo" && args.length >= 2) {
+            cmd = args[1].toLowerCase()
         }
 
           switch (cmd) {
@@ -193,7 +208,7 @@ $(function() {
 
     // Set the command-line prompt to include the user's IP Address
     //$('.prompt').html('[' + codehelper_ip["IP"] + '@HTML5] # ');
-    $('.prompt').html('[user@venus] # ');
+    $('.prompt').html('[user@venus] v:/ # ');
 
     // Initialize a new terminal object
     window.term = new Terminal('#input-line .cmdline', '#container output');
