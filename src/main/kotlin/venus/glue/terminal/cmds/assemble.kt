@@ -44,7 +44,7 @@ var assemble = Command(
                     msg += "\n" + warning.toString()
                 }
             }
-            val p = VFSProgram(programout, file, prog)
+            val p = VFSProgram(programout, file.parent, prog)
             file.parent.addChild(p)
             return msg
         }
