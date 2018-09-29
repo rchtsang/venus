@@ -7,9 +7,17 @@ package venus.glue.vfs
         currentLocation.parent = currentLocation
     }
 
+    @JsName("reset") fun reset() {
+        this.currentLocation = sentinel
+    }
+
     @JsName("mkdir") fun mkdir(dirName: String): String {
         val newdir = VFSFolder(dirName, currentLocation)
-        return currentLocation.addChild(newdir).toString()
+        return if (currentLocation.addChild(newdir)) {
+            ""
+        } else {
+            "Could not make directory: $dirName"
+        }
     }
 
     @JsName("cd") fun cd(dir: String): String {
@@ -38,8 +46,11 @@ package venus.glue.vfs
 
     @JsName("touch") fun touch(filename: String): String {
         val newfile = VFSFile(filename, currentLocation)
-        currentLocation.addChild(newfile)
-        return ""
+        return if (currentLocation.addChild(newfile)) {
+            ""
+        } else {
+            "Could not make file: $filename"
+        }
     }
 
     @JsName("ls") fun ls(): String {
@@ -77,7 +88,7 @@ package venus.glue.vfs
     }
 
     @JsName("path") fun path(): String {
-        return currentLocation.getPath()
+        return currentLocation.getPath() + VFSObject.separator
     }
     // @FIXME There is a bug for going into a file
     @JsName("remove") fun remove(path: String): String {

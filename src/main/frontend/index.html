@@ -22,8 +22,6 @@
 
   <link href="css/Inconsolata.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" type="text/css" href="css/terminal.css">
-  <script type="text/javascript" src="scripts/jquery.min.js"></script>
-  <script type="text/javascript" src="scripts/terminal.js"></script>
 </head>
 <body>
 <div class="tabs is-boxed is-centered">
@@ -48,7 +46,7 @@
   <div id="container" class="terminal" style="overflow-y:scroll; height:500px;">
     <output></output>
     <div id="input-line" class="input-line">
-      <div class="prompt"></div><div><input class="cmdline" autofocus autocomplete="false"/></div>
+      <div class="prompt" id="currentprompt"></div><div><input class="cmdline" autofocus="true" autocomplete="false"/></div>
     </div>
   </div>
 
@@ -1403,9 +1401,12 @@
     }
 </script>
 
-<script type="text/javascript" src="js/helper.js" onerror="loadScript('scripts/helper.js', '', '')"></script>
-<script type="text/javascript" src="js/seedrandom.js" onerror="loadScript('scripts/seedrandom.js', '', '')"></script>
-<script type="text/javascript" src="js/codemirror.js" onerror=""></script>
-<script type="text/javascript" src="js/main.js" onerror="loadScript('scripts/main.js', '', '')"></script>
+
+<script type="text/javascript" src="scripts/jquery.min.js" onerror=""></script>
+<script type="text/javascript" src="scripts/helper.js" onerror=""></script>
+<script type="text/javascript" src="scripts/seedrandom.js" onerror=""></script>
+<script type="text/javascript" src="scripts/codemirror.js" onerror="loadScript('js/codemirror.js', '', '')"></script>
+<script type="text/javascript" src="scripts/main.js" onerror=""></script>
+<script type="text/javascript" src="scripts/terminal.js" onerror=""></script>
 </body>
 </html>

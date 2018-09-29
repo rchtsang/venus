@@ -75,7 +75,10 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
 
         // Duplicate current input and append to output section.
         var line = this.parentNode.parentNode.cloneNode(true);
-        line.removeAttribute('id')
+        line.removeAttribute('id');
+        try {
+            line.children[0].removeAttribute('id');
+        } catch (e) {}
         line.classList.add('line');
         var input = line.querySelector('input.cmdline');
         input.autofocus = false;
@@ -96,7 +99,9 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
               case 'exit':
                   output_.innerHTML = '';
                   this.value = '';
-                  window.term.init()
+                  window.term.init();
+                  driver.VFS.reset();
+                  setDir();
                   return;
               case 'clear':
                   output_.innerHTML = '';
@@ -108,7 +113,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                   output_.appendChild(appendDiv[0]);
                   break;
               case 'date':
-                  output( new Date() );
+                  output( (new Date()).toString() );
                   break;
               case 'help':
                   output('<div class="ls-files">' + _CMDS.concat(driver.terminal.getCommands()).sort().join('<br>') + '</div>');
@@ -121,13 +126,18 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                       output(driver.terminal.processInput(args.join(' ')));
                   }
           };
-      } catch (e) {
+            setDir();
+        } catch (e) {
         output("UNKNOWN INTERNAL ERROR:" + e.toString())
       }
 
       document.getElementById("container").scrollTo(0, getDocHeight_());
       this.value = ''; // Clear/setup line for next input.
     }
+  }
+
+  function setDir() {
+      $('#currentprompt').html('[user@venus] ' + driver.VFS.path() + '# ');
   }
 
   //
