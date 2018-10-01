@@ -7,5 +7,8 @@ var path = Command(
         name = "path",
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.path()
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

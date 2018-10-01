@@ -19,5 +19,8 @@ var save = Command(
                 return "save: Could not save file!"
             }
             return t.vfs.write(args[0], txt)
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

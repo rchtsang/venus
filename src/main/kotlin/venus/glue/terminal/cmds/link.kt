@@ -43,5 +43,8 @@ var link = Command(
             }
             val obj = VFSLinkedProgram(output, t.vfs.currentLocation, linkedProgram)
             return if (t.vfs.currentLocation.addChild(obj)) "" else "link: Could not add linked program to the files!"
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

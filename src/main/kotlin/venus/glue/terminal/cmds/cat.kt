@@ -7,5 +7,8 @@ var cat = Command(
         name = "cat",
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.cat(args.joinToString(" "))
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

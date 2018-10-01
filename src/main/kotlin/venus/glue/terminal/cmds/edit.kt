@@ -28,5 +28,8 @@ var edit = Command(
                 return "edit: Could not load file to the editor!"
             }
             return ""
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )
