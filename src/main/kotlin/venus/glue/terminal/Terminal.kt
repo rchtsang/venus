@@ -42,7 +42,7 @@ class Terminal(var vfs: VirtualFileSystem) {
 
     @JsName("tab") fun tab(lineinput: String): Any? {
         val ktcmds = Command.getCommands().union(externalCommands)
-        val args = lineinput.split(" ") as MutableList<String>
+        val args = this.extractArgs(lineinput)
         try {
             if (args.isNotEmpty()) {
                 val sudo = if (args[0] === "sudo") {
