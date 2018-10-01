@@ -32,5 +32,8 @@ var run = Command(
                 return "run: An error occurred when running the programs execution: $e"
             }
             return sim.stdout
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

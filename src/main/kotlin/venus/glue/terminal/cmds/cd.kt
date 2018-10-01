@@ -7,5 +7,8 @@ var cd = Command(
         name = "cd",
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.cd(args.joinToString(" "))
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

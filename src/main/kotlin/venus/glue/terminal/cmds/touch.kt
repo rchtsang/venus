@@ -7,5 +7,8 @@ var touch = Command(
         name = "touch",
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.touch(args.joinToString(" "))
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

@@ -63,18 +63,46 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   function processNewCommand_(e) {
 
     if (e.keyCode == 9) { // tab
-        // Duplicate current input and append to output section.
-        var line = this.parentNode.parentNode.cloneNode(true);
-        line.removeAttribute('id');
-        try {
-            line.children[0].removeAttribute('id');
-        } catch (e) {}
-        line.classList.add('line');
-        var input = line.querySelector('input.cmdline');
-        input.autofocus = false;
-        input.readOnly = true;
-        output_.appendChild(line);
-        output("Tabs are still a work in progress");
+        if (this.value) {
+            var whattodo = driver.terminal.tab(this.value);
+            if (Array.isArray(whattodo)) {
+                if (whattodo.length === 0) {
+                    // Does nothing atm.
+                    e.preventDefault();
+                } else if (whattodo.length === 1) {
+                    this.value = whattodo[0];
+                    e.preventDefault();
+                } else {
+                    // Duplicate current input and append to output section.
+                    var line = this.parentNode.parentNode.cloneNode(true);
+                    line.removeAttribute('id');
+                    try {
+                        line.children[0].removeAttribute('id');
+                    } catch (e) {}
+                    line.classList.add('line');
+                    var input = line.querySelector('input.cmdline');
+                    input.autofocus = false;
+                    input.readOnly = true;
+                    output_.appendChild(line);
+                    output('<div class="ls-files">' + whattodo.sort().join('<br>') + '</div>');
+                    e.preventDefault();
+                }
+            } else {
+                // Duplicate current input and append to output section.
+                var line = this.parentNode.parentNode.cloneNode(true);
+                line.removeAttribute('id');
+                try {
+                    line.children[0].removeAttribute('id');
+                } catch (e) {}
+                line.classList.add('line');
+                var input = line.querySelector('input.cmdline');
+                input.autofocus = false;
+                input.readOnly = true;
+                output_.appendChild(line);
+                output(whattodo);
+                e.preventDefault();
+            }
+        }
       e.preventDefault();
       // Implement tab suggest.
     } else if (e.keyCode == 13) { // enter

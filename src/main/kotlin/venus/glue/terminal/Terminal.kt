@@ -37,4 +37,49 @@ class Terminal(var vfs: VirtualFileSystem) {
         }
         return js("cmds")
     }
+
+    private val externalCommands = listOf("clear", "clock", "date", "exit", "help", "uname", "sudo")
+
+    @JsName("tab") fun tab(lineinput: String): Any? {
+        val ktcmds = Command.getCommands().union(externalCommands)
+        val args = lineinput.split(" ") as MutableList<String>
+        try {
+            if (args.isNotEmpty()) {
+                val sudo = if (args[0] === "sudo") {
+                    args.removeAt(0)
+                    true
+                } else {
+                    false
+                }
+                if (args.isEmpty()) {
+                    return js("[];")
+                }
+                if (args.size == 1) {
+                    val possibleCommands = ArrayList<String>()
+                    for (c in ktcmds) {
+                        if (c.startsWith(args[0])) {
+                            possibleCommands.add(c)
+                        }
+                    }
+                    return listTojsList(possibleCommands)
+                } else {
+                    val cmd = Command[args.removeAt(0)]
+                    val options = cmd.tab(args, this, sudo)
+                    return listTojsList(options)
+                }
+            }
+        } catch (e: Throwable) {
+            console.error(e)
+            return "An unknown error occurred!"
+        }
+        return "Something bad happened!"
+    }
+
+    fun listTojsList(l: List<Any?>): Any? {
+        js("var list = [];")
+        for (i in l) {
+            js("list.push(i);")
+        }
+        return js("list;")
+    }
 }

@@ -47,5 +47,8 @@ var assemble = Command(
             val p = VFSProgram(programout, file.parent, prog)
             file.parent.addChild(p)
             return msg
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

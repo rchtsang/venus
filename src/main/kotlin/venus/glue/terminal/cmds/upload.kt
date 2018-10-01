@@ -17,6 +17,9 @@ var upload = Command(
             uploadbtn.click()
             window.setTimeout({ e: HTMLInputElement, t: Terminal -> handleFileUploads(e, t) }, 100, uploadbtn, t)
             return ""
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )
 

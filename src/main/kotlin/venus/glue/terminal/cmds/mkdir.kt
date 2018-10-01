@@ -10,5 +10,8 @@ var mkdir = Command(
                 return "mkdir: mkdir takes in a folder name."
             }
             return t.vfs.mkdir(args.joinToString(" "))
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )

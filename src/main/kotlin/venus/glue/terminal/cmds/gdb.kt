@@ -36,5 +36,8 @@ var gdb = Command(
                 return "gdb: An error has occurred"
             }
             return ""
+        },
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            return ArrayList<String>()
         }
 )
