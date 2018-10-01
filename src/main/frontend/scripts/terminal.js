@@ -103,6 +103,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                 e.preventDefault();
             }
         }
+        document.getElementById("container").scrollTo(0, getDocHeight_());
       e.preventDefault();
       // Implement tab suggest.
     } else if (e.keyCode == 13) { // enter
