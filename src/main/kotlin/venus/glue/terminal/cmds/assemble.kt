@@ -12,7 +12,7 @@ var assemble = Command(
         name = "assemble",
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             if (args.size !in listOf(1, 2)) {
-                return "assemble: takes in two arguments: [text in] {[program out], a.out}"
+                return Command["assemble"].help
             }
             val filein = args[0]
             val programout = if (args.size == 2) args[1] else "a.out"
@@ -51,5 +51,6 @@ var assemble = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = "assemble: takes in two arguments: [text in] {[program out], a.out}"
 )

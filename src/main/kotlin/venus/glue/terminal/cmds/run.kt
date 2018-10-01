@@ -36,5 +36,8 @@ var run = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = """Runs the inputed linked program with given arguments.
+            |Usage: run [program name] [argument]...
+        """.trimMargin()
 )

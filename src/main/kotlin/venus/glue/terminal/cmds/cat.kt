@@ -11,5 +11,8 @@ var cat = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = "cat: takes in one argument (a file or path to a file) and prints out the contents of the file." +
+                "\nEx cat foo.txt" +
+                "\nUsage: cat [path to file]"
 )

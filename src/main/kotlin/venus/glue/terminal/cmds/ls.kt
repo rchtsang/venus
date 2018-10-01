@@ -11,5 +11,8 @@ var ls = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = "This command prints out the contents of the current folder." +
+                "\nIt currently does not take in any arguments." +
+                "\nUsage: ls"
 )

@@ -47,5 +47,9 @@ var link = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = "This command takes in names of programs which you want to link together." +
+                "It only requires one program but takes in an arbitrary number of programs." +
+                "\nEG link out.l a.out b.out c.out" +
+                "\nUsage: link [output] [input program 1] {[input program 2] ... [input program n]}"
 )
