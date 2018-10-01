@@ -9,6 +9,7 @@ var rm = Command(
             return t.vfs.remove(args.joinToString(" "))
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            throw NotImplementedError()
             return ArrayList<String>()
         }
 )

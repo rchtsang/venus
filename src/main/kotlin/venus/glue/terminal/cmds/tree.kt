@@ -10,6 +10,7 @@ var tree = Command(
             throw CommandNotImplementedError("tree")
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            throw NotImplementedError()
             return ArrayList<String>()
         }
 )
