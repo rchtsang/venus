@@ -23,5 +23,8 @@ var save = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = """Saves the data in the editor to the specified file.
+            |Usage: save [filename]
+        """.trimMargin()
 )

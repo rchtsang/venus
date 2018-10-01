@@ -32,5 +32,7 @@ var edit = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = "edit: Takes in one argument [filename] and will copy the contents to the editor tab and then go to the editor tab." +
+                "\nUsage: edit [filename]"
 )

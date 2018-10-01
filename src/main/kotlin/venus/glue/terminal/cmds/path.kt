@@ -11,5 +11,9 @@ var path = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = """This command prints out the path of the current directory.
+            |It does not take any arguments.
+            |Usage: path
+        """.trimMargin()
 )

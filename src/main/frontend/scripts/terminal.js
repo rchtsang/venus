@@ -63,45 +63,51 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   function processNewCommand_(e) {
 
     if (e.keyCode == 9) { // tab
-        if (this.value) {
-            var whattodo = driver.terminal.tab(this.value);
-            if (Array.isArray(whattodo)) {
-                if (whattodo.length === 0) {
-                    // Does nothing atm.
-                    e.preventDefault();
-                } else if (whattodo.length === 1) {
-                    this.value = whattodo[0];
-                    e.preventDefault();
+        try {
+            if (this.value) {
+                var whattodo = driver.terminal.tab(this.value);
+                if (Array.isArray(whattodo)) {
+                    if (whattodo.length === 0) {
+                        // Does nothing atm.
+                        e.preventDefault();
+                    } else if (whattodo.length === 1) {
+                        this.value += whattodo[0];
+                        e.preventDefault();
+                    } else {
+                        // Duplicate current input and append to output section.
+                        var line = this.parentNode.parentNode.cloneNode(true);
+                        line.removeAttribute('id');
+                        try {
+                            line.children[0].removeAttribute('id');
+                        } catch (e) {
+                        }
+                        line.classList.add('line');
+                        var input = line.querySelector('input.cmdline');
+                        input.autofocus = false;
+                        input.readOnly = true;
+                        output_.appendChild(line);
+                        output('<div class="ls-files">' + whattodo.sort().join('<br>') + '</div>');
+                        e.preventDefault();
+                    }
                 } else {
                     // Duplicate current input and append to output section.
                     var line = this.parentNode.parentNode.cloneNode(true);
                     line.removeAttribute('id');
                     try {
                         line.children[0].removeAttribute('id');
-                    } catch (e) {}
+                    } catch (e) {
+                    }
                     line.classList.add('line');
                     var input = line.querySelector('input.cmdline');
                     input.autofocus = false;
                     input.readOnly = true;
                     output_.appendChild(line);
-                    output('<div class="ls-files">' + whattodo.sort().join('<br>') + '</div>');
+                    output(whattodo);
                     e.preventDefault();
                 }
-            } else {
-                // Duplicate current input and append to output section.
-                var line = this.parentNode.parentNode.cloneNode(true);
-                line.removeAttribute('id');
-                try {
-                    line.children[0].removeAttribute('id');
-                } catch (e) {}
-                line.classList.add('line');
-                var input = line.querySelector('input.cmdline');
-                input.autofocus = false;
-                input.readOnly = true;
-                output_.appendChild(line);
-                output(whattodo);
-                e.preventDefault();
             }
+        } catch (e) {
+
         }
         document.getElementById("container").scrollTo(0, getDocHeight_());
       e.preventDefault();
@@ -163,14 +169,18 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                   output( (new Date()).toString() );
                   break;
               case 'help':
-                  output('<div class="ls-files">' + _CMDS.concat(driver.terminal.getCommands()).sort().join('<br>') + '</div>');
+                  if (args.splice(1).length > 0) {
+                      output(driver.terminal.processInput(this.value || ""));
+                  } else {
+                      output('<div class="ls-files">' + _CMDS.concat(driver.terminal.getCommands()).sort().join('<br>') + '</div>');
+                  }
                   break;
               case 'uname':
                   output(navigator.appVersion);
                   break;
               default:
                   if (cmd) {
-                      output(driver.terminal.processInput(args.join(' ')));
+                      output(driver.terminal.processInput(this.value || ""));
                   }
           };
             setDir();

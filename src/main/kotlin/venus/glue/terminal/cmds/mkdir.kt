@@ -14,5 +14,8 @@ var mkdir = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = """This command makes a folder in the current directory or path.
+            |Usage: mkdir [new folder name]
+        """.trimMargin()
 )

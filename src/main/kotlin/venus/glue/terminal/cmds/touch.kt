@@ -11,5 +11,9 @@ var touch = Command(
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
             throw NotImplementedError()
             return ArrayList<String>()
-        }
+        },
+        help = """Creates a text/data file.
+            |Usage: touch [filename]
+            |NOTE: Does not modify the timestamp at the moment because that is not implemented yet in the VFS.
+        """.trimMargin()
 )
