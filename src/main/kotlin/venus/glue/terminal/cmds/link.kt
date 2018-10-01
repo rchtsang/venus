@@ -45,6 +45,7 @@ var link = Command(
             return if (t.vfs.currentLocation.addChild(obj)) "" else "link: Could not add linked program to the files!"
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            throw NotImplementedError()
             return ArrayList<String>()
         }
 )

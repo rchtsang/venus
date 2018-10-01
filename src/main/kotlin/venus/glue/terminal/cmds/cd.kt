@@ -9,6 +9,7 @@ var cd = Command(
             return t.vfs.cd(args.joinToString(" "))
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            throw NotImplementedError()
             return ArrayList<String>()
         }
 )

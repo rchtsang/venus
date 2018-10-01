@@ -12,6 +12,7 @@ var mkdir = Command(
             return t.vfs.mkdir(args.joinToString(" "))
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            throw NotImplementedError()
             return ArrayList<String>()
         }
 )

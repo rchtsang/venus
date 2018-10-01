@@ -70,7 +70,7 @@ class Terminal(var vfs: VirtualFileSystem) {
             }
         } catch (e: Throwable) {
             console.error(e)
-            return "An unknown error occurred!"
+            return "An error occurred! $e"
         }
         return "Something bad happened!"
     }

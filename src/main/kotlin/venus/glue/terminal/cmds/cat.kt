@@ -9,6 +9,7 @@ var cat = Command(
             return t.vfs.cat(args.joinToString(" "))
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+            throw NotImplementedError()
             return ArrayList<String>()
         }
 )
