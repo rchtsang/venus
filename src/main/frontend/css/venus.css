@@ -208,3 +208,41 @@ body {
 .panel-block > .field {
     width: 100%;
 }
+.tile {
+    position: relative;  /* only in order to make z-index used */
+    font-weight: bold;
+}
+.tile {
+    clear: both;
+    /* display: table; not here */
+    margin-top: 0px;
+    padding: 0px;  /* any padding will screw up height calculation */
+}
+
+.tile:first-child {
+    /* margin-top: 0;  if you do this, when the top piece is no longer
+                       the top piece, it would need fixing in the code */
+}
+
+.tile .content {  /* this exists only so that we can have padding without messing up height calculations of tile */
+    padding: .5em;
+}
+
+
+.scrubber {
+    display: inline-block;
+    border-top: 2px solid #ccc;
+    width: 25px;
+    padding-top: 2px;
+    float: right;
+    cursor: -webkit-grab;
+    cursor: ns-resize;
+}
+
+.scrubber:before,
+.scrubber:after {
+    display: block;
+    content: "";
+    border-top: 2px solid #ccc;
+    padding-top: 2px;
+}

@@ -38,7 +38,7 @@ class Terminal(var vfs: VirtualFileSystem) {
         return js("cmds")
     }
 
-    internal val externalCommands = listOf("clear", "clock", "date", "exit", "help", "uname", "sudo")
+    private val externalCommands = listOf("clear", "clock", "date", "exit", "help", "uname", "sudo")
 
     @JsName("tab") fun tab(lineinput: String): Any? {
         val ktcmds = Command.getCommands().union(externalCommands)
@@ -61,16 +61,10 @@ class Terminal(var vfs: VirtualFileSystem) {
                             possibleCommands.add(c)
                         }
                     }
-                    if (possibleCommands.size == 1) {
-                        possibleCommands[0] = possibleCommands[0].removePrefix(args[0])
-                    }
                     return listTojsList(possibleCommands)
                 } else {
                     val cmd = Command[args.removeAt(0)]
                     val options = cmd.tab(args, this, sudo)
-                    if (options.size == 1) {
-                        options[0] = options[0].removePrefix(args[0])
-                    }
                     return listTojsList(options)
                 }
             }
