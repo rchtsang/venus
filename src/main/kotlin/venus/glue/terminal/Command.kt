@@ -2,11 +2,8 @@ package venus.glue.terminal
 
 open class Command(
     val name: String,
-    val execute: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> String =
-            { a, b, c -> throw NotImplementedError() },
-    val tab: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> MutableList<String> =
-            { a, b, c -> throw NotImplementedError() },
-    val help: String = "Command does not have a help yet!"
+    val execute: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> String,
+    val tab: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> MutableList<String>
 ) {
     companion object {
         private val allCommands = arrayListOf<Command>()
