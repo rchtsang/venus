@@ -210,7 +210,6 @@ body {
 }
 .tile {
     position: relative;  /* only in order to make z-index used */
-    font-weight: bold;
 }
 .tile {
     clear: both;
