@@ -3,8 +3,8 @@ package venus.glue.terminal.cmds
 import venus.glue.terminal.Command
 import venus.glue.terminal.Terminal
 
-var path = Command(
-        name = "path",
+var pwd = Command(
+        name = "pwd",
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.path()
         },

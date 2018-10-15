@@ -67,7 +67,7 @@ internal object Renderer {
         return false
     }
 
-    var mainTabs: ArrayList<String> = arrayListOf("simulator", "urlmaker", "editor", "venus")
+    var mainTabs: ArrayList<String> = arrayListOf("simulator", "editor", "venus")
     /**
      * Shows the simulator tab and hides other tabs
      *
@@ -514,7 +514,6 @@ internal object Renderer {
     fun renderMemoryTab() {
         tabSetVisibility("memory", "block")
         tabSetVisibility("register", "none")
-        tabSetVisibility("settings", "none")
         tabSetVisibility("cache", "none")
     }
 
@@ -522,22 +521,17 @@ internal object Renderer {
     fun renderRegisterTab() {
         tabSetVisibility("register", "block")
         tabSetVisibility("memory", "none")
-        tabSetVisibility("settings", "none")
         tabSetVisibility("cache", "none")
     }
 
     fun renderCacheTab() {
         tabSetVisibility("cache", "block")
-        tabSetVisibility("settings", "none")
         tabSetVisibility("memory", "none")
         tabSetVisibility("register", "none")
     }
 
     fun renderSettingsTab() {
         tabSetVisibility("settings", "block")
-        tabSetVisibility("memory", "none")
-        tabSetVisibility("register", "none")
-        tabSetVisibility("cache", "none")
     }
 
     fun renderGeneralSettingsTab() {
