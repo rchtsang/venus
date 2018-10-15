@@ -107,7 +107,7 @@ body {
 }
 
 #settings-tab-view {
-    display: none;
+    display: block;
 }
 #tracer-settings-tab-view {
     display: none;

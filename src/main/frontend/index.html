@@ -29,8 +29,6 @@
     <li id="venus-tab" style="padding-right: 5px;"><a onclick="driver.openVenus()"><font color="#00d1b2">Venus</font></a></li>
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
     <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
-    <li id="urlmaker-tab"><a onclick="driver.openURLMaker()">URL</a></li>
-    <li id="wiki-tab"><a href="https://github.com/ThaumicMekanism/venus/wiki" target="_blank">Wiki</a></li>
   </ul>
 </div>
 <div class="container is-fluid">
@@ -43,23 +41,229 @@
   </section>
 </div>
 <section class="section" id="venus-tab-view">
-  <div id="container" class="terminal" style="overflow-y:scroll; height:500px;">
-    <output></output>
-    <div id="input-line" class="input-line">
-      <div class="prompt" id="currentprompt"></div><div><input class="cmdline" autocomplete="false" spellcheck="false" autofocus/></div>
-    </div>
-  </div>
 
-  <div class="clock-container">
-    <svg viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="45"/>
-      <g>
-        <rect class="hour" x="47.5" y="12.5" width="5" height="40" rx="2.5" ry="2.55" />
-        <rect class="min" x="48.5" y="12.5" width="3" height="40" rx="2" ry="2"/>
-        <line class="sec" x1="50" y1="50" x2="50" y2="16" />
-      </g>
-    </svg>
-  </div>
+
+
+    <div class="tile is-ancestor">
+      <div class="tile is-vertical is-8">
+        <div class="tile">
+          <div class="tile is-parent">
+            <article class="tile is-child is-primary">
+              <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                  <button id="venus-terminal" class="button is-primary" onclick="">Terminal</button>
+                </div>
+                <div class="control">
+                  <button id="venus-files" class="button" onclick="">Files</button>
+                </div>
+                <div class="control">
+                  <button id="venus-wiki" class="button" onclick=""><a href="https://github.com/ThaumicMekanism/venus/wiki" target="_blank" style="color:black;">Wiki</a></button>
+                </div>
+                <div class="control">
+                  <button id="venus-url" class="button" onclick="driver.openURLMaker()">URL</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile is-parent">
+            <article class="tile is-child is-primary">
+              <div id="container" class="terminal" style="overflow-y:scroll; overflow-x:scroll; height:500px;">
+                <output></output>
+                <div id="input-line" class="input-line">
+                  <div class="prompt" id="currentprompt"></div><div><input class="cmdline" autocomplete="false" spellcheck="false" autofocus/></div>
+                </div>
+              </div>
+
+              <div class="clock-container">
+                <svg viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="45"/>
+                  <g>
+                    <rect class="hour" x="47.5" y="12.5" width="5" height="40" rx="2.5" ry="2.55" />
+                    <rect class="min" x="48.5" y="12.5" width="3" height="40" rx="2" ry="2"/>
+                    <line class="sec" x1="50" y1="50" x2="50" y2="16" />
+                  </g>
+                </svg>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="tile is-parent" align="center">
+          <article class="tile is-child">
+
+          </article>
+        </div>
+      </div>
+      <div class="tile is-ancestor">
+        <div class="tile is-vertical">
+          <div class="tile is-parent">
+            <article class="tile is-child" id="sidebar-listings-container">
+              <nav class="panel">
+                <p class="panel-tabs">
+                  <a id="settings-tab" onclick="driver.openSettingsTab()" class="is-active">Settings</a>
+                </p>
+                <nav id="settings-tab-view" class="panel">
+                  <p class="panel-tabs"></a>
+                    <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()" class="is-active">General</a>
+                    <a id="tracer-settings-tab" onclick="driver.openTracerSettingsTab()">Tracer</a>
+                    <a id="packages-tab" onclick="driver.openPackagesTab()">Packages</a>
+                  </p>
+                  <div id="general-settings-tab-view">
+                    <div id="addArgs-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <label class="label is-small" for="addArgs">Add Args</label>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <input id="addArgs" class="input" spellcheck="false">
+                          <button id="addArgsBtn" class="button" onclick="e = document.getElementById('addArgs'); driver.sim.addArg(e.value); e.value = ''" style="text-align: center;height: 45px;">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="textStart" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <label class="label is-small" for="text-start">Text Start</label>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <input id="text-start" class="input" onblur="driver.verifyText(this)" spellcheck="false">
+                        </div>
+                      </div>
+                    </div>
+                    <div id="sv-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="sv" class="button" onclick="if(window.svclr&&this.value==='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;">Save on Close</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" id="forsv" for="sv">Save on Close</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="alignAddr-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="alignAddr" class="button" onclick="toggleThis(this);driver.setAlignedAddressing(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Aligned<br>Addressing</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="alignAddr">Force Aligned Addressing?</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="mutableText-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="mutableText" class="button is-primary" onclick="toggleThis(this);driver.setMutableText(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Mutable Text</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="mutableText">Mutable Text?</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="ecallExit-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="ecallExit" class="button" onclick="toggleThis(this);driver.setOnlyEcallExit(this.value === 'true');" value="false" style="text-align: center;">Only Ecall Exit</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="ecallExit">Only Ecall Exit?</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="setRegsOnInit-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="setRegsOnInit" class="button is-primary" onclick="toggleThis(this);driver.setSetRegsOnInit(this.value === 'true');" value="true" style="text-align: center;">Default Reg States</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="setRegsOnInit">Set Registers on Init?</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="tracer-settings-tab-view">
+                    <div id="" class="panel-block">
+                      <div class="field is-horizontal">
+                        <article class="tile is-child is-primary" align="center">
+                          <h3>Registers Pattern:</h3>
+                          <small>To add tabs, type '\t' & new line, type '\n'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.<br><b>%output%</b> represents an ecall message out</small>
+                          <br>
+                          <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%output%%0%	%1%	%2%	%3%	%4%	%5%	%6%	%7%	%8%	%9%	%10%	%11%	%12%	%13%	%14%	%15%	%16%	%17%	%18%	%19%	%20%	%21%	%22%	%23%	%24%	%25%	%26%	%27%	%28%	%29%	%30%	%31%	%line%	%pc%	%inst%</textarea>
+                        </article>
+                      </div>
+                    </div>
+                    <div id="" class="panel-block" align="center">
+                      <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
+                    </div>
+                    <div id="tinst-first-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="tinst-first" class="button is-primary" onclick="toggleThis(this)" value="true">Inst First</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="tinst-first">Instruction first?</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="tPCWAddr-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="tPCWAddr" class="button is-primary" onclick="toggleThis(this)" value="true">PC Word Addr</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="tPCWAddr">PC Word Addressed?</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="tTwoStage-div" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="tTwoStage" class="button" onclick="toggleThis(this)" value="false">Two Stage</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="tTwoStage">Two Stage?</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="" class="panel-block">
+                      <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
+                      <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
+                    </div>
+                    <div id="" class="panel-block">
+                      <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
+                      <input id="tbase-val" type="number" class="input is-small" style="width:180px;" onblur="validateBase(this);" onkeyup="validateBase(this);" value=2 spellcheck="false">
+                    </div>
+                    <div id="" class="panel-block">
+                      <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
+                      <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
+                    </div>
+                  </div>
+                  <div id="packages-tab-view">
+                    <div id="" class="panel-block">
+                      <input id="package-url-val" type="text" class="input is-small" onblur="" onkeydown="if((event.keyCode ? event.keyCode : event.which) === 13){document.getElementById('addpkg').click()}" value="" placeholder="Package URL" spellcheck="false">
+                      <button id="addpkg" class="button is-primary" onclick="driver.addPackage(this)">Add Package</button>
+                    </div>
+                    <div id="package-msgs" class="panel-block">
+
+                    </div>
+                    <div id="package-list">
+                    </div>
+                  </div>
+                </nav>
+              </nav>
+            </article>
+          </div>
+          <div class="tile is-parent">
+            <article class="tile is-child">
+
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </section>
 <section class="section" id="simulator-tab-view">
   <div class="tile is-ancestor">
@@ -135,7 +339,6 @@
                 <a id="register-tab" class="is-active" onclick="driver.openRegisterTab()">Registers</a>
                 <a id="memory-tab" onclick="driver.openMemoryTab()">Memory</a>
                 <a id="cache-tab" onclick="driver.openCacheTab()">Cache</a>
-                <a id="settings-tab" onclick="driver.openSettingsTab()">Settings</a>
               </p>
               <nav id="register-tab-view" class="panel">
                 <p class="panel-tabs"></a>
@@ -1216,154 +1419,6 @@
                   </div>
                 </div>
               </div>
-              <nav id="settings-tab-view" class="panel">
-                <p class="panel-tabs"></a>
-                  <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()" class="is-active">General</a>
-                  <a id="tracer-settings-tab" onclick="driver.openTracerSettingsTab()">Tracer</a>
-                  <a id="packages-tab" onclick="driver.openPackagesTab()">Packages</a>
-                </p>
-                <div id="general-settings-tab-view">
-                  <div id="addArgs-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <label class="label is-small" for="addArgs">Add Args</label>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <input id="addArgs" class="input" spellcheck="false">
-                        <button id="addArgsBtn" class="button" onclick="e = document.getElementById('addArgs'); driver.sim.addArg(e.value); e.value = ''" style="text-align: center;height: 45px;">Add</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="textStart" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <label class="label is-small" for="text-start">Text Start</label>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <input id="text-start" class="input" onblur="driver.verifyText(this)" spellcheck="false">
-                      </div>
-                    </div>
-                  </div>
-                  <div id="sv-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="sv" class="button" onclick="if(window.svclr&&this.value==='false'){window.svclr = false;return;}window.svclr = false;toggleThis(this);driver.persistentStorage(this.value === 'true');" value="false" style="text-align: center;">Save on Close</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" id="forsv" for="sv">Save on Close</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="alignAddr-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="alignAddr" class="button" onclick="toggleThis(this);driver.setAlignedAddressing(this.value === 'true');" value="false" style="text-align: center;height: 45px;">Aligned<br>Addressing</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" for="alignAddr">Force Aligned Addressing?</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="mutableText-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="mutableText" class="button is-primary" onclick="toggleThis(this);driver.setMutableText(this.value === 'true');" value="true" style="text-align: center;height: 45px;">Mutable Text</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" for="mutableText">Mutable Text?</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="ecallExit-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="ecallExit" class="button" onclick="toggleThis(this);driver.setOnlyEcallExit(this.value === 'true');" value="false" style="text-align: center;">Only Ecall Exit</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" for="ecallExit">Only Ecall Exit?</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="setRegsOnInit-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="setRegsOnInit" class="button is-primary" onclick="toggleThis(this);driver.setSetRegsOnInit(this.value === 'true');" value="true" style="text-align: center;">Default Reg States</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" for="setRegsOnInit">Set Registers on Init?</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div id="tracer-settings-tab-view">
-                  <div id="" class="panel-block">
-                    <div class="field is-horizontal">
-                      <article class="tile is-child is-primary" align="center">
-                        <h3>Registers Pattern:</h3>
-                        <small>To add tabs, type '\t' & new line, type '\n'. The current valid symbols to add are:<br><b>%0% through %31%</b> which represent the registers<br><b>%line%</b> is the current line which it is on<br><b>%pc%</b> represents the pc at the current instruction.<br><b>%inst%</b> represents the current instruction.<br><b>%output%</b> represents an ecall message out</small>
-                        <br>
-                        <textarea id="tregPattern" class="textarea" placeholder="Please type in the format of the output you want.">%output%%0%	%1%	%2%	%3%	%4%	%5%	%6%	%7%	%8%	%9%	%10%	%11%	%12%	%13%	%14%	%15%	%16%	%17%	%18%	%19%	%20%	%21%	%22%	%23%	%24%	%25%	%26%	%27%	%28%	%29%	%30%	%31%	%line%	%pc%	%inst%</textarea>
-                      </article>
-                    </div>
-                  </div>
-                  <div id="" class="panel-block" align="center">
-                    <font size="2px" color="green">(&dArr; Green = True; White = false &dArr;)</font>
-                  </div>
-                  <div id="tinst-first-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="tinst-first" class="button is-primary" onclick="toggleThis(this)" value="true">Inst First</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" for="tinst-first">Instruction first?</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="tPCWAddr-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="tPCWAddr" class="button is-primary" onclick="toggleThis(this)" value="true">PC Word Addr</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" for="tPCWAddr">PC Word Addressed?</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="tTwoStage-div" class="panel-block">
-                    <div class="field is-horizontal">
-                      <div class="field-label">
-                        <button id="tTwoStage" class="button" onclick="toggleThis(this)" value="false">Two Stage</button>
-                      </div>
-                      <div class="field-body is-expanded">
-                        <label class="label" for="tTwoStage">Two Stage?</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="" class="panel-block">
-                    <label class="label is-small" for="ttot-cmds-val">Total number of commands: <br>(Negative means ignored)</label><br>
-                    <input id="ttot-cmds-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false">
-                  </div>
-                  <div id="" class="panel-block">
-                    <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
-                    <input id="tbase-val" type="number" class="input is-small" style="width:180px;" onblur="validateBase(this);" onkeyup="validateBase(this);" value=2 spellcheck="false">
-                  </div>
-                  <div id="" class="panel-block">
-                    <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
-                    <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
-                  </div>
-                </div>
-                <div id="packages-tab-view">
-                  <div id="" class="panel-block">
-                    <input id="package-url-val" type="text" class="input is-small" onblur="" onkeydown="if((event.keyCode ? event.keyCode : event.which) === 13){document.getElementById('addpkg').click()}" value="" placeholder="Package URL" spellcheck="false">
-                    <button id="addpkg" class="button is-primary" onclick="driver.addPackage(this)">Add Package</button>
-                  </div>
-                  <div id="package-msgs" class="panel-block">
-
-                  </div>
-                  <div id="package-list">
-                  </div>
-                </div>
-              </nav>
             </nav>
           </article>
         </div>
