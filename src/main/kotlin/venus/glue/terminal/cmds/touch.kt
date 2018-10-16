@@ -8,9 +8,8 @@ var touch = Command(
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.touch(args.joinToString(" "))
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
-            throw NotImplementedError()
-            return ArrayList<String>()
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
+            return arrayListOf("", ArrayList<String>())
         },
         help = """Creates a text/data file.
             |Usage: touch [filename]

@@ -56,16 +56,17 @@ class Terminal(var vfs: VirtualFileSystem) {
                 }
                 if (args.size == 1) {
                     val possibleCommands = ArrayList<String>()
+                    val prefix = args[0]
                     for (c in ktcmds) {
-                        if (c.startsWith(args[0])) {
+                        if (c.startsWith(prefix)) {
                             possibleCommands.add(c)
                         }
                     }
-                    return listTojsList(possibleCommands)
+                    return listTojsList(listOf(prefix, listTojsList(possibleCommands)))
                 } else {
                     val cmd = Command[args.removeAt(0)]
                     val options = cmd.tab(args, this, sudo)
-                    return listTojsList(options)
+                    return listTojsList(listOf(options[0], listTojsList(options[1] as List<Any?>)))
                 }
             }
         } catch (e: Throwable) {

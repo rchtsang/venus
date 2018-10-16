@@ -29,9 +29,12 @@ var edit = Command(
             }
             return ""
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
-            throw NotImplementedError()
-            return ArrayList<String>()
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
+            if (args.size == 1) {
+                val prefix = args[args.size - 1]
+                return arrayListOf(prefix, t.vfs.filesFromPrefix(prefix))
+            }
+            return arrayListOf("", ArrayList<String>())
         },
         help = "edit: Takes in one argument [filename] and will copy the contents to the editor tab and then go to the editor tab." +
                 "\nUsage: edit [filename]"

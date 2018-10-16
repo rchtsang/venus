@@ -16,17 +16,18 @@ var help = Command(
                 "help: Could not find command '${args[0]}'"
             }
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             return if (args.size == 1) {
                 val possibleCommands = ArrayList<String>()
+                val prefix = args[0]
                 for (c in Command.getCommands()) {
-                    if (c.startsWith(args[0])) {
+                    if (c.startsWith(prefix)) {
                         possibleCommands.add(c)
                     }
                 }
-                possibleCommands
+                arrayListOf(prefix, possibleCommands)
             } else {
-                ArrayList()
+                arrayListOf("", ArrayList<String>())
             }
         },
         help = "help: This command takes in zero or one argument.\nIf you do not have any arguments, all of the commands" +

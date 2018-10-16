@@ -20,9 +20,12 @@ var save = Command(
             }
             return t.vfs.write(args[0], txt)
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
-            throw NotImplementedError()
-            return ArrayList<String>()
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
+            if (args.size == 1) {
+                val prefix = args[args.size - 1]
+                return arrayListOf(prefix, t.vfs.filesFromPrefix(prefix))
+            }
+            return arrayListOf("", ArrayList<String>())
         },
         help = """Saves the data in the editor to the specified file.
             |Usage: save [filename]
