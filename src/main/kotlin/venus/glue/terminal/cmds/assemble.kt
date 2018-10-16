@@ -48,9 +48,13 @@ var assemble = Command(
             file.parent.addChild(p)
             return msg
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
-            throw NotImplementedError()
-            return ArrayList<String>()
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
+            if (args.size == 1) {
+                val prefix = args[args.size - 1]
+                return arrayListOf(prefix, t.vfs.filesFromPrefix(prefix))
+            }
+            return arrayListOf("", ArrayList<String>())
         },
-        help = "assemble: takes in two arguments: [text in] {[program out], a.out}"
+        help = """assemble: takes in two arguments: [text in] {[program out], a.out}
+            |Returns a.out if no second argument exists""".trimMargin()
 )

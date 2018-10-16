@@ -149,4 +149,14 @@ import venus.simulator.SimulatorSettings
         }
         return templocation
     }
+
+    fun filesFromPrefix(prefix: String): ArrayList<String> {
+        val fnames = ArrayList<String>()
+        for (key: String in this.currentLocation.contents.keys) {
+            if (key.startsWith(prefix)) {
+                fnames.add(key)
+            }
+        }
+        return fnames
+    }
 }

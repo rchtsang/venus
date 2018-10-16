@@ -8,9 +8,8 @@ var ls = Command(
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             return t.vfs.ls()
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             throw NotImplementedError()
-            return ArrayList<String>()
         },
         help = "This command prints out the contents of the current folder." +
                 "\nIt currently does not take in any arguments." +

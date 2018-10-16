@@ -33,9 +33,12 @@ var run = Command(
             }
             return sim.stdout
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
-            throw NotImplementedError()
-            return ArrayList<String>()
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
+            if (args.size == 1) {
+                val prefix = args[args.size - 1]
+                return arrayListOf(prefix, t.vfs.filesFromPrefix(prefix))
+            }
+            return arrayListOf("", ArrayList<String>())
         },
         help = """Runs the inputed linked program with given arguments.
             |Usage: run [program name] [argument]...

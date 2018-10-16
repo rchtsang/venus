@@ -9,8 +9,7 @@ var tree = Command(
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             throw CommandNotImplementedError("tree")
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             throw NotImplementedError()
-            return ArrayList<String>()
         }
 )

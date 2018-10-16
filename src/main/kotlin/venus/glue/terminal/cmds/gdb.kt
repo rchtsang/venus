@@ -37,8 +37,7 @@ var gdb = Command(
             }
             return ""
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             throw NotImplementedError()
-            return ArrayList<String>()
         }
 )

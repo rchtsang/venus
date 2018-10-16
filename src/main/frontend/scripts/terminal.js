@@ -65,13 +65,15 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
     if (e.keyCode == 9) { // tab
         try {
             if (this.value) {
-                var whattodo = driver.terminal.tab(this.value);
+                var data = driver.terminal.tab(this.value);
+                whattodo = data[1];
+                prefix = data[0];
                 if (Array.isArray(whattodo)) {
                     if (whattodo.length === 0) {
                         // Does nothing atm.
                         e.preventDefault();
                     } else if (whattodo.length === 1) {
-                        this.value += whattodo[0];
+                        this.value += whattodo[0].replace(RegExp("^" + prefix), '');
                         e.preventDefault();
                     } else {
                         // Duplicate current input and append to output section.

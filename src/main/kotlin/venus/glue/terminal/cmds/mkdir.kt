@@ -11,9 +11,8 @@ var mkdir = Command(
             }
             return t.vfs.mkdir(args.joinToString(" "))
         },
-        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<String> {
-            throw NotImplementedError()
-            return ArrayList<String>()
+        tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
+            return arrayListOf("", ArrayList<String>())
         },
         help = """This command makes a folder in the current directory or path.
             |Usage: mkdir [new folder name]

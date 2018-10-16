@@ -4,7 +4,7 @@ open class Command(
     val name: String,
     val execute: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> String =
             { a, b, c -> throw NotImplementedError() },
-    val tab: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> MutableList<String> =
+    val tab: (parsedInput: MutableList<String>, t: Terminal, sudo: Boolean) -> MutableList<Any> =
             { a, b, c -> throw NotImplementedError() },
     val help: String = "Command does not have a help yet!"
 ) {
