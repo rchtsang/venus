@@ -271,7 +271,7 @@
       <div class="tile">
         <div class="tile is-parent">
           <article class="tile is-child is-primary" id="simulator-controls-container">
-            <div class="field is-grouped is-grouped-centered">
+            <div class="field is-grouped is-grouped-centered" id="simulator-buttons" style="display:none;">
               <div class="control">
                 <button id="simulator-run" class="button is-primary" onclick="driver.run()">Run</button>
               </div>
@@ -289,6 +289,11 @@
               </div>
               <div class="control">
                 <button id="simulator-trace" class="button is-primary" onclick="driver.trace()">Trace</button>
+              </div>
+            </div>
+            <div class="field is-grouped is-grouped-centered" id="simulator-assemble-buttons">
+              <div class="control">
+                <button id="simulator-assemble-simulator" class="button is-primary" onclick="driver.assembleSimulator()">Assemble & Simulate</button>
               </div>
             </div>
           </article>

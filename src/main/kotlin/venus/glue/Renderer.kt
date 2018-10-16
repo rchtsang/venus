@@ -73,18 +73,29 @@ internal object Renderer {
      *
      * @param displaySim the simulator to show
      */
-    fun renderSimulator(displaySim: Simulator) {
+    fun renderSimulator() {
         renderTab("simulator", mainTabs)
+    }
+
+    fun loadSimulator(displaySim: Simulator) {
         sim = displaySim
         setRunButtonSpinning(false)
         renderProgramListing()
         clearConsole()
         updateAll()
+        val simbtns = document.getElementById("simulator-buttons") as HTMLDivElement
+        val simassmbbtns = document.getElementById("simulator-assemble-buttons") as HTMLDivElement
+        simassmbbtns.style.display = "none"
+        simbtns.style.display = ""
     }
 
     /** Shows the editor tab and hides other tabs */
     fun renderEditor() {
         renderTab("editor", mainTabs)
+        val simbtns = document.getElementById("simulator-buttons") as HTMLDivElement
+        val simassmbbtns = document.getElementById("simulator-assemble-buttons") as HTMLDivElement
+        simassmbbtns.style.display = ""
+        simbtns.style.display = "none"
     }
 
     fun renderVenus() {

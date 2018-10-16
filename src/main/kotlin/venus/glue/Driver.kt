@@ -76,16 +76,20 @@ import kotlin.dom.removeClass
      * Assembles the text in the editor, and then renders the simulator.
      */
     @JsName("openSimulator") fun openSimulator() {
+        Renderer.renderSimulator()
+    }
+
+    @JsName("assembleSimulator") fun assembleSimulator() {
         if (this.ready) {
             try {
                 val success = assemble(getText())
                 if (success) {
-                    Renderer.renderSimulator(sim)
+                    Renderer.loadSimulator(sim)
                     setCacheSettings()
                     Renderer.updateCache(Address(0, MemSize.WORD))
                 }
             } catch (e: Throwable) {
-                Renderer.renderSimulator(Simulator(LinkedProgram()))
+                Renderer.loadSimulator(Simulator(LinkedProgram()))
                 handleError("Open Simulator", e)
             }
         } else {
@@ -250,7 +254,7 @@ import kotlin.dom.removeClass
      * Resets the simulator to its initial state
      */
     @JsName("reset") fun reset() {
-        openSimulator()
+        assembleSimulator()
     }
 
     @JsName("toggleBreakpoint") fun addBreakpoint(idx: Int) {
