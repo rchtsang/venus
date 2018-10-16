@@ -154,7 +154,12 @@ import venus.simulator.SimulatorSettings
         val fnames = ArrayList<String>()
         for (key: String in this.currentLocation.contents.keys) {
             if (key.startsWith(prefix)) {
-                fnames.add(key)
+                val obj = this.currentLocation.contents[key] as VFSObject
+                var k = key
+                if (obj.type in listOf(VFSType.Folder, VFSType.Drive)) {
+                    k += "/"
+                }
+                fnames.add(k)
             }
         }
         return fnames
