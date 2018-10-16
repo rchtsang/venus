@@ -66,6 +66,8 @@ import kotlin.dom.removeClass
 
     fun initTimeout() {
         loadAll(useLS)
+        Renderer.loadSimulator(this.sim)
+        Renderer.renderAssembleButtons()
         this.saveInterval = window.setInterval(Driver::saveIntervalFn, 5000)
         this.ready = true
     }
@@ -77,6 +79,10 @@ import kotlin.dom.removeClass
      */
     @JsName("openSimulator") fun openSimulator() {
         Renderer.renderSimulator()
+    }
+
+    @JsName("noAssemble") fun noAssemble() {
+        Renderer.renderSimButtons()
     }
 
     @JsName("assembleSimulator") fun assembleSimulator() {
