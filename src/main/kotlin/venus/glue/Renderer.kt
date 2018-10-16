@@ -83,19 +83,27 @@ internal object Renderer {
         renderProgramListing()
         clearConsole()
         updateAll()
+        renderSimButtons()
+    }
+
+    fun renderSimButtons() {
         val simbtns = document.getElementById("simulator-buttons") as HTMLDivElement
         val simassmbbtns = document.getElementById("simulator-assemble-buttons") as HTMLDivElement
         simassmbbtns.style.display = "none"
         simbtns.style.display = ""
     }
 
-    /** Shows the editor tab and hides other tabs */
-    fun renderEditor() {
-        renderTab("editor", mainTabs)
+    fun renderAssembleButtons() {
         val simbtns = document.getElementById("simulator-buttons") as HTMLDivElement
         val simassmbbtns = document.getElementById("simulator-assemble-buttons") as HTMLDivElement
         simassmbbtns.style.display = ""
         simbtns.style.display = "none"
+    }
+
+    /** Shows the editor tab and hides other tabs */
+    fun renderEditor() {
+        renderTab("editor", mainTabs)
+        renderAssembleButtons()
     }
 
     fun renderVenus() {
