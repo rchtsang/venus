@@ -128,8 +128,8 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
         var input = line.querySelector('input.cmdline');
         input.autofocus = false;
         input.readOnly = true;
-        line.hidden = true;
         output_.appendChild(line);
+        document.getElementById("input-line").style.display = "none";
 
         _CMDS = ['clear', 'clock', 'date', 'exit', 'help', 'uname'];
 
@@ -143,7 +143,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
         if (cmd === "sudo" && args.length >= 2) {
             cmd = args[1].toLowerCase()
         }
-
+        var noline = false;
           switch (cmd) {
               case 'exit':
                   output_.innerHTML = '';
@@ -151,12 +151,12 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                   window.term.init();
                   driver.VFS.reset();
                   setDir();
-                  line.hidden = false;
+                  terminal_showline(line, this);
                   return;
               case 'clear':
                   output_.innerHTML = '';
                   this.value = '';
-                  line.hidden = false;
+                  terminal_showline(line, this);
                   return;
               case 'clock':
                   var appendDiv = jQuery($('.clock-container')[0].outerHTML);
@@ -178,7 +178,14 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                   break;
               default:
                   if (cmd) {
-                      output(driver.terminal.processInput(this.value || ""));
+                      var out = driver.terminal.processInput(this.value || "");
+                      if (out.startsWith("VDIRECTIVE:RUNNING...")) {
+                          output(out.replace(RegExp("^VDIRECTIVE:RUNNING..."), ""));
+                          noline = true;
+                          window.setTimeout(getSimOutData, 100, output, line, this)
+                      } else {
+                          output(out);
+                      }
                   }
           };
             setDir();
@@ -187,8 +194,9 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
       }
 
       document.getElementById("container").scrollTo(0, getDocHeight_());
-      this.value = ''; // Clear/setup line for next input.
-      line.hidden = false;
+        if (!noline) {
+            terminal_showline(line, this)
+        }
     }
   }
 
@@ -216,8 +224,16 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   }
 
   //
-  function output(html) {
-    output_.insertAdjacentHTML('beforeEnd', '<p>' + html.replace(/\n/g, "<br/>") + '</p>');
+  function output(html, justappendtolast) {
+      html = html.replace(/\n/g, "<br/>");
+      var c = output_.children;
+      var child = c[c.length - 1];
+      if (justappendtolast && child !== undefined) {
+          child.innerHTML += html
+      } else {
+          output_.insertAdjacentHTML('beforeEnd', '<p>' + html + '</p>');
+      }
+      document.getElementById("container").scrollTo(0, getDocHeight_());
   }
 
   // Cross-browser impl to get document's height.
@@ -239,11 +255,28 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   //
   return {
     init: function() {
-      output('<img align="left" src="images/favicon.png" width="100" height="100" style="padding: 0px 10px 20px 0px"><h2 style="letter-spacing: 4px">Venus Web Terminal</h2><p>' + new Date() + '</p><p>Enter "help" for more information.</p>');
+        output('<img align="left" src="images/favicon.png" width="100" height="100" style="padding: 0px 10px 20px 0px"><h2 style="letter-spacing: 4px">Venus Web Terminal</h2><p>' + new Date() + '</p><p>Enter "help" for more information.</p>');
     },
-    output: output
+    output: output,
+    getDocHeight_: getDocHeight_
   }
 };
+
+function terminal_showline(line, elm) {
+    var input = document.getElementById("input-line");
+    input.querySelector("input.cmdline").value = ''; // Clear/setup line for next input.
+    input.style.display = "";
+}
+
+function getSimOutData(output, line, elm) {
+    output(driver.destructiveGetSimOut(), true);
+    if (!driver.currentlyRunning()) {
+        terminal_showline(line, elm);
+        document.getElementById("container").scrollTo(0, term.getDocHeight_());
+        return;
+    }
+    window.setTimeout(getSimOutData, 25, output, line, this)
+}
 
 $(function() {
 
@@ -266,9 +299,9 @@ $(function() {
         function r(cls, deg) {
             $('.' + cls).attr('transform', 'rotate('+ deg +' 50 50)')
         }
-        var d = new Date()
-        r("sec", 6*d.getSeconds())
-        r("min", 6*d.getMinutes())
+        var d = new Date();
+        r("sec", 6*d.getSeconds());
+        r("min", 6*d.getMinutes());
         r("hour", 30*(d.getHours()%12) + d.getMinutes()/2)
     }, 1000);
 
