@@ -206,15 +206,19 @@ import kotlin.dom.removeClass
         }
         try {
             val linked = Linker.link(listOf(prog))
-            sim = Simulator(linked, this.simSettings)
-            this.mainCache.reset()
-            sim.state.cache = this.mainCache
-            tr = Tracer(sim)
+            this.loadSim(linked)
             return true
         } catch (e: AssemblerError) {
             Renderer.displayError(e)
             return false
         }
+    }
+
+    fun loadSim(linked: LinkedProgram) {
+        sim = Simulator(linked, this.simSettings)
+        this.mainCache.reset()
+        sim.state.cache = this.mainCache
+        tr = Tracer(sim)
     }
 
     @JsName("externalAssemble") fun externalAssemble(text: String): Any {
