@@ -251,7 +251,7 @@ import kotlin.dom.removeClass
         } else {
             try {
                 Renderer.setRunButtonSpinning(true)
-                timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
+                timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME, true)
                 sim.step() // walk past breakpoint
             } catch (e: Throwable) {
                 runEnd()
@@ -274,11 +274,11 @@ import kotlin.dom.removeClass
 
     internal const val TIMEOUT_CYCLES = 100
     internal const val TIMEOUT_TIME = 10
-    internal fun runStart() {
+    internal fun runStart(useBreakPoints: Boolean) {
         try {
             var cycles = 0
             while (cycles < TIMEOUT_CYCLES) {
-                if (sim.isDone() || sim.atBreakpoint()) {
+                if (sim.isDone() || (sim.atBreakpoint() && useBreakPoints)) {
                     runEnd()
                     Renderer.updateAll()
                     return
@@ -290,7 +290,7 @@ import kotlin.dom.removeClass
                 cycles++
             }
 
-            timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME)
+            timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME, useBreakPoints)
         } catch (e: Throwable) {
             runEnd()
             handleError("RunStart", e, e is AlignmentError || e is StoreError)

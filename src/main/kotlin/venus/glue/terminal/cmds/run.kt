@@ -15,6 +15,7 @@ import venus.simulator.Simulator
 
 var run = Command(
         name = "run",
+        // @TODO Fix how will intemperate files vs args.
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             if (args.size == 0) {
                 return "run: Takes in names of programs which you want to link together and run."

@@ -16,6 +16,7 @@ import venus.riscv.Program
 
 var gdb = Command(
         name = "gdb",
+        // @TODO Fix how will intemperate files vs args.
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             if (args.size < 1) {
                 return "gdb: Takes in at least one File/Program or a single LinkedProgram"
