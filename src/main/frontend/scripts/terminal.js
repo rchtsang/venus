@@ -16,10 +16,6 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   var histpos_ = 0;
   var histtemp_ = 0;
 
-  window.addEventListener('click', function(e) {
-    cmdLine_.focus();
-  }, false);
-
   cmdLine_.addEventListener('click', inputTextClick_, false);
   cmdLine_.addEventListener('keydown', historyHandler_, false);
   cmdLine_.addEventListener('keydown', processNewCommand_, false);
@@ -258,6 +254,12 @@ $(function() {
     // Initialize a new terminal object
     window.term = new Terminal('#input-line .cmdline', '#container output');
     term.init();
+
+    var container = document.getElementById("container");
+    var cmdline = document.querySelector('#input-line .cmdline');
+    container.addEventListener('click', function(e) {
+        cmdline.focus();
+    }, false);
 
     // Update the clock every second
     setInterval(function() {
