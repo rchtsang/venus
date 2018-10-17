@@ -93,6 +93,7 @@ var gdb = Command(
                 Renderer.loadSimulator(Driver.sim)
                 Driver.setCacheSettings()
                 Renderer.updateCache(Address(0, MemSize.WORD))
+                Driver.openSimulator()
             } catch (e: Throwable) {
                 console.error(e)
                 return "gdb: An error has occurred"

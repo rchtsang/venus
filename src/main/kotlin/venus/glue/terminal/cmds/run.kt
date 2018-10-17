@@ -89,15 +89,15 @@ var run = Command(
             val linkedProgram = linkedprogs[0]
             val sim: Simulator
             try {
-                sim = Simulator(linkedProgram, Driver.simSettings)
+                Driver.loadSim(linkedProgram)
                 for (arg in args) {
-                    sim.addArg(arg)
+                    Driver.sim.addArg(arg)
                 }
-                sim.run()
+                Driver.runStart(false)
             } catch (e: Throwable) {
                 return "run: An error occurred when running the programs execution: $e"
             }
-            return sim.stdout
+            return "VDIRECTIVE:RUNNING..."
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             if (args.size > 0) {

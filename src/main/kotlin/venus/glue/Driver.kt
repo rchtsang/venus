@@ -395,7 +395,13 @@ import kotlin.dom.removeClass
         Renderer.renderGeneralSettingsTab()
     }
 
-    internal fun currentlyRunning(): Boolean = timer != null
+    @JsName("currentlyRunning") fun currentlyRunning(): Boolean = timer != null
+
+    @JsName("destructiveGetSimOut") fun destrictiveGetSimOut(): String {
+        val tmp = this.sim.stdout
+        this.sim.stdout = ""
+        return tmp
+    }
 
     /**
      * Save a register's value
