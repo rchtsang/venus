@@ -264,7 +264,19 @@ import kotlin.dom.removeClass
      * Resets the simulator to its initial state
      */
     @JsName("reset") fun reset() {
-        assembleSimulator()
+        try {
+            val args = this.sim.args
+            this.sim = Simulator(this.sim.linkedProgram, this.sim.settings, this.sim.simulatorID)
+            for (arg in args) {
+                this.sim.addArg(arg)
+            }
+            Renderer.loadSimulator(sim)
+            setCacheSettings()
+            Renderer.updateCache(Address(0, MemSize.WORD))
+        } catch (e: Throwable) {
+            Renderer.loadSimulator(Simulator(LinkedProgram()))
+            handleError("Reset Simulator", e)
+        }
     }
 
     @JsName("toggleBreakpoint") fun addBreakpoint(idx: Int) {
@@ -297,7 +309,7 @@ import kotlin.dom.removeClass
         }
     }
 
-    internal fun runEnd() {
+    @JsName("runEnd") fun runEnd() {
         handleNotExitOver()
         Renderer.updatePC(sim.getPC())
         Renderer.setRunButtonSpinning(false)
