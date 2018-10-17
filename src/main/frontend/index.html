@@ -41,27 +41,18 @@
   </section>
 </div>
 <section class="section" id="venus-tab-view">
-
-
-
     <div class="tile is-ancestor">
       <div class="tile is-vertical is-8">
         <div class="tile">
-          <div class="tile is-parent">
+          <div class="tile is-parent" style="padding:0;">
             <article class="tile is-child is-primary">
-              <div class="field is-grouped is-grouped-centered">
-                <div class="control">
-                  <button id="venus-terminal" class="button is-primary" onclick="">Terminal</button>
-                </div>
-                <div class="control">
-                  <button id="venus-files" class="button" onclick="">Files</button>
-                </div>
-                <div class="control">
-                  <button id="venus-url" class="button" onclick="driver.openURLMaker()">URL</button>
-                </div>
-                <div class="control">
-                  <button id="venus-wiki" class="button" onclick=""><a href="https://github.com/ThaumicMekanism/venus/wiki" target="_blank" style="color:black;">Wiki</a></button>
-                </div>
+              <div class="tabs is-boxed is-centered" style="margin-top: 0;">
+                <ul>
+                  <li id="venus-terminal-tab" class="is-active"><a onclick="">Terminal</a></li>
+                  <li id="venus-files-tab"><a onclick="">Files</a></li>
+                  <li id="venus-url-tab"><a onclick="">URL</a></li>
+                  <li><a href="https://github.com/ThaumicMekanism/venus/wiki" target="_blank" style="color:black;">Wiki</a></li>
+                </ul>
               </div>
             </article>
           </div>
@@ -293,7 +284,7 @@
             </div>
             <div class="field is-grouped is-grouped-centered" id="simulator-assemble-buttons">
               <div class="control">
-                <button id="simulator-assemble-simulator" class="button is-primary" onclick="driver.assembleSimulator()">Assemble & Simulate</button>
+                <button id="simulator-assemble-simulator" class="button is-primary" onclick="driver.assembleSimulator()">Assemble & Simulate from Editor</button>
               </div>
               <div class="control">
                 <button id="simulator-no-assemble" class="button" onclick="driver.noAssemble()">Cancel</button>
