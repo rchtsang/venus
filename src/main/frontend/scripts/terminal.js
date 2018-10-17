@@ -181,6 +181,9 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                       var out = driver.terminal.processInput(this.value || "");
                       if (out.startsWith("VDIRECTIVE:RUNNING...")) {
                           output(out.replace(RegExp("^VDIRECTIVE:RUNNING..."), ""));
+                          output_.parentElement.insertAdjacentHTML('beforeEnd', `
+                          <button id='term_stop_btn' style='height:auto;' class="button is-primary" onclick="driver.runEnd();">Stop Program</button>
+                          `);
                           noline = true;
                           window.setTimeout(getSimOutData, 100, output, line, this)
                       } else {
@@ -273,6 +276,14 @@ function getSimOutData(output, line, elm) {
     if (!driver.currentlyRunning()) {
         terminal_showline(line, elm);
         document.getElementById("container").scrollTo(0, term.getDocHeight_());
+        var stopbtn = document.getElementById("term_stop_btn");
+        if (stopbtn) {
+            stopbtn.parentElement.removeChild(stopbtn);
+        }
+        var sout = document.getElementById("console-output");
+        if (sout) {
+            sout.value = "";
+        }
         return;
     }
     window.setTimeout(getSimOutData, 25, output, line, this)
