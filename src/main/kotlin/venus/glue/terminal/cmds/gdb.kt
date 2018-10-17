@@ -12,7 +12,6 @@ import venus.linker.Linker
 import venus.riscv.Address
 import venus.riscv.MemSize
 import venus.riscv.Program
-import venus.simulator.Simulator
 /* ktlint-enable no-wildcard-imports */
 
 var gdb = Command(
@@ -89,10 +88,8 @@ var gdb = Command(
             }
             val lp = linkedprogs[0]
             try {
-                val sim = Simulator(lp, t.vfs.simSettings)
-                Renderer.renderSimulator()
-                Driver.sim = sim
-                Renderer.loadSimulator(sim)
+                Driver.loadSim(lp)
+                Renderer.loadSimulator(Driver.sim)
                 Driver.setCacheSettings()
                 Renderer.updateCache(Address(0, MemSize.WORD))
             } catch (e: Throwable) {

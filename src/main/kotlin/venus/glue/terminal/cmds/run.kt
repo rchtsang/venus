@@ -1,6 +1,7 @@
 package venus.glue.terminal.cmds
 
 import venus.assembler.Assembler
+import venus.glue.Driver
 import venus.glue.terminal.Command
 import venus.glue.terminal.Terminal
 import venus.glue.vfs.VFSFile
@@ -87,7 +88,7 @@ var run = Command(
             val linkedProgram = linkedprogs[0]
             val sim: Simulator
             try {
-                sim = Simulator(linkedProgram, t.vfs.simSettings)
+                sim = Simulator(linkedProgram, Driver.simSettings)
                 for (arg in args) {
                     sim.addArg(arg)
                 }
