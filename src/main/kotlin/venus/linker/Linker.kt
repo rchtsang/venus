@@ -74,7 +74,7 @@ object Linker {
                 if (toAddress != null) {
                     /* TODO: fix this for variable length instructions */
                     val mcode = linkedProgram.prog.insts[location / 4]
-                    relocator(mcode, location, toAddress)
+                    relocator(mcode, location, toAddress + textTotalOffset)
                 } else {
                     /* need to relocate globally */
                     toRelocate.add(RelocationInfo(relocator, location, label))

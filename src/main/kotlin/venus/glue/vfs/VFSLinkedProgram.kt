@@ -10,7 +10,7 @@ class VFSLinkedProgram(override var label: String, override var parent: VFSObjec
         val innerProgram = "innerprogram"
         fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {
             val file = VFSLinkedProgram(jsonContainer.label, parent)
-            file.setLinkedProgram(jsonContainer.innerobj as LinkedProgram)
+            // file.setLinkedProgram(jsonContainer.innerobj as LinkedProgram)
             return file
         }
     }
