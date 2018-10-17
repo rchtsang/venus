@@ -39,4 +39,11 @@ interface VFSObject {
         contents.remove(name)
         return true
     }
+    fun stringify(): JsonContainer {
+        val me = JsonContainer()
+        me.label = this.label
+        me.permissions = this.permissions
+        me.type = this.type.toString()
+        return me
+    }
 }
