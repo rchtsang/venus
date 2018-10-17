@@ -102,7 +102,7 @@ var gdb = Command(
             return ""
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
-            if (args.size == 1) {
+            if (args.size > 0) {
                 val prefix = args[args.size - 1]
                 return arrayListOf(prefix, t.vfs.filesFromPrefix(prefix))
             }

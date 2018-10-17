@@ -94,7 +94,7 @@ private fun sbrk(sim: Simulator) {
 
 private fun exit(sim: Simulator) {
     sim.setPC(MemorySegments.STATIC_BEGIN)
-    sim.ecallMsg = "exiting the simulator"
+    // sim.ecallMsg = "exiting the simulator"
 }
 
 private fun printChar(sim: Simulator) {
@@ -106,6 +106,6 @@ private fun printChar(sim: Simulator) {
 private fun exitWithCode(sim: Simulator) {
     sim.setPC(MemorySegments.STATIC_BEGIN)
     val retVal = sim.getReg(11)
-    sim.ecallMsg = "Exited with error code $retVal"
-    Renderer.printConsole("Exited with error code $retVal\n")
+    sim.ecallMsg = "\nExited with error code $retVal"
+    Renderer.printConsole("\nExited with error code $retVal\n")
 }
