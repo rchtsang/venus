@@ -18,7 +18,13 @@ var save = Command(
                 console.error(e)
                 return "save: Could not save file!"
             }
-            val result = t.vfs.write(args[0], txt)
+            var result = t.vfs.write(args[0], txt)
+            if (result != "") {
+                result = t.vfs.touch(args[0])
+                if (result == "") {
+                    result = t.vfs.write(args[0], txt)
+                }
+            }
             if (result == "") {
                 t.vfs.save()
             }
