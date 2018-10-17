@@ -1,10 +1,16 @@
 package venus.glue.vfs
 
+import venus.glue.Driver
 import venus.simulator.SimulatorSettings
 
 @JsName("VirtualFileSystem") class VirtualFileSystem(val defaultDriveName: String, val simSettings: SimulatorSettings = SimulatorSettings()) {
     var sentinel = VFSDrive(defaultDriveName, VFSDummy())
     var currentLocation: VFSObject = sentinel
+
+    companion object {
+        val LSName = "VFS_DATA"
+    }
+
     init {
         currentLocation.parent = currentLocation
     }
@@ -176,5 +182,20 @@ import venus.simulator.SimulatorSettings
         newsent.parent = newsent
         this.sentinel = newsent
         this.currentLocation = this.sentinel
+    }
+
+    fun load() {
+        val orig = "NULL"
+        val vfsJSON = Driver.LS.safeget(LSName, orig)
+        if (vfsJSON != orig) {
+            this.parse(vfsJSON)
+        }
+    }
+
+    fun save() {
+        if (Driver.useLS) {
+            val vfsJSON = this.stringify()
+            Driver.LS.set(LSName, vfsJSON)
+        }
     }
 }

@@ -971,6 +971,12 @@ import kotlin.dom.removeClass
                 console.warn("An error occurred when loading the cache data!")
                 console.warn(e)
             }
+            try {
+                Driver.VFS.load()
+            } catch (e: Throwable) {
+                console.warn("An error occurred when loading the VFS data!")
+                console.warn(e)
+            }
         } else {
             console.log("Local Storage has been disabled!")
         }
