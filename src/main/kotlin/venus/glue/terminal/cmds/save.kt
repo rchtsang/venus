@@ -18,7 +18,11 @@ var save = Command(
                 console.error(e)
                 return "save: Could not save file!"
             }
-            return t.vfs.write(args[0], txt)
+            val result = t.vfs.write(args[0], txt)
+            if (result == "") {
+                t.vfs.save()
+            }
+            return result
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             if (args.size == 1) {

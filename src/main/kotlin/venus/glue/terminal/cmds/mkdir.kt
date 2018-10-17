@@ -9,7 +9,11 @@ var mkdir = Command(
             if (args.size < 1) {
                 return "mkdir: mkdir takes in a folder name."
             }
-            return t.vfs.mkdir(args.joinToString(" "))
+            val result = t.vfs.mkdir(args[0])
+            if (result == "") {
+                t.vfs.save()
+            }
+            return result
         },
         tab = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             return arrayListOf("", ArrayList<String>())

@@ -32,6 +32,8 @@ fun handleFileUploads(e: HTMLInputElement, t: Terminal) {
         }
         /* This is to clear the upload button of files. */
         e.value = ""
+        // Need to save the vfs after we upload all the files.
+        t.vfs.save()
     } else {
         window.setTimeout({ e: HTMLInputElement, t: Terminal -> handleFileUploads(e, t) }, 100, e, t)
     }
