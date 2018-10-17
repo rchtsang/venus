@@ -8,6 +8,11 @@ class VFSProgram(override var label: String, override var parent: VFSObject, pro
     override var permissions = VFSPermissions()
     companion object {
         val innerProgram = "innerprogram"
+        fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {
+            val file = VFSProgram(jsonContainer.label, parent)
+            file.setProgram(jsonContainer.innerobj as Program)
+            return file
+        }
     }
     init {
         contents[innerProgram] = prog
@@ -17,5 +22,14 @@ class VFSProgram(override var label: String, override var parent: VFSObject, pro
     }
     fun setProgram(p: Program) {
         contents[innerProgram] = p
+    }
+
+    override fun stringify(): JsonContainer {
+        val me = JsonContainer()
+        me.label = this.label
+        me.permissions = this.permissions
+        me.type = this.type.toString()
+        me.innerobj = this.contents[innerProgram] as Any
+        return me
     }
 }

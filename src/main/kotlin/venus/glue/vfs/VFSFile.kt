@@ -6,6 +6,11 @@ class VFSFile(override var label: String, override var parent: VFSObject) : VFSO
     override var permissions = VFSPermissions()
     companion object {
         val innerTxt = "innertext"
+        fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {
+            val file = VFSFile(jsonContainer.label, parent)
+            file.setText(jsonContainer.innerobj as String)
+            return file
+        }
     }
     init {
         contents[innerTxt] = ""
@@ -15,5 +20,14 @@ class VFSFile(override var label: String, override var parent: VFSObject) : VFSO
     }
     fun setText(s: String) {
         contents[innerTxt] = s
+    }
+
+    override fun stringify(): JsonContainer {
+        val me = JsonContainer()
+        me.label = this.label
+        me.permissions = this.permissions
+        me.type = this.type.toString()
+        me.innerobj = this.contents[innerTxt] as String
+        return me
     }
 }
