@@ -48,9 +48,9 @@
             <article class="tile is-child is-primary">
               <div class="tabs is-boxed is-centered" style="margin-top: 0;">
                 <ul>
-                  <li id="venus-terminal-tab" class="is-active"><a onclick="">Terminal</a></li>
-                  <li id="venus-files-tab"><a onclick="">Files</a></li>
-                  <li id="venus-url-tab"><a onclick="">URL</a></li>
+                  <li id="venus-terminal-tab" class="is-active"><a onclick="driver.openVenusTab('venus-terminal');">Terminal</a></li>
+                  <li id="venus-files-tab"><a onclick="driver.openVenusTab('venus-files');">Files</a></li>
+                  <li id="venus-url-tab"><a onclick="driver.openVenusTab('venus-url');">URL</a></li>
                   <li><a href="https://github.com/ThaumicMekanism/venus/wiki" target="_blank" style="color:black;">Wiki</a></li>
                 </ul>
               </div>
@@ -60,22 +60,30 @@
         <div class="tile">
           <div class="tile is-parent">
             <article class="tile is-child is-primary">
-              <div id="container" class="terminal" style="overflow-y:scroll; overflow-x:scroll; height:500px;">
-                <output></output>
-                <div id="input-line" class="input-line">
-                  <div class="prompt" id="currentprompt"></div><div><input class="cmdline" autocomplete="false" spellcheck="false" autofocus/></div>
+              <div id="venus-terminal-tab-view">
+                <div id="container" class="terminal" style="overflow-y:scroll; overflow-x:scroll; height:500px;">
+                  <output></output>
+                  <div id="input-line" class="input-line">
+                    <div class="prompt" id="currentprompt"></div><div><input class="cmdline" autocomplete="false" spellcheck="false" autofocus/></div>
+                  </div>
+                </div>
+                <button id='term_stop_btn' style='height:auto;display:none;' class="button is-primary" onclick="this.style.display='none';driver.runEnd();">Stop Program</button>
+                <div class="clock-container">
+                  <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45"/>
+                    <g>
+                      <rect class="hour" x="47.5" y="12.5" width="5" height="40" rx="2.5" ry="2.55" />
+                      <rect class="min" x="48.5" y="12.5" width="3" height="40" rx="2" ry="2"/>
+                      <line class="sec" x1="50" y1="50" x2="50" y2="16" />
+                    </g>
+                  </svg>
                 </div>
               </div>
-              <button id='term_stop_btn' style='height:auto;display:none;' class="button is-primary" onclick="this.style.display='none';driver.runEnd();">Stop Program</button>
-              <div class="clock-container">
-                <svg viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="45"/>
-                  <g>
-                    <rect class="hour" x="47.5" y="12.5" width="5" height="40" rx="2.5" ry="2.55" />
-                    <rect class="min" x="48.5" y="12.5" width="3" height="40" rx="2" ry="2"/>
-                    <line class="sec" x1="50" y1="50" x2="50" y2="16" />
-                  </g>
-                </svg>
+              <div id="venus-files-tab-view" style="display: none;">
+                Fileview will be here
+              </div>
+              <div id="venus-url-tab-view" style="display: none;">
+                This will be where you make custom urls.
               </div>
             </article>
           </div>
@@ -89,7 +97,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-vertical">
           <div class="tile is-parent">
-            <article class="tile is-child" id="sidebar-listings-container">
+            <article class="tile is-child">
               <nav class="panel">
                 <p class="panel-tabs">
                   <a id="settings-tab" onclick="driver.openSettingsTab()" class="is-active">Settings</a>
