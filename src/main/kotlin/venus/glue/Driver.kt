@@ -68,7 +68,7 @@ import kotlin.dom.removeClass
         loadAll(useLS)
         Renderer.loadSimulator(this.sim)
         Renderer.renderAssembleButtons()
-        this.saveInterval = window.setInterval(Driver::saveIntervalFn, 5000)
+        this.saveInterval = window.setInterval(Driver::saveIntervalFn, 10000)
         this.ready = true
     }
 
