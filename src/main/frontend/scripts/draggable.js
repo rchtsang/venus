@@ -63,7 +63,7 @@ function SkylabSortableListCore( listElem ) {
     */
 
     var ACHIEVED = true;
-    var debug = false;
+    var debug = true;
     var __shadow2 = "0 6px 10px 0 rgba(0, 0, 0, 0.3), 0 2px 2px 0 rgba(0, 0, 0, 0.2)";
     var __moment = 0.2;  // ~ cheeky names for amount of time
     var waltz = 0.35;
@@ -232,7 +232,7 @@ function SkylabSortableListCore( listElem ) {
                 onDragStart: __onDragStart,
                 onDrag: __onDrag,
                 onRelease: __onRelease,
-                // autoScroll: 1,
+                autoScroll: 2,
                 zIndexBoost: false
             })[ 0 ];
         }
@@ -244,6 +244,7 @@ function SkylabSortableListCore( listElem ) {
         var movingItem;
         var pointerToScrubberCenterDelta;  // a few pixels
         var scrubberCenterWaypoint;
+        var initialScrollLocation;
 
         function __onPress() {
 
@@ -252,6 +253,7 @@ function SkylabSortableListCore( listElem ) {
             var scrubberCenterY = movingItem.scrubberCenterY();
             scrubberCenterWaypoint = scrubberCenterY;
             pointerToScrubberCenterDelta = scrubberCenterY - this.pointerY;
+            initialScrollLocation = $("#register-tab-view").offset().top;
             reestablishThresholds();
 
             movingItem.whenPress();
@@ -264,7 +266,7 @@ function SkylabSortableListCore( listElem ) {
         var checkUpperThreshold, checkLowerThreshold, scrubberCenterY;
         function __onDrag() {
 
-            scrubberCenterY = this.pointerY + pointerToScrubberCenterDelta;
+            scrubberCenterY = this.pointerY + pointerToScrubberCenterDelta + (initialScrollLocation - $("#register-tab-view").offset().top);
 
             if (scrubberCenterWaypoint > scrubberCenterY) {
 
@@ -676,7 +678,7 @@ function SkylabSortableListCore( listElem ) {
                height of the moving tile.
              */
 
-            var orig_Y_transform = this.hacky_original_Y_transform
+            var orig_Y_transform = this.hacky_original_Y_transform;
 
             if ( false === orig_Y_transform ) {
 
