@@ -181,9 +181,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                       var out = driver.terminal.processInput(this.value || "");
                       if (out.startsWith("VDIRECTIVE:RUNNING...")) {
                           output(out.replace(RegExp("^VDIRECTIVE:RUNNING..."), ""));
-                          output_.parentElement.insertAdjacentHTML('beforeEnd', `
-                          <button id='term_stop_btn' style='height:auto;' class="button is-primary" onclick="driver.runEnd();">Stop Program</button>
-                          `);
+                          document.getElementById("term_stop_btn").style.display = "block";
                           noline = true;
                           window.setTimeout(getSimOutData, 100, output, line, this)
                       } else {
@@ -269,17 +267,14 @@ function terminal_showline(line, elm) {
     var input = document.getElementById("input-line");
     input.querySelector("input.cmdline").value = ''; // Clear/setup line for next input.
     input.style.display = "";
+    document.getElementById("container").scrollTo(0, term.getDocHeight_());
 }
 
 function getSimOutData(output, line, elm) {
     output(driver.destructiveGetSimOut(), true);
     if (!driver.currentlyRunning()) {
         terminal_showline(line, elm);
-        document.getElementById("container").scrollTo(0, term.getDocHeight_());
-        var stopbtn = document.getElementById("term_stop_btn");
-        if (stopbtn) {
-            stopbtn.parentElement.removeChild(stopbtn);
-        }
+        document.getElementById("term_stop_btn").style.display = "none";
         var sout = document.getElementById("console-output");
         if (sout) {
             sout.value = "";
