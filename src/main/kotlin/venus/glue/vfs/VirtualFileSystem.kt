@@ -2,6 +2,7 @@ package venus.glue.vfs
 
 import venus.glue.Driver
 import venus.simulator.SimulatorSettings
+import kotlin.browser.window
 
 @JsName("VirtualFileSystem") class VirtualFileSystem(val defaultDriveName: String, val simSettings: SimulatorSettings = SimulatorSettings()) {
     var sentinel = VFSDrive(defaultDriveName, VFSDummy())
@@ -185,9 +186,8 @@ import venus.simulator.SimulatorSettings
     }
 
     fun load() {
-        val orig = "NULL"
-        val vfsJSON = Driver.LS.safeget(LSName, orig)
-        if (vfsJSON != orig) {
+        val vfsJSON = window.localStorage.getItem(LSName)
+        if (vfsJSON != undefined) {
             this.parse(vfsJSON)
         }
     }
@@ -195,7 +195,7 @@ import venus.simulator.SimulatorSettings
     fun save() {
         if (Driver.useLS) {
             val vfsJSON = this.stringify()
-            Driver.LS.set(LSName, vfsJSON)
+            window.localStorage.setItem(LSName, vfsJSON)
         }
     }
 }
