@@ -34,6 +34,10 @@ body {
     padding: 0 1.5rem;
 }
 
+#pc-column {
+    width: 10%;
+}
+
 #mc-column {
     width: 20%;
 }
@@ -43,7 +47,7 @@ body {
 }
 
 #oc-column {
-    width: 50%;
+    width: 40%;
 }
 
 #program-listing {
