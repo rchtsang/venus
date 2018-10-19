@@ -50,6 +50,18 @@ body {
     width: 40%;
 }
 
+#fn-column {
+    width: 30%;
+}
+
+#ft-column {
+    width: 10%;
+}
+
+#fo-column {
+    width: 40%;
+}
+
 #program-listing {
     font-family: Courier New, Courier, monospace;
 }
@@ -70,6 +82,10 @@ body {
 }
 
 #program-listing-body tr {
+    cursor: pointer;
+}
+
+#files-listing-body tr {
     cursor: pointer;
 }
 
