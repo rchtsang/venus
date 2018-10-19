@@ -80,28 +80,73 @@
                 </div>
               </div>
               <div id="venus-files-tab-view" style="display: none;">
-                <!--<article class="tile is-child is-primary" id="files-listing-container">-->
-                  <!--<table id="files-listing" class="table">-->
-                    <!--<colgroup>-->
-                      <!--<col id="mc-column">-->
-                      <!--<col id="bc-column">-->
-                      <!--<col id="oc-column">-->
-                    <!--</colgroup>-->
-                    <!--<thead>-->
-                    <!--<tr>-->
-                      <!--<th>PC</th>-->
-                      <!--<th>Machine Code</th>-->
-                      <!--<th>Basic Code</th>-->
-                      <!--<th>Original Code</th>-->
-                    <!--</tr>-->
-                    <!--</thead>-->
-                    <!--<tbody id="program-listing-body">-->
-                    <!--</tbody>-->
-                  <!--</table>-->
-                <!--</article>-->
+                <article class="tile is-child is-primary" id="program-listing-container">
+                  <table id="program-listing" class="table">
+                    <colgroup>
+                      <col id="fn-column">
+                      <col id="ft-column">
+                      <col id="fo-column">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Options</th>
+                    </tr>
+                    </thead>
+                    <tbody id="files-listing-body">
+                    <tr id="file-name"><td>TestFile</td><td>File</td><td>Delete</td></tr>
+                    </tbody>
+                  </table>
+                </article>
               </div>
               <div id="venus-url-tab-view" style="display: none;">
-                This will be where you make custom urls.
+                <div class="field">
+                  <div class="control">
+                    This feature is currently a work in progress! You will soon be able to edit what goes into the url. For now, it is just the code you set in the editor.<br>
+
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <button id="urloptions-save" class="button" onclick="toggleThis(this);setUpURL();document.getElementById('urloptions-save-choice-div').style.display = (this.value === 'true') ? 'block':'none';" value="false">Set Save State</button>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <label class="label" for="urloptions-save">Auto set save</label>
+                      </div>
+                    </div>
+                    <br>
+                    <div id="urloptions-save-choice-div" style="display: none;">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <button id="urloptions-save-choice" class="button" onclick="toggleThis(this);setUpURL();" value="false">Save State</button>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <label class="label" for="urloptions-save-choice">Save State</label>
+                        </div>
+                      </div>
+                      <br>
+                    </div>
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <button id="urloptions-code" class="button" onclick="toggleThis(this);setUpURL();document.getElementById('urloptions-code-override-div').style.display = (this.value === 'true') ? 'block':'none';" value="false">Add Code</button>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <label class="label" for="urloptions-code">Auto set the code</label>
+                      </div>
+                    </div>
+                    <div class="field is-horizontal" id="urloptions-code-override-div" style="display: none;">
+                      <div class="field-label">
+                        <button id="urloptions-code-override" class="button" onclick="toggleThis(this);setUpURL();" value="false">Add Code Override</button>
+                      </div>
+                      <div class="field-body is-expanded">
+                        <label class="label" for="urloptions-code-override">Auto set the code without a prompt.</label>
+                      </div>
+                    </div>
+                    <br><br>
+                    <div style="overflow:scroll;" id="urltxt" onclick="selectText(this.id)">
+                      <a id="generatedurl" href=""></a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </article>
           </div>
@@ -1475,56 +1520,6 @@
     </div>
   </div>
 </section>
-<div class="container is-fluid">
-  <section class="section" id="urlmaker-tab-view">
-    <div class="field">
-      <div class="control">
-        This feature is currently a work in progress! You will soon be able to edit what goes into the url. For now, it is just the code you set in the editor.<br>
-
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <button id="urloptions-save" class="button" onclick="toggleThis(this);setUpURL();document.getElementById('urloptions-save-choice-div').style.display = (this.value === 'true') ? 'block':'none';" value="false">Set Save State</button>
-          </div>
-          <div class="field-body is-expanded">
-            <label class="label" for="urloptions-save">Auto set save</label>
-          </div>
-        </div>
-        <br>
-        <div id="urloptions-save-choice-div" style="display: none;">
-          <div class="field is-horizontal">
-            <div class="field-label">
-              <button id="urloptions-save-choice" class="button" onclick="toggleThis(this);setUpURL();" value="false">Save State</button>
-            </div>
-            <div class="field-body is-expanded">
-              <label class="label" for="urloptions-save-choice">Save State</label>
-            </div>
-          </div>
-          <br>
-        </div>
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <button id="urloptions-code" class="button" onclick="toggleThis(this);setUpURL();document.getElementById('urloptions-code-override-div').style.display = (this.value === 'true') ? 'block':'none';" value="false">Add Code</button>
-          </div>
-          <div class="field-body is-expanded">
-            <label class="label" for="urloptions-code">Auto set the code</label>
-          </div>
-        </div>
-        <div class="field is-horizontal" id="urloptions-code-override-div" style="display: none;">
-          <div class="field-label">
-            <button id="urloptions-code-override" class="button" onclick="toggleThis(this);setUpURL();" value="false">Add Code Override</button>
-          </div>
-          <div class="field-body is-expanded">
-            <label class="label" for="urloptions-code-override">Auto set the code without a prompt.</label>
-          </div>
-        </div>
-        <br><br>
-        <div style="overflow:scroll;" id="urltxt" onclick="selectText(this.id)">
-          <a id="generatedurl" href=""></a>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
 
 <input id="venus_upload" type="file" multiple hidden>
 
