@@ -3,6 +3,7 @@ package venus.riscv.insts.integer.base.i
 import venus.glue.Renderer
 import venus.riscv.InstructionField
 import venus.riscv.MemorySegments
+import venus.riscv.Registers
 import venus.riscv.insts.dsl.Instruction
 import venus.riscv.insts.dsl.disasms.RawDisassembler
 import venus.riscv.insts.dsl.formats.FieldEqual
@@ -10,6 +11,7 @@ import venus.riscv.insts.dsl.formats.InstructionFormat
 import venus.riscv.insts.dsl.impls.NoImplementation
 import venus.riscv.insts.dsl.impls.RawImplementation
 import venus.riscv.insts.dsl.parsers.DoNothingParser
+import venus.simulator.FilesHandler
 import venus.simulator.Simulator
 
 val ecall = Instruction(
@@ -47,6 +49,7 @@ val ecall = Instruction(
         disasm = RawDisassembler { "ecall" }
 )
 
+// All file operations will return -1 if the file descriptor is not found.
 private fun openFile(sim: Simulator) {
     /**
      * Attempt to open the file with the lowest number to return first. If cannot open file, return -1.
@@ -54,7 +57,11 @@ private fun openFile(sim: Simulator) {
      *
      * a0=13,a1=filename,a2=permissionbits -> a0=filedescriptor
      */
-    // WIP
+    val filenameAddress = sim.getReg(Registers.a1)
+    val permissions = sim.getReg(Registers.a2)
+    val filename = getString(sim, filenameAddress)
+    val fdID = sim.filesHandler.openFile(sim, filename, permissions)
+    sim.setReg(Registers.a0, fdID)
 }
 
 private fun readFile(sim: Simulator) {
@@ -66,14 +73,38 @@ private fun readFile(sim: Simulator) {
      *
      * a0=14, a1=filedescriptor, a2=where to store data, a3=amt to read -> a0=Number of items read
      */
-    // WIP
+    val fdID = sim.getReg(Registers.a1)
+    val bufferAddress = sim.getReg(Registers.a2)
+    val size = sim.getReg(Registers.a3)
+    val data = sim.filesHandler.readFileDescriptor(fdID, size)
+    var offset = 0
+    if (data != null) {
+        for (c in data) {
+            sim.storeBytewCache(bufferAddress + offset, c.toInt())
+            offset++
+        }
+        sim.setReg(Registers.a0, offset)
+    } else {
+        sim.setReg(Registers.a0, FilesHandler.EOF)
+    }
 }
 
 private fun writeFile(sim: Simulator) {
     /**
      * a0=15, a1=filedescriptor, a2=buffer to read data, a3=amt to write, a4=size of each item -> a0=Number of items written
      */
-    // WIP
+    val fdID = sim.getReg(Registers.a1)
+    val bufferAddress = sim.getReg(Registers.a2)
+    val size = sim.getReg(Registers.a3)
+    val sizeOfItem = sim.getReg(Registers.a4)
+    var offset = 0
+    val sb = StringBuilder()
+    while (offset < size) {
+        sb.append(sim.loadBytewCache(bufferAddress + offset).toChar())
+        offset++
+    }
+    val result = sim.filesHandler.writeFileDescriptor(fdID, sb.toString())
+    sim.setReg(Registers.a0, result)
 }
 
 private fun closeFile(sim: Simulator) {
@@ -81,7 +112,9 @@ private fun closeFile(sim: Simulator) {
      * Flush the data written to the file back to where it came from.
      * a0=16, a1=filedescriptor -> ​0​ on success, EOF otherwise
      */
-    // WIP
+    val fdID = sim.getReg(Registers.a1)
+    val a0 = sim.filesHandler.closeFileDescriptor(fdID)
+    sim.setReg(Registers.a0, a0)
 }
 
 private fun fflush(sim: Simulator) {
@@ -89,6 +122,9 @@ private fun fflush(sim: Simulator) {
      * Returns zero on success. Otherwise EOF is returned and the error indicator of the file stream is set.
      * a0=19, a1=filedescriptor -> a0=if end of file
      */
+    val fdID = sim.getReg(Registers.a1)
+    val a0 = sim.filesHandler.flushFileDescriptor(fdID)
+    sim.setReg(Registers.a0, a0)
 }
 
 private fun feof(sim: Simulator) {
@@ -97,6 +133,9 @@ private fun feof(sim: Simulator) {
      *
      * a0=19, a1=filedescriptor -> a0=if end of file
      */
+    val fdID = sim.getReg(Registers.a1)
+    val a0 = sim.filesHandler.getFileDescriptorEOF(fdID)
+    sim.setReg(Registers.a0, a0)
 }
 
 private fun ferror(sim: Simulator) {
@@ -105,6 +144,9 @@ private fun ferror(sim: Simulator) {
      *
      * a0=20, a1=filedescriptor -> a0=if error occured
      */
+    val fdID = sim.getReg(Registers.a1)
+    val a0 = sim.filesHandler.getFileDescriptorError(fdID)
+    sim.setReg(Registers.a0, a0)
 }
 
 private fun printHex(sim: Simulator) {
@@ -120,15 +162,10 @@ private fun printInteger(sim: Simulator) {
 }
 
 private fun printString(sim: Simulator) {
-    var arg = sim.getReg(11)
-    var c = sim.loadByte(arg)
-    arg++
-    while (c != 0) {
-        sim.ecallMsg += c.toChar()
-        Renderer.printConsole(c.toChar())
-        c = sim.loadByte(arg)
-        arg++
-    }
+    val arg = sim.getReg(11)
+    val s = getString(sim, arg)
+        sim.ecallMsg += s
+        Renderer.printConsole(s)
 }
 
 private fun sbrk(sim: Simulator) {
@@ -154,4 +191,17 @@ private fun exitWithCode(sim: Simulator) {
     val retVal = sim.getReg(11)
     sim.ecallMsg = "\nExited with error code $retVal"
     Renderer.printConsole("\nExited with error code $retVal\n")
+}
+
+private fun getString(sim: Simulator, address: Int): String {
+    var addr = address
+    val s = StringBuilder()
+    var c = sim.loadByte(address)
+    addr++
+    while (c != 0) {
+        s.append(c)
+        c = sim.loadByte(addr)
+        addr++
+    }
+    return s.toString()
 }
