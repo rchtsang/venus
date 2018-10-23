@@ -24,6 +24,7 @@ class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSetting
     @JsName("args") var args = ArrayList<String>()
     var ebreak = false
     var stdout = ""
+    var filesHandler = FilesHandler(this)
 
     init {
         for (inst in linkedProgram.prog.insts) {
