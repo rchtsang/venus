@@ -199,7 +199,7 @@ private fun getString(sim: Simulator, address: Int): String {
     var c = sim.loadByte(address)
     addr++
     while (c != 0) {
-        s.append(c)
+        s.append(c.toChar())
         c = sim.loadByte(addr)
         addr++
     }
