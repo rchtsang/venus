@@ -2,28 +2,27 @@ package venus.simulator
 
 import venus.glue.vfs.VFSFile
 
-class FileDescriptor(var vfsFile: VFSFile, var parameters: Int) {
+class FileDescriptor(var vfsFile: VFSFile, var fileMetaData: FileMetaData) {
     var feof = false
     var ferror = false
-    var readOffset = 0
-    var writeOffset = 0
-    var readable = false
-    var writeable = false
-    lateinit var dataStream: StringBuilder
-    init {
-        var dataStream = StringBuilder(vfsFile.readText())
-    }
+    val dataStream: StringBuilder = StringBuilder(vfsFile.readText())
 
     fun read(size: Int): String? {
-        val amtToRead = minOf(size, dataStream.length - readOffset)
-        if (amtToRead == 0 || readable) {
+        val amtToRead = minOf(size, dataStream.length - fileMetaData.readOffset)
+        if (amtToRead == 0 || !fileMetaData.readable) {
             return null
         }
-
+        val oldoffset = fileMetaData.readOffset
+        fileMetaData.readOffset += amtToRead
+        return dataStream.subSequence(oldoffset, fileMetaData.readOffset).toString()
     }
 
-    fun write(value: String): Int {
-
+    fun write(value: String): Int? {
+        if (!fileMetaData.writeable) {
+            return null
+        }
+        dataStream.append(value)
+        return 0
     }
 
     fun flush(): Int {
@@ -47,3 +46,9 @@ class FileDescriptor(var vfsFile: VFSFile, var parameters: Int) {
         }
     }
 }
+
+class FileMetaData(
+    var readOffset: Int = 0,
+    var readable: Boolean = false,
+    var writeable: Boolean = false
+)

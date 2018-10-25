@@ -3,6 +3,7 @@ package venus.simulator
 /* ktlint-disable no-wildcard-imports */
 
 import venus.glue.Renderer
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
@@ -13,7 +14,7 @@ import venus.simulator.diffs.*
 
 /** Right now, this is a loose wrapper around SimulatorState
     Eventually, it will support debugging. */
-class Simulator(val linkedProgram: LinkedProgram, var settings: SimulatorSettings = SimulatorSettings(), val simulatorID: Int = 0) {
+class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = VirtualFileSystem("dummy"), var settings: SimulatorSettings = SimulatorSettings(), val simulatorID: Int = 0) {
     val state = SimulatorState()
     var maxpc = MemorySegments.TEXT_BEGIN
     @JsName("cycles") var cycles = 0

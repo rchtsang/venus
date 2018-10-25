@@ -31,14 +31,16 @@ import kotlin.dom.removeClass
  * The "driver" singleton which can be called from Javascript for all functionality.
  */
 @JsName("Driver") object Driver {
-    var sim: Simulator = Simulator(LinkedProgram())
-    var tr: Tracer = Tracer(sim)
+    @JsName("VFS") var VFS = VirtualFileSystem("v")
 
+    var sim: Simulator = Simulator(LinkedProgram(), this.VFS)
+    var tr: Tracer = Tracer(sim)
     val mainCache: CacheHandler = CacheHandler(1)
+
     var cache: CacheHandler = this.mainCache
     var cacheLevels: ArrayList<CacheHandler> = arrayListOf(this.mainCache)
-
     val simSettings = SimulatorSettings()
+
     private var timer: Int? = null
     val LS = LocalStorage()
     internal var useLS = false
@@ -49,7 +51,6 @@ import kotlin.dom.removeClass
     @JsName("ScriptManager") var ScriptManager = venus.api.ScriptManager
     @JsName("debug") var debug = false
 
-    @JsName("VFS") var VFS = VirtualFileSystem("v")
     @JsName("terminal") var terminal = Terminal(VFS)
 
     init {
@@ -95,7 +96,7 @@ import kotlin.dom.removeClass
                     Renderer.updateCache(Address(0, MemSize.WORD))
                 }
             } catch (e: Throwable) {
-                Renderer.loadSimulator(Simulator(LinkedProgram()))
+                Renderer.loadSimulator(Simulator(LinkedProgram(), this.VFS))
                 handleError("Open Simulator", e)
             }
         } else {
@@ -215,7 +216,7 @@ import kotlin.dom.removeClass
     }
 
     fun loadSim(linked: LinkedProgram) {
-        sim = Simulator(linked, this.simSettings)
+        sim = Simulator(linked, this.VFS, this.simSettings)
         this.mainCache.reset()
         sim.state.cache = this.mainCache
         tr = Tracer(sim)
@@ -232,7 +233,7 @@ import kotlin.dom.removeClass
         } else {
             try {
                 val linked = Linker.link(listOf(prog))
-                sim = Simulator(linked, this.simSettings)
+                sim = Simulator(linked, this.VFS, this.simSettings)
             } catch (e: AssemblerError) {
                 errs = e.toString()
                 success = false
@@ -266,7 +267,7 @@ import kotlin.dom.removeClass
     @JsName("reset") fun reset() {
         try {
             val args = this.sim.args
-            this.sim = Simulator(this.sim.linkedProgram, this.sim.settings, this.sim.simulatorID)
+            this.sim = Simulator(this.sim.linkedProgram, this.VFS, this.sim.settings, this.sim.simulatorID)
             for (arg in args) {
                 this.sim.addArg(arg)
             }
@@ -274,7 +275,7 @@ import kotlin.dom.removeClass
             setCacheSettings()
             Renderer.updateCache(Address(0, MemSize.WORD))
         } catch (e: Throwable) {
-            Renderer.loadSimulator(Simulator(LinkedProgram()))
+            Renderer.loadSimulator(Simulator(LinkedProgram(), this.VFS))
             handleError("Reset Simulator", e)
         }
     }
