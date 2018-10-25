@@ -10,10 +10,36 @@ import kotlin.browser.window
 
     companion object {
         val LSName = "VFS_DATA"
+
+        fun getPath(path: String): ArrayList<String> {
+            return path.split(VFSObject.separator) as ArrayList
+        }
     }
 
     init {
         currentLocation.parent = currentLocation
+    }
+
+    fun makeFileInDir(path: String): VFSFile? {
+        val obj = getObjectFromPath(path)
+        if (obj == null) {
+            val nobj = getObjectFromPath(path, true) as VFSObject
+            return if (nobj.type != VFSType.File) {
+                val name = nobj.label
+                val parent = nobj.parent
+                parent.removeChild(name)
+                val newfile = VFSFile(name, parent)
+                parent.addChild(newfile)
+                newfile
+            } else {
+                nobj as VFSFile
+            }
+        } else {
+            if (obj.type == VFSType.File) {
+                return obj as VFSFile
+            }
+            return null
+        }
     }
 
     @JsName("reset") fun reset() {
@@ -30,7 +56,7 @@ import kotlin.browser.window
     }
 
     @JsName("cd") fun cd(dir: String): String {
-        val splitpath = dir.split(VFSObject.separator) as MutableList
+        val splitpath = getPath(dir)
         var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
             splitpath.removeAt(0)
             sentinel
@@ -71,7 +97,7 @@ import kotlin.browser.window
     }
 
     @JsName("cat") fun cat(filedir: String): String {
-        val splitpath = filedir.split(VFSObject.separator) as MutableList
+        val splitpath = getPath(filedir)
         var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
             splitpath.removeAt(0)
             sentinel
@@ -114,7 +140,7 @@ import kotlin.browser.window
     }
 
     @JsName("write") fun write(path: String, msg: String): String {
-        val splitpath = path.split(VFSObject.separator) as MutableList
+        val splitpath = getPath(path)
         var templocation = if (splitpath.size > 0 && splitpath[0] == sentinel.label) {
             splitpath.removeAt(0)
             sentinel
@@ -137,8 +163,8 @@ import kotlin.browser.window
         return ""
     }
 
-    fun getObjectFromPath(path: String): VFSObject? {
-        val splitpath = path.split(VFSObject.separator) as MutableList
+    fun getObjectFromPath(path: String, make: Boolean = false): VFSObject? {
+        val splitpath = getPath(path)
         var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
             splitpath.removeAt(0)
             sentinel
@@ -150,7 +176,11 @@ import kotlin.browser.window
                 continue
             }
             if (!templocation.contents.containsKey(obj)) {
-                return null
+                if (make) {
+                    templocation.addChild(VFSFile(obj, templocation))
+                } else {
+                    return null
+                }
             }
             templocation = templocation.contents[obj] as VFSObject
         }

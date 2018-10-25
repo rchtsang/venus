@@ -1,5 +1,8 @@
 package venus.simulator
 
+import venus.glue.vfs.VFSFile
+import venus.glue.vfs.VFSType
+
 class FilesHandler(sim: Simulator) {
     companion object {
         var EOF = -1
@@ -8,8 +11,51 @@ class FilesHandler(sim: Simulator) {
     var fdCounter = 1
 
     fun openFile(sim: Simulator, filename: String, permissions: Int): Int {
-        // @TODO Make me work!
-        return EOF
+        // open file in VFS here
+        val o = sim.VFS.getObjectFromPath(filename)
+        val f = if (o == null) {
+            sim.VFS.makeFileInDir(filename) ?: return EOF
+        } else {
+            if (o.type.equals(VFSType.File)) {
+                o as VFSFile
+            } else {
+                return EOF
+            }
+        }
+        val rw = when (permissions) {
+            0 -> {
+                if (o == null) {
+                    return EOF
+                }
+                FileMetaData(0, true, false)
+            }
+            1 -> {
+                f.setText("")
+                FileMetaData(0, false, true)
+            }
+            2 -> {
+                FileMetaData(0, false, true)
+            }
+            3 -> {
+                if (o == null) {
+                    return EOF
+                }
+                FileMetaData(0, true, true)
+            }
+            4 -> {
+                f.setText("")
+                FileMetaData(0, true, true)
+            }
+            5 -> {
+                FileMetaData(0, true, true)
+            }
+            else -> {
+                return EOF
+            }
+        }
+        val fd = FileDescriptor(f, rw)
+        files.put(fdCounter, fd)
+        return fdCounter++
     }
 
     fun getFileDescriptor(fdID: Int): FileDescriptor? {

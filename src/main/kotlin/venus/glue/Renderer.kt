@@ -3,6 +3,7 @@ package venus.glue
 
 import org.w3c.dom.*
 import venus.assembler.AssemblerError
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
@@ -34,7 +35,7 @@ internal object Renderer {
     /** The memory location currently centered */
     var activeMemoryAddress: Int = 0
     /** The simulator being rendered */
-    private var sim: Simulator = Simulator(LinkedProgram())
+    private var sim: Simulator = Simulator(LinkedProgram(), VirtualFileSystem("dummy"))
     /* The way the information in the registers is displayed*/
     private var displayType = "hex"
 
