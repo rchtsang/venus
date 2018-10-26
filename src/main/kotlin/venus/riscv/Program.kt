@@ -22,6 +22,14 @@ class Program(val name: String = "anonymous") {
     var textSize = 0
     var dataSize = 0
     private val globalLabels = HashSet<String>()
+    val imports = ArrayList<String>()
+
+    companion object {
+        fun parse(json: String): Program {
+            val program: Program = JSON.parse(json)
+            return program
+        }
+    }
 
     /**
      * Adds an instruction to the program, and increments the text size.
@@ -41,6 +49,10 @@ class Program(val name: String = "anonymous") {
     fun addToData(byte: Byte) {
         dataSegment.add(byte)
         dataSize++
+    }
+
+    fun addImport(filepath: String) {
+        this.imports.add(filepath)
     }
 
     /**
@@ -111,4 +123,8 @@ class Program(val name: String = "anonymous") {
      * @return a list of instructions in this program
      */
     fun dump(): List<MachineCode> = insts
+
+    override fun toString(): String {
+        return JSON.stringify(this)
+    }
 }

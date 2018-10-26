@@ -268,6 +268,15 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
                 args.forEach(prog::makeLabelGlobal)
             }
 
+            ".import" -> {
+                checkArgsLength(args, 1)
+                var filepath = args[0]
+                if (filepath.matches(Regex("\".*\"|'.*'"))) {
+                    filepath = filepath.slice(1..(filepath.length - 2))
+                }
+                prog.addImport(filepath)
+            }
+
             ".float", ".double", ".align" -> {
                 println("Warning: $directive not currently supported!")
             }
