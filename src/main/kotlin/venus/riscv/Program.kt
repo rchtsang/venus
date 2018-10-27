@@ -3,7 +3,6 @@ package venus.riscv
 import venus.assembler.DebugInfo
 import venus.linker.RelocationInfo
 import venus.riscv.insts.dsl.relocators.Relocator
-
 /**
  * An (unlinked) program.
  *
@@ -123,8 +122,4 @@ class Program(val name: String = "anonymous") {
      * @return a list of instructions in this program
      */
     fun dump(): List<MachineCode> = insts
-
-    override fun toString(): String {
-        return JSON.stringify(this)
-    }
 }
