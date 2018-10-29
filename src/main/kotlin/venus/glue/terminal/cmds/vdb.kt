@@ -14,12 +14,12 @@ import venus.riscv.MemSize
 import venus.riscv.Program
 /* ktlint-enable no-wildcard-imports */
 
-var gdb = Command(
-        name = "gdb",
+var vdb = Command(
+        name = "vdb",
         // @TODO Fix how will intemperate files vs args.
         execute = fun (args: MutableList<String>, t: Terminal, sudo: Boolean): String {
             if (args.size < 1) {
-                return "gdb: Takes in at least one File/Program or a single LinkedProgram"
+                return "vdb: Takes in at least one File/Program or a single LinkedProgram"
             }
             val programout = "debugger"
             val fs = args
@@ -40,16 +40,16 @@ var gdb = Command(
                         }
                         VFSType.LinkedProgram -> {
                             if (files.size + progs.size + linkedprogs.size > 0) {
-                                return "gdb: You must either have no linked programs or just one linked program!"
+                                return "vdb: You must either have no linked programs or just one linked program!"
                             }
                             linkedprogs.add((obj as VFSLinkedProgram).getLinkedProgram())
                         }
-                        else -> { return "gdb: Unsupported type: ${obj.type}" }
+                        else -> { return "vdb: Unsupported type: ${obj.type}" }
                     }
                 }
             }
             if (files.size + progs.size + linkedprogs.size == 0) {
-                return "gdb: Could not find any of the inputted files!"
+                return "vdb: Could not find any of the inputted files!"
             }
 
             // Assembly stage for any files
@@ -78,14 +78,14 @@ var gdb = Command(
                 try {
                     linkedProgram = Linker.link(progs)
                 } catch (e: Throwable) {
-                    return "gdb: An error occurred when running the linked program: $e"
+                    return "vdb: An error occurred when running the linked program: $e"
                 }
                 linkedprogs.add(linkedProgram)
             }
 
             // Getting the LinkedProgram which we want to simulate
             if (linkedprogs.size != 1) {
-                return msg + "gdb: There must only be one linked program!"
+                return msg + "vdb: There must only be one linked program!"
             }
             val lp = linkedprogs[0]
             try {
@@ -96,7 +96,7 @@ var gdb = Command(
                 Driver.openSimulator()
             } catch (e: Throwable) {
                 console.error(e)
-                return "gdb: An error has occurred"
+                return "vdb: An error has occurred"
             }
             return ""
         },
