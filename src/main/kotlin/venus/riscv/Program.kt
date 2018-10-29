@@ -122,4 +122,8 @@ class Program(val name: String = "anonymous") {
      * @return a list of instructions in this program
      */
     fun dump(): List<MachineCode> = insts
+
+    fun assembleDependencies(): ArrayList<Program> {
+        
+    }
 }

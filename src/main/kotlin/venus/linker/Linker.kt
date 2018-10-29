@@ -42,9 +42,7 @@ object Linker {
         var textTotalOffset = 0
         var dataTotalOffset = 0
 
-        val pgs = ArrayList(progs)
-
-        for (prog in pgs) {
+        for (prog in progs) {
             for ((label, offset) in prog.labels) {
                 val start = if (offset >= MemorySegments.STATIC_BEGIN) {
                     dataTotalOffset
