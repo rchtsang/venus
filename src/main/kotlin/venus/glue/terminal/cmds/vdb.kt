@@ -29,7 +29,7 @@ var vdb = Command(
             for (file in fs) {
                 val obj = t.vfs.getObjectFromPath(file)
                 if (obj == null) {
-                    return "gdb: Could not find file $file"
+                    return "vdb: Could not find file $file"
                 } else {
                     when (obj.type) {
                         VFSType.File -> {
