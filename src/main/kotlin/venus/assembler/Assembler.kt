@@ -233,7 +233,7 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
                 }
             }
 
-            ".asciiz" -> {
+            ".string", ".asciiz" -> {
                 checkArgsLength(args, 1)
                 val ascii: String = try {
                     JSON.parse(args[0])
