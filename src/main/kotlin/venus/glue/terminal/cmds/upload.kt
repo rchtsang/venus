@@ -1,12 +1,12 @@
-package venus.glue.js.terminal.cmds
+package venus.glue.terminal.cmds
 
 import org.w3c.dom.HTMLInputElement
 import org.w3c.files.File
 import org.w3c.files.FileList
 import org.w3c.files.FileReader
 import org.w3c.files.get
-import venus.glue.js.terminal.Command
-import venus.glue.js.terminal.Terminal
+import venus.glue.terminal.Command
+import venus.glue.terminal.Terminal
 import kotlin.browser.document
 import kotlin.browser.window
 

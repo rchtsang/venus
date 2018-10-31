@@ -3,7 +3,7 @@ package venus.glue
 
 import org.w3c.dom.*
 import venus.assembler.AssemblerError
-import venus.glue.js.vfs.VirtualFileSystem
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction

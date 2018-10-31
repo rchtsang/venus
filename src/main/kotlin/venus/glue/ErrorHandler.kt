@@ -1,7 +1,5 @@
-package venus.glue.js
+package venus.glue
 
-import venus.glue.Driver
-import venus.glue.Renderer
 import kotlin.browser.window
 
 /**

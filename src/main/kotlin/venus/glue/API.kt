@@ -1,3 +1,3 @@
-package venus.glue.js
+package venus.glue
 
 @JsName("API") object API

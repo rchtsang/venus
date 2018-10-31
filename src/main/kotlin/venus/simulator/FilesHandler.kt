@@ -1,7 +1,7 @@
 package venus.simulator
 
-import venus.glue.js.vfs.VFSFile
-import venus.glue.js.vfs.VFSType
+import venus.glue.vfs.VFSFile
+import venus.glue.vfs.VFSType
 
 class FilesHandler(sim: Simulator) {
     companion object {

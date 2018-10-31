@@ -1,15 +1,15 @@
-package venus.glue.js.terminal.cmds
+package venus.glue.terminal.cmds
 
 /* ktlint-disable no-wildcard-imports */
 import venus.assembler.Assembler
 import venus.glue.Driver
 import venus.glue.Renderer
-import venus.glue.js.terminal.Command
-import venus.glue.js.terminal.Terminal
-import venus.glue.js.vfs.VFSFile
-import venus.glue.js.vfs.VFSLinkedProgram
-import venus.glue.js.vfs.VFSProgram
-import venus.glue.js.vfs.VFSType
+import venus.glue.terminal.Command
+import venus.glue.terminal.Terminal
+import venus.glue.vfs.VFSFile
+import venus.glue.vfs.VFSLinkedProgram
+import venus.glue.vfs.VFSProgram
+import venus.glue.vfs.VFSType
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.Address

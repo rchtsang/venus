@@ -1,6 +1,6 @@
-package venus.glue.js.terminal
+package venus.glue.terminal
 
-import venus.glue.js.vfs.VirtualFileSystem
+import venus.glue.vfs.VirtualFileSystem
 
 class Terminal(var vfs: VirtualFileSystem) {
 

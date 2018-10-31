@@ -1,4 +1,4 @@
-package venus.glue.js.vfs
+package venus.glue.vfs
 
 interface VFSObject {
     val type: VFSType

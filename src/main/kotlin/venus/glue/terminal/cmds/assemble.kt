@@ -1,12 +1,12 @@
-package venus.glue.js.terminal.cmds
+package venus.glue.terminal.cmds
 
 import venus.assembler.Assembler
-import venus.glue.js.terminal.Command
-import venus.glue.js.terminal.Terminal
-import venus.glue.js.vfs.VFSFile
-import venus.glue.js.vfs.VFSObject
-import venus.glue.js.vfs.VFSProgram
-import venus.glue.js.vfs.VFSType
+import venus.glue.terminal.Command
+import venus.glue.terminal.Terminal
+import venus.glue.vfs.VFSFile
+import venus.glue.vfs.VFSObject
+import venus.glue.vfs.VFSProgram
+import venus.glue.vfs.VFSType
 
 var assemble = Command(
         name = "assemble",

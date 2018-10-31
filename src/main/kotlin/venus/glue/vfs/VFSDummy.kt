@@ -1,4 +1,4 @@
-package venus.glue.js.vfs
+package venus.glue.vfs
 
 /**
  * This class is meant to just be a dummy class to allow for VFS init.
