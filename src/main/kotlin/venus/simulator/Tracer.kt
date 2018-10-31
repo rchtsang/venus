@@ -215,7 +215,7 @@ class Tracer(val sim: Simulator) {
             }
         } catch (e: Throwable) {
             println("Internal error in traceString")
-            console.warn(e)
+            println(e)
         }
         this.tr.stred = true
     }

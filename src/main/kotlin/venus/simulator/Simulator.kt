@@ -17,12 +17,12 @@ import venus.simulator.diffs.*
 class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = VirtualFileSystem("dummy"), var settings: SimulatorSettings = SimulatorSettings(), val simulatorID: Int = 0) {
     val state = SimulatorState()
     var maxpc = MemorySegments.TEXT_BEGIN
-    @JsName("cycles") var cycles = 0
+    var cycles = 0
     private val history = History()
     private val preInstruction = ArrayList<Diff>()
     private val postInstruction = ArrayList<Diff>()
     private val breakpoints: Array<Boolean>
-    @JsName("args") var args = ArrayList<String>()
+    var args = ArrayList<String>()
     var ebreak = false
     var stdout = ""
     var filesHandler = FilesHandler(this)
@@ -49,9 +49,9 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         breakpoints = Array<Boolean>(linkedProgram.prog.insts.size, { false })
     }
 
-    @JsName("isDone") fun isDone(): Boolean = getPC() >= if (settings.ecallOnlyExit) MemorySegments.STATIC_BEGIN else maxpc
+    fun isDone(): Boolean = getPC() >= if (settings.ecallOnlyExit) MemorySegments.STATIC_BEGIN else maxpc
 
-    @JsName("run") fun run() {
+    fun run() {
         while (!isDone() && cycles <= settings.maxSteps) {
             step()
         }
@@ -60,7 +60,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         }
     }
 
-    @JsName("step") fun step(): List<Diff> {
+    fun step(): List<Diff> {
         this.branched = false
         this.jumped = false
         this.ebreak = false
@@ -76,7 +76,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         return postInstruction.toList()
     }
 
-    @JsName("undo") fun undo(): List<Diff> {
+    fun undo(): List<Diff> {
         if (!canUndo()) return emptyList() /* TODO: error here? */
         val diffs = history.pop()
         for (diff in diffs) {
@@ -86,7 +86,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         return diffs
     }
 
-    @JsName("removeAllArgsFromMem") fun removeAllArgsFromMem() {
+    fun removeAllArgsFromMem() {
         var sp = getReg(2)
         while (sp < MemorySegments.STACK_BEGIN) {
             this.state.mem.removeByte(sp)
@@ -95,12 +95,12 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         }
     }
 
-    @JsName("removeAllArgs") fun removeAllArgs() {
+    fun removeAllArgs() {
         removeAllArgsFromMem()
         this.args.removeAll(this.args)
     }
 
-    @JsName("removeArg") fun removeArg(index: Int) {
+    fun removeArg(index: Int) {
         if (index in 0 until this.args.size) {
             this.args.removeAt(index)
             this.removeAllArgsFromMem()
@@ -108,7 +108,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         }
     }
 
-    @JsName("addArg") fun addArg(arg: String) {
+    fun addArg(arg: String) {
         if (arg == "") {
             return
         }
@@ -140,7 +140,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         } catch (e: Throwable) {}
     }
 
-    @JsName("addArgsToMem") fun addArgsToMem() {
+    fun addArgsToMem() {
         var spv = if (getReg(2) == MemorySegments.STACK_BEGIN) {
             getReg(2)
         } else {
@@ -174,7 +174,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
     var ecallMsg = ""
     var branched = false
     var jumped = false
-    @JsName("reset") fun reset() {
+    fun reset() {
         while (this.canUndo()) {
             this.undo()
         }
@@ -192,7 +192,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
 
     fun canUndo() = !history.isEmpty()
 
-    @JsName("getReg") fun getReg(id: Int) = state.getReg(id)
+    fun getReg(id: Int) = state.getReg(id)
 
     fun setReg(id: Int, v: Int) {
         preInstruction.add(RegisterDiff(id, state.getReg(id)))
@@ -203,7 +203,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
     fun setRegNoUndo(id: Int, v: Int) {
         state.setReg(id, v)
     }
-    @JsName("getFReg") fun getFReg(id: Int) = state.getFReg(id)
+    fun getFReg(id: Int) = state.getFReg(id)
 
     fun setFReg(id: Int, v: Decimal) {
         preInstruction.add(FRegisterDiff(id, state.getFReg(id)))
@@ -236,7 +236,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
         postInstruction.add(PCDiff(state.pc))
     }
 
-    @JsName("loadByte") fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
+    fun loadByte(addr: Int): Int = state.mem.loadByte(addr)
     fun loadBytewCache(addr: Int): Int {
         if (this.settings.alignedAddress && addr % MemSize.BYTE.size != 0) {
             throw AlignmentError("Address: '" + Renderer.toHex(addr) + "' is not BYTE aligned!")
