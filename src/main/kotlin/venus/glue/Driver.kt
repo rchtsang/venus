@@ -7,8 +7,10 @@ import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
-import venus.glue.terminal.Terminal
-import venus.glue.vfs.VirtualFileSystem
+import venus.glue.js.LocalStorage
+import venus.glue.js.handleError
+import venus.glue.js.terminal.Terminal
+import venus.glue.js.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.*
@@ -33,12 +35,12 @@ import kotlin.dom.removeClass
 @JsName("Driver") object Driver {
     @JsName("VFS") var VFS = VirtualFileSystem("v")
 
-    var sim: Simulator = Simulator(LinkedProgram(), this.VFS)
+    var sim: Simulator = Simulator(LinkedProgram(), VFS)
     var tr: Tracer = Tracer(sim)
     val mainCache: CacheHandler = CacheHandler(1)
 
-    var cache: CacheHandler = this.mainCache
-    var cacheLevels: ArrayList<CacheHandler> = arrayListOf(this.mainCache)
+    var cache: CacheHandler = mainCache
+    var cacheLevels: ArrayList<CacheHandler> = arrayListOf(mainCache)
     val simSettings = SimulatorSettings()
 
     private var timer: Int? = null
@@ -55,7 +57,7 @@ import kotlin.dom.removeClass
 
     init {
         console.log("Loading driver...")
-        this.mainCache.attach(false)
+        mainCache.attach(false)
 
         useLS = LS.get("venus") == "true"
         Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, useLS)
@@ -67,10 +69,10 @@ import kotlin.dom.removeClass
 
     fun initTimeout() {
         loadAll(useLS)
-        Renderer.loadSimulator(this.sim)
+        Renderer.loadSimulator(sim)
         Renderer.renderAssembleButtons()
-        this.saveInterval = window.setInterval(Driver::saveIntervalFn, 10000)
-        this.ready = true
+        saveInterval = window.setInterval(Driver::saveIntervalFn, 10000)
+        ready = true
     }
 
     /**
@@ -87,7 +89,7 @@ import kotlin.dom.removeClass
     }
 
     @JsName("assembleSimulator") fun assembleSimulator() {
-        if (this.ready) {
+        if (ready) {
             try {
                 val success = assemble(getText())
                 if (success) {
@@ -96,7 +98,7 @@ import kotlin.dom.removeClass
                     Renderer.updateCache(Address(0, MemSize.WORD))
                 }
             } catch (e: Throwable) {
-                Renderer.loadSimulator(Simulator(LinkedProgram(), this.VFS))
+                Renderer.loadSimulator(Simulator(LinkedProgram(), VFS))
                 handleError("Open Simulator", e)
             }
         } else {
@@ -207,7 +209,7 @@ import kotlin.dom.removeClass
         }
         try {
             val linked = Linker.link(listOf(prog))
-            this.loadSim(linked)
+            loadSim(linked)
             return true
         } catch (e: AssemblerError) {
             Renderer.displayError(e)
@@ -216,9 +218,9 @@ import kotlin.dom.removeClass
     }
 
     fun loadSim(linked: LinkedProgram) {
-        sim = Simulator(linked, this.VFS, this.simSettings)
-        this.mainCache.reset()
-        sim.state.cache = this.mainCache
+        sim = Simulator(linked, VFS, simSettings)
+        mainCache.reset()
+        sim.state.cache = mainCache
         tr = Tracer(sim)
     }
 
@@ -233,7 +235,7 @@ import kotlin.dom.removeClass
         } else {
             try {
                 val linked = Linker.link(listOf(prog))
-                sim = Simulator(linked, this.VFS, this.simSettings)
+                sim = Simulator(linked, VFS, simSettings)
             } catch (e: AssemblerError) {
                 errs = e.toString()
                 success = false
@@ -266,16 +268,16 @@ import kotlin.dom.removeClass
      */
     @JsName("reset") fun reset() {
         try {
-            val args = this.sim.args
-            this.sim = Simulator(this.sim.linkedProgram, this.VFS, this.sim.settings, this.sim.simulatorID)
+            val args = sim.args
+            sim = Simulator(sim.linkedProgram, VFS, sim.settings, sim.simulatorID)
             for (arg in args) {
-                this.sim.addArg(arg)
+                sim.addArg(arg)
             }
             Renderer.loadSimulator(sim)
             setCacheSettings()
             Renderer.updateCache(Address(0, MemSize.WORD))
         } catch (e: Throwable) {
-            Renderer.loadSimulator(Simulator(LinkedProgram(), this.VFS))
+            Renderer.loadSimulator(Simulator(LinkedProgram(), VFS))
             handleError("Reset Simulator", e)
         }
     }
@@ -411,8 +413,8 @@ import kotlin.dom.removeClass
     @JsName("currentlyRunning") fun currentlyRunning(): Boolean = timer != null
 
     @JsName("destructiveGetSimOut") fun destrictiveGetSimOut(): String {
-        val tmp = this.sim.stdout
-        this.sim.stdout = ""
+        val tmp = sim.stdout
+        sim.stdout = ""
         return tmp
     }
 
@@ -440,7 +442,7 @@ import kotlin.dom.removeClass
         if (!currentlyRunning()) {
             try {
                 val input = freg.value
-                val d = Decimal(f = userStringToFloat(input), d = userStringToDouble(input), isF = this.FReginputAsFloat)
+                val d = Decimal(f = userStringToFloat(input), d = userStringToDouble(input), isF = FReginputAsFloat)
                 sim.setFRegNoUndo(id, d)
             } catch (e: NumberFormatException) {
                 /* do nothing */
@@ -496,11 +498,11 @@ import kotlin.dom.removeClass
     }
 
     @JsName("setOnlyEcallExit") fun setOnlyEcallExit(b: Boolean) {
-        this.simSettings.ecallOnlyExit = b
+        simSettings.ecallOnlyExit = b
     }
 
     @JsName("setSetRegsOnInit") fun setSetRegsOnInit(b: Boolean) {
-        this.simSettings.setRegesOnInit = b
+        simSettings.setRegesOnInit = b
     }
 
     @JsName("verifyText") fun verifyText(input: HTMLInputElement) {
@@ -512,7 +514,7 @@ import kotlin.dom.removeClass
                         MemorySegments.setTextBegin(i)
                         val tabDisplay = document.getElementById("simulator-tab") as HTMLElement
                         if (tabDisplay.classList.contains("is-active")) {
-                            this.openSimulator()
+                            openSimulator()
                         }
                     } catch (e: SimulatorError) {
                         console.warn(e.toString())
@@ -533,33 +535,33 @@ import kotlin.dom.removeClass
 
     @JsName("setNumberOfCacheLevels") fun setNumberOfCacheLevels(i: Int) {
         if (i < 1) {
-            (document.getElementById("setNumCacheLvls") as HTMLInputElement).value = this.cacheLevels.size.toString()
+            (document.getElementById("setNumCacheLvls") as HTMLInputElement).value = cacheLevels.size.toString()
             handleError("Set Number of Cache Levels (LT0)", CacheError("You must set the number of caches to at least 1! If you do not want to use any cache, set this to 1 and then disable the cache."), true)
             return
         }
         (document.getElementById("setNumCacheLvls") as HTMLInputElement).value = i.toString()
-        if (i == this.cacheLevels.size) {
+        if (i == cacheLevels.size) {
             return
         }
-        if (this.cacheLevels.size < i) {
-            val lastCache = this.cacheLevels[this.cacheLevels.size - 1]
-            while (this.cacheLevels.size < i) {
-                val newCache = CacheHandler(this.cacheLevels.size + 1)
-                this.cacheLevels[this.cacheLevels.size - 1].nextLevelCacheHandler = newCache
-                this.cacheLevels.add(newCache)
+        if (cacheLevels.size < i) {
+            val lastCache = cacheLevels[cacheLevels.size - 1]
+            while (cacheLevels.size < i) {
+                val newCache = CacheHandler(cacheLevels.size + 1)
+                cacheLevels[cacheLevels.size - 1].nextLevelCacheHandler = newCache
+                cacheLevels.add(newCache)
                 Renderer.renderAddCacheLevel()
             }
             lastCache.update()
-        } else if (this.cacheLevels.size > i) {
-            while (this.cacheLevels.size > i) {
-                val prevCacheIndex = this.cacheLevels.size - 1
-                val prevCache = this.cacheLevels[prevCacheIndex]
-                this.cacheLevels.removeAt(prevCacheIndex)
-                val lastCache = this.cacheLevels[this.cacheLevels.size - 1]
+        } else if (cacheLevels.size > i) {
+            while (cacheLevels.size > i) {
+                val prevCacheIndex = cacheLevels.size - 1
+                val prevCache = cacheLevels[prevCacheIndex]
+                cacheLevels.removeAt(prevCacheIndex)
+                val lastCache = cacheLevels[cacheLevels.size - 1]
                 lastCache.nextLevelCacheHandler = null
-                if (this.cache.cacheLevel == prevCache.cacheLevel) {
-                    this.cache = lastCache
-                    Renderer.renderSetCacheLevel(this.cache.cacheLevel)
+                if (cache.cacheLevel == prevCache.cacheLevel) {
+                    cache = lastCache
+                    Renderer.renderSetCacheLevel(cache.cacheLevel)
                 }
                 Renderer.renderRemoveCacheLevel()
             }
@@ -568,7 +570,7 @@ import kotlin.dom.removeClass
     }
 
     @JsName("setCacheEnabled") fun setCacheEnabled(enabled: Boolean) {
-        this.cache.attach(enabled)
+        cache.attach(enabled)
         Renderer.updateCache(Address(0, MemSize.WORD))
     }
 
@@ -583,7 +585,7 @@ import kotlin.dom.removeClass
 
     fun updateCacheLvl(level: Int) {
         if (level in 1..cacheLevels.size) {
-            this.cache = cacheLevels[level - 1]
+            cache = cacheLevels[level - 1]
             Renderer.renderSetCacheLevel(level)
             setCacheSettings()
         } else {
@@ -629,11 +631,11 @@ import kotlin.dom.removeClass
 
     @JsName("updateCachePlacementPolicy") fun updateCachePlacementPolicy(e: HTMLSelectElement) {
         if (e.value == "N-Way Set Associative") {
-            this.cache.setPlacementPol(PlacementPolicy.NWAY_SET_ASSOCIATIVE)
+            cache.setPlacementPol(PlacementPolicy.NWAY_SET_ASSOCIATIVE)
         } else if (e.value == "Fully Associative") {
-            this.cache.setPlacementPol(PlacementPolicy.FULLY_ASSOCIATIVE)
+            cache.setPlacementPol(PlacementPolicy.FULLY_ASSOCIATIVE)
         } else {
-            this.cache.setPlacementPol(PlacementPolicy.DIRECT_MAPPING)
+            cache.setPlacementPol(PlacementPolicy.DIRECT_MAPPING)
             e.value = "Direct Mapped"
         }
         setCacheSettings()
@@ -641,9 +643,9 @@ import kotlin.dom.removeClass
 
     @JsName("updateCacheReplacementPolicy") fun updateCacheReplacementPolicy(e: HTMLSelectElement) {
         if (e.value == "Random") {
-            this.cache.setBlockRepPolicy(BlockReplacementPolicy.RANDOM)
+            cache.setBlockRepPolicy(BlockReplacementPolicy.RANDOM)
         } else {
-            this.cache.setBlockRepPolicy(BlockReplacementPolicy.LRU)
+            cache.setBlockRepPolicy(BlockReplacementPolicy.LRU)
             e.value = "LRU"
         }
         setCacheSettings()
@@ -685,11 +687,11 @@ import kotlin.dom.removeClass
     }
 
     @JsName("setAlignedAddressing") fun setAlignedAddressing(b: Boolean) {
-        this.simSettings.alignedAddress = b
+        simSettings.alignedAddress = b
     }
 
     @JsName("setMutableText") fun setMutableText(b: Boolean) {
-        this.simSettings.mutableText = b
+        simSettings.mutableText = b
     }
 
     @JsName("addPackage") fun addPackage(button: HTMLButtonElement) {
@@ -733,7 +735,7 @@ import kotlin.dom.removeClass
         }
         Renderer.setNameButtonSpinning("simulator-trace", true)
         Renderer.clearConsole()
-        this.loadTraceSettings()
+        loadTraceSettings()
         trTimer = window.setTimeout(Driver::traceSt, TIMEOUT_TIME)
     }
 
@@ -851,25 +853,25 @@ import kotlin.dom.removeClass
     }
 
     @JsName("persistentStorage") fun persistentStorage(b: Boolean) {
-        this.useLS = b
-        if (this.useLS) {
+        useLS = b
+        if (useLS) {
             console.log("Persistent storage has been enabled!")
-            this.LS.set("venus", "true")
-            this.saveAll()
+            LS.set("venus", "true")
+            saveAll()
         } else {
             console.log("Persistent storage has been disabled!")
-            this.LS.set("venus", "false")
+            LS.set("venus", "false")
             // this.LS.reset()
         }
     }
 
     @JsName("psReset") fun psReset() {
-        this.LS.reset()
+        LS.reset()
         console.log("Persistent storage has been reset!")
     }
 
     fun saveIntervalFn() {
-        if (this.useLS) {
+        if (useLS) {
             blinkSave(true)
             window.setTimeout(Driver::blinkSave, 500, false)
             saveAll()
@@ -888,50 +890,50 @@ import kotlin.dom.removeClass
     fun saveAll() {
         /*Trace settings*/
         loadTraceSettings()
-        this.LS.set("trace_format", tr.format)
-        this.LS.set("trace_base", tr.base.toString())
-        this.LS.set("trace_totCommands", tr.totCommands.toString())
-        this.LS.set("trace_maxSteps", tr.maxSteps.toString())
-        this.LS.set("trace_instFirst", tr.instFirst.toString())
-        this.LS.set("trace_wordAddressed", wordAddressed.toString())
-        this.LS.set("trace_TwoStage", this.tr.twoStage.toString())
+        LS.set("trace_format", tr.format)
+        LS.set("trace_base", tr.base.toString())
+        LS.set("trace_totCommands", tr.totCommands.toString())
+        LS.set("trace_maxSteps", tr.maxSteps.toString())
+        LS.set("trace_instFirst", tr.instFirst.toString())
+        LS.set("trace_wordAddressed", wordAddressed.toString())
+        LS.set("trace_TwoStage", tr.twoStage.toString())
 
         /*Text Begin*/
-        this.LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
+        LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
         /*Other Settings*/
-        this.LS.set("aligned_memory", simSettings.alignedAddress.toString())
-        this.LS.set("mutable_text", simSettings.mutableText.toString())
-        this.LS.set("ecall_exit_only", simSettings.ecallOnlyExit.toString())
-        this.LS.set("set_regs_on_init", simSettings.setRegesOnInit.toString())
+        LS.set("aligned_memory", simSettings.alignedAddress.toString())
+        LS.set("mutable_text", simSettings.mutableText.toString())
+        LS.set("ecall_exit_only", simSettings.ecallOnlyExit.toString())
+        LS.set("set_regs_on_init", simSettings.setRegesOnInit.toString())
 
         /*Program*/
         js("codeMirror.save()")
-        this.LS.set("prog", getText())
+        LS.set("prog", getText())
 
         /*Cache*/
-        val numExtraCache = this.LS.safeget("cache_levels", "1").toInt()
-        if (this.cacheLevels.size < numExtraCache) {
-            for (i in (this.cacheLevels.size + 1)..numExtraCache) {
-                this.LS.remove("cache_L" + i + "_associativity")
-                this.LS.remove("cache_L" + i + "_cacheBlockSize")
-                this.LS.remove("cache_L" + i + "_numberOfBlocks")
-                this.LS.remove("cache_L" + i + "_placementPol")
-                this.LS.remove("cache_L" + i + "_blockRepPolicy")
-                this.LS.remove("cache_L" + i + "_seed")
-                this.LS.remove("cache_L" + i + "_attach")
+        val numExtraCache = LS.safeget("cache_levels", "1").toInt()
+        if (cacheLevels.size < numExtraCache) {
+            for (i in (cacheLevels.size + 1)..numExtraCache) {
+                LS.remove("cache_L" + i + "_associativity")
+                LS.remove("cache_L" + i + "_cacheBlockSize")
+                LS.remove("cache_L" + i + "_numberOfBlocks")
+                LS.remove("cache_L" + i + "_placementPol")
+                LS.remove("cache_L" + i + "_blockRepPolicy")
+                LS.remove("cache_L" + i + "_seed")
+                LS.remove("cache_L" + i + "_attach")
             }
         }
-        this.LS.set("cache_levels", this.cacheLevels.size.toString())
-        this.LS.set("cache_current_level", this.cache.cacheLevel.toString())
-        for (i in this.cacheLevels.indices) {
-            val curCache = this.cacheLevels[i]
-            this.LS.set("cache_L" + (i + 1) + "_associativity", curCache.associativity().toString())
-            this.LS.set("cache_L" + (i + 1) + "_cacheBlockSize", curCache.cacheBlockSize().toString())
-            this.LS.set("cache_L" + (i + 1) + "_numberOfBlocks", curCache.numberOfBlocks().toString())
-            this.LS.set("cache_L" + (i + 1) + "_placementPol", curCache.placementPol().toString())
-            this.LS.set("cache_L" + (i + 1) + "_blockRepPolicy", curCache.blockRepPolicy().toString())
-            this.LS.set("cache_L" + (i + 1) + "_seed", curCache.seed)
-            this.LS.set("cache_L" + (i + 1) + "_attach", curCache.attached.toString())
+        LS.set("cache_levels", cacheLevels.size.toString())
+        LS.set("cache_current_level", cache.cacheLevel.toString())
+        for (i in cacheLevels.indices) {
+            val curCache = cacheLevels[i]
+            LS.set("cache_L" + (i + 1) + "_associativity", curCache.associativity().toString())
+            LS.set("cache_L" + (i + 1) + "_cacheBlockSize", curCache.cacheBlockSize().toString())
+            LS.set("cache_L" + (i + 1) + "_numberOfBlocks", curCache.numberOfBlocks().toString())
+            LS.set("cache_L" + (i + 1) + "_placementPol", curCache.placementPol().toString())
+            LS.set("cache_L" + (i + 1) + "_blockRepPolicy", curCache.blockRepPolicy().toString())
+            LS.set("cache_L" + (i + 1) + "_seed", curCache.seed)
+            LS.set("cache_L" + (i + 1) + "_attach", curCache.attached.toString())
         }
     }
 
@@ -957,7 +959,7 @@ import kotlin.dom.removeClass
 
         /*Program*/
         js("codeMirror.save()")
-        this.p = getText()
+        p = getText()
         if (useLS) {
             console.log("Using local storage!")
             /*Trace Settings*/
@@ -979,14 +981,14 @@ import kotlin.dom.removeClass
             sroi = LS.safeget("set_regs_on_init", sroi)
 
             /*Program*/
-            this.p = LS.safeget("prog", this.p)
+            p = LS.safeget("prog", p)
 
             /*Cache*/
             try {
-                setNumberOfCacheLevels(LS.safeget("cache_levels", this.cacheLevels.size.toString()).toInt())
-                updateCacheLvl(LS.safeget("cache_current_level", this.cache.cacheLevel.toString()).toInt())
-                for (i in this.cacheLevels.indices) {
-                    val currentCache = this.cacheLevels[i]
+                setNumberOfCacheLevels(LS.safeget("cache_levels", cacheLevels.size.toString()).toInt())
+                updateCacheLvl(LS.safeget("cache_current_level", cache.cacheLevel.toString()).toInt())
+                for (i in cacheLevels.indices) {
+                    val currentCache = cacheLevels[i]
                     currentCache.setCacheBlockSize(LS.safeget("cache_L" + (i + 1) + "_cacheBlockSize", currentCache.cacheBlockSize().toString()).toInt())
                     currentCache.setNumberOfBlocks(LS.safeget("cache_L" + (i + 1) + "_numberOfBlocks", currentCache.numberOfBlocks().toString()).toInt())
                     currentCache.setBlockRepPolicy(BlockReplacementPolicy.valueOf(LS.safeget("cache_L" + (i + 1) + "_blockRepPolicy", currentCache.blockRepPolicy().toString())))
@@ -1000,7 +1002,7 @@ import kotlin.dom.removeClass
                 console.warn(e)
             }
             try {
-                Driver.VFS.load()
+                VFS.load()
             } catch (e: Throwable) {
                 console.warn("An error occurred when loading the VFS data!")
                 console.warn(e)
