@@ -74,6 +74,14 @@ fun getBit(value: Number, position: Int): Int {
     return ((value.toLong() shr position) and 1).toInt()
 }
 
+fun unescapeString(s: String) =
+        s.replace("\\n", "\n")
+                .replace("\\r", "\r")
+                .replace("\\t", "\t")
+                .replace("\\b", "\b")
+                .replace("\\\"", "\"")
+                .replace("\\'", "'")
+
 private fun isCharacterLiteral(s: String) =
         s.first() == '\'' && s.last() == '\''
 
@@ -82,9 +90,8 @@ private fun characterLiteralToInt(s: String): Int {
     if (stripSingleQuotes == "\\'") return '\''.toInt()
     if (stripSingleQuotes == "\"") return '"'.toInt()
 
-    val jsonString = "\"$stripSingleQuotes\""
     try {
-        val parsed = JSON.parse<String>(jsonString)
+        val parsed = unescapeString(stripSingleQuotes)
         if (parsed.isEmpty()) throw NumberFormatException("character literal $s is empty")
         if (parsed.length > 1) throw NumberFormatException("character literal $s too long")
         return parsed[0].toInt()
@@ -98,9 +105,8 @@ private fun characterLiteralToLong(s: String): Long {
     if (stripSingleQuotes == "\\'") return '\''.toLong()
     if (stripSingleQuotes == "\"") return '"'.toLong()
 
-    val jsonString = "\"$stripSingleQuotes\""
     try {
-        val parsed = JSON.parse<String>(jsonString)
+        val parsed = unescapeString(stripSingleQuotes)
         if (parsed.isEmpty()) throw NumberFormatException("character literal $s is empty")
         if (parsed.length > 1) throw NumberFormatException("character literal $s too long")
         return parsed[0].toLong()
