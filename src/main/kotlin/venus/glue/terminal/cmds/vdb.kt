@@ -12,6 +12,7 @@ import venus.glue.vfs.VFSProgram
 import venus.glue.vfs.VFSType
 import venus.linker.LinkedProgram
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 import venus.riscv.Address
 import venus.riscv.MemSize
 import venus.riscv.Program
@@ -79,9 +80,14 @@ var vdb = Command(
 
             // Linking Stage for any programs
             if (progs.size > 0) {
+                val PandL = try {
+                    ProgramAndLibraries(progs, t.vfs)
+                } catch (e: AssertionError) {
+                    return "link: An error occurred when getting the imports: $e"
+                }
                 val linkedProgram: LinkedProgram
                 try {
-                    linkedProgram = Linker.link(progs)
+                    linkedProgram = Linker.link(PandL)
                 } catch (e: Throwable) {
                     return "vdb: An error occurred when running the linked program: $e"
                 }

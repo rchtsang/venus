@@ -5,7 +5,9 @@ package venus.simulator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 
 class ECALLTest {
     @Test fun terminateEarly() {
@@ -13,7 +15,8 @@ class ECALLTest {
         addi a0 x0 10
         ecall
         addi a0 x0 5""")
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(10, sim.getReg(10))
@@ -38,7 +41,8 @@ class ECALLTest {
         sw s2 0(a0)
         # retrieve the old 5
         lw s1 0(s0)""")
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(5, sim.getReg(9))

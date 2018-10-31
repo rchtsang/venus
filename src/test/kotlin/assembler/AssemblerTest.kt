@@ -2,9 +2,11 @@
 package venus.assembler
 /* ktlint-enable package-name */
 
+import venus.glue.vfs.VirtualFileSystem
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 import venus.simulator.Simulator
 
 class AssemblerTest {
@@ -15,7 +17,9 @@ class AssemblerTest {
         add x3 x1 x2
         andi x3 x3 8
         """)
-        val sim = Simulator(Linker.link(listOf(prog)))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked)
         sim.run()
         assertEquals(8, sim.getReg(3))
     }
@@ -26,7 +30,9 @@ class AssemblerTest {
         sw x1 60(x0)
         lw x2 -40(x1)
         """)
-        val sim = Simulator(Linker.link(listOf(prog)))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked)
         sim.step()
         assertEquals(100, sim.getReg(1))
         sim.step()
@@ -44,7 +50,9 @@ class AssemblerTest {
         addi x9 x9 1
         bne x9 x6 start
         """)
-        val sim = Simulator(Linker.link(listOf(prog)))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked)
         for (i in 1..17) sim.step()
         assertEquals(10, sim.getReg(8))
     }
@@ -54,7 +62,9 @@ class AssemblerTest {
         addi x8 x8 0xf7
         addi x9 x9 0b10001
         """)
-        val sim = Simulator(Linker.link(listOf(prog)))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked)
         sim.step()
         assertEquals(0xf7, sim.getReg(8))
         sim.step()
@@ -80,7 +90,9 @@ class AssemblerTest {
         sub x5, a2, a1  # Should be 8
         sub x6, a3, a2  # Should be 4
         """)
-        val sim = Simulator(Linker.link(listOf(prog)))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked)
         sim.run()
         assertEquals(8, sim.getReg(5))
         assertEquals(4, sim.getReg(6))

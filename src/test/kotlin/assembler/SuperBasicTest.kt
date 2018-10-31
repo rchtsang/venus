@@ -2,7 +2,9 @@
 package venus.assembler
 /* ktlint-enable package-name */
 
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 import venus.simulator.Simulator
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,7 +15,8 @@ class SuperBasicTest {
         addi x8 x8 13
         add x9 x8 x8
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(13, sim.getReg(8))
@@ -29,7 +32,8 @@ class SuperBasicTest {
         sb x9 -1(sp)
         lb x9 -1(sp)
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(5, sim.getReg(8))

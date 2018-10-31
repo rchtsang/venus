@@ -8,6 +8,7 @@ import venus.glue.vfs.VFSProgram
 import venus.glue.vfs.VFSType
 import venus.linker.LinkedProgram
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 import venus.riscv.Program
 
 var link = Command(
@@ -32,9 +33,14 @@ var link = Command(
                 }
                 progs.add((obj as VFSProgram).getProgram())
             }
+            val PandL = try {
+                ProgramAndLibraries(progs, t.vfs)
+            } catch (e: AssertionError) {
+                return "link: An error occurred when getting the imports: $e"
+            }
             val linkedProgram: LinkedProgram
             try {
-                linkedProgram = Linker.link(progs)
+                linkedProgram = Linker.link(PandL)
             } catch (e: Throwable) {
                 return "link: An error occurred when running the linked program: $e"
             }

@@ -11,6 +11,7 @@ import venus.glue.terminal.Terminal
 import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction
 import venus.riscv.insts.floating.Decimal
@@ -90,7 +91,8 @@ import kotlin.dom.removeClass
         if (ready) {
             try {
                 val success = assemble(getText())
-                if (success) {
+                if (success != null) {
+                    link(listOf(success))
                     Renderer.loadSimulator(sim)
                     setCacheSettings()
                     Renderer.updateCache(Address(0, MemSize.WORD))
@@ -199,14 +201,19 @@ import kotlin.dom.removeClass
      *
      * @param text the assembly code.
      */
-    internal fun assemble(text: String): Boolean {
+    internal fun assemble(text: String): Program? {
         val (prog, errors, warnings) = Assembler.assemble(text)
         if (errors.isNotEmpty()) {
             Renderer.displayError(errors.first())
-            return false
+            return null
         }
+        return prog
+    }
+
+    internal fun link(progs: List<Program>): Boolean {
         try {
-            val linked = Linker.link(listOf(prog))
+            val PandL = ProgramAndLibraries(progs, VFS)
+            val linked = Linker.link(PandL)
             loadSim(linked)
             return true
         } catch (e: AssemblerError) {
@@ -232,7 +239,8 @@ import kotlin.dom.removeClass
             success = false
         } else {
             try {
-                val linked = Linker.link(listOf(prog))
+                val PandL = ProgramAndLibraries(listOf(prog), VFS)
+                val linked = Linker.link(PandL)
                 sim = Simulator(linked, VFS, simSettings)
             } catch (e: AssemblerError) {
                 errs = e.toString()
