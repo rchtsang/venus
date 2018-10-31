@@ -1,14 +1,13 @@
-/* ktlint-disable package-name */
 package venus.simulator
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
 import venus.linker.Linker
 
 class FunctionCallTest {
-    @Test fun doubleJALR() {
+    @Test
+    fun doubleJALR() {
         val (prog, _) = Assembler.assemble("""
             jal x0 main
         double:

@@ -1,15 +1,14 @@
-/* ktlint-disable package-name */
 package venus.simulator
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
 import venus.linker.Linker
 import venus.riscv.MemorySegments
 
 class StaticDataTest {
-    @Test fun easyManualLoad() {
+    @Test
+    fun easyManualLoad() {
         val (prog, _) = Assembler.assemble("""
         .data
         .byte 1 2 3 4

@@ -1,14 +1,13 @@
-/* ktlint-disable package-name */
 package venus.simulator
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
 import venus.linker.Linker
 
 class Lab3Test {
-    @Test fun Ex1() {
+    @Test
+    fun Ex1() {
         val (prog, _) = Assembler.assemble(
 """
         .data

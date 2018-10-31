@@ -38,40 +38,4 @@ open class VFSFolder(var name: String, override var parent: VFSObject) : VFSObje
         }
         return me
     }
-
-    companion object {
-        fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {
-            val folder = VFSFolder(jsonContainer.label, parent)
-            for (i in 0 until js("jsonContainer.contents.length")) {
-                val value = js("jsonContainer.contents[i]")
-                var addchild = true
-                val obj = when (value.type) {
-                    VFSType.Folder.toString() -> {
-                        inflate(value, folder)
-                    }
-                    VFSType.Program.toString() -> {
-                        addchild = false
-                        VFSProgram.inflate(value, folder)
-                    }
-                    VFSType.LinkedProgram.toString() -> {
-                        addchild = false
-                        VFSLinkedProgram.inflate(value, folder)
-                    }
-                    VFSType.File.toString() -> {
-                        VFSFile.inflate(value, folder)
-                    }
-                    VFSType.Drive.toString() -> {
-                        VFSDrive.inflate(value, folder)
-                    }
-                    else -> {
-                        VFSDummy()
-                    }
-                }
-                if (addchild) {
-                    folder.addChild(obj)
-                }
-            }
-            return folder
-        }
-    }
 }

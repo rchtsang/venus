@@ -1,14 +1,13 @@
-/* ktlint-disable package-name */
 package venus.assembler
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import venus.simulator.Simulator
 import venus.linker.Linker
 
 class PseudoTest {
-    @Test fun moveTest() {
+    @Test
+    fun moveTest() {
         val (prog, _) = Assembler.assemble("""
         addi x1 x0 5
         mv x2 x1

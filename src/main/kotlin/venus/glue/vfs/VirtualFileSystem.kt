@@ -1,10 +1,8 @@
 package venus.glue.vfs
 
-import venus.glue.Driver
 import venus.simulator.SimulatorSettings
-import kotlin.browser.window
 
-@JsName("VirtualFileSystem") class VirtualFileSystem(val defaultDriveName: String, val simSettings: SimulatorSettings = SimulatorSettings()) {
+class VirtualFileSystem(val defaultDriveName: String, val simSettings: SimulatorSettings = SimulatorSettings()) {
     var sentinel = VFSDrive(defaultDriveName, VFSDummy())
     var currentLocation: VFSObject = sentinel
 
@@ -42,11 +40,11 @@ import kotlin.browser.window
         }
     }
 
-    @JsName("reset") fun reset() {
+    fun reset() {
         this.currentLocation = sentinel
     }
 
-    @JsName("mkdir") fun mkdir(dirName: String): String {
+    fun mkdir(dirName: String): String {
         val newdir = VFSFolder(dirName, currentLocation)
         return if (currentLocation.addChild(newdir)) {
             ""
@@ -55,7 +53,7 @@ import kotlin.browser.window
         }
     }
 
-    @JsName("cd") fun cd(dir: String): String {
+    fun cd(dir: String): String {
         val splitpath = getPath(dir)
         var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
             splitpath.removeAt(0)
@@ -79,7 +77,7 @@ import kotlin.browser.window
         return ""
     }
 
-    @JsName("touch") fun touch(filename: String): String {
+    fun touch(filename: String): String {
         val newfile = VFSFile(filename, currentLocation)
         return if (currentLocation.addChild(newfile)) {
             ""
@@ -88,7 +86,7 @@ import kotlin.browser.window
         }
     }
 
-    @JsName("ls") fun ls(): String {
+    fun ls(): String {
         var str = ""
         for (s in currentLocation.contents.keys) {
             str += s + (if ((currentLocation.contents[s] as VFSObject).type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
@@ -96,7 +94,7 @@ import kotlin.browser.window
         return str
     }
 
-    @JsName("cat") fun cat(filedir: String): String {
+    fun cat(filedir: String): String {
         val splitpath = getPath(filedir)
         var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
             splitpath.removeAt(0)
@@ -122,11 +120,11 @@ import kotlin.browser.window
         return templocation.contents.get(VFSFile.innerTxt) as String
     }
 
-    @JsName("path") fun path(): String {
+    fun path(): String {
         return currentLocation.getPath() + VFSObject.separator
     }
     // @FIXME There is a bug for going into a file
-    @JsName("remove") fun remove(path: String): String {
+    fun remove(path: String): String {
         val templocation = this.getObjectFromPath(path)
         if (templocation === null) {
             return "rm: cannot remove '$path': No such file or directory"
@@ -139,7 +137,7 @@ import kotlin.browser.window
         return (if (p.removeChild(templocation.label)) "" else "rm: could not remove file")
     }
 
-    @JsName("write") fun write(path: String, msg: String): String {
+    fun write(path: String, msg: String): String {
         val splitpath = getPath(path)
         var templocation = if (splitpath.size > 0 && splitpath[0] == sentinel.label) {
             splitpath.removeAt(0)
@@ -200,32 +198,5 @@ import kotlin.browser.window
             }
         }
         return fnames
-    }
-
-    fun stringify(): String {
-        return JSON.stringify(sentinel.stringify())
-    }
-
-    fun parse(vfsString: String) {
-        val raw = JSON.parse<JsonContainer>(vfsString)
-        val temp = VFSDrive.inflate(raw, VFSDummy())
-        val newsent = temp as VFSDrive
-        newsent.parent = newsent
-        this.sentinel = newsent
-        this.currentLocation = this.sentinel
-    }
-
-    fun load() {
-        val vfsJSON = window.localStorage.getItem(LSName)
-        if (vfsJSON != undefined) {
-            this.parse(vfsJSON)
-        }
-    }
-
-    fun save() {
-        if (Driver.useLS) {
-            val vfsJSON = this.stringify()
-            window.localStorage.setItem(LSName, vfsJSON)
-        }
     }
 }

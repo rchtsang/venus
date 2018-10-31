@@ -1,14 +1,13 @@
-/* ktlint-disable package-name */
 package venus.assembler
-/* ktlint-enable package-name */
 
+import org.junit.Test
 import venus.linker.Linker
 import venus.simulator.Simulator
-import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class SuperBasicTest {
-    @Test fun superBasic() {
+    @Test
+    fun superBasic() {
         val (prog, _) = Assembler.assemble("""
         addi x8 x8 13
         add x9 x8 x8

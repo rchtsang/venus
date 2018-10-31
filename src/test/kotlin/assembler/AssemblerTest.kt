@@ -1,14 +1,14 @@
-/* ktlint-disable package-name */
 package venus.assembler
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
+import venus.glue.jvm.JVMInitInstructions
 import kotlin.test.assertEquals
 import venus.linker.Linker
 import venus.simulator.Simulator
 
 class AssemblerTest {
-    @Test fun assembleLexerTest() {
+    @Test
+    fun assembleLexerTest() {
         val (prog, _) = Assembler.assemble("""
         addi x1 x0 5
         addi x2 x1 5

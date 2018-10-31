@@ -1,12 +1,11 @@
-/* ktlint-disable package-name */
 package venus.simulator
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 
 class MemoryTest {
-    @Test fun byteStoreLoadTest() {
+    @Test
+    fun byteStoreLoadTest() {
         val memory = Memory()
         memory.storeByte(100, 42)
         assertEquals(42, memory.loadByte(100))

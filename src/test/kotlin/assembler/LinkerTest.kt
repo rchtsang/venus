@@ -1,8 +1,6 @@
-/* ktlint-disable package-name */
 package venus.linker
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
@@ -11,7 +9,8 @@ import venus.assembler.Assembler
 import venus.assembler.AssemblerError
 
 class LinkerTest {
-    @Test fun linkOneFile() {
+    @Test
+    fun linkOneFile() {
         val (prog, _) = Assembler.assemble("""
         start:
         addi x8 x8 1

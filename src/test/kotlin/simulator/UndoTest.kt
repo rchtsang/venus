@@ -1,14 +1,13 @@
-/* ktlint-disable package-name */
 package venus.simulator
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
 import venus.linker.Linker
 
 class UndoTest {
-    @Test fun undoRegisterSet() {
+    @Test
+    fun undoRegisterSet() {
         val (prog, _) = Assembler.assemble("""
         addi x8 x0 7
         addi x8 x0 9

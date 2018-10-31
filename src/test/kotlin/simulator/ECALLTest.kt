@@ -1,14 +1,13 @@
-/* ktlint-disable package-name */
 package venus.simulator
-/* ktlint-enable package-name */
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
 import venus.linker.Linker
 
 class ECALLTest {
-    @Test fun terminateEarly() {
+    @Test
+    fun terminateEarly() {
         val (prog, _) = Assembler.assemble("""
         addi a0 x0 10
         ecall
