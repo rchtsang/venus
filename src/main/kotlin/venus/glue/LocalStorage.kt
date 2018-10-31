@@ -1,4 +1,4 @@
-package venus.glue.js
+package venus.glue
 
 class LocalStorage {
     // @todo convert this to js and use it externally instead.

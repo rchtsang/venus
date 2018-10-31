@@ -1,10 +1,10 @@
-package venus.glue.js.terminal.cmds
+package venus.glue.terminal.cmds
 
 import venus.glue.Driver
-import venus.glue.js.terminal.Command
-import venus.glue.js.terminal.Terminal
-import venus.glue.js.vfs.VFSFile
-import venus.glue.js.vfs.VFSType
+import venus.glue.terminal.Command
+import venus.glue.terminal.Terminal
+import venus.glue.vfs.VFSFile
+import venus.glue.vfs.VFSType
 
 var edit = Command(
         name = "edit",

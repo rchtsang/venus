@@ -1,4 +1,4 @@
-package venus.glue.js.vfs
+package venus.glue.vfs
 
 class VFSFile(override var label: String, override var parent: VFSObject) : VFSObject {
     override val type = VFSType.File

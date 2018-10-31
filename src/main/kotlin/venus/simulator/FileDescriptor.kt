@@ -1,6 +1,6 @@
 package venus.simulator
 
-import venus.glue.js.vfs.VFSFile
+import venus.glue.vfs.VFSFile
 
 class FileDescriptor(var vfsFile: VFSFile, var fileMetaData: FileMetaData) {
     var feof = false

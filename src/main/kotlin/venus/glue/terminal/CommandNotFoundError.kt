@@ -1,4 +1,4 @@
-package venus.glue.js.terminal
+package venus.glue.terminal
 
 class CommandNotFoundError : Throwable {
     /**

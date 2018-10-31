@@ -1,4 +1,4 @@
-package venus.glue.js.terminal
+package venus.glue.terminal
 
 open class Command(
     val name: String,

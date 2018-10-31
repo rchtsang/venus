@@ -1,4 +1,4 @@
-package venus.glue.js
+package venus.glue
 
 class CookieJar() {
     init {

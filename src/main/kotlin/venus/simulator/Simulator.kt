@@ -3,7 +3,7 @@ package venus.simulator
 /* ktlint-disable no-wildcard-imports */
 
 import venus.glue.Renderer
-import venus.glue.js.vfs.VirtualFileSystem
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction

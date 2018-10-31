@@ -1,8 +1,8 @@
-package venus.glue.js.terminal.cmds
+package venus.glue.terminal.cmds
 
-import venus.glue.js.terminal.Command
-import venus.glue.js.terminal.CommandNotImplementedError
-import venus.glue.js.terminal.Terminal
+import venus.glue.terminal.Command
+import venus.glue.terminal.CommandNotImplementedError
+import venus.glue.terminal.Terminal
 
 var tree = Command(
         name = "tree",

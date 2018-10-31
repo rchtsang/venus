@@ -1,11 +1,11 @@
-package venus.glue.js.terminal.cmds
+package venus.glue.terminal.cmds
 
-import venus.glue.js.terminal.Command
-import venus.glue.js.terminal.Terminal
-import venus.glue.js.vfs.VFSLinkedProgram
-import venus.glue.js.vfs.VFSObject
-import venus.glue.js.vfs.VFSProgram
-import venus.glue.js.vfs.VFSType
+import venus.glue.terminal.Command
+import venus.glue.terminal.Terminal
+import venus.glue.vfs.VFSLinkedProgram
+import venus.glue.vfs.VFSObject
+import venus.glue.vfs.VFSProgram
+import venus.glue.vfs.VFSType
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.Program

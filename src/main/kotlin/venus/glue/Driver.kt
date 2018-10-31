@@ -7,10 +7,8 @@ import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
-import venus.glue.js.LocalStorage
-import venus.glue.js.handleError
-import venus.glue.js.terminal.Terminal
-import venus.glue.js.vfs.VirtualFileSystem
+import venus.glue.terminal.Terminal
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
 import venus.riscv.*
