@@ -652,7 +652,7 @@ import kotlin.dom.removeClass
     }
 
     @JsName("setCacheSeed") fun setCacheSeed(v: String) {
-        cache.setSeed(v)
+        cache.setCurrentSeed(v)
         setCacheSettings()
     }
 
@@ -995,7 +995,7 @@ import kotlin.dom.removeClass
                     currentCache.setPlacementPol(PlacementPolicy.valueOf(LS.safeget("cache_L" + (i + 1) + "_placementPol", currentCache.placementPol().toString())))
                     currentCache.setAssociativity(LS.safeget("cache_L" + (i + 1) + "_associativity", currentCache.associativity().toString()).toInt())
                     currentCache.attach(LS.safeget("cache_L" + (i + 1) + "_attach", currentCache.attached.toString()) == "true")
-                    currentCache.setSeed(LS.safeget("cache_L" + (i + 1) + "_seed", currentCache.seed))
+                    currentCache.setCurrentSeed(LS.safeget("cache_L" + (i + 1) + "_seed", currentCache.seed))
                 }
             } catch (e: Throwable) {
                 console.warn("An error occurred when loading the cache data!")

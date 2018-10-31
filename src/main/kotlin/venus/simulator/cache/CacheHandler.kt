@@ -4,10 +4,11 @@ import venus.riscv.Address
 import venus.riscv.MemSize
 import kotlin.math.floor
 import kotlin.math.log2
+import kotlin.random.Random
 
 class CacheHandler(var cacheLevel: Int) {
-    var seed: String = Math.random().toString()
-        private set
+    var seed: String = Random.nextLong().toString()
+    var seededRandom = Random(seed.hashCode())
     private var numberOfBlocks: Int = 1
     /*This is in bytes*/
     private var cacheBlockSize: Int = 4
@@ -60,8 +61,9 @@ class CacheHandler(var cacheLevel: Int) {
         }
     }
 
-    fun setSeed(v: String) {
+    fun setCurrentSeed(v: String) {
         this.seed = v
+        this.seededRandom = Random(this.seed.hashCode())
         this.update()
     }
 
@@ -92,7 +94,7 @@ class CacheHandler(var cacheLevel: Int) {
 
     fun reset(full: Boolean = true) {
         try {
-            Math.seedrandom(seed)
+            this.seededRandom = Random(this.seed.hashCode())
         } catch (e: Throwable) {}
         cacheList = ArrayList()
         cacheList.add(CacheState(Address(0, MemSize.WORD), this, RW.READ, true))
@@ -227,13 +229,6 @@ class CacheHandler(var cacheLevel: Int) {
 
     internal fun isInt(d: Double): Boolean {
         return !d.isNaN() && !d.isInfinite() && d == floor(d)
-    }
-}
-
-external class Math {
-    companion object {
-        fun seedrandom(seed: String)
-        fun random(): Double
     }
 }
 
