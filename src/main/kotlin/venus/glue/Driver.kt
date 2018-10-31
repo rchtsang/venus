@@ -42,25 +42,33 @@ object Driver {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        if (args.size != 1) {
-            println("This takes in one argument: the file you want to run!")
+        if (args.isEmpty()) {
+            println("This takes in one or more arguments: They must be the files which you want to link together and run!")
             exitProcess(-1)
         }
 
-        JVMInitInstructions()
+        val progs = ArrayList<Program>()
 
-        val filename = args[0]
+        for (arg in args) {
+            val filename = arg
 
-        val assemblyProgramText = try {
-            readFileDirectlyAsText(args[0])
-        } catch (e: FileNotFoundException) {
-            println("Could not find the file: " + filename)
-            exitProcess(1)
+            val assemblyProgramText = try {
+                readFileDirectlyAsText(filename)
+            } catch (e: FileNotFoundException) {
+                println("Could not find the file: " + filename)
+                exitProcess(1)
+            }
+
+            val prog = assemble(assemblyProgramText)
+            if (prog == null) {
+                exitProcess(-1)
+            } else {
+                progs.add(prog)
+            }
         }
 
-        if (!assemble(assemblyProgramText)) {
-            exitProcess(-1)
-        }
+        link(progs)
+
         try {
             sim.run()
             println() // This is to end on a new line regardless of the output.
@@ -79,7 +87,7 @@ object Driver {
      *
      * @param text the assembly code.
      */
-    internal fun assemble(text: String): Boolean {
+    internal fun assemble(text: String): Program? {
         val (prog, errors, warnings) = Assembler.assemble(text)
         if (warnings.isNotEmpty()) {
             for (warning in warnings) {
@@ -91,10 +99,14 @@ object Driver {
             for (error in errors) {
                 Renderer.displayError(error)
             }
-            return false
+            return null
         }
+        return prog
+    }
+
+    internal fun link(progs: List<Program>): Boolean {
         try {
-            val linked = Linker.link(listOf(prog))
+            val linked = Linker.link(progs)
             loadSim(linked)
             return true
         } catch (e: AssemblerError) {
