@@ -304,8 +304,32 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
                 }
             }
 
-            ".float", ".double" -> {
-                println("Warning: $directive not currently supported!")
+            ".float" -> {
+                checkArgsLength(args, 1)
+                val value = args[0]
+                val float = userStringToFloat(value)
+                val bits = float.toRawBits()
+                prog.addToData(bits.toByte())
+                prog.addToData((bits shr 8).toByte())
+                prog.addToData((bits shr 16).toByte())
+                prog.addToData((bits shr 24).toByte())
+                currentDataOffset += 4
+            }
+
+            ".double" -> {
+                checkArgsLength(args, 1)
+                val value = args[0]
+                val double = userStringToDouble(value)
+                val bits = double.toRawBits()
+                prog.addToData(bits.toByte())
+                prog.addToData((bits shr 8).toByte())
+                prog.addToData((bits shr 16).toByte())
+                prog.addToData((bits shr 24).toByte())
+                prog.addToData((bits shr 32).toByte())
+                prog.addToData((bits shr 40).toByte())
+                prog.addToData((bits shr 48).toByte())
+                prog.addToData((bits shr 56).toByte())
+                currentDataOffset += 8
             }
 
             else -> throw AssemblerError("unknown assembler directive $directive")
