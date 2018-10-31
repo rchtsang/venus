@@ -8,8 +8,8 @@ open class VFSFolder(var name: String, override var parent: VFSObject) : VFSObje
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()
     init {
-        contents[""] = parent
-        contents[""] = this
+        contents[".."] = parent
+        contents["."] = this
     }
     fun addFile(name: String): Boolean {
         if (isValidName(name) && !contents.containsKey(name)) {
@@ -32,7 +32,7 @@ open class VFSFolder(var name: String, override var parent: VFSObject) : VFSObje
         me.permissions = this.permissions
         me.type = this.type.toString()
         for (item in this.contents.keys) {
-            if (item !in listOf("", "")) {
+            if (item !in listOf(".", "..")) {
                 me.contents.add((this.contents[item] as VFSObject).stringify())
             }
         }
