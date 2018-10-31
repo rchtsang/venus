@@ -8,5 +8,5 @@ val fmsubs = FR4TypeInstruction(
         name = "fmsub.s",
         opcode = 0b1000111,
         funct2 = 0b00,
-        eval32 = { a, b, c -> Decimal(f = (a.getFloat() * b.getFloat()) - c.getFloat()) }
+        eval32 = { a, b, c -> Decimal(f = (a.getCurrentFloat() * b.getCurrentFloat()) - c.getCurrentFloat()) }
 )

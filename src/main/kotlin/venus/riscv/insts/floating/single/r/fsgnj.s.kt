@@ -10,5 +10,5 @@ val fsgnjs = F3RTypeInstruction(
         opcode = 0b1010011,
         funct7 = 0b0010000,
         funct3 = 0b000,
-        eval32 = { a, b -> Decimal(f = a.getFloat().withSign(b.getFloat())) }
+        eval32 = { a, b -> Decimal(f = a.getCurrentFloat().withSign(b.getCurrentFloat())) }
 )

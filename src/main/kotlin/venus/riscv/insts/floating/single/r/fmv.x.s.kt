@@ -9,5 +9,5 @@ val fmvxs = FtRTypeInstruction(
         funct7 = 0b1110000,
         funct3 = 0b000,
         rs2 = 0b00000,
-        eval32 = { a, b -> a.getFloat().toRawBits() }
+        eval32 = { a, b -> a.getCurrentFloat().toRawBits() }
 )

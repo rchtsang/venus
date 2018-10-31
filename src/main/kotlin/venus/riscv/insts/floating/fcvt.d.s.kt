@@ -7,5 +7,5 @@ val fcvtds = FRRTypeInstruction(
         opcode = 0b1010011,
         funct7 = 0b0100001,
         rs2 = 0b00000,
-        eval32 = { a, b -> Decimal(d = a.getFloat().toDouble(), isF = false) }
+        eval32 = { a, b -> Decimal(d = a.getCurrentFloat().toDouble(), isF = false) }
 )

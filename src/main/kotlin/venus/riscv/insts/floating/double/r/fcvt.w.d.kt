@@ -9,5 +9,5 @@ val fcvtwd = FtRTypeInstruction(
         funct7 = 0b1100001,
         funct3 = 0b000,
         rs2 = 0b00000,
-        eval32 = { a, b -> round(a.getDouble()).toInt() }
+        eval32 = { a, b -> round(a.getCurrentDouble()).toInt() }
 )

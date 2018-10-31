@@ -10,5 +10,5 @@ val fsgnjxd = F3RTypeInstruction(
         opcode = 0b1010011,
         funct7 = 0b0010001,
         funct3 = 0b010,
-        eval32 = { a, b -> Decimal(d = a.getDouble().withSign((a.getDouble().toRawBits() xor b.getDouble().toRawBits()).sign), isF = false) }
+        eval32 = { a, b -> Decimal(d = a.getCurrentDouble().withSign((a.getCurrentDouble().toRawBits() xor b.getCurrentDouble().toRawBits()).sign), isF = false) }
 )
