@@ -9,5 +9,5 @@ val fsgnjd = F3RTypeInstruction(
         opcode = 0b1010011,
         funct7 = 0b0010001,
         funct3 = 0b000,
-        eval32 = { a, b -> Decimal(d = a.getDouble().withSign(b.getDouble()), isF = false) }
+        eval32 = { a, b -> Decimal(d = a.getCurrentDouble().withSign(b.getCurrentDouble()), isF = false) }
 )

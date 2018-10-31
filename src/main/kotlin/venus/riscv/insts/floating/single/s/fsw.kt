@@ -10,7 +10,7 @@ val fsw = FSTypeInstruction(
         funct3 = 0b010,
 //        store16 = NoImplementation,
         store32 = { sim, address, value ->
-            sim.storeWordwCache(address, value.getFloat().toRawBits())
+            sim.storeWordwCache(address, value.getCurrentFloat().toRawBits())
         }
 //        store64 = NoImplementation,
 //        store128 = NoImplementation

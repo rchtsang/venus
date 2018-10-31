@@ -10,5 +10,5 @@ val fcvtwus = FtRTypeInstruction(
         funct7 = 0b1100001,
         funct3 = 0b000,
         rs2 = 0b00001,
-        eval32 = { a, b -> abs(round(a.getDouble())).toInt() }
+        eval32 = { a, b -> abs(round(a.getCurrentDouble())).toInt() }
 )

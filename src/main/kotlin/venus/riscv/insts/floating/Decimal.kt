@@ -4,9 +4,7 @@ import kotlin.math.abs
 
 class Decimal(f: Float = 0F, d: Double = 0.0, isF: Boolean = true) {
     var float: Float = f
-        private set
     var double: Double = d
-        private set
     var isFloat: Boolean = isF
     fun isDouble(): Boolean = !this.isFloat
 
@@ -28,7 +26,7 @@ class Decimal(f: Float = 0F, d: Double = 0.0, isF: Boolean = true) {
         }
     }
 
-    fun getFloat(): Float {
+    fun getCurrentFloat(): Float {
         if (this.isFloat) {
             return this.float
         } else {
@@ -38,7 +36,7 @@ class Decimal(f: Float = 0F, d: Double = 0.0, isF: Boolean = true) {
         }
     }
 
-    fun getDouble(): Double {
+    fun getCurrentDouble(): Double {
         if (this.isFloat) {
             var s = this.float.toRawBits().toString(16)
             s += "0".repeat(8 - s.length)

@@ -10,5 +10,5 @@ val fsqrts = FRRTypeInstruction(
         opcode = 0b1010011,
         funct7 = 0b0101100,
         rs2 = 0b00000,
-        eval32 = { a, b -> Decimal(f = sqrt((a.getFloat()).toDouble()).toFloat()) }
+        eval32 = { a, b -> Decimal(f = sqrt((a.getCurrentFloat()).toDouble()).toFloat()) }
 )
