@@ -1,12 +1,11 @@
 package venus.simulator.cache
 
-import venus.simulator.cache.Math.Companion.random
 import kotlin.math.floor
 
 /**
  * Created by thaum on 7/29/2018.
  */
-class Set(internal var associativity: Int, internal var blocksize: Int) {
+class Set(internal var associativity: Int, internal var blocksize: Int, val cacheHandler: CacheHandler) {
     internal var useCounter: Int = 0
     internal var blocks: Array<Block>
 
@@ -21,7 +20,7 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
     }
 
     fun copy(): Set {
-        var s = Set(associativity, blocksize)
+        var s = Set(associativity, blocksize, cacheHandler)
         s.useCounter = this.useCounter
         for (i in blocks.indices) {
             s.blocks[i] = this.blocks[i].copy()
@@ -68,7 +67,7 @@ class Set(internal var associativity: Int, internal var blocksize: Int) {
 
     fun getRandomInt(min: Int, vmax: Int): Int {
         val max = vmax + 1
-        return minOf(floor(random() * (max - min)).toInt() + min, vmax)
+        return minOf(floor(cacheHandler.seededRandom.nextDouble() * (max - min)).toInt() + min, vmax)
     }
 
     // returns the Block if found, null otherwise

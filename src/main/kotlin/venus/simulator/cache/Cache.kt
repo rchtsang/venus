@@ -38,7 +38,7 @@ class Cache
         // create the sets that make up this cHandler
         for (i in s.indices)
             // s[i] = Set(this.associativity, this.blocksize)
-            s[i] = Set(c.associativity(), c.cacheBlockSize())
+            s[i] = Set(c.associativity(), c.cacheBlockSize(), c)
         sets = s.filterNotNull().toTypedArray()
     }
 
