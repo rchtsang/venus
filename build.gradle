@@ -7,7 +7,7 @@ buildscript {
     ext.ktlint_version = '0.27.0'
 
     repositories {
-        maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib/$kotlin_version" }
+        mavenCentral()
         jcenter()
     }
     dependencies {
@@ -27,7 +27,6 @@ configurations {
 }
 
 repositories {
-    maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib/$kotlin_version" }
     mavenCentral()
     jcenter()
 }
