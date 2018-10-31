@@ -1,5 +1,13 @@
 package venus.glue.jvm
 
+import venus.riscv.insts.floating.double.i.fld
+import venus.riscv.insts.floating.double.r.*
+import venus.riscv.insts.floating.double.s.fsd
+import venus.riscv.insts.floating.fcvtds
+import venus.riscv.insts.floating.fcvtsd
+import venus.riscv.insts.floating.single.i.flw
+import venus.riscv.insts.floating.single.r.*
+import venus.riscv.insts.floating.single.s.fsw
 import venus.riscv.insts.integer.base.i.*
 import venus.riscv.insts.integer.base.r.*
 import venus.riscv.insts.integer.base.sb.*
@@ -95,6 +103,59 @@ class JVMInitInstructions {
             remu
 //            remuw
 //            remw
+            fld
+            faddd
+            fclassd
+            fcvtdw
+            fcvtdwu
+            fcvtwd
+            fcvtwud
+            feqd
+            fled
+            fltd
+            fmaddd
+            fmaxd
+            fmind
+            fmsubd
+            fmuld
+            fmvdx
+            fmvxd
+            fnmaddd
+            fnmsubd
+            fsgnjd
+            fsgnjnd
+            fsgnjxd
+            fsqrtd
+            fsubd
+            fsd
+            flw
+            fadds
+            fclasss
+            fcvtsw
+            fcvtswu
+            fcvtws
+            fcvtwus
+            fdivs
+            feqs
+            fles
+            flts
+            fmadds
+            fmaxs
+            fmins
+            fmsubs
+            fmuls
+            fmvsx
+            fmvxs
+            fnmadds
+            fnmsubs
+            fsgnjs
+            fsgnjns
+            fsgnjxs
+            fsqrts
+            fsubs
+            fsw
+            fcvtds
+            fcvtsd
             inited = true
         }
     }
