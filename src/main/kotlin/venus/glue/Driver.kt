@@ -7,6 +7,7 @@ import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
+import venus.assembler.Lexer
 import venus.glue.terminal.Terminal
 import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
