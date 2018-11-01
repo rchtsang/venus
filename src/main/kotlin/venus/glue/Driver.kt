@@ -425,7 +425,7 @@ import kotlin.dom.removeClass
     }
 
     @JsName("openVenusTab") fun openVenusTab(tabid: String) {
-        val tabs = listOf("venus-terminal", "venus-files", "venus-url")
+        val tabs = listOf("venus-terminal", "venus-files", "venus-url", "venus-jvm")
         Renderer.renderTab(tabid, tabs)
     }
 
