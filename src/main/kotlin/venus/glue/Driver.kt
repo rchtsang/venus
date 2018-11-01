@@ -43,33 +43,35 @@ object Driver {
     fun main(args: Array<String>) {
 
         if (args.isEmpty()) {
-            println("This takes in one or more arguments: They must be the files which you want to link together and run!")
+            println("Welcome to the Venus JVM!\nTo use this program please specify a program to compile and then any args which are needed:")
+            println("usage: [program text] [args...]")
             exitProcess(-1)
         }
 
         val progs = ArrayList<Program>()
 
-        for (arg in args) {
-            val filename = arg
+        val filename = args[0]
 
-            val assemblyProgramText = try {
-                readFileDirectlyAsText(filename)
-            } catch (e: FileNotFoundException) {
-                println("Could not find the file: " + filename)
-                exitProcess(1)
-            }
+        val assemblyProgramText = try {
+            readFileDirectlyAsText(filename)
+        } catch (e: FileNotFoundException) {
+            println("Could not find the file: " + filename)
+            exitProcess(1)
+        }
 
-            val prog = assemble(assemblyProgramText)
-            if (prog == null) {
-                exitProcess(-1)
-            } else {
-                progs.add(prog)
-            }
+        val prog = assemble(assemblyProgramText)
+        if (prog == null) {
+            exitProcess(-1)
+        } else {
+            progs.add(prog)
         }
 
         link(progs)
 
         try {
+            for (i in 1 until args.size) {
+                sim.addArg(args[i])
+            }
             sim.run()
             println() // This is to end on a new line regardless of the output.
         } catch (e: Exception) {
