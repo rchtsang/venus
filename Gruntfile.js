@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         },
 
         copy: {
-		  	main: {
+		  	venus: {
 			    files: [
                     {expand: true,
                         cwd: 'src/main/frontend/images',
@@ -40,6 +40,20 @@ module.exports = function(grunt) {
                         dest: 'out/packages/',},
                 ]
 		  	},
+            jvm: {
+                files: [
+                    {expand: true,
+                        cwd: 'build/libs',
+                        dest: 'out/jvm/',
+                        src: [
+                            'venus*.jar'
+                        ],
+                        rename: function(dest, src) {
+                            return dest + "venus-jvm-latest.jar"
+                        }
+                    },
+                ]
+            },
 		},
 
         htmlmin: {
@@ -57,17 +71,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-
-        JVMCopy: {
-            main: {
-                files: [
-                    {expand: true,
-                        cwd: 'build/libs/*',
-                        src: '**',
-                        dest: 'out/jvm/',},
-                ]
-            }
-        }
     });
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -75,7 +78,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.registerTask('test', 'qunit:src');
-    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin', 'copy']);
+    grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin', 'copy:venus']);
     grunt.registerTask('frontend', ['cssmin:venus', 'htmlmin:venus']);
-    grunt.registerTask('distJVM', ['JVMCopy'])
+    grunt.registerTask('distjvm', ['copy:jvm']);
 };
