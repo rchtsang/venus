@@ -15,11 +15,34 @@ cache:
   directories:
     - node_modules/
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: out
-  on:
-    branch: master
-  email: deployer@travis-ci.org
-  name: Travis CI Deployment
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: out
+    keep-history: true
+    on:
+      branch: master
+    email: deployer@travis-ci.org
+    name: Travis CI Deployment
+
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    file_glob: true
+    local_dir: build/libs/venus-*.jar
+    keep-history: true
+    on:
+      branch: JVM
+    email: deployer@travis-ci.org
+    name: Travis CI Deployment
+
+#  - provider: releases
+#  github_token: $GITHUB_TOKEN
+#  file_glob: true
+#  file: build/libs/venus-*.jar
+#  skip_cleanup: true
+#  email: deployer@travis-ci.org
+#  name: Travis CI Deployment
+#  on:
+#    tags: true
+#    branch:
