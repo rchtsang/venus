@@ -78,7 +78,7 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
     /** The text offset where the next instruction will be written */
     private var currentTextOffset = 0 // MemorySegments.TEXT_BEGIN
     /** The data offset where more data will be written */
-    private var currentDataOffset = MemorySegments.STATIC_BEGIN - MemorySegments.TEXT_BEGIN
+    private var currentDataOffset = MemorySegments.STATIC_BEGIN // - MemorySegments.TEXT_BEGIN
     /** Whether or not we are currently in the text segment */
     private var inTextSegment = true
     /** TAL Instructions which will be added to the program */
