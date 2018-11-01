@@ -1,40 +1,41 @@
 language: java
 jdk: oraclejdk8
 before_install:
-  - nvm install 4
-  - npm install
-  - npm install -g grunt-cli
+- nvm install 4
+- npm install
+- npm install -g grunt-cli
 script:
-  - ./gradlew build -x ktlint
-  - ./gradlew ktlint
-  - grunt test
+- ./gradlew build -x ktlint
+- ./gradlew ktlint
+- grunt test
 after_success:
 #  - ./gradlew dokka
-  - test $TRAVIS_BRANCH = "master" && grunt dist
-  - test $TRAVIS_BRANCH = "JVM" && grunt distjvm
+- git clone -b gh-pages https://github.com/ThaumicMekanism/venus.git out && rm -rf out/.git
+- test $TRAVIS_BRANCH = "master" && grunt dist
+- test $TRAVIS_BRANCH = "JVM" && grunt distjvm
 cache:
   directories:
-    - node_modules/
+  - node_modules/
 deploy:
-  - provider: pages
-    skip_cleanup: true
-    github_token: $GITHUB_TOKEN
-    local_dir: out
-    keep-history: true
-    on:
-      branch: master
-    email: deployer@travis-ci.org
-    name: Travis CI Deployment
+- provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: out
+  keep-history: true
+  on:
+    branch: master
+  email: deployer@travis-ci.org
+  name: Travis CI Deployment
 
-  - provider: pages
-    skip_cleanup: true
-    github_token: $GITHUB_TOKEN
-    local_dir: out
-    keep-history: true
-    on:
-      branch: JVM
-    email: deployer@travis-ci.org
-    name: Travis CI Deployment
+- provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: out
+  keep-history: true
+  on:
+    branch: JVM
+  email: deployer@travis-ci.org
+  name: Travis CI Deployment
 
 #  - provider: releases
 #  github_token: $GITHUB_TOKEN
