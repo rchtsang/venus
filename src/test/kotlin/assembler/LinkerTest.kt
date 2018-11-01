@@ -7,6 +7,7 @@ import kotlin.test.fail
 import venus.simulator.Simulator
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
+import venus.glue.vfs.VirtualFileSystem
 
 class LinkerTest {
     @Test
@@ -19,7 +20,8 @@ class LinkerTest {
         jal x0 start
         skip:
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(2, sim.getReg(8))
@@ -37,7 +39,8 @@ class LinkerTest {
         bar:
             addi x8 x8 1
         """)
-        val linked = Linker.link(listOf(prog1, prog2))
+        val PandL = ProgramAndLibraries(listOf(prog1, prog2), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(1, sim.getReg(8))
@@ -56,7 +59,7 @@ class LinkerTest {
         """)
 
         try {
-            Linker.link(listOf(prog1, prog2))
+            Linker.link(ProgramAndLibraries(listOf(prog1, prog2), VirtualFileSystem("dummy")))
             fail("allowed jump to 'private' label")
         } catch (e: AssemblerError) {
             assertTrue(true)
@@ -71,7 +74,8 @@ class LinkerTest {
         la x8 magic
         lb x9 0(x8)
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(42, sim.getReg(9))
@@ -92,7 +96,8 @@ class LinkerTest {
         la x8 magic
         lb x9 0(x8)
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(42, sim.getReg(9))
@@ -111,7 +116,7 @@ class LinkerTest {
         """)
 
         try {
-            Linker.link(listOf(prog1, prog2))
+            Linker.link(ProgramAndLibraries(listOf(prog1, prog2), VirtualFileSystem("dummy")))
             fail("allowed global labels in two different files")
         } catch (e: AssemblerError) {
             assertTrue(true)
@@ -130,7 +135,8 @@ class LinkerTest {
         lw x2, B
         lw x3, 0(x2)
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(sim.getReg(1), sim.getReg(2))
@@ -153,7 +159,8 @@ class LinkerTest {
         lw x2, B
         lw x3, 0(x2)
         """)
-        val linked = Linker.link(listOf(prog1, prog2))
+        val PandL = ProgramAndLibraries(listOf(prog1, prog2), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(sim.getReg(1), sim.getReg(2))

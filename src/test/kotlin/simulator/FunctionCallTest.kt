@@ -3,7 +3,9 @@ package venus.simulator
 import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 
 class FunctionCallTest {
     @Test
@@ -18,7 +20,8 @@ class FunctionCallTest {
             jal ra double
             add x1 a0 x0
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(10, sim.getReg(1))
@@ -43,7 +46,8 @@ class FunctionCallTest {
             addi sp sp 1000
             jal ra bar
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(7, sim.getReg(8))
@@ -68,7 +72,8 @@ class FunctionCallTest {
             addi sp sp 1000
             jal ra bar
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(7, sim.getReg(8))

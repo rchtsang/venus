@@ -4,10 +4,10 @@ package venus.glue
 
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
-import venus.glue.jvm.JVMInitInstructions
 import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 import venus.riscv.*
 import venus.simulator.*
 import venus.simulator.cache.BlockReplacementPolicy
@@ -42,6 +42,7 @@ object Driver {
 
     @JvmStatic
     fun main(args: Array<String>) {
+
         if (args.isEmpty()) {
             println("This takes in one or more arguments: They must be the files which you want to link together and run!")
             exitProcess(-1)
@@ -106,7 +107,8 @@ object Driver {
 
     internal fun link(progs: List<Program>): Boolean {
         try {
-            val linked = Linker.link(progs)
+            val PandL = ProgramAndLibraries(progs, VFS)
+            val linked = Linker.link(PandL)
             loadSim(linked)
             return true
         } catch (e: AssemblerError) {

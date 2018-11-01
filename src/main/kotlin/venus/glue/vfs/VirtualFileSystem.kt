@@ -1,6 +1,7 @@
 package venus.glue.vfs
 
 import venus.simulator.SimulatorSettings
+import java.io.File
 
 class VirtualFileSystem(val defaultDriveName: String, val simSettings: SimulatorSettings = SimulatorSettings()) {
     var sentinel = VFSDrive(defaultDriveName, VFSDummy())
@@ -19,25 +20,34 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
     }
 
     fun makeFileInDir(path: String): VFSFile? {
-        val obj = getObjectFromPath(path)
-        if (obj == null) {
-            val nobj = getObjectFromPath(path, true) as VFSObject
-            return if (nobj.type != VFSType.File) {
-                val name = nobj.label
-                val parent = nobj.parent
-                parent.removeChild(name)
-                val newfile = VFSFile(name, parent)
-                parent.addChild(newfile)
-                newfile
-            } else {
-                nobj as VFSFile
-            }
+        // TODO FIX ME
+        val f = File(path)
+        return if (!f.exists() || f.isFile()) {
+            val vfsf = VFSFile(f.name, VFSDummy())
+            vfsf.setFile(f)
+            vfsf
         } else {
-            if (obj.type == VFSType.File) {
-                return obj as VFSFile
-            }
-            return null
+            null
         }
+//        val obj = getObjectFromPath(path)
+//        if (obj == null) {
+//            val nobj = getObjectFromPath(path, true) as VFSObject
+//            return if (nobj.type != VFSType.File) {
+//                val name = nobj.label
+//                val parent = nobj.parent
+//                parent.removeChild(name)
+//                val newfile = VFSFile(name, parent)
+//                parent.addChild(newfile)
+//                newfile
+//            } else {
+//                nobj as VFSFile
+//            }
+//        } else {
+//            if (obj.type == VFSType.File) {
+//                return obj as VFSFile
+//            }
+//            return null
+//        }
     }
 
     fun reset() {
@@ -162,27 +172,36 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
     }
 
     fun getObjectFromPath(path: String, make: Boolean = false): VFSObject? {
-        val splitpath = getPath(path)
-        var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
-            splitpath.removeAt(0)
-            sentinel
+        // TODO FIX ME
+        val f = File(path)
+        return if (!f.exists() || f.isFile()) {
+            val vfsf = VFSFile(f.name, VFSDummy())
+            vfsf.setFile(f)
+            vfsf
         } else {
-            currentLocation
+            null
         }
-        for (obj in splitpath) {
-            if (obj == "") {
-                continue
-            }
-            if (!templocation.contents.containsKey(obj)) {
-                if (make) {
-                    templocation.addChild(VFSFile(obj, templocation))
-                } else {
-                    return null
-                }
-            }
-            templocation = templocation.contents[obj] as VFSObject
-        }
-        return templocation
+//        val splitpath = getPath(path)
+//        var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
+//            splitpath.removeAt(0)
+//            sentinel
+//        } else {
+//            currentLocation
+//        }
+//        for (obj in splitpath) {
+//            if (obj == "") {
+//                continue
+//            }
+//            if (!templocation.contents.containsKey(obj)) {
+//                if (make) {
+//                    templocation.addChild(VFSFile(obj, templocation))
+//                } else {
+//                    return null
+//                }
+//            }
+//            templocation = templocation.contents[obj] as VFSObject
+//        }
+//        return templocation
     }
 
     fun filesFromPrefix(prefix: String): ArrayList<String> {

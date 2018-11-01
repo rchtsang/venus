@@ -12,7 +12,7 @@ import venus.riscv.insts.dsl.relocators.Relocator
  * @see venus.linker.Linker
  */
 public val venusInternalLabels: String = "Venus_Internal_Label-"
-class Program(val name: String = "anonymous") {
+class Program(var name: String = "anonymous") {
     /* TODO: abstract away these variables */
     val insts = ArrayList<MachineCode>()
     val debugInfo = ArrayList<DebugInfo>()

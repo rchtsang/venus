@@ -2,7 +2,6 @@ package venus.linker
 
 import venus.assembler.AssemblerError
 import venus.riscv.MemorySegments
-import venus.riscv.Program
 import venus.riscv.insts.dsl.relocators.Relocator
 
 /**
@@ -43,13 +42,15 @@ object Linker {
      * @return a [LinkedProgram] which can be used in the [venus.simulator.Simulator]
      * @todo refactor this into multiple functions
      */
-    fun link(progs: List<Program>): LinkedProgram {
+    fun link(progsAndLibs: ProgramAndLibraries): LinkedProgram {
         val linkedProgram = LinkedProgram()
         val globalTable = HashMap<String, Int>()
         val toRelocate = ArrayList<RelocationInfo>()
         val toRelocateData = ArrayList<DataRelocationInfo>()
         var textTotalOffset = 0
         var dataTotalOffset = 0
+
+        val progs = progsAndLibs.AllProgs
 
         for (prog in progs) {
             for ((label, offset) in prog.labels) {

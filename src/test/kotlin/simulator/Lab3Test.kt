@@ -3,7 +3,9 @@ package venus.simulator
 import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 
 class Lab3Test {
     @Test
@@ -33,7 +35,8 @@ finish: addi    a0, x0, 1
 		ecall
 """
         )
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.run()
         assertEquals(34, sim.getReg(11))

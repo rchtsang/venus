@@ -3,7 +3,9 @@ package venus.simulator
 import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 import venus.riscv.MemorySegments
 
 class StaticDataTest {
@@ -15,7 +17,8 @@ class StaticDataTest {
         .text
         nop
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         assertEquals(1, sim.loadByte(MemorySegments.STATIC_BEGIN))
         assertEquals(2, sim.loadByte(MemorySegments.STATIC_BEGIN + 1))
@@ -29,7 +32,8 @@ class StaticDataTest {
         .asciiz "a"
         .asciiz "b"
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         val offset = MemorySegments.STATIC_BEGIN
         assertEquals('a'.toInt(), sim.loadByte(offset))
@@ -47,7 +51,8 @@ class StaticDataTest {
         .data
         .byte 2
         """)
-        val linked = Linker.link(listOf(prog1, prog2))
+        val PandL = ProgramAndLibraries(listOf(prog1, prog2), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         val offset = MemorySegments.STATIC_BEGIN
         assertEquals(1, sim.loadByte(offset))
@@ -61,7 +66,8 @@ class StaticDataTest {
         .text
         nop
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         assertEquals(-21231234, sim.loadWord(MemorySegments.STATIC_BEGIN))
     }

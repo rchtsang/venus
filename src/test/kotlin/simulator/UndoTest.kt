@@ -3,7 +3,9 @@ package venus.simulator
 import org.junit.Test
 import kotlin.test.assertEquals
 import venus.assembler.Assembler
+import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker
+import venus.linker.ProgramAndLibraries
 
 class UndoTest {
     @Test
@@ -12,7 +14,8 @@ class UndoTest {
         addi x8 x0 7
         addi x8 x0 9
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.step()
         assertEquals(7, sim.getReg(8))
@@ -30,7 +33,8 @@ class UndoTest {
         addi x9 x0 42
         sw x9 0(x8)
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.step()
         sim.step()
@@ -47,7 +51,8 @@ class UndoTest {
         up: addi x8 x8 1
         j up
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.step()
         assertEquals(1, sim.getReg(8))
@@ -64,7 +69,8 @@ class UndoTest {
         sw x8 100(x0)
         lw x9 100(x0)
         """)
-        val linked = Linker.link(listOf(prog))
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         sim.step()
         assertEquals(5, sim.getReg(8))
