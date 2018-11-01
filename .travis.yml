@@ -10,6 +10,7 @@ script:
 - grunt test
 after_success:
 #  - ./gradlew dokka
+- git clone -b gh-pages https://github.com/ThaumicMekanism/venus.git out && rm -rf out/.git
 - test $TRAVIS_BRANCH = "master" && grunt dist
 - test $TRAVIS_BRANCH = "JVM" && grunt distjvm
 cache:
