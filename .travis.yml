@@ -28,8 +28,7 @@ deploy:
   - provider: pages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN
-    file_glob: true
-    local_dir: build/libs/venus-*.jar
+    local_dir: out
     keep-history: true
     on:
       branch: JVM
