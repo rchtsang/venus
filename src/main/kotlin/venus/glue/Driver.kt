@@ -39,7 +39,6 @@ object Driver {
     var FReginputAsFloat = true
     var debug = false
 
-
     @JvmStatic
     fun main(args: Array<String>) {
 
@@ -79,9 +78,7 @@ object Driver {
         }
     }
 
-    fun readFileDirectlyAsText(fileName: String): String
-            = File(fileName).readText(Charsets.UTF_8)
-
+    fun readFileDirectlyAsText(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
 
     /**
      * Assembles and links the program, sets the simulator
@@ -131,8 +128,6 @@ object Driver {
         sim.stdout = ""
         return tmp
     }
-
-
 
     fun getInstructionDump(): String {
         val sb = StringBuilder()

@@ -1,4 +1,6 @@
+/* ktlint-disable package-name */
 package venus.riscv
+/* ktlint-enable package-name */
 
 import org.junit.Test
 import kotlin.test.assertEquals

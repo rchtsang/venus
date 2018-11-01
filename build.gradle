@@ -41,6 +41,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 task ktlint(type: JavaExec) {
@@ -49,7 +50,7 @@ task ktlint(type: JavaExec) {
     args "--verbose", "src/**/*.kt"
 }
 
-//check.dependsOn ktlint
+check.dependsOn ktlint
 
 task ktlintFormat(type: JavaExec) {
     main = "com.github.shyiko.ktlint.Main"

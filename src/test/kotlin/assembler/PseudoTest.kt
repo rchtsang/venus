@@ -1,4 +1,6 @@
+/* ktlint-disable package-name */
 package venus.assembler
+/* ktlint-enable package-name */
 
 import org.junit.Test
 import venus.glue.vfs.VirtualFileSystem

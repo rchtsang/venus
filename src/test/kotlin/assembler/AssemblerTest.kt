@@ -1,7 +1,8 @@
+/* ktlint-disable package-name */
 package venus.assembler
+/* ktlint-enable package-name */
 
 import org.junit.Test
-import venus.glue.jvm.JVMInitInstructions
 import venus.glue.vfs.VirtualFileSystem
 import kotlin.test.assertEquals
 import venus.linker.Linker

@@ -1,7 +1,6 @@
 package venus.assembler
 /* ktlint-disable no-wildcard-imports */
 import venus.assembler.pseudos.checkArgsLength
-import venus.glue.Renderer
 import venus.glue.jvm.JVMInitInstructions
 import venus.riscv.*
 import venus.riscv.insts.dsl.Instruction

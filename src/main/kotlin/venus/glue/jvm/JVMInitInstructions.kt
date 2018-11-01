@@ -1,5 +1,6 @@
 package venus.glue.jvm
 
+/* ktlint-disable no-wildcard-imports */
 import venus.riscv.insts.floating.double.i.fld
 import venus.riscv.insts.floating.double.r.*
 import venus.riscv.insts.floating.double.s.fsd
@@ -16,6 +17,7 @@ import venus.riscv.insts.integer.base.u.*
 import venus.riscv.insts.integer.base.uj.*
 import venus.riscv.insts.integer.extensions.atomic.r.*
 import venus.riscv.insts.integer.extensions.multiply.r.*
+/* ktlint-enable no-wildcard-imports */
 
 class JVMInitInstructions {
     companion object {

@@ -23,11 +23,9 @@ internal object Renderer {
     /* The way the information in the registers is displayed*/
     private var displayType = "hex"
 
-
     fun updateProgramListing(idx: Int, inst: Int, orig: String? = null): InstructionDiff {
         return InstructionDiff(-1, -1, "")
     }
-
 
     /**
      * Updates the register with the given id and value.
@@ -51,7 +49,6 @@ internal object Renderer {
         return v
     }
 
-
     /**
      * Prints the given thing to the console as a string.
      *
@@ -62,15 +59,14 @@ internal object Renderer {
     }
 
     /** Display a given [AssemblerError] */
-    fun displayWarning(thing: Any) {
-        println(thing)
-    }
-
-    /** Display a given [AssemblerError] */
     fun displayError(thing: Any) {
         println(thing)
     }
 
+    /** Display a given [AssemblerError] */
+    fun displayWarning(thing: Any) {
+        println(thing)
+    }
 
     /** a map from integers to the corresponding hex digits */
     private val hexMap = listOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
