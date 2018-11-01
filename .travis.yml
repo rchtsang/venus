@@ -10,7 +10,8 @@ script:
   - grunt test
 after_success:
 #  - ./gradlew dokka
-  - grunt dist
+  - test $TRAVIS_BRANCH = "master" && grunt dist
+  - test $TRAVIS_BRANCH = "JVM" && grunt distJVM
 cache:
   directories:
     - node_modules/

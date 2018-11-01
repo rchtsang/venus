@@ -38,10 +38,6 @@ module.exports = function(grunt) {
                         cwd: 'src/main/frontend/packages',
                         src: '**',
                         dest: 'out/packages/',},
-                    {expand: true,
-                        cwd: 'build/libs/*',
-                        src: '**',
-                        dest: 'out/jvm/',},
                 ]
 		  	},
 		},
@@ -60,6 +56,17 @@ module.exports = function(grunt) {
                     'out/index.html': ['src/main/frontend/index.html']
                 }
             }
+        },
+
+        JVMCopy: {
+            main: {
+                files: [
+                    {expand: true,
+                        cwd: 'build/libs/*',
+                        src: '**',
+                        dest: 'out/jvm/',},
+                ]
+            }
         }
     });
     grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -70,4 +77,5 @@ module.exports = function(grunt) {
     grunt.registerTask('test', 'qunit:src');
     grunt.registerTask('dist', ['uglify:venus', 'cssmin', 'htmlmin', 'copy']);
     grunt.registerTask('frontend', ['cssmin:venus', 'htmlmin:venus']);
+    grunt.registerTask('distJVM', ['JVMCopy'])
 };
