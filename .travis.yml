@@ -11,8 +11,8 @@ script:
 after_success:
 #  - ./gradlew dokka
 - git clone -b gh-pages https://github.com/ThaumicMekanism/venus.git out && rm -rf out/.git
-- test $TRAVIS_BRANCH = "master" && grunt dist
-- test $TRAVIS_BRANCH = "JVM" && grunt distjvm
+- test $TRAVIS_BRANCH = "master" && mv out/jvm jvm && rm -rf out && mkdir out && mv jvm out && grunt dist
+- test $TRAVIS_BRANCH = "JVM" && rm -rf out/jvm && grunt distjvm
 cache:
   directories:
   - node_modules/
