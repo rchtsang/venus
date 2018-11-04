@@ -46,7 +46,7 @@ object Driver {
         val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
         val trace by cli.flagArgument(listOf("-t", "--trace"), "Trace the program given with the pattern given. If no pattern is given, it will use the default.", false, true)
         val template by cli.flagValueArgument(listOf("-tf", "--tracetemplate"), "TemplateFile", "Optional file/filepath to trace template to use. Only used if the trace argument is set.")
-        val traceBase by cli.flagValueArgument(listOf("-tb", "--tracebase"), "Radix", "The radix which you want the trace to output. Default is 2 if omitted", "2"){
+        val traceBase by cli.flagValueArgument(listOf("-tb", "--tracebase"), "Radix", "The radix which you want the trace to output. Default is 2 if omitted", "2") {
             val radix = try {
                 it.toInt()
             } catch (e: Exception) {
