@@ -4,6 +4,7 @@ package venus.glue
 
 import venus.assembler.Assembler
 import venus.assembler.AssemblerError
+import venus.cli.*
 import venus.glue.vfs.VirtualFileSystem
 import venus.linker.LinkedProgram
 import venus.linker.Linker
@@ -41,23 +42,36 @@ object Driver {
 
     @JvmStatic
     fun main(args: Array<String>) {
-
-        if (args.isEmpty()) {
-            println("Welcome to the Venus JVM!\nTo use this program please specify a program to compile and then any args which are needed:")
-            println("usage: [program text] [args...]")
+        val cli = CommandLineInterface("venus")
+        val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
+        val trace by cli.flagArgument(listOf("-t", "--trace"), "Trace the program given with the pattern given. If no pattern is given, it will use the default.", false, true)
+        val template by cli.flagValueArgument(listOf("-tf", "--tracetemplate"), "TemplateFile", "Optional file/filepath to trace template to use. Only used if the trace argument is set.")
+        val traceBase by cli.flagValueArgument(listOf("-tb", "--tracebase"), "Radix", "The radix which you want the trace to output. Default is 2 if omitted", "2"){
+            val radix = try {
+                it.toInt()
+            } catch (e: Exception) {
+                val msg = "Could not parse radix input '$it'"
+                throw NumberFormatException(msg)
+            }
+            if (radix !in Character.MIN_RADIX..Character.MAX_RADIX) {
+                val msg = "radix $radix was not in valid range ${Character.MIN_RADIX..Character.MAX_RADIX}"
+                throw IllegalArgumentException(msg)
+            }
+            radix.toString()
+        }
+        val traceInstFirst by cli.flagArgument(listOf("-ti", "--traceInstFirst"), "Sets the tracer to put instructions first.", false, true)
+        val tracePCWordAddr by cli.flagArgument(listOf("-tw", "--tracePCWordAddr"), "Sets the pc output of the trace to be word addressed.", false, true)
+        val traceTwoStage by cli.flagArgument(listOf("-ts", "--traceTwoStage"), "Sets the trace to be two stages.", false, true)
+        val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
+        try {
+            cli.parse(args)
+        } catch (e: Exception) {
             exitProcess(-1)
         }
 
         val progs = ArrayList<Program>()
 
-        val filename = args[0]
-
-        val assemblyProgramText = try {
-            readFileDirectlyAsText(filename)
-        } catch (e: FileNotFoundException) {
-            println("Could not find the file: " + filename)
-            exitProcess(1)
-        }
+        val assemblyProgramText = readFileDirectlyAsText(assemblyTextFile)
 
         val prog = assemble(assemblyProgramText)
         if (prog == null) {
@@ -69,10 +83,21 @@ object Driver {
         link(progs)
 
         try {
-            for (i in 1 until args.size) {
-                sim.addArg(args[i])
+            for (i in 1 until simArgs.size) {
+                sim.addArg(simArgs[i])
             }
-            sim.run()
+            if (trace) {
+                if (template != null) {
+                    tr.format = readFileDirectlyAsText(template as String)
+                }
+                tr.base = traceBase.toInt()
+                tr.instFirst = traceInstFirst
+                wordAddressed = tracePCWordAddr
+                tr.twoStage = traceTwoStage
+                trace()
+            } else {
+                sim.run()
+            }
             println() // This is to end on a new line regardless of the output.
         } catch (e: Exception) {
             println(e)
@@ -80,7 +105,14 @@ object Driver {
         }
     }
 
-    fun readFileDirectlyAsText(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
+    fun readFileDirectlyAsText(fileName: String): String {
+        return try {
+            File(fileName).readText(Charsets.UTF_8)
+        } catch (e: FileNotFoundException) {
+            println("Could not find the file: " + fileName)
+            exitProcess(1)
+        }
+    }
 
     /**
      * Assembles and links the program, sets the simulator
