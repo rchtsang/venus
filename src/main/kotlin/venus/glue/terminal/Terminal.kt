@@ -1,5 +1,6 @@
 package venus.glue.terminal
 
+import venus.assembler.Lexer
 import venus.glue.vfs.VirtualFileSystem
 
 class Terminal(var vfs: VirtualFileSystem) {
@@ -26,7 +27,7 @@ class Terminal(var vfs: VirtualFileSystem) {
     }
 
     fun extractArgs(input: String): ArrayList<String> {
-        return input.split(" ") as ArrayList<String>
+        return Lexer.lex(input) as ArrayList<String>
     }
 
     @JsName("getCommands") fun getCommands() {
