@@ -63,6 +63,7 @@ object Driver {
         val tracePCWordAddr by cli.flagArgument(listOf("-tw", "--tracePCWordAddr"), "Sets the pc output of the trace to be word addressed.", false, true)
         val traceTwoStage by cli.flagArgument(listOf("-ts", "--traceTwoStage"), "Sets the trace to be two stages.", false, true)
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
+        val dumpInsts by cli.flagArgument(listOf("-d", "--dump"), "Dumps the instructions of the input program then quits.", false, true)
         try {
             cli.parse(args)
         } catch (e: Exception) {
@@ -86,6 +87,7 @@ object Driver {
             for (i in 1 until simArgs.size) {
                 sim.addArg(simArgs[i])
             }
+
             if (trace) {
                 if (template != null) {
                     tr.format = readFileDirectlyAsText(template as String)
@@ -95,6 +97,8 @@ object Driver {
                 wordAddressed = tracePCWordAddr
                 tr.twoStage = traceTwoStage
                 trace()
+            } else if (dumpInsts) {
+                dump()
             } else {
                 sim.run()
             }
