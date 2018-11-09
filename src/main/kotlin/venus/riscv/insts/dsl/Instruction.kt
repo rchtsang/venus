@@ -2,6 +2,7 @@ package venus.riscv.insts.dsl
 
 import venus.assembler.AssemblerError
 import venus.riscv.MachineCode
+import venus.riscv.insts.InstructionNotFoundError
 import venus.riscv.insts.dsl.disasms.InstructionDisassembler
 import venus.riscv.insts.dsl.formats.InstructionFormat
 import venus.riscv.insts.dsl.impls.InstructionImplementation
@@ -28,7 +29,7 @@ open class Instruction(
 
         operator fun get(name: String) =
                 allInstructions.firstOrNull { it.name == name }
-                        ?: throw AssemblerError("instruction with name $name not found")
+                        ?: throw AssemblerError("instruction with name $name not found", InstructionNotFoundError())
     }
 
     init {

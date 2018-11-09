@@ -3,6 +3,7 @@ package venus.assembler
 import venus.assembler.pseudos.checkArgsLength
 import venus.glue.Renderer
 import venus.riscv.*
+import venus.riscv.insts.InstructionNotFoundError
 import venus.riscv.insts.dsl.Instruction
 import venus.riscv.insts.dsl.getImmWarning
 import venus.riscv.insts.dsl.relocators.Relocator
@@ -155,8 +156,8 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
         } catch (t: Throwable) {
             /* TODO: don't use throwable here */
             /* not a pseudoinstruction, or expansion failure */
-
-            return parsePossibleMachineCode(tokens)
+            val linetokens = parsePossibleMachineCode(tokens)
+            return linetokens
         }
     }
 
@@ -362,7 +363,25 @@ internal class AssemblerPassTwo(val prog: Program, val talInstructions: List<Deb
                 }
             } catch (e: AssemblerError) {
                 val (lineNumber, _) = dbg
-                errors.add(AssemblerError(lineNumber, e))
+                if (e.errorType is InstructionNotFoundError) {
+                    val cmd = getInstruction(inst)
+                    // This is meant to allow for cmds with periods since the pseudodispatcher does not allow for special chars.
+                    val cleanedCMD = cmd.replace(".", "")
+                    val pw = try {
+                        PseudoDispatcher.valueOf(cleanedCMD).pw
+                    } catch (_: Throwable) {
+                        errors.add(AssemblerError(lineNumber, e))
+                        continue
+                    }
+                    try {
+                        pw(inst, AssemblerPassOne(""))
+                        errors.add(AssemblerError(lineNumber, e))
+                    } catch (pe: Throwable) {
+                        errors.add(AssemblerError(lineNumber, pe))
+                    }
+                } else {
+                    errors.add(AssemblerError(lineNumber, e))
+                }
             }
         }
         return AssemblerOutput(prog, errors, warnings)

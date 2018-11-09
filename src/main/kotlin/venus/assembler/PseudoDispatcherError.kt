@@ -5,18 +5,13 @@ package venus.assembler
  *
  * @todo split this into AssemblerUserError and AssemblerError
  */
-class AssemblerError : Throwable {
+class PseudoDispatcherError : Throwable {
     var line: Int? = null
-    var errorType: Throwable? = null
 
     /**
      * @param msg the message to error with
      */
     constructor(msg: String? = null) : super(msg)
-
-    constructor(msg: String? = null, errorType: Throwable) : super(msg) {
-        this.errorType = errorType
-    }
 
     /**
      * @param errorLine the line the error occurred on
