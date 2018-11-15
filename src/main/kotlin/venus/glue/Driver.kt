@@ -62,14 +62,18 @@ object Driver {
         val traceInstFirst by cli.flagArgument(listOf("-ti", "--traceInstFirst"), "Sets the tracer to put instructions first.", false, true)
         val tracePCWordAddr by cli.flagArgument(listOf("-tw", "--tracePCWordAddr"), "Sets the pc output of the trace to be word addressed.", false, true)
         val traceTwoStage by cli.flagArgument(listOf("-ts", "--traceTwoStage"), "Sets the trace to be two stages.", false, true)
-        val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
         val dumpInsts by cli.flagArgument(listOf("-d", "--dump"), "Dumps the instructions of the input program then quits.", false, true)
+        val unsetRegisters by cli.flagArgument(listOf("-r", "--unsetRegisters"), "All registers start as 0 when set.", false, true)
+
+        val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
+
         try {
             cli.parse(args)
         } catch (e: Exception) {
             exitProcess(-1)
         }
 
+        this.simSettings.setRegesOnInit = !unsetRegisters
         val progs = ArrayList<Program>()
 
         val assemblyProgramText = readFileDirectlyAsText(assemblyTextFile)
