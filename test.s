@@ -1,4 +1,5 @@
 nop
 nop
 nop
-addi x3 x0 -256
+nop
+addi x4 s0 -255

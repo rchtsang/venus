@@ -88,7 +88,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
 
     fun removeAllArgsFromMem() {
         var sp = getReg(2)
-        while (sp < MemorySegments.STACK_BEGIN) {
+        while (sp < MemorySegments.STACK_BEGIN && settings.setRegesOnInit) {
             this.state.mem.removeByte(sp)
             sp++
             setReg(2, sp)
