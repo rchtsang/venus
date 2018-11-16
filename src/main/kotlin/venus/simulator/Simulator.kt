@@ -109,7 +109,7 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
     }
 
     fun addArg(arg: String) {
-        if (arg == "") {
+        if (arg == "" || !settings.setRegesOnInit) {
             return
         }
         args.add(arg)
@@ -141,6 +141,9 @@ class Simulator(val linkedProgram: LinkedProgram, val VFS: VirtualFileSystem = V
     }
 
     fun addArgsToMem() {
+        if (!settings.setRegesOnInit) {
+            return
+        }
         var spv = if (getReg(2) == MemorySegments.STACK_BEGIN) {
             getReg(2)
         } else {
