@@ -106,7 +106,7 @@ object Driver {
             } else {
                 sim.run()
             }
-            println() // This is to end on a new line regardless of the output.
+//            println() // This is to end on a new line regardless of the output.
         } catch (e: Exception) {
             println(e)
             exitProcess(-1)
