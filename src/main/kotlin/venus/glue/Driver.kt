@@ -66,12 +66,18 @@ object Driver {
         val dumpInsts by cli.flagArgument(listOf("-d", "--dump"), "Dumps the instructions of the input program then quits.", false, true)
         val unsetRegisters by cli.flagArgument(listOf("-r", "--unsetRegisters"), "All registers start as 0 when set.", false, true)
 
+        val getNumberOfCycles by cli.flagArgument(listOf("-n", "--numberCycles"), "Prints out the total number of cycles.", false, true)
+
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
         try {
             cli.parse(args)
         } catch (e: Exception) {
             exitProcess(-1)
+        }
+
+        if (getNumberOfCycles) {
+            Renderer.activeDisplay = false
         }
 
         this.simSettings.setRegesOnInit = !unsetRegisters
@@ -108,6 +114,10 @@ object Driver {
                 dump()
             } else {
                 sim.run()
+                if (getNumberOfCycles) {
+                    Renderer.activeDisplay = true
+                    Renderer.printConsole(sim.cycles)
+                }
             }
 //            println() // This is to end on a new line regardless of the output.
         } catch (e: Exception) {

@@ -23,6 +23,8 @@ internal object Renderer {
     /* The way the information in the registers is displayed*/
     private var displayType = "hex"
 
+    var activeDisplay = true
+
     fun updateProgramListing(idx: Int, inst: Int, orig: String? = null): InstructionDiff {
         return InstructionDiff(-1, -1, "")
     }
@@ -55,7 +57,9 @@ internal object Renderer {
      * @param thing the thing to print
      */
     internal fun printConsole(thing: Any) {
-        print(thing)
+        if (activeDisplay) {
+            print(thing)
+        }
     }
 
     /** Display a given [AssemblerError] */
