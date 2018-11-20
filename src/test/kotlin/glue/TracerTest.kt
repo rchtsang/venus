@@ -1,3 +1,0 @@
-package glue
-
-class TracerTest
