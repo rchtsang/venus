@@ -149,9 +149,14 @@ class Tracer(val sim: Simulator) {
                 t.pc += 4
             }
             if (this.tr.peak().jumped) {
-                t.regs = this.tr.peak().regs.copyOf()
+                if (!this.twoStage) {
+                    t.regs = this.tr.peak().regs.copyOf()
+                }
                 t.prevTrace?.regs = t.regs.copyOf()
                 traceStringJumpHelper(t)
+                if (this.twoStage) {
+                    t.regs = this.tr.peak().regs.copyOf()
+                }
             }
         }
         t.line = this.tr.stringIndex
@@ -196,8 +201,8 @@ class Tracer(val sim: Simulator) {
         nextPC -= MemorySegments.TEXT_BEGIN
         flushed.inst = if (nextPC < this.sim.maxpc) this.sim.linkedProgram.prog.insts[nextPC / flushed.inst.length] else MachineCode(0)
         flushed.line = this.tr.stringIndex
-        if (this.instFirst) {
-            // flushed.regs = t.regs
+        if (this.instFirst && this.twoStage) {
+//            flushed.regs = t.regs
         }
         this.tr.str += flushed.getString(format, base)
         this.tr.stringIndex++
