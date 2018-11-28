@@ -64,12 +64,12 @@ internal object Renderer {
 
     /** Display a given [AssemblerError] */
     fun displayError(thing: Any) {
-        println(thing)
+        System.err.println(thing)
     }
 
     /** Display a given [AssemblerError] */
     fun displayWarning(thing: Any) {
-        println(thing)
+        System.err.println(thing)
     }
 
     /** a map from integers to the corresponding hex digits */
