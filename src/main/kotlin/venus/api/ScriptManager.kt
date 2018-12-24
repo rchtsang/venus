@@ -1,10 +1,10 @@
 package venus.api
 
 import org.w3c.dom.get
-import venus.glue.Driver
+import venus.Driver
 import kotlin.browser.document
 import kotlin.browser.window
-import venus.glue.Renderer
+import venus.Renderer
 
 /**
 * This is used to add and remove external packages.
@@ -20,7 +20,7 @@ import venus.glue.Renderer
     var packages = HashMap<String, venuspackage>()
 
     fun loadDefaults() {
-        val defpkgs = hashMapOf(Pair("packages/tester.js", true), Pair("packages/disassembler.js", true))
+        val defpkgs = hashMapOf(Pair("packages/tester.js", false), Pair("packages/disassembler.js", false))
 
         val pstr = Driver.LS.safeget("script_manager", "[]")
         val pkgs = JSON.parse<ArrayList<pkg>>(pstr)

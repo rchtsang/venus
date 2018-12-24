@@ -1,4 +1,4 @@
-CodeMirror.defineMode("riscv", function(config, parserConfig) {
+CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
     function regexFromWords(words, ins) {
         return new RegExp("^(?:" + words.join("|") + ")$", ins);
     }
@@ -221,7 +221,7 @@ CodeMirror.defineMode("riscv", function(config, parserConfig) {
     };
 });
 
-CodeMirror.registerHelper("lint", "riscv", function (text) {
+CodeMirror.registerHelper("lint", "venusbackend.riscv", function (text) {
     var errors = [];
     var parseError = function(err) {
         var line = err.lineNumber;
@@ -238,7 +238,7 @@ CodeMirror.registerHelper("lint", "riscv", function (text) {
             message: war.message});
     };
 
-    var res = window.venus_main.venus.assembler.Linter.lint(text);
+    var res = window.venus_main.venusbackend.assembler.Linter.lint(text);
     for (var i = 0; i < res.length; i++) {
         info = res[i]
         if (info.isError) {

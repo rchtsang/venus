@@ -1,12 +1,12 @@
 function setup_venus() {
     console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
     window.venus_main = window.venus;
-    window.driver = venus_main.venus.glue.Driver;
+    window.driver = venus_main.venus.Driver;
     window.editor = document.getElementById("asm-editor");
     window.codeMirror = CodeMirror.fromTextArea(editor,
         {
             lineNumbers: true,
-            mode: "riscv",
+            mode: "venusbackend.riscv",
             indentUnit: 4,
             autofocus: true,
             lint: true

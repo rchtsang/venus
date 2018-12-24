@@ -28,7 +28,7 @@
   <ul>
     <li id="venus-tab" style="padding-right: 5px;"><a onclick="driver.openVenus()"><font color="#00d1b2">Venus</font></a></li>
     <li id="editor-tab" class="is-active"><a onclick="driver.openEditor()">Editor</a></li>
-    <li id="simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
+    <li id="venusbackend.simulator-tab"><a onclick="codeMirror.save(); driver.openSimulator()">Simulator</a></li>
   </ul>
 </div>
 <div class="container is-fluid">
@@ -339,38 +339,38 @@
   </section>
 
 </section>
-<section class="section" id="simulator-tab-view">
+<section class="section" id="venusbackend.simulator-tab-view">
   <div class="tile is-ancestor">
     <div class="tile is-vertical is-8">
       <div class="tile">
         <div class="tile is-parent">
-          <article class="tile is-child is-primary" id="simulator-controls-container">
-            <div class="field is-grouped is-grouped-centered" id="simulator-buttons" style="display:none;">
+          <article class="tile is-child is-primary" id="venusbackend.simulator-controls-container">
+            <div class="field is-grouped is-grouped-centered" id="venusbackend.simulator-buttons" style="display:none;">
               <div class="control">
-                <button id="simulator-run" class="button is-primary" onclick="driver.run()">Run</button>
+                <button id="venusbackend.simulator-run" class="button is-primary" onclick="driver.run()">Run</button>
               </div>
               <div class="control">
-                <button id="simulator-step" class="button" onclick="driver.step()">Step</button>
+                <button id="venusbackend.simulator-step" class="button" onclick="driver.step()">Step</button>
               </div>
               <div class="control">
-                <button id="simulator-undo" class="button" onclick="driver.undo()">Prev</button>
+                <button id="venusbackend.simulator-undo" class="button" onclick="driver.undo()">Prev</button>
               </div>
               <div class="control">
-                <button id="simulator-reset" class="button" onclick="driver.reset()">Reset</button>
+                <button id="venusbackend.simulator-reset" class="button" onclick="driver.reset()">Reset</button>
               </div>
               <div class="control">
-                <button id="simulator-dump" class="button" onclick="driver.dump()">Dump</button>
+                <button id="venusbackend.simulator-dump" class="button" onclick="driver.dump()">Dump</button>
               </div>
               <div class="control">
-                <button id="simulator-trace" class="button is-primary" onclick="driver.trace()">Trace</button>
+                <button id="venusbackend.simulator-trace" class="button is-primary" onclick="driver.trace()">Trace</button>
               </div>
             </div>
-            <div class="field is-grouped is-grouped-centered" id="simulator-assemble-buttons">
+            <div class="field is-grouped is-grouped-centered" id="venusbackend.simulator-assemble-buttons">
               <div class="control">
-                <button id="simulator-assemble-simulator" class="button is-primary" onclick="driver.assembleSimulator()">Assemble & Simulate from Editor</button>
+                <button id="venusbackend.simulator-assemble-venusbackend.simulator" class="button is-primary" onclick="driver.assembleSimulator()">Assemble & Simulate from Editor</button>
               </div>
               <div class="control">
-                <button id="simulator-no-assemble" class="button" onclick="driver.noAssemble()">Cancel</button>
+                <button id="venusbackend.simulator-no-assemble" class="button" onclick="driver.noAssemble()">Cancel</button>
               </div>
             </div>
           </article>

@@ -1,7 +1,7 @@
 # [venus](https://ThaumicMekanism.github.io/venus/)
 [![Build Status](https://travis-ci.org/ThaumicMekanism/venus.svg?branch=master)](https://travis-ci.org/ThaumicMekanism/venus)
 
-__venus__ is a RISC-V instruction set simulator built for education.
+__venus__ is a RISC-V instruction set venusbackend.simulator built for education.
 
 ## Using venus
 

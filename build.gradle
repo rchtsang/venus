@@ -20,7 +20,7 @@ apply plugin: 'kotlin2js'
 apply plugin: 'kotlin-dce-js'
 apply plugin: 'org.jetbrains.dokka'
 
-runDceKotlinJs.keep 'venus.venus.glue.Driver.run', 'venus.venus.assembler.Linter', 'venus.venus.api.API'
+runDceKotlinJs.keep 'venus.Driver.run', 'venusbackend.assembler.Linter', 'venus.api.API'
 
 configurations {
     ktlint
