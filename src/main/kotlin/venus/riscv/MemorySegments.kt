@@ -9,7 +9,7 @@ object MemorySegments {
     /** Memory address where the heap segment starts */
     const val HEAP_BEGIN = 0x1000_8000
     /** Memory address where the data segment starts */
-    const val STATIC_BEGIN = 0x1000_0000
+    var STATIC_BEGIN = 0x1000_0000
     /**
      * Memory address where the text segment starts
      */

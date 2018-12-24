@@ -81,6 +81,8 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
     private var currentTextOffset = 0 // MemorySegments.TEXT_BEGIN
     /** The data offset where more data will be written */
     private var currentDataOffset = MemorySegments.STATIC_BEGIN // - MemorySegments.TEXT_BEGIN
+    /** The allows user to set custom memory segments until the assembler has used an offset. */
+    private var allow_custom_memory_setments = true
     /** Whether or not we are currently in the text segment */
     private var inTextSegment = true
     /** TAL Instructions which will be added to the program */
@@ -105,6 +107,7 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
 
                 val (labels, args) = Lexer.lexLine(line)
                 for (label in labels) {
+                    allow_custom_memory_setments = false
                     val oldOffset = prog.addLabel(label, offset)
                     if (oldOffset != null) {
                         throw AssemblerError("label $label defined twice")
@@ -116,6 +119,7 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
                 if (isAssemblerDirective(args[0])) {
                     parseAssemblerDirective(args[0], args.drop(1), line)
                 } else {
+                    allow_custom_memory_setments = false
                     val expandedInsts = replacePseudoInstructions(args)
                     for (inst in expandedInsts) {
                         val dbg = DebugInfo(currentLineNumber, line)
@@ -224,6 +228,16 @@ internal class AssemblerPassOne(private val text: String, name: String = "anonym
         when (directive) {
             ".data" -> inTextSegment = false
             ".text" -> inTextSegment = true
+
+            ".data_start" -> {
+                if (!allow_custom_memory_setments) {
+                    throw AssemblerError("""You can only set the data start address BEFORE any labels or
+                        |instructions have been processed""".trimMargin())
+                }
+                checkArgsLength(args, 1)
+                val location = userStringToInt(args[0])
+                MemorySegments.STATIC_BEGIN = location
+            }
 
             ".byte" -> {
                 for (arg in args) {
