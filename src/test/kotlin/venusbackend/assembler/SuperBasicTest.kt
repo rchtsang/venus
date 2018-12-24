@@ -3,7 +3,7 @@ package venusbackend.assembler
 /* ktlint-enable package-name */
 
 import kotlin.test.Test
-import venusbackend.vfs.VirtualFileSystem
+import venus.vfs.VirtualFileSystem
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 import venusbackend.simulator.Simulator

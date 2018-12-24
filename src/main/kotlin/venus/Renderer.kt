@@ -2,7 +2,7 @@ package venus
 /* ktlint-disable no-wildcard-imports */
 
 import venusbackend.assembler.AssemblerError
-import venusbackend.vfs.VirtualFileSystem
+import venus.vfs.VirtualFileSystem
 import venusbackend.linker.LinkedProgram
 import venusbackend.simulator.Simulator
 import venusbackend.simulator.diffs.*

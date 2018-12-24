@@ -1,7 +1,7 @@
 package venusbackend.simulator
 
-import venusbackend.vfs.VFSFile
-import venusbackend.vfs.VFSType
+import venus.vfs.VFSFile
+import venus.vfs.VFSType
 
 class FilesHandler(sim: Simulator) {
     companion object {

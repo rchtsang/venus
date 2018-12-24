@@ -1,4 +1,4 @@
-package venusbackend.vfs
+package venus.vfs
 
 class JsonContainer {
     var type = "Dummy"

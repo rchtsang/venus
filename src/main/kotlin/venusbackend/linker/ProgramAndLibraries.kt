@@ -2,10 +2,10 @@ package venusbackend.linker
 
 import venusbackend.assembler.AssemblerError
 import venus.Driver.assemble
-import venusbackend.vfs.VFSFile
-import venusbackend.vfs.VFSProgram
-import venusbackend.vfs.VFSType
-import venusbackend.vfs.VirtualFileSystem
+import venus.vfs.VFSFile
+import venus.vfs.VFSProgram
+import venus.vfs.VFSType
+import venus.vfs.VirtualFileSystem
 import venusbackend.riscv.Program
 
 class ProgramAndLibraries(val progs: List<Program>, vfs: VirtualFileSystem) {

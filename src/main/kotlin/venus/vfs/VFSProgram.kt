@@ -1,26 +1,26 @@
-package venusbackend.vfs
+package venus.vfs
 
-import venusbackend.linker.LinkedProgram
+import venusbackend.riscv.Program
 
-class VFSLinkedProgram(override var label: String, override var parent: VFSObject, prog: LinkedProgram = LinkedProgram()) : VFSObject {
-    override val type = VFSType.LinkedProgram
+class VFSProgram(override var label: String, override var parent: VFSObject, prog: Program = Program()) : VFSObject {
+    override val type = VFSType.Program
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()
     companion object {
         val innerProgram = "innerprogram"
         fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {
-            val file = VFSLinkedProgram(jsonContainer.label, parent)
-            // file.setLinkedProgram(jsonContainer.innerobj as LinkedProgram)
+            val file = VFSProgram(jsonContainer.label, parent)
+            // file.setProgram(jsonContainer.innerobj as Program)
             return file
         }
     }
     init {
         contents[innerProgram] = prog
     }
-    fun getLinkedProgram(): LinkedProgram {
-        return contents[innerProgram] as LinkedProgram
+    fun getProgram(): Program {
+        return contents[innerProgram] as Program
     }
-    fun setLinkedProgram(p: LinkedProgram) {
+    fun setProgram(p: Program) {
         contents[innerProgram] = p
     }
 
@@ -29,7 +29,7 @@ class VFSLinkedProgram(override var label: String, override var parent: VFSObjec
         me.label = this.label
         me.permissions = this.permissions
         me.type = this.type.toString()
-        me.innerobj = this.contents[VFSProgram.innerProgram] as Any
+        me.innerobj = this.contents[innerProgram] as Any
         return me
     }
 }

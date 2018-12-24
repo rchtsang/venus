@@ -1,6 +1,6 @@
 package venusbackend.simulator
 
-import venusbackend.vfs.VFSFile
+import venus.vfs.VFSFile
 
 class FileDescriptor(var vfsFile: VFSFile, var fileMetaData: FileMetaData) {
     var feof = false

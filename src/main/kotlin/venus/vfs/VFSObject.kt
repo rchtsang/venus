@@ -1,4 +1,4 @@
-package venusbackend.vfs
+package venus.vfs
 
 interface VFSObject {
     val type: VFSType

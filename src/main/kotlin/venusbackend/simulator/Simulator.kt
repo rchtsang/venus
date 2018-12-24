@@ -3,7 +3,7 @@ package venusbackend.simulator
 /* ktlint-disable no-wildcard-imports */
 
 import venus.Renderer
-import venusbackend.vfs.VirtualFileSystem
+import venus.vfs.VirtualFileSystem
 import venusbackend.linker.LinkedProgram
 import venusbackend.riscv.*
 import venusbackend.riscv.insts.dsl.Instruction

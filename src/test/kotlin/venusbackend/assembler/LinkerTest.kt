@@ -9,7 +9,7 @@ import kotlin.test.fail
 import venusbackend.simulator.Simulator
 import venusbackend.assembler.Assembler
 import venusbackend.assembler.AssemblerError
-import venusbackend.vfs.VirtualFileSystem
+import venus.vfs.VirtualFileSystem
 
 class LinkerTest {
     @Test

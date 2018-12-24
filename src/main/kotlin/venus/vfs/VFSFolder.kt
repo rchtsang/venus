@@ -1,6 +1,6 @@
-package venusbackend.vfs
+package venus.vfs
 
-import venusbackend.vfs.VFSObject.Companion.isValidName
+import venus.vfs.VFSObject.Companion.isValidName
 
 open class VFSFolder(var name: String, override var parent: VFSObject) : VFSObject {
     override val type = VFSType.Folder

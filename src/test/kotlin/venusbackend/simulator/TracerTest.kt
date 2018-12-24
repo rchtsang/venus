@@ -2,7 +2,7 @@ package venusbackend.simulator
 
 import kotlin.test.Test
 import venusbackend.assembler.Assembler
-import venusbackend.vfs.VirtualFileSystem
+import venus.vfs.VirtualFileSystem
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 import kotlin.test.assertEquals

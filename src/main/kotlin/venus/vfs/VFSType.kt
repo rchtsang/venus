@@ -1,4 +1,4 @@
-package venusbackend.vfs
+package venus.vfs
 
 enum class VFSType {
     Drive,

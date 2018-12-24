@@ -5,7 +5,7 @@ package venus
 import venusbackend.assembler.Assembler
 import venusbackend.assembler.AssemblerError
 import venusbackend.cli.*
-import venusbackend.vfs.VirtualFileSystem
+import venus.vfs.VirtualFileSystem
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
