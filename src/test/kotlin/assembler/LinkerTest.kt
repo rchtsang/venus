@@ -2,7 +2,7 @@
 package venus.linker
 /* ktlint-enable package-name */
 
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail

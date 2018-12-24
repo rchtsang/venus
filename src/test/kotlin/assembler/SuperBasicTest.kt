@@ -2,7 +2,7 @@
 package venus.assembler
 /* ktlint-enable package-name */
 
-import org.junit.Test
+import kotlin.test.Test
 import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker
 import venus.linker.ProgramAndLibraries

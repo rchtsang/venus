@@ -1,6 +1,6 @@
 package simulator
 
-import org.junit.Test
+import kotlin.test.Test
 import venus.assembler.Assembler
 import venus.glue.vfs.VirtualFileSystem
 import venus.linker.Linker

@@ -2,7 +2,7 @@
 package venus.simulator
 /* ktlint-enable package-name */
 
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class SimulatorStateTest {
