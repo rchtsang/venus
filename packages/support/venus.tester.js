@@ -240,12 +240,12 @@ var tester = {
 
         /**
          * The first thing it returns is if all of the tests succeeded. Then there is a list of the test which passed/failed.
-         * @param sim - A venus venusbackend.simulator object.
+         * @param sim - A venus simulator object.
          * @returns {boolean, [testid, boolean] ... }
          */
         testAll(sim) {
             /**
-             * First step is to get the venusbackend.simulator into the correct state.
+             * First step is to get the simulator into the correct state.
              * I am not resetting the sim since it assumes the sim is in the correct initial state. It will then add
              * args and process it.
              */
@@ -257,7 +257,7 @@ var tester = {
             }
 
             /**
-             * This part of the code will actually do the comparisons with the venusbackend.simulator.
+             * This part of the code will actually do the comparisons with the simulator.
              * @type {Array}
              */
             let details = [];
