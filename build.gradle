@@ -20,7 +20,7 @@ apply plugin: "application"
 //apply plugin: 'kotlin2js'
 //apply plugin: 'kotlin-dce-js'
 //
-//runDceKotlinJs.keep 'venus_main.venus.glue.Driver.run', 'venus_main.venus.assembler.Linter'
+//runDceKotlinJs.keep 'venus_main.venus.glue.Driver.run', 'venus_main.venusbackend.venusbackend.assembler.Linter'
 
 mainClassName = 'venus.glue.Driver'
 jar {

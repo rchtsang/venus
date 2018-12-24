@@ -1,4 +1,4 @@
-CodeMirror.defineMode("riscv", function(config, parserConfig) {
+CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
     function regexFromWords(words, ins) {
         return new RegExp("^(?:" + words.join("|") + ")$", ins);
     }
@@ -221,7 +221,7 @@ CodeMirror.defineMode("riscv", function(config, parserConfig) {
     };
 });
 
-CodeMirror.registerHelper("lint", "riscv", function (text) {
+CodeMirror.registerHelper("lint", "venusbackend.riscv", function (text) {
     var errors = [];
     var parseError = function(err) {
         var line = err.lineNumber;

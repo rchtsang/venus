@@ -6,7 +6,7 @@ function setup_venus() {
     window.codeMirror = CodeMirror.fromTextArea(editor,
         {
             lineNumbers: true,
-            mode: "riscv",
+            mode: "venusbackend.riscv",
             indentUnit: 4,
             autofocus: true,
             lint: true
