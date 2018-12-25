@@ -1,0 +1,3 @@
+[submodule "src/main/kotlin/venusbackend"]
+	path = src/main/kotlin/venusbackend
+	url = git@github.com:ThaumicMekanism/venusbackend.git
