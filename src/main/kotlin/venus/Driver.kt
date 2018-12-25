@@ -9,6 +9,7 @@ import venusbackend.assembler.Assembler
 import venusbackend.assembler.AssemblerError
 import venus.terminal.Terminal
 import venus.vfs.VirtualFileSystem
+import venusbackend.assembler.LintError
 import venusbackend.assembler.Linter
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
@@ -76,7 +77,7 @@ import kotlin.dom.removeClass
         ready = true
     }
 
-    @JsName("lint") fun lint(text: String) = Linter.lint(text)
+    @JsName("lint") fun lint(text: String): Array<LintError> = Linter.lint(text)
 
     /**
      * Run when the user clicks the "Simulator" tab.
