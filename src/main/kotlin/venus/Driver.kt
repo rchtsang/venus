@@ -25,6 +25,7 @@ import kotlin.system.exitProcess
  * The "driver" singleton which can be called from Javascript for all functionality.
  */
 object Driver {
+
     var VFS = VirtualFileSystem("v")
 
     var sim: Simulator = Simulator(LinkedProgram(), VFS)

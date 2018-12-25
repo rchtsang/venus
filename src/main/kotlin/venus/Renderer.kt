@@ -125,4 +125,6 @@ internal object Renderer {
                 !in 32..126 -> "\uFFFD"
                 else -> "'${value.toChar()}'"
             }
+
+    fun updateText() {}
 }
