@@ -238,7 +238,7 @@ CodeMirror.registerHelper("lint", "venusbackend.riscv", function (text) {
             message: war.message});
     };
 
-    var res = window.venus_main.venusbackend.assembler.Linter.lint(text);
+    var res = window.venus_main.venus.Driver.lint(text);
     for (var i = 0; i < res.length; i++) {
         info = res[i]
         if (info.isError) {

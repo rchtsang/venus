@@ -76,6 +76,8 @@ import kotlin.dom.removeClass
         ready = true
     }
 
+    @JsName("lint") fun lint(text: String) = Linter.lint(text)
+
     /**
      * Run when the user clicks the "Simulator" tab.
      *
