@@ -1,11 +1,11 @@
-# [venus](https://ThaumicMekanism.github.io/venus/)
+# [Venus](https://ThaumicMekanism.github.io/venus/)
 [![Build Status](https://travis-ci.org/ThaumicMekanism/venus.svg?branch=master)](https://travis-ci.org/ThaumicMekanism/venus)
 
-__venus__ is a RISC-V instruction set venusbackend.simulator built for education.
+__Venus__ is a RISC-V instruction set simulator built for education.
 
-## Using venus
+## Using Venus
 
-venus is [available online](https://ThaumicMekanism.github.io/venus/).
+Venus is [available online](https://ThaumicMekanism.github.io/venus/).
 
 ## Features
 * RV32IM
@@ -20,7 +20,7 @@ venus is [available online](https://ThaumicMekanism.github.io/venus/).
 
 #### [User Guide](https://github.com/ThaumicMekanism/venus/wiki)
 
-#### [Roadmap](https://github.com/ThaumicMekanism/venus/projects/2)
+#### [Roadmap](https://github.com/ThaumicMekanism/venus/projects/1)
 
 #### [Contributing](https://github.com/ThaumicMekanism/venus/blob/master/CONTRIBUTING.md)
 
@@ -28,5 +28,5 @@ venus is [available online](https://ThaumicMekanism.github.io/venus/).
 
 ## Credit
 
+* Currently Maintained by [ThaumicMekanism](https://github.com/ThaumicMekanism/venus)
 * Originally made by [kvakil](https://github.com/kvakil/venus)
-* With edits by [ThaumicMekanism](https://github.com/ThaumicMekanism/venus)
