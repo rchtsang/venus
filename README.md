@@ -1,7 +1,7 @@
 # [Venus](https://ThaumicMekanism.github.io/venus/)
-Web: [![Build Status](https://travis-ci.org/ThaumicMekanism/venus.svg?branch=js)](https://travis-ci.org/ThaumicMekanism/venus)
+[Web](https://github.com/ThaumicMekanism/venus/tree/js): [![Build Status](https://travis-ci.org/ThaumicMekanism/venus.svg?branch=js)](https://travis-ci.org/ThaumicMekanism/venus)
 
-Java: [![Build Status](https://travis-ci.org/ThaumicMekanism/venus.svg?branch=jvm)](https://travis-ci.org/ThaumicMekanism/venus)
+[Java](https://github.com/ThaumicMekanism/venus/tree/jvm): [![Build Status](https://travis-ci.org/ThaumicMekanism/venus.svg?branch=jvm)](https://travis-ci.org/ThaumicMekanism/venus)
 
 __Venus__ is a RISC-V instruction set simulator built for education.
 
