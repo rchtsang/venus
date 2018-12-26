@@ -133,6 +133,10 @@ internal object Renderer {
         }
     }
 
+    fun displayWarning(w: String) {
+        printConsole(w)
+    }
+
     /** Display a given [AssemblerError] */
     @Suppress("UNUSED_PARAMETER") fun displayError(e: AssemblerError) {
         if (e.line !== null) {
