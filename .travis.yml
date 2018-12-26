@@ -17,8 +17,8 @@ script:
 after_success:
 #  - ./gradlew dokka
 - git clone -b gh-pages https://github.com/ThaumicMekanism/venus.git out && rm -rf out/.git
-- test $TRAVIS_BRANCH = "master" && mv out/jvm jvm && rm -rf out && mkdir out && mv jvm out && grunt dist
-- test $TRAVIS_BRANCH = "JVM" && rm -rf out/jvm && grunt distjvm
+- test $TRAVIS_BRANCH = "js" && mv out/jvm jvm && rm -rf out && mkdir out && mv jvm out && grunt dist
+- test $TRAVIS_BRANCH = "jvm" && rm -rf out/jvm && grunt distjvm
 cache:
   directories:
   - node_modules/
@@ -29,7 +29,7 @@ deploy:
   local_dir: out
   keep-history: true
   on:
-    branch: master
+    branch: js
   email: deployer@travis-ci.org
   name: Travis CI Deployment
 
@@ -39,7 +39,7 @@ deploy:
   local_dir: out
   keep-history: true
   on:
-    branch: JVM
+    branch: jvm
   email: deployer@travis-ci.org
   name: Travis CI Deployment
 
