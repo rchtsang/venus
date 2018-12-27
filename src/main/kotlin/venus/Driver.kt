@@ -117,7 +117,7 @@ object Driver {
                 sim.run()
                 if (getNumberOfCycles) {
                     Renderer.activeDisplay = true
-                    Renderer.printConsole(sim.cycles)
+                    Renderer.printConsole(sim.getCycles())
                 }
             }
 //            println() // This is to end on a new line regardless of the output.
