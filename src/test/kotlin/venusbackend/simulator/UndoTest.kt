@@ -10,7 +10,8 @@ import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 
 class UndoTest {
-    @Test fun undoRegisterSet() {
+    @Test
+    fun undoRegisterSet() {
         val (prog, _) = Assembler.assemble("""
         addi x8 x0 7
         addi x8 x0 9

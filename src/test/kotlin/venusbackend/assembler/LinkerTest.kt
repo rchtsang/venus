@@ -12,7 +12,8 @@ import venusbackend.assembler.AssemblerError
 import venus.vfs.VirtualFileSystem
 
 class LinkerTest {
-    @Test fun linkOneFile() {
+    @Test
+    fun linkOneFile() {
         val (prog, _) = Assembler.assemble("""
         start:
         addi x8 x8 1
@@ -60,7 +61,7 @@ class LinkerTest {
         """)
 
         try {
-            Linker.link(ProgramAndLibraries(listOf(prog1, prog2), VirtualFileSystem("Dummy")))
+            Linker.link(ProgramAndLibraries(listOf(prog1, prog2), VirtualFileSystem("dummy")))
             fail("allowed jump to 'private' label")
         } catch (e: AssemblerError) {
             assertTrue(true)

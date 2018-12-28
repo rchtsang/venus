@@ -2,15 +2,16 @@
 package venusbackend.assembler
 /* ktlint-enable package-name */
 
+import kotlin.test.Test
 import venus.vfs.VirtualFileSystem
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 import venusbackend.simulator.Simulator
-import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class SuperBasicTest {
-    @Test fun superBasic() {
+    @Test
+    fun superBasic() {
         val (prog, _) = Assembler.assemble("""
         addi x8 x8 13
         add x9 x8 x8

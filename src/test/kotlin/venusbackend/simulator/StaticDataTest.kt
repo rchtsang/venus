@@ -11,7 +11,8 @@ import venusbackend.linker.ProgramAndLibraries
 import venusbackend.riscv.MemorySegments
 
 class StaticDataTest {
-    @Test fun easyManualLoad() {
+    @Test
+    fun easyManualLoad() {
         val (prog, _) = Assembler.assemble("""
         .data
         .byte 1 2 3 4
@@ -37,10 +38,10 @@ class StaticDataTest {
         val linked = Linker.link(PandL)
         val sim = Simulator(linked)
         val offset = MemorySegments.STATIC_BEGIN
-        assertEquals('a'.toInt(), sim.loadByte(offset))
-        assertEquals(0, sim.loadByte(offset + 1))
-        assertEquals('b'.toInt(), sim.loadByte(offset + 2))
-        assertEquals(0, sim.loadByte(offset + 3))
+        assertEquals('a'.toInt(), sim.loadByte(offset).toInt())
+        assertEquals(0, sim.loadByte(offset + 1).toInt())
+        assertEquals('b'.toInt(), sim.loadByte(offset + 2).toInt())
+        assertEquals(0, sim.loadByte(offset + 3).toInt())
     }
 
     @Test fun linkedStaticBytes() {

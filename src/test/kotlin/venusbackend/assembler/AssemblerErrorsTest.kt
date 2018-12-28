@@ -6,7 +6,8 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class AssemblerErrorsTest {
-    @Test fun noEmptyException() {
+    @Test
+    fun noEmptyException() {
         val (_, errors) = Assembler.assemble("")
         assertTrue(errors.isEmpty())
     }

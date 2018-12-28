@@ -2,15 +2,16 @@
 package venusbackend.assembler
 /* ktlint-enable package-name */
 
-import venus.vfs.VirtualFileSystem
 import kotlin.test.Test
+import venus.vfs.VirtualFileSystem
 import kotlin.test.assertEquals
 import venusbackend.simulator.Simulator
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 
 class PseudoTest {
-    @Test fun moveTest() {
+    @Test
+    fun moveTest() {
         val (prog, _) = Assembler.assemble("""
         addi x1 x0 5
         mv x2 x1

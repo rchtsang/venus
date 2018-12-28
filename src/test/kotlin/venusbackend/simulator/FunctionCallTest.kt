@@ -10,7 +10,8 @@ import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 
 class FunctionCallTest {
-    @Test fun doubleJALR() {
+    @Test
+    fun doubleJALR() {
         val (prog, _) = Assembler.assemble("""
             jal x0 main
         double:

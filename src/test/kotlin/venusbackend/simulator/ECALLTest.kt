@@ -10,7 +10,8 @@ import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 
 class ECALLTest {
-    @Test fun terminateEarly() {
+    @Test
+    fun terminateEarly() {
         val (prog, _) = Assembler.assemble("""
         addi a0 x0 10
         ecall
