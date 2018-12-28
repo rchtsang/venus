@@ -11,6 +11,7 @@ import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 import venusbackend.riscv.*
 import venusbackend.simulator.*
+import venusbackend.simulator.Tracer.Companion.wordAddressed
 import venusbackend.simulator.cache.BlockReplacementPolicy
 import venusbackend.simulator.cache.CacheError
 import venusbackend.simulator.cache.CacheHandler
