@@ -2,6 +2,8 @@
 var venuspackage = {
   id: "disassembler",
   load: function(setting) {
+      console.log("Until this plugin is updated, it cannot be enabled :(");
+      return;
       if (setting.includes("enabled")) {
           loadDecoder();
       }
