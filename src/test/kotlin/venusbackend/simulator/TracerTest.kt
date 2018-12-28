@@ -5,6 +5,7 @@ import venusbackend.assembler.Assembler
 import venus.vfs.VirtualFileSystem
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
+import venusbackend.simulator.Tracer.Companion.wordAddressed
 import kotlin.test.assertEquals
 
 class TracerTest {

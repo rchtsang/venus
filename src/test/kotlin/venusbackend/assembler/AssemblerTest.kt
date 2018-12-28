@@ -38,7 +38,7 @@ class AssemblerTest {
         val linked = Linker.link(PandL)
         val sim = Simulator(linked, state = SimulatorState64())
         sim.run()
-        assertEquals(8.toLong(), sim.getReg(3))
+        assertEquals(8L, sim.getReg(3).toLong())
     }
 
     @Test fun storeLoadTest() {
@@ -69,12 +69,12 @@ class AssemblerTest {
         val linked = Linker.link(PandL)
         val sim = Simulator(linked, state = SimulatorState64())
         sim.step()
-        assertEquals(100L, sim.getReg(1))
+        assertEquals(100L, sim.getReg(1).toLong())
         sim.step()
-        assertEquals(100L, sim.getReg(1))
+        assertEquals(100L, sim.getReg(1).toLong())
         assertEquals(100, sim.loadWord(60))
         sim.step()
-        assertEquals(100L, sim.getReg(2))
+        assertEquals(100L, sim.getReg(2).toLong())
     }
 
     @Test fun branchTest() {
@@ -104,7 +104,7 @@ class AssemblerTest {
         val linked = Linker.link(PandL)
         val sim = Simulator(linked, state = SimulatorState64())
         for (i in 1..17) sim.step()
-        assertEquals(10L, sim.getReg(8))
+        assertEquals(10L, sim.getReg(8).toLong())
     }
 
     @Test fun otherImmediateTest() {
@@ -119,6 +119,20 @@ class AssemblerTest {
         assertEquals(0xf7, sim.getReg(8))
         sim.step()
         assertEquals(0b10001, sim.getReg(9))
+    }
+
+    @Test fun otherImmediate64Test() {
+        val (prog, _) = Assembler.assemble("""
+        addi x8 x8 0xf7
+        addi x9 x9 0b10001
+        """)
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked, state = SimulatorState64())
+        sim.step()
+        assertEquals(0xf7L, sim.getReg(8).toLong())
+        sim.step()
+        assertEquals(0b10001L, sim.getReg(9).toLong())
     }
 
     @Test fun alignTest() {

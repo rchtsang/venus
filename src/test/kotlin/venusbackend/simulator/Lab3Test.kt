@@ -75,6 +75,6 @@ finish: addi    a0, x0, 1
         val linked = Linker.link(PandL)
         val sim = Simulator(linked, state = SimulatorState64())
         sim.run()
-        assertEquals(34L, sim.getReg(11))
+        assertEquals(34L, sim.getReg(11).toLong())
     }
 }
