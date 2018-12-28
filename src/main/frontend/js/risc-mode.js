@@ -4,9 +4,10 @@ CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
     }
 
     var instructions = regexFromWords([
-        "addw?",
+        "(c\.)?addw?",
         "addiw?",
         "andi?",
+        "c.and",
         "auipc",
         "beq",
         "bgeu?",
@@ -24,7 +25,7 @@ CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
         "lui",
         "lwu?",
         "ld",
-        "or",
+        "(c.)?or",
         "ori",
         "sb",
         "sh",
@@ -37,10 +38,10 @@ CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
         "sraiw?",
         "srlw?",
         "srliw?",
-        "subw?",
+        "(c\.)?subw?",
         "sw",
         "sd",
-        "xori?",
+        "(c.)?xori?",
         /* Extensions */
         /* Atomic */
         "amoadd.[wd](\.aq\.rl|\.rl\.aq|\.aq|\.rl)?",
