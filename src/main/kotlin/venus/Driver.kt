@@ -14,10 +14,12 @@ import venusbackend.assembler.Linter
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
+import venusbackend.plus
 import venusbackend.riscv.*
 import venusbackend.riscv.insts.dsl.Instruction
 import venusbackend.riscv.insts.floating.Decimal
 import venusbackend.simulator.*
+import venusbackend.simulator.Tracer.Companion.wordAddressed
 import venusbackend.simulator.cache.BlockReplacementPolicy
 import venusbackend.simulator.cache.CacheError
 import venusbackend.simulator.cache.CacheHandler
@@ -43,6 +45,7 @@ import kotlin.dom.removeClass
     var cache: CacheHandler = mainCache
     var cacheLevels: ArrayList<CacheHandler> = arrayListOf(mainCache)
     val simSettings = SimulatorSettings()
+    val simState64 = SimulatorState64()
 
     private var timer: Int? = null
     val LS = LocalStorage()
@@ -57,6 +60,7 @@ import kotlin.dom.removeClass
     @JsName("terminal") var terminal = Terminal(VFS)
 
     init {
+        simState64.getReg(0)
         Linter.lint("")
         console.log("Loading driver...")
         mainCache.attach(false)
@@ -280,7 +284,7 @@ import kotlin.dom.removeClass
     @JsName("reset") fun reset() {
         try {
             val args = sim.args
-            sim = Simulator(sim.linkedProgram, VFS, sim.settings, sim.simulatorID)
+            sim = Simulator(sim.linkedProgram, VFS, sim.settings, simulatorID = sim.simulatorID)
             for (arg in args) {
                 sim.addArg(arg)
             }
@@ -347,9 +351,9 @@ import kotlin.dom.removeClass
     }
 
     private fun handleNotExitOver() {
-        if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.maxpc) until MemorySegments.STATIC_BEGIN) {
-            val pcloc = (sim.maxpc - MemorySegments.TEXT_BEGIN) / 4
-            sim.maxpc += 4
+        if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.getMaxPC().toInt()) until MemorySegments.STATIC_BEGIN) {
+            val pcloc = (sim.getMaxPC().toInt() - MemorySegments.TEXT_BEGIN) / 4
+            sim.incMaxPC(4)
             var mcode = MachineCode(0)
             var progLine = ""
             try {
@@ -485,7 +489,7 @@ import kotlin.dom.removeClass
         val sb = StringBuilder()
         for (i in 0 until sim.linkedProgram.prog.insts.size) {
             val mcode = sim.linkedProgram.prog.insts[i]
-            val hexRepresentation = Renderer.toHex(mcode[InstructionField.ENTIRE])
+            val hexRepresentation = Renderer.toHex(mcode[InstructionField.ENTIRE].toInt())
             sb.append(hexRepresentation/*.removePrefix("0x")*/)
             sb.append("\n")
         }

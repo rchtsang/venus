@@ -189,7 +189,7 @@ internal object Renderer {
                 is RegisterDiff -> updateRegister(diff.id, diff.v, true)
                 is FRegisterDiff -> updateFRegister(diff.id, diff.v, true)
                 is PCDiff -> updatePC(diff.pc)
-                is MemoryDiff -> updateMemory(diff.addr)
+                is MemoryDiff -> updateMemory(diff.addr.toInt())
                 is CacheDiff -> updateCache(diff.addr)
                 is InstructionDiff -> {}
                 else -> {
@@ -226,7 +226,7 @@ internal object Renderer {
         val pcText = document.createTextNode("0x" + ((idx * 4) + MemorySegments.TEXT_BEGIN).toString(16))
         pcline.appendChild(pcText)
 
-        val hexRepresention = toHex(mcode[InstructionField.ENTIRE])
+        val hexRepresention = toHex(mcode[InstructionField.ENTIRE].toInt())
         val machineCode = newRow.insertCell(1)
         val machineCodeText = document.createTextNode(hexRepresention)
         machineCode.appendChild(machineCodeText)
@@ -240,7 +240,7 @@ internal object Renderer {
         line.appendChild(lineText)
     }
 
-    fun updateProgramListing(idx: Int, inst: Int, orig: String? = null): InstructionDiff {
+    fun updateProgramListing(idx: Number, inst: Int, orig: String? = null): InstructionDiff {
         val instTab = document.getElementById("instruction-$idx")
         val children = instTab?.children
         val mcode = MachineCode(inst)
@@ -248,8 +248,8 @@ internal object Renderer {
         try {
             code = Instruction[mcode].disasm(mcode)
         } catch (e: SimulatorError) {}
-        val pre = InstructionDiff(idx, userStringToInt(children?.get(1)?.innerHTML ?: "-1"), children?.get(3)?.innerHTML ?: "")
-        children?.get(1)?.innerHTML = toHex(mcode[InstructionField.ENTIRE]) /*Machine Code*/
+        val pre = InstructionDiff(idx.toInt(), userStringToInt(children?.get(1)?.innerHTML ?: "-1"), children?.get(3)?.innerHTML ?: "")
+        children?.get(1)?.innerHTML = toHex(mcode[InstructionField.ENTIRE].toInt()) /*Machine Code*/
         children?.get(2)?.innerHTML = code /*Basic Code*/
         children?.get(3)?.innerHTML = orig ?: code /*Original Code*/
         return pre
@@ -272,14 +272,14 @@ internal object Renderer {
      * @param value the new value of the register
      * @param setActive whether the register should be set to the active register (i.e., highlighted for the user)
      */
-    fun updateRegister(id: Int, value: Int, setActive: Boolean = false) {
+    fun updateRegister(id: Int, value: Number, setActive: Boolean = false) {
         val register = getElement("reg-$id-val") as HTMLInputElement
         register.value = when (displayType) {
-            "Hex" -> toHex(value)
+            "Hex" -> toHex(value.toInt())
             "Decimal" -> value.toString()
-            "Unsigned" -> toUnsigned(value)
-            "ASCII" -> toAscii(value)
-            else -> toHex(value)
+            "Unsigned" -> toUnsigned(value.toInt())
+            "ASCII" -> toAscii(value.toInt())
+            else -> toHex(value.toInt())
         }
         if (setActive) {
             activeRegister?.classList?.remove("is-modified")
@@ -424,8 +424,8 @@ internal object Renderer {
      * @param pc the new PC
      * @todo abstract away instruction length
      */
-    fun updatePC(pc: Int) {
-        val idx = (pc - MemorySegments.TEXT_BEGIN) / 4
+    fun updatePC(pc: Number) {
+        val idx = (pc.toInt() - MemorySegments.TEXT_BEGIN) / 4
         activeInstruction?.classList?.remove("is-selected")
         val newActiveInstruction = document.getElementById("instruction-$idx") as HTMLElement?
         newActiveInstruction?.classList?.add("is-selected")
@@ -764,6 +764,10 @@ internal object Renderer {
         }
 
         return "0x" + suffix
+    }
+
+    fun toHex(value: Number): String {
+        return toHex(value.toInt())
     }
 
     private fun toUnsigned(value: Int): String =
