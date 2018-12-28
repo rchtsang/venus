@@ -28,23 +28,26 @@ object Driver {
 
     var VFS = VirtualFileSystem("v")
 
-    var sim: Simulator = Simulator(LinkedProgram(), VFS)
+    var simState: SimulatorState = SimulatorState32()
+    var sim: Simulator = Simulator(LinkedProgram(), VFS, state = simState)
     var tr: Tracer = Tracer(sim)
-    val mainCache: CacheHandler = CacheHandler(1)
 
+    val mainCache: CacheHandler = CacheHandler(1)
     var cache: CacheHandler = mainCache
     var cacheLevels: ArrayList<CacheHandler> = arrayListOf(mainCache)
-    val simSettings = SimulatorSettings()
 
+    val simSettings = SimulatorSettings()
     var p = ""
     private var ready = false
     var FReginputAsFloat = true
+
     var debug = false
 
     @JvmStatic
     fun main(args: Array<String>) {
         val cli = CommandLineInterface("venus")
         val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
+        val regWidth by cli.flagValueArgument(listOf("-r", "--regwidth"), "RegisterWidth", "Sets register width (Currently only supporting 32 (default) and 64).", "32")
         val trace by cli.flagArgument(listOf("-t", "--trace"), "Trace the program given with the pattern given. If no pattern is given, it will use the default.", false, true)
         val template by cli.flagValueArgument(listOf("-tf", "--tracetemplate"), "TemplateFile", "Optional file/filepath to trace template to use. Only used if the trace argument is set.")
         val traceBase by cli.flagValueArgument(listOf("-tb", "--tracebase"), "Radix", "The radix which you want the trace to output. Default is 2 if omitted", "2") {
@@ -75,6 +78,12 @@ object Driver {
             cli.parse(args)
         } catch (e: Exception) {
             exitProcess(-1)
+        }
+
+        simState = when (regWidth) {
+            "32" -> { SimulatorState32() }
+            "64" -> { SimulatorState64() }
+            else -> { throw SimulatorError("Invalid register width $regWidth") }
         }
 
         if (getNumberOfCycles) {
@@ -171,7 +180,7 @@ object Driver {
     }
 
     fun loadSim(linked: LinkedProgram) {
-        sim = Simulator(linked, VFS, simSettings)
+        sim = Simulator(linked, VFS, simSettings, state = simState)
         mainCache.reset()
         sim.state.cache = mainCache
         tr = Tracer(sim)

@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 class SimulatorStateTest {
     @Test
     fun storeLoadRegister() {
-        val state = SimulatorState()
+        val state = SimulatorState32()
         state.setReg(1, 10)
         assertEquals(10, state.getReg(1))
         state.setReg(1, -10)
@@ -16,7 +16,7 @@ class SimulatorStateTest {
     }
 
     @Test fun nowriteZeroRegister() {
-        val state = SimulatorState()
+        val state = SimulatorState32()
         state.setReg(0, 10)
         assertEquals(0, state.getReg(0))
     }

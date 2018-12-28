@@ -25,7 +25,7 @@ internal object Renderer {
 
     var activeDisplay = true
 
-    fun updateProgramListing(idx: Int, inst: Int, orig: String? = null): InstructionDiff {
+    fun updateProgramListing(idx: Number, inst: Number, orig: String? = null): InstructionDiff {
         return InstructionDiff(-1, -1, "")
     }
 
@@ -36,7 +36,7 @@ internal object Renderer {
      * @param value the new value of the register
      * @param setActive whether the register should be set to the active register (i.e., highlighted for the user)
      */
-    fun updateRegister(id: Int, value: Int, setActive: Boolean = false) {}
+    fun updateRegister(id: Int, value: Number, setActive: Boolean = false) {}
 
     fun updateMemory(id: Int) {}
 
@@ -114,6 +114,10 @@ internal object Renderer {
         }
 
         return "0x" + suffix
+    }
+
+    fun toHex(value: Number): String {
+        return toHex(value.toInt()) // FIXME
     }
 
     private fun toUnsigned(value: Int): String =

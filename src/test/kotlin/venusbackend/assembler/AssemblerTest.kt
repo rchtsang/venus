@@ -8,6 +8,7 @@ import kotlin.test.assertEquals
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 import venusbackend.simulator.Simulator
+import venusbackend.simulator.SimulatorState64
 
 class AssemblerTest {
     @Test
@@ -23,6 +24,21 @@ class AssemblerTest {
         val sim = Simulator(linked)
         sim.run()
         assertEquals(8, sim.getReg(3))
+    }
+
+    @Test
+    fun assembleLexer64Test() {
+        val (prog, _) = Assembler.assemble("""
+        addi x1 x0 5
+        addi x2 x1 5
+        add x3 x1 x2
+        andi x3 x3 8
+        """)
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked, state = SimulatorState64())
+        sim.run()
+        assertEquals(8.toLong(), sim.getReg(3))
     }
 
     @Test fun storeLoadTest() {
@@ -43,6 +59,24 @@ class AssemblerTest {
         assertEquals(100, sim.getReg(2))
     }
 
+    @Test fun storeLoad64Test() {
+        val (prog, _) = Assembler.assemble("""
+        addi x1 x0 100
+        sw x1 60(x0)
+        lw x2 -40(x1)
+        """)
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked, state = SimulatorState64())
+        sim.step()
+        assertEquals(100L, sim.getReg(1))
+        sim.step()
+        assertEquals(100L, sim.getReg(1))
+        assertEquals(100, sim.loadWord(60))
+        sim.step()
+        assertEquals(100L, sim.getReg(2))
+    }
+
     @Test fun branchTest() {
         val (prog, _) = Assembler.assemble("""
         add x8 x8 x9
@@ -56,6 +90,21 @@ class AssemblerTest {
         val sim = Simulator(linked)
         for (i in 1..17) sim.step()
         assertEquals(10, sim.getReg(8))
+    }
+
+    @Test fun branch64Test() {
+        val (prog, _) = Assembler.assemble("""
+        add x8 x8 x9
+        addi x7 x0 5
+        start: add x8 x8 x9
+        addi x9 x9 1
+        bne x9 x6 start
+        """)
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked, state = SimulatorState64())
+        for (i in 1..17) sim.step()
+        assertEquals(10L, sim.getReg(8))
     }
 
     @Test fun otherImmediateTest() {
