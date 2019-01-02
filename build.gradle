@@ -20,9 +20,12 @@ apply plugin: 'kotlin2js'
 apply plugin: 'kotlin-dce-js'
 apply plugin: 'org.jetbrains.dokka'
 
-runDceKotlinJs.keep 'venus.Driver.run', 'venusbackend.assembler.Linter', 'venus.api.API'
+runDceKotlinJs.keep 'venus.Driver.run', 'venusbackend.assembler.Linter', 'venus.api.API', "kotlin.Number"
 
-        configurations {
+runDceKotlinJs.dceOptions.devMode = true
+runDceTestKotlinJs.dceOptions.devMode = true
+
+configurations {
     ktlint
 }
 

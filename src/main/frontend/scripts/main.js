@@ -29,6 +29,10 @@ function local_venus() {
 }
 
 function main_venus() {
+    if (typeof kotlin.kotlin.Number === "undefined") {
+        kotlin.kotlin.Number = function (){}
+        kotlin.kotlin.Number.prototype.call = function(a){}
+    }
     loadScript("venus.js", "local_riscv();", "setup_venus();");
 }
 

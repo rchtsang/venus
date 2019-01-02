@@ -6,7 +6,7 @@ import venusbackend.assembler.AssemblerError
 import venus.vfs.VirtualFileSystem
 import venusbackend.linker.LinkedProgram
 import venusbackend.riscv.*
-import venusbackend.riscv.insts.dsl.Instruction
+import venusbackend.riscv.insts.dsl.types.Instruction
 import venusbackend.riscv.insts.floating.Decimal
 import venusbackend.simulator.Diff
 import venusbackend.simulator.Simulator

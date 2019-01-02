@@ -16,7 +16,7 @@ import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
 import venusbackend.plus
 import venusbackend.riscv.*
-import venusbackend.riscv.insts.dsl.Instruction
+import venusbackend.riscv.insts.dsl.types.Instruction
 import venusbackend.riscv.insts.floating.Decimal
 import venusbackend.simulator.*
 import venusbackend.simulator.Tracer.Companion.wordAddressed
