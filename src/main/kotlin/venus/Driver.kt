@@ -14,6 +14,7 @@ import venusbackend.assembler.Linter
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
+import venusbackend.numbers.QuadWord
 import venusbackend.plus
 import venusbackend.riscv.*
 import venusbackend.riscv.insts.dsl.types.Instruction
@@ -46,6 +47,7 @@ import kotlin.dom.removeClass
     var cacheLevels: ArrayList<CacheHandler> = arrayListOf(mainCache)
     val simSettings = SimulatorSettings()
     val simState64 = SimulatorState64()
+    val temp = QuadWord()
 
     private var timer: Int? = null
     val LS = LocalStorage()

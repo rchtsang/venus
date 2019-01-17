@@ -12,6 +12,12 @@
 <script src="qunit.js"></script>
 <script type="text/javascript" src="../build/kotlin-js-min/main/kotlin.js"></script>
 <script type="text/javascript" src="../build/kotlin-js-min/main/kotlin.js"></script>
+<script>
+    if (typeof kotlin.kotlin.Number === "undefined") {
+        kotlin.kotlin.Number = function (){}
+        kotlin.kotlin.Number.prototype.call = function(a){}
+    }
+</script>
 <script type="text/javascript" src="../build/kotlin-js-min/main/venus.js"></script>
 <script type="text/javascript" src="../build/kotlin-js-min/test/kotlin.js"></script>
 <script type="text/javascript" src="../build/kotlin-js-min/test/kotlin-test.js"></script>
