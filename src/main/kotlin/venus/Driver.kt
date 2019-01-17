@@ -287,6 +287,7 @@ import kotlin.dom.removeClass
         try {
             val args = sim.args
             sim = Simulator(sim.linkedProgram, VFS, sim.settings, simulatorID = sim.simulatorID)
+            tr.sim = sim
             for (arg in args) {
                 sim.addArg(arg)
             }
