@@ -23,7 +23,7 @@ import kotlin.dom.removeClass
 
 /**
  * This singleton is used to render different parts of the screen, it serves as an interface between the UI and the
- * internal venusbackend.simulator.
+ * internal simulator.
  *
  * @todo break this up into multiple objects
  */
@@ -34,7 +34,7 @@ internal object Renderer {
     private var activeInstruction: HTMLElement? = null
     /** The memory location currently centered */
     var activeMemoryAddress: Int = 0
-    /** The venusbackend.simulator being rendered */
+    /** The simulator being rendered */
     private var sim: Simulator = Simulator(LinkedProgram(), VirtualFileSystem("dummy"))
     /* The way the information in the registers is displayed*/
     private var displayType = "hex"
@@ -68,14 +68,14 @@ internal object Renderer {
         return false
     }
 
-    var mainTabs: ArrayList<String> = arrayListOf("venusbackend.simulator", "editor", "venus")
+    var mainTabs: ArrayList<String> = arrayListOf("simulator", "editor", "venus")
     /**
-     * Shows the venusbackend.simulator tab and hides other tabs
+     * Shows the simulator tab and hides other tabs
      *
-     * @param displaySim the venusbackend.simulator to show
+     * @param displaySim the simulator to show
      */
     fun renderSimulator() {
-        renderTab("venusbackend.simulator", mainTabs)
+        renderTab("simulator", mainTabs)
     }
 
     fun loadSimulator(displaySim: Simulator) {
@@ -88,15 +88,15 @@ internal object Renderer {
     }
 
     fun renderSimButtons() {
-        val simbtns = document.getElementById("venusbackend.simulator-buttons") as HTMLDivElement
-        val simassmbbtns = document.getElementById("venusbackend.simulator-assemble-buttons") as HTMLDivElement
+        val simbtns = document.getElementById("simulator-buttons") as HTMLDivElement
+        val simassmbbtns = document.getElementById("simulator-assemble-buttons") as HTMLDivElement
         simassmbbtns.style.display = "none"
         simbtns.style.display = ""
     }
 
     fun renderAssembleButtons() {
-        val simbtns = document.getElementById("venusbackend.simulator-buttons") as HTMLDivElement
-        val simassmbbtns = document.getElementById("venusbackend.simulator-assemble-buttons") as HTMLDivElement
+        val simbtns = document.getElementById("simulator-buttons") as HTMLDivElement
+        val simassmbbtns = document.getElementById("simulator-assemble-buttons") as HTMLDivElement
         simassmbbtns.style.display = ""
         simbtns.style.display = "none"
     }
@@ -120,7 +120,7 @@ internal object Renderer {
      *
      * Also updates the highlighted tab at the top.
      *
-     * @param tab the name of the tab (currently "editor" or "venusbackend.simulator")
+     * @param tab the name of the tab (currently "editor" or "simulator")
      */
     @JsName("tabSetVisibility") private fun tabSetVisibility(tab: String, display: String) {
         val tabView = document.getElementById("$tab-tab-view") as HTMLElement
@@ -161,7 +161,7 @@ internal object Renderer {
     }
 
     /**
-     * Refresh all of the venusbackend.simulator tab's content
+     * Refresh all of the simulator tab's content
      *
      * @todo refactor this into a "reset" and "update" all function
      */
@@ -457,7 +457,7 @@ internal object Renderer {
      * @param spinning whether the button should be spin
      */
     fun setRunButtonSpinning(spinning: Boolean) {
-        val runButton = getElement("venusbackend.simulator-run")
+        val runButton = getElement("simulator-run")
         if (spinning) {
             runButton.classList.add("is-loading")
             disableControlButtons()
@@ -497,10 +497,10 @@ internal object Renderer {
      * Renders the control buttons to be enabled / disabled appropriately.
      */
     fun updateControlButtons() {
-        setButtonDisabled("venusbackend.simulator-reset", !sim.canUndo())
-        setButtonDisabled("venusbackend.simulator-undo", !sim.canUndo())
-        setButtonDisabled("venusbackend.simulator-step", sim.isDone())
-        setButtonDisabled("venusbackend.simulator-run", sim.isDone())
+        setButtonDisabled("simulator-reset", !sim.canUndo())
+        setButtonDisabled("simulator-undo", !sim.canUndo())
+        setButtonDisabled("simulator-step", sim.isDone())
+        setButtonDisabled("simulator-run", sim.isDone())
     }
 
     /**
@@ -509,9 +509,9 @@ internal object Renderer {
      * Used while running, see [Driver.runStart].
      */
     fun disableControlButtons() {
-        setButtonDisabled("venusbackend.simulator-reset", true)
-        setButtonDisabled("venusbackend.simulator-undo", true)
-        setButtonDisabled("venusbackend.simulator-step", true)
+        setButtonDisabled("simulator-reset", true)
+        setButtonDisabled("simulator-undo", true)
+        setButtonDisabled("simulator-step", true)
     }
 
     /**
