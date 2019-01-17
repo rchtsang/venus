@@ -21,10 +21,15 @@ function local_riscv() {
 }
 
 function local_kotlin() {
+    // loadScript("https://try.kotlinlang.org/static/kotlin/1.3.11/kotlin.js", "alert('COULD NOT LOAD KOTLIN SCRIPT!');", "local_venus();");
     loadScript("../../../build/kotlin-js-min/main/kotlin.js", "alert('COULD NOT LOAD KOTLIN SCRIPT!');", "local_venus();");
 }
 
 function local_venus() {
+    if (typeof kotlin.kotlin.Number === "undefined") {
+        kotlin.kotlin.Number = function (){}
+        kotlin.kotlin.Number.prototype.call = function(a){}
+    }
     loadScript("../../../build/kotlin-js-min/main/venus.js", "alert('COULD NOT LOAD VENUS SCRIPT!');", "setup_venus();")
 }
 
