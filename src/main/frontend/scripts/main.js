@@ -27,19 +27,24 @@ function local_kotlin() {
 }
 
 function local_venus() {
-    if (typeof kotlin.kotlin.Number === "undefined") {
-        kotlin.kotlin.Number = function (){};
-        kotlin.kotlin.Number.prototype.call = function(a){};
-    }
+    temp_fix();
     loadScript("../../../build/kotlin-js-min/main/venus.js", "alert('COULD NOT LOAD VENUS SCRIPT!');", "setup_venus();")
 }
 
+function deploy_venus() {
+    temp_fix();
+    loadScript("js/venus.js",  "alert('COULD NOT LOAD VENUS SCRIPT!');", "setup_venus();");
+}
+
 function main_venus() {
-    if (typeof kotlin !== "undefined" && typeof kotlin.kotlin !== "undefined" && kotlin.kotlin.Number === "undefined") {
+    loadScript("js/kotlin.js", "local_riscv();", "deploy_venus();");
+}
+
+function temp_fix() {
+    if (typeof kotlin !== "undefined" && typeof kotlin.kotlin !== "undefined" && typeof kotlin.kotlin.Number === "undefined") {
         kotlin.kotlin.Number = function (){};
         kotlin.kotlin.Number.prototype.call = function(a){};
     }
-    loadScript("venus.js", "local_riscv();", "setup_venus();");
 }
 
 main_venus();

@@ -19,12 +19,12 @@ var tester = {
         lielem.appendChild(aelem);
         document.getElementsByClassName('tabs')[0].children[0].appendChild(lielem);
         this.insertAfter(secelem, document.getElementById("simulator-tab-view"));
-        venus_main.venus.glue.Renderer.addTab("tester", venus_main.venus.glue.Renderer.mainTabs);
+        venus_main.venus.Renderer.addTab("tester", venus_main.venus.Renderer.mainTabs);
     },
     disable: function() {
-        venus_main.venus.glue.Renderer.removeTab("tester", venus_main.venus.glue.Renderer.mainTabs);
+        venus_main.venus.Renderer.removeTab("tester", venus_main.venus.Renderer.mainTabs);
         if (document.getElementById("tester-tab").classList.contains("is-active")) {
-            venus_main.venus.glue.Renderer.renderTab("editor", venus_main.venus.glue.Renderer.mainTabs);
+            venus_main.venus.Renderer.renderTab("editor", venus_main.venus.Renderer.mainTabs);
         }
         document.getElementById("tester-tab").remove();
         document.getElementById("tester-tab-view").remove();
@@ -112,7 +112,7 @@ var tester = {
                 let tmp = this.testCases[i].testAll(baseSim);
                 passed = passed && tmp[0];
                 results.push(tmp);
-                baseSim.reset();
+                simulatorAPI.reset(baseSim);
                 document.getElementById("console-output").value = "";
                 i++;
             }
@@ -240,24 +240,24 @@ var tester = {
 
         /**
          * The first thing it returns is if all of the tests succeeded. Then there is a list of the test which passed/failed.
-         * @param sim - A venus venusbackend.simulator object.
+         * @param sim - A venus simulator object.
          * @returns {boolean, [testid, boolean] ... }
          */
         testAll(sim) {
             /**
-             * First step is to get the venusbackend.simulator into the correct state.
+             * First step is to get the simulator into the correct state.
              * I am not resetting the sim since it assumes the sim is in the correct initial state. It will then add
              * args and process it.
              */
             for (let arg of this.args) {
-                sim.addArg(arg);
+                simulatorAPI.addArg(sim, arg);
             }
-            while( !sim.isDone() && (sim.cycles < this.when || this.when < 0) && (sim.cycles < this.maxcycles || this.maxcycles < 0)) {
-                sim.step();
+            while( !simulatorAPI.isDone(sim) && (simulatorAPI.getCycles(sim) < this.when || this.when < 0) && (simulatorAPI.getCycles(sim) < this.maxcycles || this.maxcycles < 0)) {
+                simulatorAPI.step(sim);
             }
 
             /**
-             * This part of the code will actually do the comparisons with the venusbackend.simulator.
+             * This part of the code will actually do the comparisons with the simulator.
              * @type {Array}
              */
             let details = [];
@@ -295,12 +295,12 @@ var tester = {
     },
 
     assertRegister: function(sim, regID, expected){
-        var result = [sim.getReg(regID) === expected, sim.getReg(regID)];
+        var result = [simulatorAPI.getReg(sim, regID) === expected, simulatorAPI.getReg(sim, regID)];
         return result;
     },
 
     assertFRegister: function(sim, regID, expected) {
-        var result = [sim.getFReg(regID) === expected, sim.getFReg(regID)];
+        var result = [simulatorAPI.getFReg(sim, regID) === expected, simulatorAPI.getFReg(sim, regID)];
         return result;
     },
 
@@ -316,7 +316,7 @@ var tester = {
     },
 
     assertMemory: function(sim, address, expected) {
-        var result = [sim.loadByte(address) === expected, sim.loadByte(address)];
+        var result = [simulatorAPI.loadByte(sim, address) === expected, simulatorAPI.loadByte(sim, address)];
         return result;
     },
 
@@ -1131,14 +1131,14 @@ var tester = {
     openTab: function(tabName, tabsList) {
         for (t of tabsList) {
             if (t === tabName) {
-                venus_main.venus.glue.Renderer.tabSetVisibility(t, "block");
+                venus_main.venus.Renderer.tabSetVisibility(t, "block");
             } else {
-                venus_main.venus.glue.Renderer.tabSetVisibility(t, "none");
+                venus_main.venus.Renderer.tabSetVisibility(t, "none");
             }
         }
     },
     openTester: function() {
-        venus_main.venus.glue.Renderer.renderTab("tester", venus_main.venus.glue.Renderer.mainTabs);
+        venus_main.venus.Renderer.renderTab("tester", venus_main.venus.Renderer.mainTabs);
     },
     insertAfter: function(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);

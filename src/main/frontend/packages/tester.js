@@ -3,8 +3,6 @@ var venuspackage = {
   id: "tester",
   requires: undefined,
   load: function(setting) {
-      console.log("Until this plugin is updated, it cannot be enabled :(");
-      return;
       if (setting.includes("init") || typeof tester === "undefined" || true) {
           var state = "disabled";
           if (setting.includes("enabled")) {
