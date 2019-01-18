@@ -2,8 +2,6 @@
 var venuspackage = {
   id: "disassembler",
   load: function(setting) {
-      console.log("Until this plugin is updated, it cannot be enabled :(");
-      return;
       if (setting.includes("enabled")) {
           loadDecoder();
       }
@@ -25,8 +23,8 @@ function dissassemblerloadScript(url, onfail, onload) {
     document.getElementsByTagName("head")[0].appendChild(script);
 }
 function loadDecoder(){
-    dissassemblerloadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/decoder.js',
+    dissassemblerloadScript('packages/support/decoder.js',
         `alert("Could not load the decoder! Please try to reload the page to get it to load.");` ,
-        `loadScript('https://thaumicmekanism.github.io/Unimarklet/repo/scripts/venus.decoder.js', "", "");`
+        `loadScript('packages/support/venus.decoder.js', "", "");`
     );
 }

@@ -2,6 +2,7 @@ function setup_venus() {
     console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
     window.venus_main = window.venus;
     window.driver = venus_main.venus.Driver;
+    window.simulatorAPI = venus_main.venus.api.venusbackend.simulator.Simulator;
     window.editor = document.getElementById("asm-editor");
     window.codeMirror = CodeMirror.fromTextArea(editor,
         {
@@ -27,13 +28,17 @@ function local_kotlin() {
 
 function local_venus() {
     if (typeof kotlin.kotlin.Number === "undefined") {
-        kotlin.kotlin.Number = function (){}
-        kotlin.kotlin.Number.prototype.call = function(a){}
+        kotlin.kotlin.Number = function (){};
+        kotlin.kotlin.Number.prototype.call = function(a){};
     }
     loadScript("../../../build/kotlin-js-min/main/venus.js", "alert('COULD NOT LOAD VENUS SCRIPT!');", "setup_venus();")
 }
 
 function main_venus() {
+    if (typeof kotlin !== "undefined" && typeof kotlin.kotlin !== "undefined" && kotlin.kotlin.Number === "undefined") {
+        kotlin.kotlin.Number = function (){};
+        kotlin.kotlin.Number.prototype.call = function(a){};
+    }
     loadScript("venus.js", "local_riscv();", "setup_venus();");
 }
 
