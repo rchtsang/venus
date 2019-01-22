@@ -161,4 +161,26 @@ class AssemblerTest {
         assertEquals(8, sim.getReg(5))
         assertEquals(4, sim.getReg(6))
     }
+
+    @Test fun numbericLabels() {
+        val (prog, _) = Assembler.assemble("""
+        1:  addi x1 x0 5
+            addi x3 x0 2
+            addi x2 x0 0
+            j 2f
+            addi x1 x1 5
+        2:  addi x1 x1 5
+            addi x2 x2 1
+            beq x2 x3 3f
+            j 2b
+        3:  addi x3 x3 1
+        """)
+        val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
+        val linked = Linker.link(PandL)
+        val sim = Simulator(linked)
+        sim.run()
+        assertEquals(15, sim.getReg(1))
+        assertEquals(2, sim.getReg(2))
+        assertEquals(3, sim.getReg(3))
+    }
 }
