@@ -174,6 +174,9 @@ class AssemblerTest {
             beq x2 x3 3f
             j 2b
         3:  addi x3 x3 1
+        3:  nop
+        2:  nop
+        1:  nop
         """)
         val PandL = ProgramAndLibraries(listOf(prog), VirtualFileSystem("dummy"))
         val linked = Linker.link(PandL)
