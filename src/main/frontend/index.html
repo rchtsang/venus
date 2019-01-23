@@ -15,6 +15,7 @@
 	console.log("----------DO NOT WORRY ABOUT THE GET ERRORS BELOW!----------");
   </script>
   <title>venus</title>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
   <link rel="stylesheet" type="text/css" href="css/bulma.css">
   <link rel="stylesheet" type="text/css" href="css/codemirror.css">
   <link rel="stylesheet" type="text/css" href="css/venus.css">
@@ -24,6 +25,15 @@
   <link rel="stylesheet" type="text/css" href="css/terminal.css">
 </head>
 <body>
+
+<div id="loader-wrapper">
+  <a class="loader-section section-up" style="top:0;height:auto;z-index: 1002;position: fixed;font-size:0.4em;" href="javascript:load_done();">Click me if you think the loader is stuck.</a>
+  <div id="loader"></div>
+  <div class="loader-section section-up" id="loading_text" style="color: #96b38a;">Venus is loading<span class="one">.</span><span class="two">.</span><span class="three">.</span></div>
+  <div class="loader-section section-left"></div>
+  <div class="loader-section section-right"></div>
+</div>
+
 <div class="tabs is-boxed is-centered">
   <ul>
     <li id="venus-tab" style="padding-right: 5px;"><a onclick="driver.openVenus()"><font color="#00d1b2">Venus</font></a></li>
@@ -178,7 +188,7 @@
                   <a id="settings-tab" onclick="driver.openSettingsTab()" class="is-active">Settings</a>
                 </p>
                 <nav id="settings-tab-view" class="panel">
-                  <p class="panel-tabs"></a>
+                  <p class="panel-tabs"></>
                     <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()" class="is-active">General</a>
                     <a id="tracer-settings-tab" onclick="driver.openTracerSettingsTab()">Tracer</a>
                     <a id="packages-tab" onclick="driver.openPackagesTab()">Packages</a>

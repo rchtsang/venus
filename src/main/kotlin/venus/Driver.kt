@@ -81,6 +81,7 @@ import kotlin.dom.removeClass
         Renderer.renderAssembleButtons()
         saveInterval = window.setInterval(Driver::saveIntervalFn, 10000)
         ready = true
+        js("window.load_done();")
     }
 
     @JsName("lint") fun lint(text: String): Array<LintError> = Linter.lint(text)
