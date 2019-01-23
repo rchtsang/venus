@@ -69,4 +69,19 @@ window.onerror = function (message, source, lineno, colno, error) {
     load_error(message + "\nMore info in the console.")
 };
 
+window.default_alert = window.alert;
+window.alert = alertify.alert;
+alertify.alert()
+    .setting({
+        'title': 'Venus'
+    });
+alertify.confirm()
+    .setting({
+        'title': 'Venus'
+    });
+alertify.prompt()
+    .setting({
+        'title': 'Venus'
+    });
+
 main_venus();
