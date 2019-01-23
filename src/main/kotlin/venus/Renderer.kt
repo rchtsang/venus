@@ -501,6 +501,7 @@ internal object Renderer {
         setButtonDisabled("simulator-undo", !sim.canUndo())
         setButtonDisabled("simulator-step", sim.isDone())
         setButtonDisabled("simulator-run", sim.isDone())
+        setButtonDisabled("simulator-trace", sim.instOrderMapping.isEmpty())
     }
 
     /**

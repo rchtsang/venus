@@ -89,7 +89,7 @@ import kotlin.dom.removeClass
     /**
      * Run when the user clicks the "Simulator" tab.
      *
-     * Assembles the text in the editor, and then renders the venusbackend.simulator.
+     * Assembles the text in the editor, and then renders the simulator.
      */
     @JsName("openSimulator") fun openSimulator() {
         Renderer.renderSimulator()
@@ -209,7 +209,7 @@ import kotlin.dom.removeClass
     }
 
     /**
-     * Assembles and links the program, sets the venusbackend.simulator
+     * Assembles and links the program, sets the simulator
      *
      * @param text the assembly code.
      */
@@ -264,7 +264,7 @@ import kotlin.dom.removeClass
     }
 
     /**
-     * Runs the venusbackend.simulator until it is done, or until the run button is pressed again.
+     * Runs the simulator until it is done, or until the run button is pressed again.
      */
     @JsName("run") fun run() {
         if (currentlyRunning()) {
@@ -282,7 +282,7 @@ import kotlin.dom.removeClass
     }
 
     /**
-     * Resets the venusbackend.simulator to its initial state
+     * Resets the simulator to its initial state
      */
     @JsName("reset") fun reset() {
         try {
@@ -340,7 +340,7 @@ import kotlin.dom.removeClass
     }
 
     /**
-     * Runs the venusbackend.simulator for one step and renders any updates.
+     * Runs the simulator for one step and renders any updates.
      */
     @JsName("step") fun step() {
         try {
@@ -531,7 +531,7 @@ import kotlin.dom.removeClass
                     var i = userStringToInt(input.value)
                     try {
                         MemorySegments.setTextBegin(i)
-                        val tabDisplay = document.getElementById("venusbackend.simulator-tab") as HTMLElement
+                        val tabDisplay = document.getElementById("simulator-tab") as HTMLElement
                         if (tabDisplay.classList.contains("is-active")) {
                             openSimulator()
                         }
@@ -744,7 +744,7 @@ import kotlin.dom.removeClass
 
     @JsName("trace") fun trace() {
         if (trTimer != null) {
-            Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
             tr.traceFullReset()
@@ -752,7 +752,7 @@ import kotlin.dom.removeClass
             Renderer.updateControlButtons()
             return
         }
-        Renderer.setNameButtonSpinning("venusbackend.simulator-trace", true)
+        Renderer.setNameButtonSpinning("simulator-trace", true)
         Renderer.clearConsole()
         loadTraceSettings()
         trTimer = window.setTimeout(Driver::traceSt, TIMEOUT_TIME)
@@ -775,7 +775,7 @@ import kotlin.dom.removeClass
             traceLoop()
         } catch (e: Throwable) {
             handleError("Trace tr Start", e, e is AlignmentError || e is StoreError)
-            Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
         }
@@ -795,7 +795,7 @@ import kotlin.dom.removeClass
             trTimer = window.setTimeout(Driver::traceLoop, TIMEOUT_TIME)
         } catch (e: Throwable) {
             handleError("Trace tr Loop", e, e is AlignmentError || e is StoreError)
-            Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
         }
@@ -807,7 +807,7 @@ import kotlin.dom.removeClass
             trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
         } catch (e: Throwable) {
             handleError("Trace Tr End", e, e is AlignmentError || e is StoreError)
-            Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
         }
@@ -825,7 +825,7 @@ import kotlin.dom.removeClass
             trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
         } catch (e: Throwable) {
             handleError("Trace String Loop", e, e is AlignmentError || e is StoreError)
-            Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
         }
@@ -839,14 +839,14 @@ import kotlin.dom.removeClass
         } catch (e: Throwable) {
             handleError("Trace String End", e, e is AlignmentError || e is StoreError)
         }
-        Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+        Renderer.setNameButtonSpinning("simulator-trace", false)
         trTimer?.let(window::clearTimeout)
         trTimer = null
     }
 
     /*@JsName("trace") fun trace() {
         //@todo make it so trace is better
-        Renderer.setNameButtonSpinning("venusbackend.simulator-trace", true)
+        Renderer.setNameButtonSpinning("simulator-trace", true)
         Renderer.clearConsole()
         this.loadTraceSettings()
         window.setTimeout(Driver::traceStart, TIMEOUT_TIME)
@@ -857,7 +857,7 @@ import kotlin.dom.removeClass
             window.setTimeout(Driver::traceString, TIMEOUT_TIME)
         } catch (e: Throwable) {
             handleError("Trace Start", e, e is AlignmentError || e is StoreError)
-            Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+            Renderer.setNameButtonSpinning("simulator-trace", false)
         }
     }
     internal fun traceString() {
@@ -868,7 +868,7 @@ import kotlin.dom.removeClass
         } catch (e: Throwable) {
             handleError("Trace to String", e)
         }
-        Renderer.setNameButtonSpinning("venusbackend.simulator-trace", false)
+        Renderer.setNameButtonSpinning("simulator-trace", false)
     }
 
     @JsName("persistentStorage") fun persistentStorage(b: Boolean) {
