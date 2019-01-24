@@ -1,6 +1,7 @@
 function setup_venus() {
     console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
     try {
+        load_update_message("Initializing codeMirror");
         window.venus_main = window.venus;
         window.driver = venus_main.venus.Driver;
         window.simulatorAPI = venus_main.venus.api.venusbackend.simulator.Simulator;
@@ -21,26 +22,31 @@ function setup_venus() {
 }
 
 function local_riscv() {
+    load_update_message("Loading required file (local): js/risc-mode.js");
     loadScript("js/risc-mode.js", "var msg='COULD NOT LOAD RISCVMODE SCRIPT!';load_error(msg);", "local_kotlin();");
 }
 
 function local_kotlin() {
+    load_update_message("Loading required file (local): kotlin.js");
     // loadScript("https://try.kotlinlang.org/static/kotlin/1.3.11/kotlin.js", "alert('COULD NOT LOAD KOTLIN SCRIPT!');", "local_venus();");
     loadScript("../../../build/kotlin-js-min/main/kotlin.js", "var msg='COULD NOT LOAD KOTLIN SCRIPT!';load_error(msg);", "local_venus();");
 }
 
 function local_venus() {
+    load_update_message("Loading required file (local): venus.js");
     temp_fix();
     loadScript("../../../build/kotlin-js-min/main/venus.js", "var msg='COULD NOT LOAD VENUS SCRIPT!';load_error(msg);", "setup_venus();")
 }
 
 function deploy_venus() {
+    load_update_message("Loading required file: venus.js");
     temp_fix();
     loadScript("js/venus.js",  "var msg='COULD NOT LOAD VENUS SCRIPT!';load_error(msg);", "setup_venus();");
 }
 
 function main_venus() {
-    loadScript("js/kotlin.js", "local_riscv();", "deploy_venus();");
+    load_update_message("Loading required file: kotlin.js");
+    loadScript("js/kotlin.js", "load_update_message(\"Loading required file: kotlin.js...FAILED!\");local_riscv();", "deploy_venus();");
 }
 
 function temp_fix() {
@@ -61,16 +67,24 @@ function load_error(msg) {
 }
 
 window.load_done = function () {
+    load_update_message("Done!");
     window.document.body.classList.add("loaded");
     window.onerror = null;
 };
 
-window.onerror = function (message, source, lineno, colno, error) {
-    load_error(message + "\nMore info in the console.")
-};
+function load_update_message(msg) {
+    document.getElementById("load-msg").innerHTML = msg.replace(/\n/g, "<br>")
+}
 
+function load_error_fn(message, source, lineno, colno, error) {
+    load_error(message + "\nMore info in the console.")
+}
+
+window.onerror = load_error_fn;
 window.default_alert = window.alert;
 window.alert = alertify.alert;
+// window.confirm = alertify.confirm;
+// window.prompt = alertify.prompt;
 alertify.alert()
     .setting({
         'title': 'Venus'

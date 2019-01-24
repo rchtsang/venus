@@ -62,6 +62,7 @@ import kotlin.dom.removeClass
     @JsName("terminal") var terminal = Terminal(VFS)
 
     init {
+        js("load_update_message(\"Initializing Driver: Init\");")
         simState64.getReg(0)
         Linter.lint("")
         console.log("Loading driver...")
@@ -76,7 +77,9 @@ import kotlin.dom.removeClass
     }
 
     fun initTimeout() {
+        js("load_update_message(\"Initializing Driver: Local Storage\");")
         loadAll(useLS)
+        js("load_update_message(\"Initializing Driver: Renderer\");")
         Renderer.loadSimulator(sim)
         Renderer.renderAssembleButtons()
         saveInterval = window.setInterval(Driver::saveIntervalFn, 10000)
