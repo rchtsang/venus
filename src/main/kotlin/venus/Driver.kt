@@ -62,7 +62,7 @@ import kotlin.dom.removeClass
     @JsName("terminal") var terminal = Terminal(VFS)
 
     init {
-        js("load_update_message(\"Initializing Driver: Init\");")
+        js("load_update_message(\"Initializing Venus: Init\");")
         simState64.getReg(0)
         Linter.lint("")
         console.log("Loading driver...")
@@ -77,14 +77,22 @@ import kotlin.dom.removeClass
     }
 
     fun initTimeout() {
-        js("load_update_message(\"Initializing Driver: Local Storage\");")
+        js("load_update_message(\"Initializing Venus: Local Storage\");")
         loadAll(useLS)
-        js("load_update_message(\"Initializing Driver: Renderer\");")
+        js("load_update_message(\"Initializing Venus: Renderer\");")
         Renderer.loadSimulator(sim)
         Renderer.renderAssembleButtons()
         saveInterval = window.setInterval(Driver::saveIntervalFn, 10000)
-        ready = true
-        js("window.load_done();")
+        Driver.ready = true
+        initFinish()
+    }
+
+    fun initFinish() {
+        if (Driver.ready) {
+            js("window.load_done();")
+        } else {
+            window.setInterval(Driver::initFinish, 100)
+        }
     }
 
     @JsName("lint") fun lint(text: String): Array<LintError> = Linter.lint(text)
