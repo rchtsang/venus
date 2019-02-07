@@ -1,7 +1,9 @@
 package venus.vfs
 
+import venus.Driver
 import venusbackend.simulator.SimulatorSettings
 import java.io.File
+import java.nio.file.Paths
 
 class VirtualFileSystem(val defaultDriveName: String, val simSettings: SimulatorSettings = SimulatorSettings()) {
     var sentinel = VFSDrive(defaultDriveName, VFSDummy())
@@ -21,7 +23,7 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
 
     fun makeFileInDir(path: String): VFSFile? {
         // TODO FIX ME
-        val f = File(path)
+        val f = File(Paths.get(path).normalize().toUri())
         return if (!f.exists() || f.isFile()) {
             val vfsf = VFSFile(f.name, VFSDummy())
             vfsf.setFile(f)
@@ -173,7 +175,7 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
 
     fun getObjectFromPath(path: String, make: Boolean = false): VFSObject? {
         // TODO FIX ME
-        val f = File(path)
+        val f = File(Driver.workingdir, path)
         return if (!f.exists() || f.isFile()) {
             val vfsf = VFSFile(f.name, VFSDummy())
             vfsf.setFile(f)

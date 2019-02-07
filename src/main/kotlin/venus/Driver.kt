@@ -45,6 +45,9 @@ object Driver {
 
     var debug = false
 
+    var lastReadFile: File? = null
+    var workingdir = "."
+
     @JvmStatic
     fun main(args: Array<String>) {
         val cli = CommandLineInterface("venus")
@@ -140,7 +143,10 @@ object Driver {
 
     fun readFileDirectlyAsText(fileName: String): String {
         return try {
-            File(fileName).readText(Charsets.UTF_8)
+            val f = File(fileName)
+            lastReadFile = f
+            workingdir = f.absoluteFile.parent
+            f.readText(Charsets.UTF_8)
         } catch (e: FileNotFoundException) {
             println("Could not find the file: " + fileName)
             exitProcess(1)
