@@ -18,6 +18,7 @@ import venusbackend.simulator.cache.CacheHandler
 import venusbackend.simulator.cache.PlacementPolicy
 import java.io.File
 import java.io.FileNotFoundException
+import kotlin.jvm.JvmStatic
 import kotlin.system.exitProcess
 
 /* ktlint-enable no-wildcard-imports */
@@ -69,7 +70,7 @@ object Driver {
         val traceTwoStage by cli.flagArgument(listOf("-ts", "--traceTwoStage"), "Sets the trace to be two stages.", false, true)
         val traceTotalNumCommands by cli.flagValueArgument(listOf("-tn", "--traceTotalNumCommands"), "NumberOfCommands", "Sets the number of trace lines which will be printed (negative is ignored).", -1) { it.toInt() }
         val dumpInsts by cli.flagArgument(listOf("-d", "--dump"), "Dumps the instructions of the input program then quits.", false, true)
-        val unsetRegisters by cli.flagArgument(listOf("-r", "--unsetRegisters"), "All registers start as 0 when set.", false, true)
+        val unsetRegisters by cli.flagArgument(listOf("-ur", "--unsetRegisters"), "All registers start as 0 when set.", false, true)
 
         val getNumberOfCycles by cli.flagArgument(listOf("-n", "--numberCycles"), "Prints out the total number of cycles.", false, true)
 

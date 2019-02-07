@@ -22,10 +22,10 @@ apply plugin: "application"
 //
 //runDceKotlinJs.keep 'venus_main.venus.glue.Driver.run', 'venus_main.venusbackend.venusbackend.assembler.Linter'
 
-mainClassName = 'venus.glue.Driver'
+mainClassName = 'venus.Driver'
 jar {
     manifest {
-        attributes 'Main-Class': 'venus.glue.Driver'
+        attributes 'Main-Class': 'venus.Driver'
     }
 
     // This line of code recursively collects and copies all of a project's files
