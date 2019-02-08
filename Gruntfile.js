@@ -38,6 +38,8 @@ module.exports = function(grunt) {
                         cwd: 'src/main/frontend/packages',
                         src: '**',
                         dest: 'out/packages/',},
+                    {src: 'src/main/frontend/CNAME',
+                        dest: 'out/CNAME',},
                 ]
 		  	},
             jvm: {
