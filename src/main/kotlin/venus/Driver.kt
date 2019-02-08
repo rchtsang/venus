@@ -227,7 +227,7 @@ import kotlin.dom.removeClass
     internal fun assemble(text: String): Program? {
         val (prog, errors, warnings) = Assembler.assemble(text)
         if (errors.isNotEmpty()) {
-            Renderer.displayError(errors.first())
+            Renderer.displayAssemblerError(errors.first())
             return null
         }
         return prog
@@ -240,7 +240,7 @@ import kotlin.dom.removeClass
             loadSim(linked)
             return true
         } catch (e: AssemblerError) {
-            Renderer.displayError(e)
+            Renderer.displayAssemblerError(e)
             return false
         }
     }

@@ -137,8 +137,15 @@ internal object Renderer {
         printConsole(w)
     }
 
+    /** Display a given ERROR */
+    fun displayError(thing: Any) {
+        printConsole("\n------STDERR------\n")
+        printConsole(thing)
+        printConsole("\n----STDERR_END----\n")
+    }
+
     /** Display a given [AssemblerError] */
-    @Suppress("UNUSED_PARAMETER") fun displayError(e: AssemblerError) {
+    @Suppress("UNUSED_PARAMETER") fun displayAssemblerError(e: AssemblerError) {
         if (e.line !== null) {
             js("alert('[ERROR]: (Line: ' + e.line + ') ' + e.message)")
         } else {
