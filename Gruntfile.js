@@ -18,7 +18,8 @@ module.exports = function(grunt) {
         cssmin: {
             venus: {
                 files: {
-                    'out/css/venus.css': ['src/main/frontend/css/*.css']
+                    'out/js/venus.js': ['build/kotlin-js-min/main/venus.js'],
+                    'out/js/kotlin.js': ['build/kotlin-js-min/main/kotlin.js'],
                 }
             }
         },
