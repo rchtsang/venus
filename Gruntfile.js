@@ -10,7 +10,8 @@ module.exports = function(grunt) {
             },
             venus: {
                 files: {
-                    'out/venus.js': ['build/kotlin-js-min/main/*.js'],
+                    'out/js/venus.js': ['build/kotlin-js-min/main/venus.js'],
+                    'out/js/kotlin.js': ['build/kotlin-js-min/main/kotlin.js'],
                     'out/js/codemirror.js': ['src/main/frontend/js/*.js']
                 }
             }
@@ -18,15 +19,14 @@ module.exports = function(grunt) {
         cssmin: {
             venus: {
                 files: {
-                    'out/js/venus.js': ['build/kotlin-js-min/main/venus.js'],
-                    'out/js/kotlin.js': ['build/kotlin-js-min/main/kotlin.js'],
+                    'out/css/venus.css': ['src/main/frontend/css/*.css']
                 }
             }
         },
 
         copy: {
-            venus: {
-                files: [
+		  	venus: {
+			    files: [
                     {expand: true,
                         cwd: 'src/main/frontend/images',
                         src: '**',
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
                     {src: 'src/main/frontend/CNAME',
                         dest: 'out/CNAME',},
                 ]
-            },
+		  	},
             jvm: {
                 files: [
                     {expand: true,
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
                     },
                 ]
             },
-        },
+		},
 
         htmlmin: {
             venus: {
