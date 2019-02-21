@@ -159,7 +159,7 @@ CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
     ], "");
 
     var keywords = regexFromWords([
-        ".data", ".text", ".globl", ".float", ".double",
+        ".data", ".text", ".globl", "global", ".float", ".double",
         ".asciiz", ".string", ".word", ".byte", ".import",
         ".data_start"
     ], "i");
