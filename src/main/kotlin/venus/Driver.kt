@@ -133,6 +133,7 @@ object Driver {
                     Renderer.activeDisplay = true
                     Renderer.printConsole(sim.getCycles())
                 }
+                exitProcess(sim.exitcode ?: -1)
             }
 //            println() // This is to end on a new line regardless of the output.
         } catch (e: Exception) {
