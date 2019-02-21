@@ -252,6 +252,17 @@ import kotlin.dom.removeClass
         tr = Tracer(sim)
     }
 
+    fun exitcodecheck() {
+        if (sim.exitcode != null) {
+            val msg = "Exited with error code ${sim.exitcode}"
+            if (sim.exitcode ?: 0 == 0) {
+                js("window.alertify.message(msg)")
+            } else {
+                js("window.alertify.error(msg)")
+            }
+        }
+    }
+
     @JsName("externalAssemble") fun externalAssemble(text: String): Any {
         var success = true
         var errs = ""
@@ -324,6 +335,7 @@ import kotlin.dom.removeClass
             var cycles = 0
             while (cycles < TIMEOUT_CYCLES) {
                 if (sim.isDone() || (sim.atBreakpoint() && useBreakPoints)) {
+                    exitcodecheck()
                     runEnd()
                     Renderer.updateAll()
                     return
@@ -360,6 +372,7 @@ import kotlin.dom.removeClass
             Renderer.updateFromDiffs(diffs)
             Renderer.updateCache(Address(0, MemSize.WORD))
             Renderer.updateControlButtons()
+            exitcodecheck()
         } catch (e: Throwable) {
             handleError("step", e, e is AlignmentError || e is StoreError)
         }
