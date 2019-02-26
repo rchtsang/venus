@@ -77,6 +77,9 @@ object Driver {
 
         val getNumberOfCycles by cli.flagArgument(listOf("-n", "--numberCycles"), "Prints out the total number of cycles.", false, true)
 
+        val mutableText by cli.flagArgument(listOf("-it", "--immutableText"), "When used, an error will be thrown when the code is modified.", true, false)
+        val maxSteps by cli.flagValueArgument(listOf("-ms", "--maxsteps"), "MaxSteps", "Sets the max number of steps to allow (negative to not care).", "500000")
+
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
         try {
@@ -96,6 +99,8 @@ object Driver {
         }
 
         simSettings.setRegesOnInit = !unsetRegisters
+        simSettings.maxSteps = maxSteps.toInt()
+        simSettings.mutableText = mutableText
 
         val progs = ArrayList<Program>()
 
