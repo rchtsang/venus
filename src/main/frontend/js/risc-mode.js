@@ -1,5 +1,5 @@
-CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
-    function regexFromWords(words, ins) {
+CodeMirror.defineMode("riscv", function(config, parserConfig) {
+    window.regexFromWords = function (words, ins) {
         return new RegExp("^(?:" + words.join("|") + ")$", ins);
     }
 
@@ -203,6 +203,14 @@ CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
         };
     }
 
+    /* Formatting for this:
+    *   Key: Name of you extra style
+    *   Value: List of the form:
+    *       Item 1: Regex Format to test
+    *       Item 2: Resulting style name
+    */
+    window.codeMirror_riscv_styles = {};
+
     return {
         startState: function(basecol) {
             return { basecol: basecol || 0, indentDepth: 0, cur: normal };
@@ -216,13 +224,22 @@ CodeMirror.defineMode("venusbackend.riscv", function(config, parserConfig) {
                 if (keywords.test(word)) style = "keyword";
                 else if (instructions.test(word)) style = "builtin";
                 else if (registers.test(word)) style = "variable-2";
+                for (var key in window.codeMirror_riscv_styles) {
+                    var val = window.codeMirror_riscv_styles[key];
+                    var regx = val[0];
+                    var result = val[1];
+                    if (regx.test(word)) {
+                        style = result;
+                        break;
+                    }
+                }
             }
             return style;
         }
     };
 });
 
-CodeMirror.registerHelper("lint", "venusbackend.riscv", function (text) {
+CodeMirror.registerHelper("lint", "riscv", function (text) {
     var errors = [];
     var parseError = function(err) {
         var line = err.lineNumber;
