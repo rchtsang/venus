@@ -62,6 +62,8 @@ import kotlin.dom.removeClass
     @JsName("terminal") var terminal = Terminal(VFS)
 
     init {
+        /* This code right here is so that you can add custom kotlin code even after venus has been loaded! */
+        js("window.eval_in_venus_env = function (s) {return eval(s);}")
         js("load_update_message(\"Initializing Venus: Init\");")
         simState64.getReg(0)
         Linter.lint("")
