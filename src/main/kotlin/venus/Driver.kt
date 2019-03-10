@@ -174,6 +174,21 @@ import kotlin.dom.removeClass
                 Renderer.renderButton(document.getElementById("sv") as HTMLButtonElement, false)
             }
         }
+
+        try {
+            s = currentURL.searchParams.get("packages")
+            if (s != null) {
+                s = parseString(s.toString())
+                var l = s.split(Regex(","))
+                for (pack in l) {
+                    ScriptManager.addPackage(pack)
+                }
+            }
+        } catch (e: Exception) {
+            console.warn("An error occurred when parsing the packages!")
+            console.warn(e)
+        }
+
         if (clearparams) {
             clearURLParams()
         }

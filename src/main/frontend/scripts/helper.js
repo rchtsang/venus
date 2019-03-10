@@ -1,9 +1,9 @@
 /*This will remove the venus save data*/
-var url_string = window.location.href
-var url = new URL(url_string)
+var url_string = window.location.href;
+var url = new URL(url_string);
 if (url.searchParams.get("clear") === "true") {
-    console.log("Found clear message! Removing venus data from the localStorage...")
-    localStorage.removeItem("venus")
+    console.log("Found clear message! Removing venus data from the localStorage...");
+    localStorage.removeItem("venus");
     function removeURLParameter(url, parameter) {
         //prefer to use l.search if you have a location/link object
         var urlparts= url.split('?');
