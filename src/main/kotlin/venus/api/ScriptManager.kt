@@ -192,6 +192,7 @@ import venus.Renderer
                 worked = false;
             }
             """)
+        updateLS()
         if (worked) {
             Renderer.rendererRemovePackage(id)
             msg = "Package '$id' uninstalled successfully!"
