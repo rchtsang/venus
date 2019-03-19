@@ -332,7 +332,7 @@ import kotlin.dom.removeClass
                 sim.addArg(arg)
             }
             mainCache.reset()
-            sim.state.setCache(mainCache)
+            sim.state.setCacheHandler(mainCache)
             Renderer.loadSimulator(sim)
             setCacheSettings()
             Renderer.updateCache(Address(0, MemSize.WORD))
