@@ -2,8 +2,8 @@ package venus
 /* ktlint-disable no-wildcard-imports */
 
 import org.w3c.dom.*
+import venus.vfs.*
 import venusbackend.assembler.AssemblerError
-import venus.vfs.VirtualFileSystem
 import venusbackend.linker.LinkedProgram
 import venusbackend.riscv.*
 import venusbackend.riscv.insts.dsl.types.Instruction
@@ -834,5 +834,72 @@ internal object Renderer {
             e.classList.remove("is-primary")
         }
         e.value = b.toString()
+    }
+
+    fun addObjectToDisplay(obj: VFSObject, special: String = "") {
+        val b = document.getElementById("files-listing-body")!!
+        var elm = document.createElement("tr")
+        if (special == "") {
+            elm.setAttribute("id", obj.label)
+            elm.innerHTML = "<td>${obj.label}</td>"
+            elm.innerHTML += "<td>${obj.type.name}</td>"
+            var options = "<td>"
+
+            when (obj) {
+                is VFSDrive -> {
+                    options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('${obj.label}')\">Open</button>\n"
+                }
+                is VFSFile -> {
+                    // TODO
+                }
+                is VFSFolder -> {
+                    options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('${obj.label}')\">Open</button>\n"
+                }
+                is VFSLinkedProgram -> {
+                    // TODO
+                }
+                is VFSProgram -> {
+                    // TODO
+                }
+                else -> {
+                    // TODO
+                }
+            }
+            options += "<button class=\"button is-primary\" style=\"background-color:red;\" " +
+                    "onclick=\"driver.deleteVFObject('${obj.label}')\">Delete</button>"
+            options += "</td>"
+
+            elm.innerHTML += options
+        } else {
+            elm.setAttribute("id", special)
+            elm.innerHTML = "<td>$special</td>"
+            elm.innerHTML += "<td>${obj.type.name}</td>"
+            var options = "<td>"
+            options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('$special')\">Open</button>\n"
+            options += "</td>"
+            elm.innerHTML += options
+        }
+        b.appendChild(elm)
+    }
+
+    fun addFilePWD(obj: VFSObject) {
+        var b = document.getElementById("files-listing-pwd")!!
+        var pwd = ""
+        var o = obj
+        while (o !is VFSDrive) {
+            val path = o.getPath()
+            pwd = "<a onclick=\"driver.openVFObject('$path')\">${o.label}</a>/" + pwd
+            o = o.parent
+        }
+        val path = o.getPath()
+        pwd = "<a onclick=\"driver.openVFObject('$path')\">${o.label}</a>/" + pwd
+        b.innerHTML = pwd
+    }
+
+    fun clearObjectsFromDisplay() {
+        var b = document.getElementById("files-listing-body")!!
+        b.innerHTML = ""
+        b = document.getElementById("files-listing-pwd")!!
+        b.innerHTML = ""
     }
 }

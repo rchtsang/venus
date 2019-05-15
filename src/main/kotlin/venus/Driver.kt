@@ -8,6 +8,7 @@ import venus.api.venuspackage
 import venusbackend.assembler.Assembler
 import venusbackend.assembler.AssemblerError
 import venus.terminal.Terminal
+import venus.vfs.VFSObject
 import venus.vfs.VirtualFileSystem
 import venusbackend.assembler.LintError
 import venusbackend.assembler.Linter
@@ -91,6 +92,8 @@ import kotlin.dom.removeClass
 
     fun initFinish() {
         if (Driver.ready) {
+            fileExplorerCurrentLocation = VFS.sentinel
+            openVFObjectfromObj(VFS.sentinel)
             js("window.load_done();")
         } else {
             window.setInterval(Driver::initFinish, 100)
@@ -152,6 +155,16 @@ import kotlin.dom.removeClass
                 }
             } else {
                 js("codeMirror.setValue(s);")
+            }
+        }
+
+        s = currentURL.searchParams.get("tab")
+        if (s != null) {
+            s = parseString(s.toString())
+            if (s in Renderer.mainTabs) {
+                Renderer.renderTab(s, Renderer.mainTabs)
+            } else {
+                console.log("Unknown Tag!")
             }
         }
 
@@ -1114,5 +1127,38 @@ import kotlin.dom.removeClass
         ScriptManager.loadPackages()
 
         checkURLParams()
+    }
+
+    lateinit var fileExplorerCurrentLocation: VFSObject
+
+    @JsName("deleteVFObject") fun deleteVFObject(name: String) {
+        VFS.rm(name, fileExplorerCurrentLocation)
+        refreshVFS()
+    }
+
+    @JsName("openVFObject") fun openVFObject(name: String) {
+        val s = VFS.chdir(name, fileExplorerCurrentLocation)
+        if (s is VFSObject) {
+            fileExplorerCurrentLocation = s
+            openVFObjectfromObj(fileExplorerCurrentLocation)
+        } else {
+            console.log(s)
+        }
+    }
+
+    fun openVFObjectfromObj(obj: VFSObject) {
+        Renderer.clearObjectsFromDisplay()
+        Renderer.addFilePWD(obj)
+        for ((key, value) in fileExplorerCurrentLocation.contents) {
+            if (key in listOf(".", "..")) {
+                Renderer.addObjectToDisplay(value as VFSObject, key)
+            } else {
+                Renderer.addObjectToDisplay(value as VFSObject)
+            }
+        }
+    }
+
+    @JsName("refreshVFS") fun refreshVFS() {
+        openVFObject(".")
     }
 }

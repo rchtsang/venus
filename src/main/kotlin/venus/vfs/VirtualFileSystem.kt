@@ -17,7 +17,7 @@ import kotlin.browser.window
     }
 
     init {
-        currentLocation.parent = currentLocation
+        sentinel.parent = sentinel
     }
 
     fun makeFileInDir(path: String): VFSFile? {
@@ -56,12 +56,22 @@ import kotlin.browser.window
     }
 
     @JsName("cd") fun cd(dir: String): String {
+        var tmp = chdir(dir, currentLocation)
+        if (tmp is VFSObject) {
+            currentLocation = tmp
+        } else {
+            return tmp.toString()
+        }
+        return ""
+    }
+
+    fun chdir(dir: String, curloc: VFSObject): Any {
         val splitpath = getPath(dir)
         var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
             splitpath.removeAt(0)
             sentinel
         } else {
-            currentLocation
+            curloc
         }
         for (dir in splitpath) {
             if (dir == "") {
@@ -75,8 +85,7 @@ import kotlin.browser.window
                 return "cd: $dir: Not a directory"
             }
         }
-        currentLocation = templocation
-        return ""
+        return templocation
     }
 
     @JsName("touch") fun touch(filename: String): String {
@@ -127,11 +136,15 @@ import kotlin.browser.window
     }
     // @FIXME There is a bug for going into a file
     @JsName("remove") fun remove(path: String): String {
+        return rm(path, currentLocation)
+    }
+
+    fun rm(path: String, curloc: VFSObject): String {
         val templocation = this.getObjectFromPath(path)
         if (templocation === null) {
             return "rm: cannot remove '$path': No such file or directory"
         }
-        if (currentLocation.getPath().contains(templocation.getPath())) {
+        if (curloc.getPath().contains(templocation.getPath())) {
             return "rm: cannot remove '$path': Path is currently active"
         }
         val p = templocation.parent
