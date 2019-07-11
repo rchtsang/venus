@@ -8,8 +8,12 @@ import kotlin.browser.window
  */
 
 internal fun handleError(where: String, error: Throwable, h: Boolean = false) {
-    var handled = h
-    if (!(error is SimulatorError && error.infe != null)) {
+    var handled = h || if (error is SimulatorError) {
+        error.handled ?: false
+    } else {
+        false
+    }
+    if (!(error is SimulatorError && (error.infe != null))) {
         Renderer.clearConsole()
     } else {
         handled = true

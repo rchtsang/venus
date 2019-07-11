@@ -576,6 +576,10 @@ import kotlin.dom.removeClass
         simSettings.ecallOnlyExit = b
     }
 
+    @JsName("setAllowAccessBtnStackHeap") fun setAllowAccessBtnStackHeap(b: Boolean) {
+        simSettings.allowAccessBtnStackHeap = b
+    }
+
     @JsName("setSetRegsOnInit") fun setSetRegsOnInit(b: Boolean) {
         simSettings.setRegesOnInit = b
     }
