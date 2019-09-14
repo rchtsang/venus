@@ -3,10 +3,10 @@ package venus.terminal.cmds
 import venus.terminal.Command
 import venus.terminal.Terminal
 
-var ls = Command(
-        name = "ls",
+var zip = Command(
+        name = "zip",
         execute = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): String {
-            return t.vfs.ls()
+            throw NotImplementedError()
         },
         tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             throw NotImplementedError()
