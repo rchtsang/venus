@@ -58,6 +58,9 @@ import kotlin.browser.window
     @JsName("cd") fun cd(dir: String): String {
         var tmp = chdir(dir, currentLocation)
         if (tmp is VFSObject) {
+            if (tmp.type !in listOf(VFSType.Folder, VFSType.Drive)) {
+                return "Can only go into folders and drives."
+            }
             currentLocation = tmp
         } else {
             return tmp.toString()
@@ -178,13 +181,13 @@ import kotlin.browser.window
         return ""
     }
 
-    fun getObjectFromPath(path: String, make: Boolean = false): VFSObject? {
+    fun getObjectFromPath(path: String, make: Boolean = false, location: VFSObject? = null): VFSObject? {
         val splitpath = getPath(path)
         var templocation = if (path.startsWith("/")) {
             splitpath.removeAt(0)
             sentinel
         } else {
-            currentLocation
+            location ?: currentLocation
         }
         for (obj in splitpath) {
             if (obj == "") {

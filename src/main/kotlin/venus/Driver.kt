@@ -8,7 +8,9 @@ import venus.api.venuspackage
 import venusbackend.assembler.Assembler
 import venusbackend.assembler.AssemblerError
 import venus.terminal.Terminal
+import venus.vfs.VFSFile
 import venus.vfs.VFSObject
+import venus.vfs.VFSType
 import venus.vfs.VirtualFileSystem
 import venusbackend.assembler.LintError
 import venusbackend.assembler.Linter
@@ -1145,7 +1147,7 @@ import kotlin.dom.removeClass
 
     @JsName("openVFObject") fun openVFObject(name: String) {
         val s = VFS.chdir(name, fileExplorerCurrentLocation)
-        if (s is VFSObject) {
+        if (s is VFSObject && s.type in listOf(VFSType.Drive, VFSType.Folder)) {
             fileExplorerCurrentLocation = s
             openVFObjectfromObj(fileExplorerCurrentLocation)
         } else {
@@ -1167,5 +1169,58 @@ import kotlin.dom.removeClass
 
     @JsName("refreshVFS") fun refreshVFS() {
         openVFObject(".")
+    }
+
+    fun editVFObjectfromObj(obj: VFSObject) {
+        if (obj.type !== VFSType.File) {
+            window.alert("Only files can be loaded into the editor.")
+            return
+        }
+        try {
+            val txt: String = (obj as VFSFile).readText()
+            js("codeMirror.setValue(txt);")
+            this.openEditor()
+            js("codeMirror.refresh();")
+        } catch (e: Throwable) {
+            console.error(e)
+            window.alert("Could not load file to the editor!")
+        }
+    }
+
+    @JsName("editVFObject") fun editVFObject(name: String) {
+        val s = VFS.getObjectFromPath(name, location = fileExplorerCurrentLocation)
+        if (s is VFSObject) {
+            editVFObjectfromObj(s)
+        } else {
+            console.log(s)
+        }
+    }
+
+    fun saveVFObjectfromObj(obj: VFSObject) {
+        val txt: String
+        try {
+            js("codeMirror.save();")
+            txt = this.getText()
+        } catch (e: Throwable) {
+            console.error(e)
+            window.alert("Could not save file!")
+            return
+        }
+        if (obj.type != VFSType.File) {
+            window.alert("You can (currently) only save to files!")
+            return
+        }
+        var file = obj as VFSFile
+        file.setText(txt)
+        this.VFS.save()
+    }
+
+    @JsName("saveVFObject") fun saveVFObject(name: String) {
+        val s = VFS.getObjectFromPath(name, location = fileExplorerCurrentLocation)
+        if (s is VFSObject) {
+            saveVFObjectfromObj(s)
+        } else {
+            console.log(s)
+        }
     }
 }

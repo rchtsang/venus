@@ -847,13 +847,14 @@ internal object Renderer {
 
             when (obj) {
                 is VFSDrive -> {
-                    options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('${obj.label}')\">Open</button>\n"
+                    options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('${obj.getPath()}')\">Open</button>\n"
                 }
                 is VFSFile -> {
-                    // TODO
+                    options += "<button class=\"button is-primary\" onclick=\"driver.editVFObject('${obj.getPath()}')\">Edit</button>\n"
+                    options += "<button class=\"button is-primary\" onclick=\"driver.saveVFObject('${obj.getPath()}')\">Save</button>\n"
                 }
                 is VFSFolder -> {
-                    options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('${obj.label}')\">Open</button>\n"
+                    options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('${obj.getPath()}')\">Open</button>\n"
                 }
                 is VFSLinkedProgram -> {
                     // TODO
@@ -866,7 +867,7 @@ internal object Renderer {
                 }
             }
             options += "<button class=\"button is-primary\" style=\"background-color:red;\" " +
-                    "onclick=\"driver.deleteVFObject('${obj.label}')\">Delete</button>"
+                    "onclick=\"driver.deleteVFObject('${obj.getPath()}')\">Delete</button>"
             options += "</td>"
 
             elm.innerHTML += options
