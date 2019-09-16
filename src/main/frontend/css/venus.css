@@ -7,6 +7,10 @@ body {
 }
 
 #venus-tab-view {
+    display: block;
+}
+
+#editor-tab-view {
     display: none;
 }
 
