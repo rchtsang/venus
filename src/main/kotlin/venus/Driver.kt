@@ -38,7 +38,7 @@ import kotlin.dom.removeClass
  * The "driver" singleton which can be called from Javascript for all functionality.
  */
 @JsName("Driver") object Driver {
-    @JsName("VFS") var VFS = VirtualFileSystem("v")
+    @JsName("VFS") var VFS = VirtualFileSystem("/")
 
     var sim: Simulator = Simulator(LinkedProgram(), VFS)
     var tr: Tracer = Tracer(sim)

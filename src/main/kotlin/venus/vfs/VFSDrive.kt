@@ -4,12 +4,11 @@ class VFSDrive(val n: String, override var parent: VFSObject) : VFSFolder(n, par
     override val type = VFSType.Drive
     init {
         this.contents[".."] = this
-        this.label += ":"
     }
 
     companion object {
         fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {
-            val folder = VFSDrive(jsonContainer.label.removeSuffix(":"), parent)
+            val folder = VFSDrive(jsonContainer.label, parent)
             for (i in 0 until js("jsonContainer.contents.length")) {
                 val value = js("jsonContainer.contents[i]")
                 var addchild = true

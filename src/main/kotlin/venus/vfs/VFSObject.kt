@@ -20,7 +20,7 @@ interface VFSObject {
             path = separator + node.label + path
             node = node.parent
         }
-        return ((node?.label ?: "v:") + path)
+        return (path)
     }
 
     fun addChild(child: VFSObject): Boolean {

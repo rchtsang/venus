@@ -18,7 +18,7 @@ class VFSFile(override var label: String, override var parent: VFSObject) : VFSO
     fun readText(): String {
         return contents[innerTxt] as String
     }
-    fun setText(s: String) {
+    @JsName("setText") fun setText(s: String) {
         contents[innerTxt] = s
     }
 

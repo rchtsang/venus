@@ -67,8 +67,10 @@ import kotlin.browser.window
 
     fun chdir(dir: String, curloc: VFSObject): Any {
         val splitpath = getPath(dir)
-        var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
-            splitpath.removeAt(0)
+        var templocation = if (dir.startsWith("/") || dir == "") {
+            if (splitpath.size > 0) {
+                splitpath.removeAt(0)
+            }
             sentinel
         } else {
             curloc
@@ -107,7 +109,7 @@ import kotlin.browser.window
 
     @JsName("cat") fun cat(filedir: String): String {
         val splitpath = getPath(filedir)
-        var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
+        var templocation = if (filedir.startsWith("/")) {
             splitpath.removeAt(0)
             sentinel
         } else {
@@ -178,7 +180,7 @@ import kotlin.browser.window
 
     fun getObjectFromPath(path: String, make: Boolean = false): VFSObject? {
         val splitpath = getPath(path)
-        var templocation = if (splitpath.size > 0 && splitpath[0].contains(":")) {
+        var templocation = if (path.startsWith("/")) {
             splitpath.removeAt(0)
             sentinel
         } else {
