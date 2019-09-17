@@ -32,7 +32,17 @@ var download = Command(
 fun downloadFile(filename: String, text: String) {
     js("""
         var element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        // Due to chars being 16 bytes, we cannot do standard encoding :'(
+//        var encoded = encodeURIComponent(text);
+        var encoded = "";
+        for (var i = 0; i < text.length; i++) {
+            var byte = (text.charCodeAt(i)).toString(16)
+            if (byte.length == 1) {
+                byte = "0" + byte;
+            }
+            encoded += "%" + byte;
+        }
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encoded);
         element.setAttribute('download', filename);
         
         element.style.display = 'none';
