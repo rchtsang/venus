@@ -16,6 +16,7 @@ function setup_venus() {
             }
         );
         window.codeMirror.setSize("100%", "88vh");
+        window.codeMirror.refresh()
     } catch (e) {
         load_error(e.toString())
     }
