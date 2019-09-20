@@ -27,7 +27,12 @@ class VFSFile(override var label: String, override var parent: VFSObject) : VFSO
     }
     fun setText(s: String) {
         if (contents.containsKey(innerFile) && contents[innerFile] is File) {
-            (contents[innerFile] as File).writeText(s)
+            val f = (contents[innerFile] as File)
+            val bytes = ArrayList<Byte>(s.length)
+            for (c in s) {
+                bytes.add(c.toByte())
+            }
+            f.writeBytes(bytes.toByteArray())
         } else {
             contents[innerTxt] = s
         }
