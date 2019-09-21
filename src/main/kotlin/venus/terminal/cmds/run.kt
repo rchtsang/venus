@@ -22,11 +22,11 @@ var run = Command(
                 return "run: Takes in names of programs which you want to link together and run."
             }
             val programout = "debugger"
-            val fs = args
+            val file = args.removeAt(0)
             val linkedprogs = ArrayList<LinkedProgram>()
             val progs = ArrayList<Program>()
             val files = ArrayList<VFSFile>()
-            for (file in fs) {
+//            for (file in fs) {
                 val obj = t.vfs.getObjectFromPath(file)
                 if (obj == null) {
                     return "run: Could not find file $file"
@@ -49,7 +49,7 @@ var run = Command(
                         }
                     }
                 }
-            }
+//            }
             if (files.size + progs.size + linkedprogs.size == 0) {
                 return "run: Could not find any of the inputted files!"
             }
