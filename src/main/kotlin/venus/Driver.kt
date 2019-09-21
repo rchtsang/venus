@@ -79,6 +79,7 @@ object Driver {
 
         val mutableText by cli.flagArgument(listOf("-it", "--immutableText"), "When used, an error will be thrown when the code is modified.", true, false)
         val maxSteps by cli.flagValueArgument(listOf("-ms", "--maxsteps"), "MaxSteps", "Sets the max number of steps to allow (negative to not care).", "500000")
+        val stackHeapProtection by cli.flagArgument(listOf("-ahs", "--AllowHSAccess"), "Allows for load/store operations between the stack and heap. The default (without this flag) is to error on those acceses.", false, true)
 
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
@@ -101,6 +102,7 @@ object Driver {
         simSettings.setRegesOnInit = !unsetRegisters
         simSettings.maxSteps = maxSteps.toInt()
         simSettings.mutableText = mutableText
+        simSettings.allowAccessBtnStackHeap = stackHeapProtection
 
         val progs = ArrayList<Program>()
 
