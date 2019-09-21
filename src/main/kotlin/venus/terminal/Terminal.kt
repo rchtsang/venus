@@ -1,5 +1,7 @@
 package venus.terminal
 
+import venus.vfs.VFSDummy
+import venus.vfs.VFSType
 import venusbackend.assembler.Lexer
 import venus.vfs.VirtualFileSystem
 
@@ -7,17 +9,28 @@ class Terminal(var vfs: VirtualFileSystem) {
 
     @JsName("processInput") fun processInput(input: String): String {
         try {
+            val args = this.extractArgs(input)
+            var sudo = if (args[0].toLowerCase() === "sudo") {
+                args.removeAt(0)
+                true
+            } else {
+                false
+            }
+            val prog = if (args.size > 0) {
+                args[0]
+            } else {
+                ""
+            }
             try {
-                val args = this.extractArgs(input)
-                var sudo = if (args[0].toLowerCase() === "sudo") {
-                    args.removeAt(0)
-                    true
-                } else {
-                    false
-                }
                 val cmd = Command[args.removeAt(0)]
                 return cmd.execute(args, this, sudo)
             } catch (e: CommandNotFoundError) {
+                val obj = vfs.getObjectFromPath(prog) ?: VFSDummy()
+                if (obj.type in listOf(VFSType.File, VFSType.LinkedProgram, VFSType.Program)) {
+                    val r = Command[venus.terminal.cmds.run.name]
+                    args.add(0, prog)
+                    return r.execute(args, this, sudo)
+                }
                 return e.message ?: ": command not found"
             }
         } catch (e: Throwable) {
