@@ -61,6 +61,8 @@ import kotlin.dom.removeClass
 
     @JsName("terminal") var terminal = Terminal(VFS)
 
+    @JsName("activeFileinEditor") var activeFileinEditor: String = ""
+
     init {
         /* This code right here is so that you can add custom kotlin code even after venus has been loaded! */
         js("window.eval_in_venus_env = function (s) {return eval(s);}")
@@ -1190,6 +1192,7 @@ import kotlin.dom.removeClass
             js("codeMirror.setValue(txt);")
             this.openEditor()
             js("codeMirror.refresh();")
+            activeFileinEditor = obj.getPath()
         } catch (e: Throwable) {
             console.error(e)
             window.alert("Could not load file to the editor!")

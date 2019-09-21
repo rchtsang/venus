@@ -24,6 +24,7 @@ var edit = Command(
                 js("codeMirror.setValue(txt);")
                 Driver.openEditor()
                 js("codeMirror.refresh();")
+                Driver.activeFileinEditor = obj.getPath()
             } catch (e: Throwable) {
                 return "edit: Could not load file to the editor!"
             }
