@@ -78,8 +78,17 @@ function vnumToBase(curNumBase, n, length, base, signextend) {
     }
     return snum;
 }
+window._recent_save_ = false;
 function downloadtrace(id, filename, custom_name) {
-    var cusN = prompt("Please enter a name for the file. Leave blank for default.");
+    if (!window._recent_save_ && driver.activeFileinEditor !== "") {
+        driver.saveVFObject(driver.activeFileinEditor);
+        window._recent_save_ = true;
+        setTimeout(function () {
+            window._recent_save_ = false;
+        }, 500);
+        return
+    }
+    var cusN = prompt("Please enter a name for the file. Leave blank for default. If you do not want to receive this prompt anymore, please open (edit) a file through the terminal or file explorer. Saving will then happen to last file which was 'edit'ed. If you save twice really fast, you can still bring up this prompt.");
     if (cusN != "") {
         if (cusN == null) {
             return;
