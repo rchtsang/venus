@@ -122,18 +122,24 @@ import kotlin.dom.removeClass
     }
 
     @JsName("assembleSimulator") fun assembleSimulator() {
+        var text = getText()
+        if (text == "") {
+            js("codeMirror.refresh();codeMirror.save();")
+            text = getText()
+        }
         if (ready) {
             try {
-                val success = assemble(getText())
+                val success = assemble(text)
                 if (success != null) {
-                    link(listOf(success))
-                    val args = Lexer.lex(getDefaultArgs())
-                    for (arg in args) {
-                        sim.addArg(arg)
+                    if (link(listOf(success))) {
+                        val args = Lexer.lex(getDefaultArgs())
+                        for (arg in args) {
+                            sim.addArg(arg)
+                        }
+                        Renderer.loadSimulator(sim)
+                        setCacheSettings()
+                        Renderer.updateCache(Address(0, MemSize.WORD))
                     }
-                    Renderer.loadSimulator(sim)
-                    setCacheSettings()
-                    Renderer.updateCache(Address(0, MemSize.WORD))
                 }
             } catch (e: Throwable) {
                 Renderer.loadSimulator(Simulator(LinkedProgram(), VFS))
@@ -1143,7 +1149,7 @@ import kotlin.dom.removeClass
         (document.getElementById("ArgsList") as HTMLInputElement).value = simargs
 
         /*Program*/
-        js("codeMirror.setValue(driver.p)")
+        js("codeMirror.setValue(driver.p);")
         p = ""
 
         mainCache.update()
