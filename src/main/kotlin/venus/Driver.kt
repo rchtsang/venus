@@ -110,6 +110,7 @@ import kotlin.dom.removeClass
      */
     @JsName("openSimulator") fun openSimulator() {
         Renderer.renderSimulator()
+        LS.set("defaultTab", "simulator")
     }
 
     @JsName("noAssemble") fun noAssemble() {
@@ -239,10 +240,13 @@ import kotlin.dom.removeClass
     @JsName("openEditor") fun openEditor() {
         runEnd()
         Renderer.renderEditor()
+        js("codeMirror.refresh();")
+        LS.set("defaultTab", "editor")
     }
 
     @JsName("openVenus") fun openVenus() {
         Renderer.renderVenus()
+        LS.set("defaultTab", "venus")
     }
 
     @JsName("openURLMaker") fun openURLMaker() {
@@ -1049,6 +1053,7 @@ import kotlin.dom.removeClass
         var eeo = simSettings.ecallOnlyExit.toString()
         var sroi = simSettings.setRegesOnInit.toString()
         var simargs = ""
+        var defaultTab = "venus"
 
         /*Program*/
         js("codeMirror.save()")
@@ -1073,6 +1078,7 @@ import kotlin.dom.removeClass
             eeo = LS.safeget("ecall_exit_only", eeo)
             sroi = LS.safeget("set_regs_on_init", sroi)
             simargs = LS.safeget("simargs", simargs)
+            defaultTab = LS.safeget("defaultTab", defaultTab)
 
             /*Program*/
             p = LS.safeget("prog", p)
@@ -1147,6 +1153,9 @@ import kotlin.dom.removeClass
         ScriptManager.loadPackages()
 
         checkURLParams()
+
+        Renderer.renderTab(defaultTab, Renderer.mainTabs)
+        js("codeMirror.refresh();")
     }
 
     lateinit var fileExplorerCurrentLocation: VFSObject
