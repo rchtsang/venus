@@ -25,12 +25,11 @@ var vdb = Command(
             if (args.size < 1) {
                 return "vdb: Takes in at least one File/Program or a single LinkedProgram"
             }
-            val programout = "debugger"
-            val fs = args
+            val file = args.removeAt(0)
             val linkedprogs = ArrayList<LinkedProgram>()
             val progs = ArrayList<Program>()
             val files = ArrayList<VFSFile>()
-            for (file in fs) {
+//            for (file in fs) {
                 val obj = t.vfs.getObjectFromPath(file)
                 if (obj == null) {
                     return "vdb: Could not find file $file"
@@ -53,7 +52,7 @@ var vdb = Command(
                         }
                     }
                 }
-            }
+//            }
             if (files.size + progs.size + linkedprogs.size == 0) {
                 return "vdb: Could not find any of the inputted files!"
             }
@@ -101,6 +100,7 @@ var vdb = Command(
             val lp = linkedprogs[0]
             try {
                 Driver.loadSim(lp)
+                Driver.sim.addArg(args)
                 Renderer.loadSimulator(Driver.sim)
                 Driver.setCacheSettings()
                 Renderer.updateCache(Address(0, MemSize.WORD))

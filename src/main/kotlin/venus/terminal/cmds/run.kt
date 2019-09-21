@@ -21,7 +21,6 @@ var run = Command(
             if (args.size == 0) {
                 return "run: Takes in names of programs which you want to link together and run."
             }
-            val programout = "debugger"
             val file = args.removeAt(0)
             val linkedprogs = ArrayList<LinkedProgram>()
             val progs = ArrayList<Program>()
@@ -98,9 +97,7 @@ var run = Command(
             val sim: Simulator
             try {
                 Driver.loadSim(linkedProgram)
-                for (arg in args) {
-                    Driver.sim.addArg(arg)
-                }
+                Driver.sim.addArg(args)
                 Driver.runStart(false)
             } catch (e: Throwable) {
                 return "run: An error occurred when running the programs execution: $e"
