@@ -24,7 +24,8 @@ class VFSFile(override var label: String, override var parent: VFSObject) : VFSO
             val bs = (contents[innerFile] as File).readBytes()
             val sb = StringBuilder()
             for (b in bs) {
-                sb.append(b.toChar())
+                val s = b.toUByte().toShort()
+                sb.append(s.toChar())
             }
             sb.toString()
         } else {

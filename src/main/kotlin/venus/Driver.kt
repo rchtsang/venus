@@ -28,7 +28,7 @@ import kotlin.system.exitProcess
  */
 object Driver {
 
-    var VFS = VirtualFileSystem("v")
+    var VFS = VirtualFileSystem("/")
 
     var simState: SimulatorState = SimulatorState32()
     var sim: Simulator = Simulator(LinkedProgram(), VFS, state = simState)
