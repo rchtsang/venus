@@ -5,15 +5,12 @@ package venus
 import org.w3c.dom.*
 import org.w3c.dom.url.URL
 import venus.api.venuspackage
-import venusbackend.assembler.Assembler
-import venusbackend.assembler.AssemblerError
 import venus.terminal.Terminal
 import venus.vfs.VFSFile
 import venus.vfs.VFSObject
 import venus.vfs.VFSType
 import venus.vfs.VirtualFileSystem
-import venusbackend.assembler.LintError
-import venusbackend.assembler.Linter
+import venusbackend.assembler.*
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
@@ -117,12 +114,20 @@ import kotlin.dom.removeClass
         Renderer.renderSimButtons()
     }
 
+    fun getDefaultArgs(): String {
+        return (document.getElementById("ArgsList") as HTMLInputElement).value
+    }
+
     @JsName("assembleSimulator") fun assembleSimulator() {
         if (ready) {
             try {
                 val success = assemble(getText())
                 if (success != null) {
                     link(listOf(success))
+                    val args = Lexer.lex(getDefaultArgs())
+                    for (arg in args) {
+                        sim.addArg(arg)
+                    }
                     Renderer.loadSimulator(sim)
                     setCacheSettings()
                     Renderer.updateCache(Address(0, MemSize.WORD))
@@ -989,6 +994,7 @@ import kotlin.dom.removeClass
         LS.set("mutable_text", simSettings.mutableText.toString())
         LS.set("ecall_exit_only", simSettings.ecallOnlyExit.toString())
         LS.set("set_regs_on_init", simSettings.setRegesOnInit.toString())
+        LS.set("simargs", getDefaultArgs())
 
         /*Program*/
         js("codeMirror.save()")
@@ -1040,6 +1046,7 @@ import kotlin.dom.removeClass
         var mt = simSettings.mutableText.toString()
         var eeo = simSettings.ecallOnlyExit.toString()
         var sroi = simSettings.setRegesOnInit.toString()
+        var simargs = ""
 
         /*Program*/
         js("codeMirror.save()")
@@ -1063,6 +1070,7 @@ import kotlin.dom.removeClass
             mt = LS.safeget("mutable_text", mt)
             eeo = LS.safeget("ecall_exit_only", eeo)
             sroi = LS.safeget("set_regs_on_init", sroi)
+            simargs = LS.safeget("simargs", simargs)
 
             /*Program*/
             p = LS.safeget("prog", p)
@@ -1124,6 +1132,7 @@ import kotlin.dom.removeClass
         simSettings.ecallOnlyExit = eeo == "true"
         Renderer.renderButton(document.getElementById("setRegsOnInit") as HTMLButtonElement, sroi == "true")
         simSettings.setRegesOnInit = sroi == "true"
+        (document.getElementById("ArgsList") as HTMLInputElement).value = simargs
 
         /*Program*/
         js("codeMirror.setValue(driver.p)")

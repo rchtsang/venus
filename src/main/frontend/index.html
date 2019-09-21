@@ -200,14 +200,13 @@
                     <a id="packages-tab" onclick="driver.openPackagesTab()">Packages</a>
                   </p>
                   <div id="general-settings-tab-view">
-                    <div id="addArgs-div" class="panel-block">
+                    <div id="ArgsList-div" class="panel-block">
                       <div class="field is-horizontal">
                         <div class="field-label">
-                          <label class="label is-small" for="addArgs">Add Args</label>
+                          <label class="label is-small" for="ArgsList">Simulator Default Args</label>
                         </div>
                         <div class="field-body is-expanded">
-                          <input id="addArgs" class="input" spellcheck="false">
-                          <button id="addArgsBtn" class="button" onclick="e = document.getElementById('addArgs'); driver.sim.addArg(e.value); e.value = ''" style="text-align: center;height: 45px;">Add</button>
+                          <input id="ArgsList" class="input" spellcheck="false">
                         </div>
                       </div>
                     </div>
