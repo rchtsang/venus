@@ -1,6 +1,7 @@
 package venus.vfs
 
 import java.io.File
+import java.lang.StringBuilder
 
 class VFSFile(override var label: String, override var parent: VFSObject) : VFSObject {
     override val type = VFSType.File
@@ -19,11 +20,17 @@ class VFSFile(override var label: String, override var parent: VFSObject) : VFSO
         contents[innerTxt] = ""
     }
     fun readText(): String {
-        return if (contents.containsKey(innerFile) && contents[innerFile] is File) {
-            (contents[innerFile] as File).readText(Charsets.UTF_8)
+        val t = if (contents.containsKey(innerFile) && contents[innerFile] is File) {
+            val bs = (contents[innerFile] as File).readBytes()
+            val sb = StringBuilder()
+            for (b in bs) {
+                sb.append(b.toChar())
+            }
+            sb.toString()
         } else {
             contents[innerTxt] as String
         }
+        return t
     }
     fun setText(s: String) {
         if (contents.containsKey(innerFile) && contents[innerFile] is File) {
