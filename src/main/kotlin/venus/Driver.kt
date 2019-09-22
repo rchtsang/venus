@@ -83,7 +83,6 @@ object Driver {
 
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
-
         try {
             cli.parse(args)
         } catch (e: Exception) {
@@ -119,8 +118,8 @@ object Driver {
         link(progs)
 
         try {
-            for (i in 0 until simArgs.size) {
-                sim.addArg(simArgs[i])
+            for (element in simArgs) {
+                sim.addArg(element)
             }
 
             if (trace) {
