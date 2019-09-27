@@ -432,7 +432,8 @@ internal object Renderer {
      * @todo abstract away instruction length
      */
     fun updatePC(pc: Number) {
-        val idx = (pc.toInt() - MemorySegments.TEXT_BEGIN) / 4
+//        val idx = (pc.toInt() - MemorySegments.TEXT_BEGIN) / 4
+        val idx = sim.invInstOrderMapping[pc.toInt()]
         activeInstruction?.classList?.remove("is-selected")
         val newActiveInstruction = document.getElementById("instruction-$idx") as HTMLElement?
         newActiveInstruction?.classList?.add("is-selected")
