@@ -1,37 +1,52 @@
 package venus.zip
 
+import venus.vfs.VFSFile
+import venus.vfs.VFSFolder
+import venus.vfs.VFSObject
+import venus.vfs.VFSType
+
 class Zip {
     var internal_zip = JSZip()
     fun addFile(name: String, data: Any) {
-        internal_zip = internal_zip.file(name, data, js("""{"binary":true}"""))
+        this.addFileHelper(name, data, internal_zip)
+    }
+
+    private fun addFileHelper(name: String, data: Any, int_zip: JSZip) {
+        int_zip.file(name, data, js("""{"binary":true}"""))
     }
 
     fun save(name: String): String {
         val z = internal_zip
         js("""
-            var saveData = (function () {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            return function (data, fileName) {
-                var json = JSON.stringify(data),
-                    blob = new Blob([json], {type: "octet/stream"}),
-                    url = window.URL.createObjectURL(blob);
-                a.href = url;
-                a.download = fileName;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            };
-        }());
-
            z.generateAsync({"type": "blob"}).then(function(data){
-            saveData(data, name);
+            saveAs(data, name);
            });
         """)
         return ""
     }
 
-//    fun addFolder()
+    fun addFolder(folder: VFSFolder) {
+        val newf = internal_zip.folder(folder.name)
+        this.addFolderHelper(folder, newf)
+    }
+
+    private fun addFolderHelper(folder: VFSFolder, int_zip: JSZip) {
+        for (s in folder.contents.keys) {
+            if (s !in listOf(".", "..")) {
+                val type = (folder.contents[s] as VFSObject).type
+                if (type == VFSType.File) {
+                    val file = folder.contents[s] as VFSFile
+                    this.addFileHelper(file.label, file.readText(), int_zip)
+                } else if (type == VFSType.Folder) {
+                    val fold = folder.contents[s] as VFSFolder
+                    val newf = int_zip.folder(fold.name)
+                    this.addFolderHelper(fold, newf)
+                } else {
+                    console.error("Currently, we only support zipping files and folders!")
+                }
+            }
+        }
+    }
 }
 
 external class JSZip {

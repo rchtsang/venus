@@ -4,6 +4,7 @@ import venus.terminal.Command
 import venus.terminal.Terminal
 import venus.vfs.VFSDummy
 import venus.vfs.VFSFile
+import venus.vfs.VFSFolder
 import venus.vfs.VFSType
 import venus.zip.Zip
 
@@ -20,6 +21,8 @@ var zip = Command(
                 val f = t.vfs.getObjectFromPath(fname) ?: VFSDummy()
                 if (f.type == VFSType.File) {
                     z.addFile(fname, (f as VFSFile).readText())
+                } else if (f.type == VFSType.Folder) {
+                    z.addFolder((f as VFSFolder))
                 } else {
                     s.append("'$fname' is not a path to a file! For now, this function only accepts files.\n")
                 }
@@ -29,7 +32,11 @@ var zip = Command(
             return s.toString()
         },
         tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
-            throw NotImplementedError()
+            if (args.size > 1) {
+                val prefix = args[args.size - 1]
+                return arrayListOf(prefix, t.vfs.filesFromPrefix(prefix))
+            }
+            return arrayListOf("", ArrayList<String>())
         },
         help = "This command creates a zip file."
 )

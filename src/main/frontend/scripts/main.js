@@ -74,11 +74,11 @@ window.load_done = function () {
 };
 
 function load_update_message(msg) {
-    document.getElementById("load-msg").innerHTML = msg.replace(/\n/g, "<br>")
+    document.getElementById("load-msg").innerHTML = msg.replace(/\n/g, "<br>");
 }
 
 function load_error_fn(message, source, lineno, colno, error) {
-    load_error(message + "\nMore info in the console.")
+    load_error(message + "\nMore info in the console.");
 }
 
 window.onerror = load_error_fn;
