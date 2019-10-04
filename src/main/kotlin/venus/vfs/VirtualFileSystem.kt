@@ -181,6 +181,32 @@ import kotlin.browser.window
         return ""
     }
 
+    @JsName("addFile") fun addFile(path: String, data: String, loc: VFSObject = currentLocation): String {
+        val splitpath = getPath(path)
+        if (splitpath.size == 0) {
+            return "There was no file passed in!"
+        }
+        val fname = splitpath.removeAt(splitpath.size - 1)
+        var curloc = loc
+        for (p in splitpath) {
+            curloc = if (curloc.contents.containsKey(p)) {
+                val next = curloc.contents[p]!! as VFSObject
+                if (next.type !in listOf(VFSType.Folder, VFSType.Drive)) {
+                    return "Could not create folder due to a non folder existing in the path."
+                }
+                next
+            } else {
+                val fold = VFSFolder(p, curloc)
+                curloc.addChild(fold)
+                fold
+            }
+        }
+        val f = VFSFile(fname, curloc)
+        f.setText(data)
+        curloc.addChild(f)
+        return ""
+    }
+
     fun getObjectFromPath(path: String, make: Boolean = false, location: VFSObject? = null): VFSObject? {
         val splitpath = getPath(path)
         var templocation = if (path.startsWith("/")) {

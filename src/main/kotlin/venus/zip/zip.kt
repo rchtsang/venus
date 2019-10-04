@@ -1,9 +1,10 @@
 package venus.zip
 
-import venus.vfs.VFSFile
 import venus.vfs.VFSFolder
 import venus.vfs.VFSObject
 import venus.vfs.VFSType
+import venus.vfs.VFSFile
+import venus.vfs.VirtualFileSystem
 
 class Zip {
     var internal_zip = JSZip()
@@ -46,6 +47,37 @@ class Zip {
                 }
             }
         }
+    }
+
+    fun loadZip(zipfile: VFSFile, vfs: VirtualFileSystem, folder: VFSFolder) {
+        val content = zipfile.readText()
+        js("""
+            var new_zip = new JSZip();
+            window.VENUSLOADZIPCOUNTER = 0;
+            new_zip.loadAsync(content).then(function(zip) {
+                // you now have every files contained in the loaded zip
+                new_zip.forEach(function (relativePath, file){
+                    if (!relativePath.endsWith("/")) {
+                        window.VENUSLOADZIPCOUNTER++;
+                        file.async("string").then(function (data) {
+                          var out = vfs.addFile(relativePath, data, folder);
+                            if (out != "") {
+                                window.VENUSFNOUTPUT += out + "\n";
+                            }
+                            window.VENUSLOADZIPCOUNTER--;
+                        });
+                    }
+                });
+                function timeoutcheck() {
+                    if (window.VENUSLOADZIPCOUNTER == 0) {
+                        window.VENUSFNDONE = true;
+                    } else {
+                        setTimeout(timeoutcheck, 25);
+                    }
+                }
+                timeoutcheck();
+            });
+        """)
     }
 }
 

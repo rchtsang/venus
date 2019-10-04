@@ -12,9 +12,13 @@ var edit = Command(
             if (args.size != 1) {
                 return "edit: Takes in one argument [filename]"
             }
-            val obj = t.vfs.getObjectFromPath(args[0])
+            var obj = t.vfs.getObjectFromPath(args[0])
             if (obj === null) {
-                return "edit: '${args[0]}' could not be found!"
+                val tout = t.vfs.touch(args[0])
+                if (tout != "") {
+                    return "edit: $tout"
+                }
+                obj = t.vfs.getObjectFromPath(args[0]) ?: return "edit: Failed to make the file!"
             }
             if (obj.type !== VFSType.File) {
                 return "edit: Only files can be loaded into the editor."
