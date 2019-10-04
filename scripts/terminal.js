@@ -181,10 +181,16 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                   if (cmd) {
                       var out = driver.terminal.processInput(this.value || "");
                       if (out.startsWith("VDIRECTIVE:RUNNING...")) {
-                          output(out.replace(RegExp("^VDIRECTIVE:RUNNING..."), ""));
+                          output(out.replace(RegExp("^VDIRECTIVE:RUNNING\\.\\.\\."), ""));
                           document.getElementById("term_stop_btn").style.display = "block";
                           noline = true;
                           window.setTimeout(getSimOutData, 100, output, line, this)
+                      } else if (out.startsWith("VDIRECTIVE:EXEFN...")) {
+                          output(out.replace(RegExp("^VDIRECTIVE:EXEFN\\.\\.\\."), ""));
+                          noline = true;
+                          window.VENUSFNOUTPUT = "";
+                          window.VENUSFNDONE = false;
+                          window.setTimeout(checkFnExeOut, 100, output, line, this);
                       } else {
                           output(out);
                       }
@@ -282,7 +288,18 @@ function getSimOutData(output, line, elm) {
         }
         return;
     }
-    window.setTimeout(getSimOutData, 25, output, line, this)
+    window.setTimeout(getSimOutData, 25, output, line, this);
+}
+
+function checkFnExeOut(output, line, elm) {
+    var txt = window.VENUSFNOUTPUT;
+    window.VENUSFNOUTPUT = "";
+    output(txt, true);
+    if (window.VENUSFNDONE === true) {
+        terminal_showline(line, elm);
+        return;
+    }
+    window.setTimeout(checkFnExeOut, 25, output, line, elm);
 }
 
 $(function() {
