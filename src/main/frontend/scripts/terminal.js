@@ -63,15 +63,59 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
         try {
             if (this.value) {
                 var data = driver.terminal.tab(this.value);
-                whattodo = data[1];
-                prefix = data[0];
-                if (Array.isArray(whattodo)) {
-                    if (whattodo.length === 0) {
-                        // Does nothing atm.
+                if (typeof(data) === "string") {
+                    if (data.startsWith("An error occurred!")) {
                         e.preventDefault();
-                    } else if (whattodo.length === 1) {
-                        this.value += whattodo[0].replace(RegExp("^" + prefix), '');
-                        e.preventDefault();
+                    }
+                } else {
+                    whattodo = data[1];
+                    prefix = data[0];
+                    if (Array.isArray(whattodo)) {
+                        if (whattodo.length === 0) {
+                            // Does nothing atm.
+                            e.preventDefault();
+                        } else if (whattodo.length === 1) {
+                            this.value += whattodo[0].replace(RegExp("^" + prefix), '');
+                            e.preventDefault();
+                        } else {
+                            // Duplicate current input and append to output section.
+                            var line = this.parentNode.parentNode.cloneNode(true);
+                            line.removeAttribute('id');
+                            try {
+                                line.children[0].removeAttribute('id');
+                            } catch (e) {
+                            }
+                            line.classList.add('line');
+                            var input = line.querySelector('input.cmdline');
+                            input.autofocus = false;
+                            input.readOnly = true;
+                            output_.appendChild(line);
+                            output('<div class="ls-files">' + whattodo.sort().join('<br>') + '</div>');
+                            common = "";
+                            smallest_len = Number.MAX_SAFE_INTEGER;
+                            for (i = 0; i < whattodo.length; i++) {
+                                var l = whattodo[i].length;
+                                if (l < smallest_len) {
+                                    smallest_len = l;
+                                }
+                            }
+                            for (i = 0; i < smallest_len; i++) {
+                                var c = whattodo[0][i];
+                                var shouldBread = false;
+                                for (j = 1; j < whattodo.length; j++) {
+                                    if (c !== whattodo[j][i]) {
+                                        shouldBread = true;
+                                        break;
+                                    }
+                                }
+                                if (shouldBread) {
+                                    break;
+                                }
+                                common += c;
+                            }
+                            this.value += common.replace(RegExp("^" + prefix), '');
+                            e.preventDefault();
+                        }
                     } else {
                         // Duplicate current input and append to output section.
                         var line = this.parentNode.parentNode.cloneNode(true);
@@ -85,28 +129,13 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                         input.autofocus = false;
                         input.readOnly = true;
                         output_.appendChild(line);
-                        output('<div class="ls-files">' + whattodo.sort().join('<br>') + '</div>');
+                        output(whattodo);
                         e.preventDefault();
                     }
-                } else {
-                    // Duplicate current input and append to output section.
-                    var line = this.parentNode.parentNode.cloneNode(true);
-                    line.removeAttribute('id');
-                    try {
-                        line.children[0].removeAttribute('id');
-                    } catch (e) {
-                    }
-                    line.classList.add('line');
-                    var input = line.querySelector('input.cmdline');
-                    input.autofocus = false;
-                    input.readOnly = true;
-                    output_.appendChild(line);
-                    output(whattodo);
-                    e.preventDefault();
                 }
             }
         } catch (e) {
-
+            console.error(e);
         }
         document.getElementById("container").scrollTo(0, getDocHeight_());
       e.preventDefault();
