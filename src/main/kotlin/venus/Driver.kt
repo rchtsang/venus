@@ -871,7 +871,12 @@ import kotlin.dom.removeClass
                     trTimer = window.setTimeout(Driver::runTrEnd, TIMEOUT_TIME)
                     return
                 }
-                tr.traceStep()
+                try {
+                    tr.traceStep()
+                } catch (err: SimulatorError) {
+                    trTimer = window.setTimeout(Driver::runTrEnd, TIMEOUT_TIME, err)
+                    return
+                }
                 cycles++
             }
             trTimer = window.setTimeout(Driver::traceLoop, TIMEOUT_TIME)
@@ -882,9 +887,12 @@ import kotlin.dom.removeClass
             trTimer = null
         }
     }
-    internal fun runTrEnd() {
+    internal fun runTrEnd(err: SimulatorError? = null) {
         try {
             tr.traceEnd()
+            if (err != null) {
+                tr.traceAddError(err)
+            }
             tr.traceStringStart()
             trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
         } catch (e: Throwable) {
