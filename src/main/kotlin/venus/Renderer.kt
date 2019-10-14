@@ -163,7 +163,8 @@ internal object Renderer {
             val (_, dbg) = programDebug
             val (_, line) = dbg
             val mcode = sim.linkedProgram.prog.insts[i]
-            addToProgramListing(i, mcode, line)
+            val pc = sim.instOrderMapping[i]!!
+            addToProgramListing(pc, mcode, line)
         }
     }
 
@@ -218,22 +219,22 @@ internal object Renderer {
     /**
      * Adds an instruction with the given index to the program listing.
      *
-     * @param idx the index of the instruction
+     * @param idx the pc of the instruction
      * @param mcode the machine code representation of the instruction
      * @param progLine the original assembly code
      */
-    fun addToProgramListing(idx: Int, mcode: MachineCode, progLine: String, invalidInst: Boolean = false) {
+    fun addToProgramListing(pcx: Int, mcode: MachineCode, progLine: String, invalidInst: Boolean = false) {
         val programTable = getElement("program-listing-body") as HTMLTableSectionElement
 
         val newRow = programTable.insertRow() as HTMLTableRowElement
-        newRow.id = "instruction-$idx"
-        newRow.onclick = { Driver.addBreakpoint(idx) }
+        newRow.id = "instruction-$pcx"
+        newRow.onclick = { Driver.addBreakpoint(pcx) }
 
         val pcline = newRow.insertCell(0)
-        val pcText = document.createTextNode("0x" + ((idx * 4) + MemorySegments.TEXT_BEGIN).toString(16))
+        val pcText = document.createTextNode("0x" + (pcx).toString(16))
         pcline.appendChild(pcText)
 
-        val hexRepresention = toHex(mcode[InstructionField.ENTIRE].toInt())
+        val hexRepresention = toHex(mcode[InstructionField.ENTIRE].toInt(), mcode.length * 2)
         val machineCode = newRow.insertCell(1)
         val machineCodeText = document.createTextNode(hexRepresention)
         machineCode.appendChild(machineCodeText)
@@ -433,7 +434,8 @@ internal object Renderer {
      */
     fun updatePC(pc: Number) {
 //        val idx = (pc.toInt() - MemorySegments.TEXT_BEGIN) / 4
-        val idx = sim.invInstOrderMapping[pc.toInt()]
+//        val idx = sim.invInstOrderMapping[pc.toInt()]
+        val idx = pc.toInt()
         activeInstruction?.classList?.remove("is-selected")
         val newActiveInstruction = document.getElementById("instruction-$idx") as HTMLElement?
         newActiveInstruction?.classList?.add("is-selected")
@@ -762,11 +764,11 @@ internal object Renderer {
      * @return the hexadecimal string corresponding to that value
      * @todo move this?
      */
-    fun toHex(value: Int): String {
+    fun toHex(value: Int, num_nibbles: Int = 8): String {
         var remainder = value.toLong()
         var suffix = ""
 
-        repeat(8) {
+        repeat(num_nibbles) {
             val hexDigit = hexMap[(remainder and 15).toInt()]
             suffix = hexDigit + suffix
             remainder = remainder ushr 4
