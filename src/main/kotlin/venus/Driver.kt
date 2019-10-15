@@ -54,7 +54,8 @@ object Driver {
         val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
         val regWidth by cli.flagValueArgument(listOf("-r", "--regwidth"), "RegisterWidth", "Sets register width (Currently only supporting 32 (default) and 64).", "32")
         val trace by cli.flagArgument(listOf("-t", "--trace"), "Trace the program given with the pattern given. If no pattern is given, it will use the default.", false, true)
-        val template by cli.flagValueArgument(listOf("-tf", "--tracetemplate"), "TemplateFile", "Optional file/filepath to trace template to use. Only used if the trace argument is set.")
+        val template by cli.flagValueArgument(listOf("-tf", "--tracefile"), "TemplateFile", "Optional file/filepath to trace template to use. Only used if the trace argument is set.")
+        val pattern by cli.flagValueArgument(listOf("-tp", "--tracepattern"), "TemplatePattern", "Optional pattern for the trace.")
         val traceBase by cli.flagValueArgument(listOf("-tb", "--tracebase"), "Radix", "The radix which you want the trace to output. Default is 2 if omitted", "2") {
             val radix = try {
                 it.toInt()
@@ -123,6 +124,9 @@ object Driver {
             }
 
             if (trace) {
+                if (pattern != null) {
+                    tr.format = pattern!!
+                }
                 if (template != null) {
                     tr.format = readFileDirectlyAsText(template as String)
                 }
