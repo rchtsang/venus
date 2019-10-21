@@ -25,7 +25,7 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
         // TODO FIX ME
         val f = try {
             File(Paths.get(path).normalize().toUri())
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             return null
         }
         return if (!f.exists() || f.isFile()) {
@@ -181,10 +181,10 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
         // TODO FIX ME
         val f = try {
             File(Driver.workingdir, path)
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             return null
         }
-        return if (!f.exists() || f.isFile()) {
+        return if (f.exists() && f.isFile()) {
             val vfsf = VFSFile(f.name, VFSDummy())
             vfsf.setFile(f)
             vfsf
