@@ -1063,7 +1063,7 @@ import kotlin.dom.removeClass
         var fmt = t.format
         var bs = t.base.toString()
         var totC = t.totCommands.toString()
-        var ms = t.maxSteps.toString()
+        var ms = simSettings.maxSteps.toString()
         var instf = t.instFirst.toString()
         var tws = t.twoStage.toString()
         var wa = wordAddressed.toString()
