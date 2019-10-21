@@ -28,7 +28,12 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
         } catch (e: Exception) {
             return null
         }
-        return if (!f.exists() || f.isFile()) {
+        if (!f.exists()) {
+            if (!f.createNewFile()) {
+                return null
+            }
+        }
+        return if (f.isFile) {
             val vfsf = VFSFile(f.name, VFSDummy())
             vfsf.setFile(f)
             vfsf
