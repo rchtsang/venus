@@ -280,6 +280,10 @@
                         </div>
                       </div>
                     </div>
+                    <div id="" class="panel-block">
+                      <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
+                      <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false" onkeyup="driver.updateMaxSteps()">
+                    </div>
                   </div>
                   <div id="tracer-settings-tab-view">
                     <div id="" class="panel-block">
@@ -338,10 +342,6 @@
                     <div id="" class="panel-block">
                       <label class="label is-small" for="tbase-val">Output Number's Base: <br>(2-32)</label><br>
                       <input id="tbase-val" type="number" class="input is-small" style="width:180px;" onblur="validateBase(this);" onkeyup="validateBase(this);" value=2 spellcheck="false">
-                    </div>
-                    <div id="" class="panel-block">
-                      <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
-                      <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=0 spellcheck="false">
                     </div>
                   </div>
                   <div id="packages-tab-view">

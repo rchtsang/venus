@@ -301,6 +301,15 @@ import kotlin.dom.removeClass
         tr = Tracer(sim)
     }
 
+    fun getMaxSteps(): Int {
+        return (document.getElementById("tmaxsteps-val") as HTMLInputElement).value.toInt()
+    }
+
+    @JsName("updateMaxSteps") fun updateMaxSteps() {
+        runEnd()
+        simSettings.maxSteps = getMaxSteps()
+    }
+
     fun exitcodecheck() {
         if (sim.exitcode != null) {
             val msg = "Exited with error code ${sim.exitcode}"
@@ -347,7 +356,7 @@ import kotlin.dom.removeClass
                 sim.step() // walk past breakpoint
             } catch (e: Throwable) {
                 runEnd()
-                handleError("RunStart", e, e is AlignmentError || e is StoreError)
+                handleError("RunStart", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
             }
         }
     }
@@ -401,7 +410,7 @@ import kotlin.dom.removeClass
             timer = window.setTimeout(Driver::runStart, TIMEOUT_TIME, useBreakPoints)
         } catch (e: Throwable) {
             runEnd()
-            handleError("RunStart", e, e is AlignmentError || e is StoreError)
+            handleError("RunStart", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
         }
     }
 
@@ -425,7 +434,7 @@ import kotlin.dom.removeClass
             Renderer.updateControlButtons()
             exitcodecheck()
         } catch (e: Throwable) {
-            handleError("step", e, e is AlignmentError || e is StoreError)
+            handleError("step", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
         }
     }
 
@@ -455,7 +464,7 @@ import kotlin.dom.removeClass
             Renderer.updateFromDiffs(diffs)
             Renderer.updateControlButtons()
         } catch (e: Throwable) {
-            handleError("undo", e, e is AlignmentError || e is StoreError)
+            handleError("undo", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
         }
     }
 
@@ -856,7 +865,7 @@ import kotlin.dom.removeClass
             tr.traceStart()
             traceLoop()
         } catch (e: Throwable) {
-            handleError("Trace tr Start", e, e is AlignmentError || e is StoreError)
+            handleError("Trace tr Start", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
@@ -881,7 +890,7 @@ import kotlin.dom.removeClass
             }
             trTimer = window.setTimeout(Driver::traceLoop, TIMEOUT_TIME)
         } catch (e: Throwable) {
-            handleError("Trace tr Loop", e, e is AlignmentError || e is StoreError)
+            handleError("Trace tr Loop", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
@@ -896,7 +905,7 @@ import kotlin.dom.removeClass
             tr.traceStringStart()
             trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
         } catch (e: Throwable) {
-            handleError("Trace Tr End", e, e is AlignmentError || e is StoreError)
+            handleError("Trace Tr End", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
@@ -914,7 +923,7 @@ import kotlin.dom.removeClass
         }
             trTimer = window.setTimeout(Driver::traceStringLoop, TIMEOUT_TIME)
         } catch (e: Throwable) {
-            handleError("Trace String Loop", e, e is AlignmentError || e is StoreError)
+            handleError("Trace String Loop", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
             trTimer?.let(window::clearTimeout)
             trTimer = null
@@ -927,7 +936,7 @@ import kotlin.dom.removeClass
             Renderer.clearConsole()
             Renderer.printConsole(tr.getString())
         } catch (e: Throwable) {
-            handleError("Trace String End", e, e is AlignmentError || e is StoreError)
+            handleError("Trace String End", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
         }
         Renderer.setNameButtonSpinning("simulator-trace", false)
         trTimer?.let(window::clearTimeout)
@@ -946,7 +955,7 @@ import kotlin.dom.removeClass
             tr.trace()
             window.setTimeout(Driver::traceString, TIMEOUT_TIME)
         } catch (e: Throwable) {
-            handleError("Trace Start", e, e is AlignmentError || e is StoreError)
+            handleError("Trace Start", e, e is AlignmentError || e is StoreError || e is ExceededAllowedCyclesError)
             Renderer.setNameButtonSpinning("simulator-trace", false)
         }
     }
@@ -1133,6 +1142,7 @@ import kotlin.dom.removeClass
         tr.totCommands = totC.toInt()
         (document.getElementById("tmaxsteps-val") as HTMLInputElement).value = ms
         tr.maxSteps = ms.toInt()
+        simSettings.maxSteps = ms.toInt()
         Renderer.renderButton(document.getElementById("tinst-first") as HTMLButtonElement, instf == "true")
         tr.instFirst = instf == "true"
         Renderer.renderButton(document.getElementById("tPCWAddr") as HTMLButtonElement, wa == "true")
