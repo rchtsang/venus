@@ -23,7 +23,11 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
 
     fun makeFileInDir(path: String): VFSFile? {
         // TODO FIX ME
-        val f = File(Paths.get(path).normalize().toUri())
+        val f = try {
+            File(Paths.get(path).normalize().toUri())
+        } catch (e: Throwable) {
+            return null
+        }
         return if (!f.exists() || f.isFile()) {
             val vfsf = VFSFile(f.name, VFSDummy())
             vfsf.setFile(f)
@@ -175,7 +179,11 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
 
     fun getObjectFromPath(path: String, make: Boolean = false): VFSObject? {
         // TODO FIX ME
-        val f = File(Driver.workingdir, path)
+        val f = try {
+            File(Driver.workingdir, path)
+        } catch (e: Throwable) {
+            return null
+        }
         return if (!f.exists() || f.isFile()) {
             val vfsf = VFSFile(f.name, VFSDummy())
             vfsf.setFile(f)
