@@ -256,6 +256,9 @@ import kotlin.dom.removeClass
 
     @JsName("openGenericMainTab") fun openGenericMainTab(name: String) {
         Renderer.renderTab(name, Renderer.mainTabs)
+        if (name == "editor") {
+            Renderer.renderAssembleButtons()
+        }
         LS.set("defaultTab", name)
     }
 
