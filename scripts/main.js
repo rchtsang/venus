@@ -68,6 +68,18 @@ function load_error(msg) {
     document.getElementById("loader").style.opacity = 0;
 }
 
+window.driver_load_done = function () {
+    /* Check if packages are all loaded */
+    h  = function(){
+        if (driver.driver_complete_loading) {
+            load_done();
+            return
+        }
+        setTimeout(h, 10);
+    };
+    setTimeout(h, 10);
+};
+
 window.load_done = function () {
     load_update_message("Done!");
     window.document.body.classList.add("loaded");
