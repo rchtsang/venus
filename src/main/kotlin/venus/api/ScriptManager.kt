@@ -19,11 +19,13 @@ import venus.Renderer
 
     var packages = HashMap<String, venuspackage>()
 
+    var loading_packages = HashSet<String>()
+
     fun loadDefaults() {
         val defpkgs = hashMapOf(
                 Pair("packages/tester.js", false),
                 Pair("packages/disassembler.js", false),
-                Pair("packages/chocopy.js", false)
+                Pair("packages/chocopy.js", true)
         )
 
         val pstr = Driver.LS.safeget("script_manager", "[]")
@@ -60,6 +62,7 @@ import venus.Renderer
     }
 
     @JsName("addPackageSuccess") fun addPackageSuccess(url: String, en: Boolean = true, removable: Boolean = true) {
+        loading_packages.remove(url)
         var enabled = en
         if (venuspackage == undefined) {
             addPackageFailure(url)
@@ -146,6 +149,7 @@ import venus.Renderer
     }
 
     @JsName("addPackageFailure") fun addPackageFailure(url: String) {
+        loading_packages.remove(url)
         val msg = "Could not load the script ($url)!"
         Renderer.pkgMsg(msg)
         console.warn(msg)
@@ -378,8 +382,13 @@ import venus.Renderer
             } else {
                 loadPKGTimeout(p.id, p.enabled)
             }
+            loading_packages.add(p.url)
             i++
         }
+    }
+
+    fun packagesLoading(): Boolean {
+        return loading_packages.isNotEmpty()
     }
 
     fun loadPKGTimeout(id: String, enabled: Boolean) {

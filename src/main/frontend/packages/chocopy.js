@@ -21,6 +21,7 @@ var venuspackage = {
     name: "chocopy",
     firstload: true,
     load: function(setting) {
+        console.log("Loading chocopy package...");
         if (setting.includes("enabled")) {
             if (this.firstload) {
                 this.firstload = false;

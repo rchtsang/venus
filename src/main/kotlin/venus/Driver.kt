@@ -63,6 +63,8 @@ import kotlin.dom.removeClass
 
     @JsName("activeFileinEditor") var activeFileinEditor: String = ""
 
+    @JsName("driver_complete_loading") var driver_complete_loading: Boolean = false
+
     init {
         /* This code right here is so that you can add custom kotlin code even after venus has been loaded! */
         js("window.eval_in_venus_env = function (s) {return eval(s);}")
@@ -95,7 +97,7 @@ import kotlin.dom.removeClass
         if (Driver.ready) {
             fileExplorerCurrentLocation = VFS.sentinel
             openVFObjectfromObj(VFS.sentinel)
-            js("window.load_done();")
+            js("window.driver_load_done();")
         } else {
             window.setInterval(Driver::initFinish, 100)
         }
@@ -1180,7 +1182,17 @@ import kotlin.dom.removeClass
 
         checkURLParams()
 
-        Renderer.renderTab(defaultTab, Renderer.mainTabs)
+        fun checkToSetTab() {
+            js("load_update_message(\"Initializing Venus: Waiting on packages to load...\");")
+            if (!this.ScriptManager.packagesLoading()) {
+                this.openGenericMainTab(defaultTab)
+                this.driver_complete_loading = true
+                return
+            }
+            window.setTimeout(fun () { checkToSetTab() }, 10)
+        }
+        window.setTimeout(fun () { checkToSetTab() }, 10)
+
         js("codeMirror.refresh();")
     }
 
