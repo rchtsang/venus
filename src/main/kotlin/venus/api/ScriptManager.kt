@@ -20,7 +20,11 @@ import venus.Renderer
     var packages = HashMap<String, venuspackage>()
 
     fun loadDefaults() {
-        val defpkgs = hashMapOf(Pair("packages/tester.js", false), Pair("packages/disassembler.js", false))
+        val defpkgs = hashMapOf(
+                Pair("packages/tester.js", false),
+                Pair("packages/disassembler.js", false),
+                Pair("packages/chocopy.js", false)
+        )
 
         val pstr = Driver.LS.safeget("script_manager", "[]")
         val pkgs = JSON.parse<ArrayList<pkg>>(pstr)
@@ -113,6 +117,7 @@ import venus.Renderer
             try {
                 window.venuspackage.load(state);
             } catch (e) {
+                console.error(e);
                 worked = false
                 window.VenusScriptManager.addPackageFailure();
             }
@@ -174,7 +179,7 @@ import venus.Renderer
                 val pk = packages[k]
                 js("""try {
                         pk.dependent.pop(k);
-                    } catch (e) {}""")
+                    } catch (e) {console.error(e);}""")
                 i--
             }
             i = js("p.dependent.length") as Int
@@ -189,6 +194,7 @@ import venus.Renderer
             try {
                 p.unload('remove');
             } catch (e) {
+                console.error(e);
                 worked = false;
             }
             """)
@@ -238,6 +244,7 @@ import venus.Renderer
             try {
                 p.unload('disable');
             } catch (e) {
+                console.error(e);
                 worked = false;
             }
             """)
@@ -306,6 +313,7 @@ import venus.Renderer
             try {
                 p.load('enabled');
             } catch (e) {
+                console.error(e);
                 worked = false;
             }
             """)

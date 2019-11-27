@@ -16,12 +16,49 @@
  *  'remove'    - This means you should remove your package because venus is about to remove it.
  */
 var venuspackage = {
-  id: "chocopy",
-  requires: undefined,
-  load: function(setting) {
-      console.warn("I have loaded the example package! This is the stage which would apply all of the hooks and code to interact with Venus.");
-  },
-  unload: function(setting) {
-      console.warn("I have unloaded the test package! This is the stage which all of the changes and hooks should be undone.")
-  }
+    id: "chocopy",
+    requires: undefined,
+    name: "chocopy",
+    firstload: true,
+    load: function(setting) {
+        if (setting.includes("enabled")) {
+            if (this.firstload) {
+                this.firstload = false;
+                var body = window.venus.api.addMainTabAndShow(this.name);
+                return chocopyenable(body);
+            } else {
+                return window.venus.api.showMainTab(this.name);
+            }
+        } else if (setting.includes("disabled")) {
+            if (this.firstload) {
+                this.firstload = false;
+                var body = window.venus.api.addMainTab(this.name);
+                return chocopyenable(body);
+            }
+        } else {
+            return false;
+        }
+    },
+    unload: function(setting) {
+        if (setting.includes("disable")) {
+            window.venus.api.hideMainTab(this.name);
+            return true;
+        } else if (setting.includes("remove")) {
+            window.venus.api.removeMainTab(this.name);
+            return true;
+        } else {
+            return false;
+        }
+    }
 };
+
+function chocopyenable(body) {
+    if (body == null) {
+        return false;
+    }
+    var baseurl = "packages/support/chocopy";
+    body.innerHTML=`<object id="chocopy_fe" style="width:100%; height: 100%;background: transparent url(${baseurl}/img/AnimatedLoading.gif) no-repeat center;" type="text/html" data="${baseurl}/chocopy.html" ></object>`;
+    body.style.width = "100%";
+    body.style.height = "100%";
+    return true;
+}

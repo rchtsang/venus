@@ -51,7 +51,7 @@ import kotlin.dom.removeClass
 
     private var timer: Int? = null
     val LS = LocalStorage()
-    internal var useLS = false
+    var useLS = false
     private var saveInterval: Int? = null
     var p = ""
     private var ready = false
@@ -109,8 +109,7 @@ import kotlin.dom.removeClass
      * Assembles the text in the editor, and then renders the simulator.
      */
     @JsName("openSimulator") fun openSimulator() {
-        Renderer.renderSimulator()
-        LS.set("defaultTab", "simulator")
+        openGenericMainTab("simulator")
     }
 
     @JsName("noAssemble") fun noAssemble() {
@@ -245,14 +244,17 @@ import kotlin.dom.removeClass
      */
     @JsName("openEditor") fun openEditor() {
         runEnd()
-        Renderer.renderEditor()
+        openGenericMainTab("editor")
         js("codeMirror.refresh();")
-        LS.set("defaultTab", "editor")
     }
 
     @JsName("openVenus") fun openVenus() {
-        Renderer.renderVenus()
-        LS.set("defaultTab", "venus")
+        openGenericMainTab("venus")
+    }
+
+    @JsName("openGenericMainTab") fun openGenericMainTab(name: String) {
+        Renderer.renderTab(name, Renderer.mainTabs)
+        LS.set("defaultTab", name)
     }
 
     @JsName("openURLMaker") fun openURLMaker() {

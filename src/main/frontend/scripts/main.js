@@ -4,6 +4,7 @@ function setup_venus() {
         load_update_message("Initializing codeMirror");
         window.venus_main = window.venus;
         window.driver = venus_main.venus.Driver;
+        window.venus.api = venus_main.venus.api.API;
         window.simulatorAPI = venus_main.venus.api.venusbackend.simulator.Simulator;
         window.editor = document.getElementById("asm-editor");
         window.codeMirror = CodeMirror.fromTextArea(editor,

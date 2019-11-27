@@ -1,5 +1,15 @@
 package venus.api
 
+/* ktlint-disable no-wildcard-imports */
+import org.w3c.dom.*
+import venus.Driver
+import venus.Renderer
+import kotlin.browser.document
+import kotlin.dom.addClass
+import kotlin.dom.hasClass
+
+/* ktlint-enable no-wildcard-imports */
+
 @JsName("API") object API {
     // The key (String) is the ID of the FunctionsList
     val functionsLists: MutableMap<String, FunctionsList> = HashMap()
@@ -34,5 +44,70 @@ package venus.api
         } else {
             console.error("Could not remove function to '$locationID' because the location ID does not exist!")
         }
+    }
+
+    @JsName("addMainTab") fun addMainTab(name: String): Element? {
+        if (Renderer.mainTabs.contains(name)) {
+            console.error("Tabs MUST have unique names!")
+            return null
+        }
+        val t = document.createElement("li")
+        t.id = "$name-tab"
+
+        val link = document.createElement("a")
+        t.appendChild(link)
+        link.setAttribute("onclick", "driver.openGenericMainTab(\"$name\")")
+
+        val font = document.createElement("font")
+        link.appendChild(font)
+        val tmp = name
+        font.innerHTML = tmp.capitalize()
+
+        val tabs_list = document.getElementById("venus-main-tabs") ?: return null
+        tabs_list.appendChild(t)
+
+        val s = document.createElement("section")
+
+        s.addClass("section")
+        s.id = "$name-tab-view"
+        s.setAttribute("style", "display:none;")
+        document.body!!.appendChild(s)
+
+        Renderer.mainTabs.add(name)
+        s.innerHTML = "TEST"
+        return s
+    }
+
+    @JsName("addMainTabAndShow") fun addMainTab(name: String, show: Boolean): Element? {
+        val s = addMainTab(name)
+        showMainTab(name)
+        return s
+    }
+
+    @JsName("showMainTab") fun showMainTab(name: String): Boolean {
+        val tab = (document.getElementById("$name-tab") ?: return false) as HTMLLIElement
+        tab.style.display = ""
+        return true
+    }
+
+    @JsName("hideMainTab") fun hideMainTab(name: String): Boolean {
+        val tab = (document.getElementById("$name-tab") ?: return false) as HTMLLIElement
+        tab.style.display = "none"
+        if (tab.hasClass("is-active")) {
+            Driver.openVenus()
+        }
+        return true
+    }
+
+    @JsName("removeMainTab") fun removeMainTab(name: String): Boolean {
+        val t = (document.getElementById("$name-tab") ?: return false) as HTMLLIElement
+        val v = (document.getElementById("$name-tab-view") ?: return false)
+        if (t.hasClass("is-active")) {
+            hideMainTab(name)
+        }
+        Renderer.mainTabs.remove(name)
+        t.remove()
+        v.remove()
+        return true
     }
 }

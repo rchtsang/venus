@@ -7,23 +7,23 @@ class LocalStorage {
     init {
     }
 
-    fun get(key: String): String {
+    @JsName("get") fun get(key: String): String {
         return lsm.get(key)
     }
 
-    fun set(key: String, value: String) {
+    @JsName("set") fun set(key: String, value: String) {
         lsm.set(key, value)
     }
 
-    fun remove(key: String) {
+    @JsName("remove") fun remove(key: String) {
         lsm.remove(key)
     }
 
-    fun reset() {
+    @JsName("reset") fun reset() {
         lsm.reset()
     }
 
-    fun safeget(key: String, prevVal: String): String {
+    @JsName("safeget") fun safeget(key: String, prevVal: String): String {
         val v = this.get(key)
         if (v == "undefined") {
             return prevVal
