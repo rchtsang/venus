@@ -22,4 +22,5 @@ node_modules/
 
 # IntelliJ
 .idea/
+.idea*
 venus.iml
