@@ -424,6 +424,7 @@ import kotlin.dom.removeClass
     @JsName("runEnd") fun runEnd() {
         handleNotExitOver()
         Renderer.updatePC(sim.getPC())
+        Renderer.updateAll()
         Renderer.setRunButtonSpinning(false)
         timer?.let(window::clearTimeout)
         timer = null
