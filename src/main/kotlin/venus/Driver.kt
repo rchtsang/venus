@@ -447,8 +447,11 @@ import kotlin.dom.removeClass
     }
 
     private fun handleNotExitOver() {
-        if (sim.settings.ecallOnlyExit && sim.getPC() in (sim.getMaxPC().toInt()) until MemorySegments.STATIC_BEGIN) {
-            val pcloc = (sim.getMaxPC().toInt() - MemorySegments.TEXT_BEGIN)
+        if (sim.settings.ecallOnlyExit &&
+                (sim.getPC().toInt() >= sim.getMaxPC().toInt() || sim.getPC().toInt() < MemorySegments.TEXT_BEGIN)
+        ) {
+//            val pcloc = (sim.getMaxPC().toInt() - MemorySegments.TEXT_BEGIN)
+            val pcloc = sim.getPC().toInt()
             sim.incMaxPC(4)
             var mcode = MachineCode(0)
             var progLine = ""
