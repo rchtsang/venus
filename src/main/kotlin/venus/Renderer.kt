@@ -711,7 +711,7 @@ internal object Renderer {
                     "Hex" -> byteToHex(byte)
                     "Decimal" -> byteToDec(byte)
                     "Unsigned" -> byteToUnsign(byte)
-                    "ASCII" -> toAscii(byte)
+                    "ASCII" -> toAscii(byte, 2)
                     else -> byteToHex(byte)
                 }
             }
@@ -764,7 +764,7 @@ internal object Renderer {
      * @return the hexadecimal string corresponding to that value
      * @todo move this?
      */
-    fun toHex(value: Int, num_nibbles: Int = 8): String {
+    fun toHex(value: Int, num_nibbles: Int = 8, add_prefix: Boolean = true): String {
         var remainder = value.toLong()
         var suffix = ""
 
@@ -774,7 +774,11 @@ internal object Renderer {
             remainder = remainder ushr 4
         }
 
-        return "0x" + suffix
+        if (add_prefix) {
+            suffix = "0x" + suffix
+        }
+
+        return suffix
     }
 
     fun toHex(value: Number): String {
@@ -784,12 +788,20 @@ internal object Renderer {
     private fun toUnsigned(value: Int): String =
             if (value >= 0) value.toString() else (value + 0x1_0000_0000L).toString()
 
-    private fun toAscii(value: Int): String =
-            when (value) {
-                !in 0..255 -> toHex(value)
-                !in 32..126 -> "\uFFFD"
-                else -> "'${value.toChar()}'"
+    private fun toAscii(value: Int, num_nibbles: Int = 8): String {
+        var s = ""
+//        for (i in 0..3) {
+//            val v = (value shr i * 8) and 0xFF
+            val v = value
+            s += when (v) {
+                !in 0..255 -> toHex(v, num_nibbles = num_nibbles)
+//                !in 32..126 -> "\uFFFD"
+                !in 32..126 -> toHex(v, num_nibbles = num_nibbles)
+                else -> "${v.toChar()}"
             }
+//        }
+        return s
+    }
 
     /**
      * Sets the display type for all of the registers and memory
