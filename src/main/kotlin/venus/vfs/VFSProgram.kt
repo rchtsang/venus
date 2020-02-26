@@ -2,7 +2,7 @@ package venus.vfs
 
 import venusbackend.riscv.Program
 
-class VFSProgram(override var label: String, override var parent: VFSObject, prog: Program = Program()) : VFSObject {
+class VFSProgram(override var label: String, override var parent: VFSObject, prog: Program = Program(absPath = "")) : VFSObject {
     override val type = VFSType.Program
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()

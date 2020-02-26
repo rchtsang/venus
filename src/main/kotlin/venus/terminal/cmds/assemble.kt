@@ -30,7 +30,7 @@ var assemble = Command(
                 return "assemble: $programout: Invalid name"
             }
             var msg = ""
-            val (prog, errors, warnings) = Assembler.assemble(file.contents.get(VFSFile.innerTxt) as String, programout)
+            val (prog, errors, warnings) = Assembler.assemble(file.contents.get(VFSFile.innerTxt) as String, programout, file.getPath())
             if (errors.isNotEmpty()) {
                 msg += "assemble: Could not assemble file! Here are the errors:"
                 for (error in errors) {

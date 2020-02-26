@@ -128,7 +128,7 @@ import kotlin.dom.removeClass
         }
         if (ready) {
             try {
-                val success = assemble(text, name = "editor.S")
+                val success = assemble(text, name = "editor.S", absPath = VFS.currentLocation.getPath())
                 if (success != null) {
                     if (link(listOf(success))) {
                         val args = Lexer.lex(getDefaultArgs())
@@ -278,11 +278,11 @@ import kotlin.dom.removeClass
      *
      * @param text the assembly code.
      */
-    internal fun assemble(text: String, name: String = ""): Program? {
+    internal fun assemble(text: String, name: String = "", absPath: String): Program? {
         val (prog, errors, warnings) = if (name != "") {
-            Assembler.assemble(text, name)
+            Assembler.assemble(text, name, abspath = absPath)
         } else {
-            Assembler.assemble(text)
+            Assembler.assemble(text, abspath = absPath)
         }
         if (errors.isNotEmpty()) {
             Renderer.displayAssemblerError(errors.first())
@@ -330,11 +330,11 @@ import kotlin.dom.removeClass
         }
     }
 
-    @JsName("externalAssemble") fun externalAssemble(text: String): Any {
+    @JsName("externalAssemble") fun externalAssemble(text: String, absPath: String = ""): Any {
         var success = true
         var errs = ""
         var sim = js("undefined;")
-        val (prog, errors, warnings) = Assembler.assemble(text)
+        val (prog, errors, warnings) = Assembler.assemble(text, abspath = absPath)
         if (errors.isNotEmpty()) {
             errs = errors.first().toString()
             success = false

@@ -61,7 +61,7 @@ var vdb = Command(
             // Assembly stage for any files
             var msg = ""
             for (file in files) {
-                val (prog, errors, warnings) = Assembler.assemble(file.contents.get(VFSFile.innerTxt) as String, file.label)
+                val (prog, errors, warnings) = Assembler.assemble(file.contents.get(VFSFile.innerTxt) as String, file.label, file.getPath())
                 if (errors.isNotEmpty()) {
                     msg += "assemble: Could not assemble file! Here are the errors:"
                     for (error in errors) {
