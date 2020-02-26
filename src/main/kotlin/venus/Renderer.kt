@@ -867,6 +867,7 @@ internal object Renderer {
                 is VFSFile -> {
                     options += "<button class=\"button is-primary\" onclick=\"driver.editVFObject('${obj.getPath()}')\">Edit</button>\n"
                     options += "<button class=\"button is-primary\" onclick=\"driver.saveVFObject('${obj.getPath()}')\">Save</button>\n"
+                    options += "<button class=\"button is-primary\" onclick=\"driver.vdbVFObject('${obj.getPath()}')\">VDB</button>\n"
                 }
                 is VFSFolder -> {
                     options += "<button class=\"button is-primary\" onclick=\"driver.openVFObject('${obj.getPath()}')\">Open</button>\n"

@@ -10,6 +10,7 @@ import venus.vfs.VFSFile
 import venus.vfs.VFSLinkedProgram
 import venus.vfs.VFSProgram
 import venus.vfs.VFSType
+import venusbackend.assembler.AssemblerError
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
@@ -81,8 +82,8 @@ var vdb = Command(
             if (progs.size > 0) {
                 val PandL = try {
                     ProgramAndLibraries(progs, t.vfs)
-                } catch (e: AssertionError) {
-                    return "link: An error occurred when getting the imports: $e"
+                } catch (e: AssemblerError) {
+                    return "vdb: An error occurred when getting the imports: $e"
                 }
                 val linkedProgram: LinkedProgram
                 try {

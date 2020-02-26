@@ -6,10 +6,8 @@ import org.w3c.dom.*
 import org.w3c.dom.url.URL
 import venus.api.venuspackage
 import venus.terminal.Terminal
-import venus.vfs.VFSFile
-import venus.vfs.VFSObject
-import venus.vfs.VFSType
-import venus.vfs.VirtualFileSystem
+import venus.terminal.cmds.vdb
+import venus.vfs.*
 import venusbackend.assembler.*
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
@@ -1289,6 +1287,21 @@ import kotlin.dom.removeClass
         val s = VFS.getObjectFromPath(name, location = fileExplorerCurrentLocation)
         if (s is VFSObject) {
             saveVFObjectfromObj(s)
+        } else {
+            console.log(s)
+        }
+    }
+
+    @JsName("vdbVFObject") fun vdbVFObject(name: String) {
+        val s = VFS.getObjectFromPath(name, location = fileExplorerCurrentLocation)
+        if (s is VFSObject) {
+            val cur_loc = VFS.currentLocation
+            VFS.currentLocation = fileExplorerCurrentLocation
+            val res = vdb.execute(arrayListOf("${s.getPath()}"), terminal, false)
+            VFS.currentLocation = cur_loc
+            if (res != "") {
+                js("alert('[ERROR]\\n' + res)")
+            }
         } else {
             console.log(s)
         }
