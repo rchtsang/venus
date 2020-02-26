@@ -27,8 +27,8 @@ var cp = Command(
         tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             return arrayListOf("", ArrayList<String>())
         },
-        help = """Creates a text/data file.
-            |Usage: touch [filename]
-            |NOTE: Does not modify the timestamp at the moment because that is not implemented yet in the VFS.
+        help = """Copies a text/data file to a new location.
+            |Usage: cp [src] [dst]
+            |NOTE: This is a very dumb copy. It does not work on folders yet or many files!
         """.trimMargin()
 )

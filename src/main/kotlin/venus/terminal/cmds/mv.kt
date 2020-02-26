@@ -20,8 +20,8 @@ var mv = Command(
         tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
             return arrayListOf("", ArrayList<String>())
         },
-        help = """Creates a text/data file.
-            |Usage: touch [filename]
-            |NOTE: Does not modify the timestamp at the moment because that is not implemented yet in the VFS.
+        help = """Moves a file/folder to a new location.
+            |Usage: mv [source] [destination]
+            |NOTE: This is a very dumb implementation of move and does not do any fancy things linux move does.
         """.trimMargin()
 )
