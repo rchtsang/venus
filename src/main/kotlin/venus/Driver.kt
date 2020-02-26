@@ -130,7 +130,7 @@ import kotlin.dom.removeClass
         }
         if (ready) {
             try {
-                val success = assemble(text)
+                val success = assemble(text, name = "editor.S")
                 if (success != null) {
                     if (link(listOf(success))) {
                         val args = Lexer.lex(getDefaultArgs())
@@ -280,8 +280,12 @@ import kotlin.dom.removeClass
      *
      * @param text the assembly code.
      */
-    internal fun assemble(text: String): Program? {
-        val (prog, errors, warnings) = Assembler.assemble(text)
+    internal fun assemble(text: String, name: String = ""): Program? {
+        val (prog, errors, warnings) = if (name != "") {
+            Assembler.assemble(text, name)
+        } else {
+            Assembler.assemble(text)
+        }
         if (errors.isNotEmpty()) {
             Renderer.displayAssemblerError(errors.first())
             return null

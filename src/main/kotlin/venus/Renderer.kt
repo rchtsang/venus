@@ -146,11 +146,11 @@ internal object Renderer {
 
     /** Display a given [AssemblerError] */
     @Suppress("UNUSED_PARAMETER") fun displayAssemblerError(e: AssemblerError) {
-        if (e.line !== null) {
-            js("alert('[ERROR]: (Line: ' + e.line + ') ' + e.message)")
-        } else {
-            js("alert('[ERROR]:' + e.message)")
-        }
+//        if (e.line !== null) {
+//            js("alert('[ERROR]\\n(Line: ' + e.line + ') ' + e.message)")
+//        } else {
+            js("alert('[ERROR]\\n' + e.message)")
+//        }
     }
 
     /**

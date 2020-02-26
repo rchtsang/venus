@@ -96,7 +96,10 @@ function load_error_fn(message, source, lineno, colno, error) {
 
 window.onerror = load_error_fn;
 window.default_alert = window.alert;
-window.alert = alertify.alert;
+window.alert = function(message) {
+    alertify.alert(message.replace(/\n/g, "<br>"));
+    // alertify.alert.apply(this, arguments);
+};
 // window.confirm = alertify.confirm;
 // window.prompt = alertify.prompt;
 alertify.alert()
