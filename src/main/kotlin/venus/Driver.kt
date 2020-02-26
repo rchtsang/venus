@@ -139,7 +139,11 @@ object Driver {
             } else if (dumpInsts) {
                 dump()
             } else {
-                sim.run()
+                try {
+                    sim.run()
+                } catch (e: SimulatorError) {
+                    // pass
+                }
                 if (getNumberOfCycles) {
                     Renderer.activeDisplay = true
                     Renderer.printConsole(sim.getCycles())
