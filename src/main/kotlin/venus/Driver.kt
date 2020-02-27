@@ -109,7 +109,7 @@ object Driver {
 
         val assemblyProgramText = readFileDirectlyAsText(assemblyTextFile)
 
-        val prog = assemble(assemblyProgramText)
+        val prog = assemble(assemblyProgramText, lastReadFile!!.absolutePath)
         if (prog == null) {
             exitProcess(-1)
         } else {
@@ -164,11 +164,12 @@ object Driver {
         return try {
             val f = File(fileName)
             lastReadFile = f
-            workingdir = f.absoluteFile.parent
+//            workingdir = f.absoluteFile.parent
+            workingdir = System.getProperty("user.dir")
             f.readText(Charsets.UTF_8)
         } catch (e: FileNotFoundException) {
             println("Could not find the file: " + fileName)
-            exitProcess(1)
+            exitProcess(-1)
         }
     }
 
@@ -177,8 +178,8 @@ object Driver {
      *
      * @param text the assembly code.
      */
-    internal fun assemble(text: String): Program? {
-        val (prog, errors, warnings) = Assembler.assemble(text)
+    internal fun assemble(text: String, abspath: String): Program? {
+        val (prog, errors, warnings) = Assembler.assemble(text, abspath = abspath)
         if (warnings.isNotEmpty()) {
             for (warning in warnings) {
                 Renderer.displayWarning(warning)

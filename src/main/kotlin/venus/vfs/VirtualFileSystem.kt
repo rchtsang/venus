@@ -182,17 +182,34 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
         return ""
     }
 
-    fun getObjectFromPath(path: String, make: Boolean = false): VFSObject? {
+    fun getParentFromObject(obj: VFSObject): VFSObject? {
+        val cf = obj.contents[VFSObject.internalLabelpath] ?: return obj.parent
+        var f = File((cf as String))
+        val p = f.parentFile
+        return getObjectFromPath(p.absolutePath, location = sentinel)
+    }
+
+    fun getObjectFromPath(path: String, make: Boolean = false, location: VFSObject? = null): VFSObject? {
         // TODO FIX ME
         val f = try {
-            File(Driver.workingdir, path)
+            if (location == sentinel) {
+                File(path)
+            } else {
+                File(location?.getPath() ?: Driver.workingdir, path)
+            }
         } catch (e: Exception) {
             return null
         }
-        return if (f.exists() && f.isFile()) {
+        return if (f.exists() && f.isFile) {
             val vfsf = VFSFile(f.name, VFSDummy())
             vfsf.setFile(f)
+            vfsf.contents[VFSObject.internalLabelpath] = f.absolutePath
             vfsf
+        } else if (f.exists() && f.isDirectory) {
+            val vfsd = VFSFolder(f.name, VFSDummy())
+            vfsd.setFile(f)
+            vfsd.contents[VFSObject.internalLabelpath] = f.absolutePath
+            vfsd
         } else {
             null
         }

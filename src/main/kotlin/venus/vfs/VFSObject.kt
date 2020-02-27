@@ -1,5 +1,7 @@
 package venus.vfs
 
+import java.io.File
+
 interface VFSObject {
     val type: VFSType
     var label: String
@@ -11,16 +13,20 @@ interface VFSObject {
             return !name.contains(Regex("[" + separator + ":\"><]"))
         }
         const val separator = "/"
+        const val internalLabelpath = "VENUS_INTERNAL_LABEL-fpath"
     }
 
     fun getPath(): String {
+        if (this.contents.containsKey(internalLabelpath)) {
+            return this.contents[internalLabelpath] as String
+        }
         var path = ""
         var node: VFSObject? = this
         while (node != null && node.type != VFSType.Drive) {
             path = separator + node.label + path
             node = node.parent
         }
-        return ((node?.label ?: "v:") + path)
+        return ((node?.label ?: "/") + path)
     }
 
     fun addChild(child: VFSObject): Boolean {

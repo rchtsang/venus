@@ -1,6 +1,7 @@
 package venus.vfs
 
 import venus.vfs.VFSObject.Companion.isValidName
+import java.io.File
 
 open class VFSFolder(var name: String, override var parent: VFSObject) : VFSObject {
     override val type = VFSType.Folder
@@ -24,6 +25,10 @@ open class VFSFolder(var name: String, override var parent: VFSObject) : VFSObje
             return true
         }
         return false
+    }
+
+    fun setFile(f: File) {
+        contents[VFSFile.innerFile] = f
     }
 
     override fun stringify(): JsonContainer {
