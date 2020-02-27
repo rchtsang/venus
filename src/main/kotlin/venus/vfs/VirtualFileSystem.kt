@@ -207,6 +207,10 @@ import kotlin.browser.window
         return ""
     }
 
+    fun getParentFromObject(obj: VFSObject): VFSObject? {
+        return obj.parent
+    }
+
     fun getObjectFromPath(path: String, make: Boolean = false, location: VFSObject? = null): VFSObject? {
         val splitpath = getPath(path)
         var templocation = if (path.startsWith("/")) {
