@@ -143,6 +143,9 @@ object Driver {
                     sim.run()
                 } catch (e: SimulatorError) {
                     // pass
+                    System.err.println("Venus ran into a simulator error!")
+                    System.err.println(e.message ?: throw e)
+                    exitProcess(-1)
                 }
                 if (getNumberOfCycles) {
                     Renderer.activeDisplay = true
