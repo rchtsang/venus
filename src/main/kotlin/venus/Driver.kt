@@ -42,6 +42,7 @@ import kotlin.dom.removeClass
     fun set_active_afpath(path: String?) {
         active_abs_file_path = path
         document.getElementById("activeFileInEditor")!!.innerHTML = path.toString()
+        activeFileinEditor = path ?: ""
     }
 
     var sim: Simulator = Simulator(LinkedProgram(), VFS)
@@ -1084,6 +1085,20 @@ import kotlin.dom.removeClass
             LS.set("cache_L" + (i + 1) + "_seed", curCache.seed)
             LS.set("cache_L" + (i + 1) + "_attach", curCache.attached.toString())
         }
+
+        LS.set("activeFileinEditor", activeFileinEditor)
+        var s = if (active_abs_file_name == null) {
+            "n"
+        } else {
+            "p$active_abs_file_name"
+        }
+        LS.set("active_abs_file_name", s)
+        s = if (active_abs_file_path == null) {
+            "n"
+        } else {
+            "p$active_abs_file_path"
+        }
+        LS.set("active_abs_file_path", s)
     }
 
     /*If b is true, will load stored values else load default values.*/
@@ -1160,6 +1175,23 @@ import kotlin.dom.removeClass
                 console.warn("An error occurred when loading the VFS data!")
                 console.warn(e)
             }
+
+            var tmp = LS.safeget("active_abs_file_name", "")
+            active_abs_file_name = if (tmp == "" || tmp == "n") {
+                null
+            } else {
+                tmp.substring(1 until (tmp.length))
+            }
+
+            tmp = LS.safeget("active_abs_file_path", "")
+            val ntmp = if (tmp == "" || tmp == "n") {
+                null
+            } else {
+                tmp.substring(1 until (tmp.length))
+            }
+            set_active_afpath(ntmp)
+
+            activeFileinEditor = LS.safeget("activeFileinEditor", "")
         } else {
             console.log("Local Storage has been disabled!")
         }
