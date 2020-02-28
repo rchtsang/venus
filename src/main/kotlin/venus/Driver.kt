@@ -101,8 +101,10 @@ import kotlin.dom.removeClass
 
     fun initFinish() {
         if (Driver.ready) {
-            fileExplorerCurrentLocation = VFS.sentinel
-            openVFObjectfromObj(VFS.sentinel)
+            if (!::fileExplorerCurrentLocation.isInitialized) {
+                fileExplorerCurrentLocation = VFS.sentinel
+                openVFObjectfromObj(VFS.sentinel)
+            }
             js("window.driver_load_done();")
         } else {
             window.setInterval(Driver::initFinish, 100)
@@ -1099,6 +1101,11 @@ import kotlin.dom.removeClass
             "p$active_abs_file_path"
         }
         LS.set("active_abs_file_path", s)
+
+        if (::fileExplorerCurrentLocation.isInitialized) {
+            LS.set("fileExplorerCurrentLocation", fileExplorerCurrentLocation.getPath())
+        }
+        LS.set("terminalCurrentLocation", terminal.vfs.currentLocation.getPath())
     }
 
     /*If b is true, will load stored values else load default values.*/
@@ -1192,6 +1199,13 @@ import kotlin.dom.removeClass
             set_active_afpath(ntmp)
 
             activeFileinEditor = LS.safeget("activeFileinEditor", "")
+
+            tmp = LS.safeget("fileExplorerCurrentLocation", "")
+            fileExplorerCurrentLocation = VFS.sentinel
+            openVFObject(tmp)
+
+            terminal.vfs.cd(LS.safeget("terminalCurrentLocation", ""))
+            js("try {term.reset();} catch (e) {console.error(e);}")
         } else {
             console.log("Local Storage has been disabled!")
         }
@@ -1250,7 +1264,6 @@ import kotlin.dom.removeClass
             window.setTimeout(fun () { checkToSetTab() }, 10)
         }
         window.setTimeout(fun () { checkToSetTab() }, 10)
-
         js("codeMirror.refresh();")
     }
 
