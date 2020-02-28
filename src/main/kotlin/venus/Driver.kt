@@ -36,6 +36,8 @@ import kotlin.dom.removeClass
  */
 @JsName("Driver") object Driver {
     @JsName("VFS") var VFS = VirtualFileSystem("/")
+    var active_abs_file_name: String? = null
+    var active_abs_file_path: String? = null
 
     var sim: Simulator = Simulator(LinkedProgram(), VFS)
     var tr: Tracer = Tracer(sim)
@@ -128,13 +130,14 @@ import kotlin.dom.removeClass
         }
         if (ready) {
             try {
-                val editorFileName = "editor.S"
+                val editorFileName = active_abs_file_name ?: "editor.S"
+                val fpath = active_abs_file_path ?: VFS.currentLocation.getPath() + "/$editorFileName"
                 var remove = false
-                if (VFS.getObjectFromPath(editorFileName) == null) {
-                    VFS.addFile(editorFileName, text)
+                if (VFS.getObjectFromPath(fpath) == null) {
+                    VFS.addFile(fpath, text)
                     remove = true
                 }
-                val success = assemble(text, name = editorFileName, absPath = VFS.currentLocation.getPath() + "/$editorFileName")
+                val success = assemble(text, name = editorFileName, absPath = fpath)
                 if (success != null) {
                     if (link(listOf(success))) {
                         val args = Lexer.lex(getDefaultArgs())
@@ -147,7 +150,7 @@ import kotlin.dom.removeClass
                     }
                 }
                 if (remove) {
-                    VFS.remove(editorFileName)
+                    VFS.remove(fpath)
                 }
             } catch (e: Throwable) {
                 Renderer.loadSimulator(Simulator(LinkedProgram(), VFS))
@@ -1254,6 +1257,8 @@ import kotlin.dom.removeClass
         }
         try {
             val txt: String = (obj as VFSFile).readText()
+            active_abs_file_name = obj.label
+            active_abs_file_path = obj.getPath()
             js("codeMirror.setValue(txt);")
             this.openEditor()
             js("codeMirror.refresh();")
@@ -1288,6 +1293,9 @@ import kotlin.dom.removeClass
             return
         }
         var file = obj as VFSFile
+        active_abs_file_name = obj.label
+        active_abs_file_path = obj.getPath()
+        activeFileinEditor = obj.getPath()
         file.setText(txt)
         this.VFS.save()
     }
