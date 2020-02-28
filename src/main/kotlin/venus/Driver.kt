@@ -128,7 +128,13 @@ import kotlin.dom.removeClass
         }
         if (ready) {
             try {
-                val success = assemble(text, name = "editor.S", absPath = VFS.currentLocation.getPath())
+                val editorFileName = "editor.S"
+                var remove = false
+                if (VFS.getObjectFromPath(editorFileName) == null) {
+                    VFS.addFile(editorFileName, text)
+                    remove = true
+                }
+                val success = assemble(text, name = editorFileName, absPath = VFS.currentLocation.getPath() + "/$editorFileName")
                 if (success != null) {
                     if (link(listOf(success))) {
                         val args = Lexer.lex(getDefaultArgs())
@@ -139,6 +145,9 @@ import kotlin.dom.removeClass
                         setCacheSettings()
                         Renderer.updateCache(Address(0, MemSize.WORD))
                     }
+                }
+                if (remove) {
+                    VFS.remove(editorFileName)
                 }
             } catch (e: Throwable) {
                 Renderer.loadSimulator(Simulator(LinkedProgram(), VFS))
