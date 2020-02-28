@@ -27,6 +27,8 @@ var save = Command(
             }
             if (result == "") {
                 t.vfs.save()
+                val obj = t.vfs.getObjectFromPath(args[0])!!
+                Driver.saveVFObjectfromObj(obj, false)
             }
             return result
         },

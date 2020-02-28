@@ -39,6 +39,11 @@ import kotlin.dom.removeClass
     var active_abs_file_name: String? = null
     var active_abs_file_path: String? = null
 
+    fun set_active_afpath(path: String?) {
+        active_abs_file_path = path
+        document.getElementById("activeFileInEditor")!!.innerHTML = path.toString()
+    }
+
     var sim: Simulator = Simulator(LinkedProgram(), VFS)
     var tr: Tracer = Tracer(sim)
     val mainCache: CacheHandler = CacheHandler(1)
@@ -1258,7 +1263,7 @@ import kotlin.dom.removeClass
         try {
             val txt: String = (obj as VFSFile).readText()
             active_abs_file_name = obj.label
-            active_abs_file_path = obj.getPath()
+            set_active_afpath(obj.getPath())
             js("codeMirror.setValue(txt);")
             this.openEditor()
             js("codeMirror.refresh();")
@@ -1278,7 +1283,7 @@ import kotlin.dom.removeClass
         }
     }
 
-    fun saveVFObjectfromObj(obj: VFSObject) {
+    fun saveVFObjectfromObj(obj: VFSObject, save: Boolean = true) {
         val txt: String
         try {
             js("codeMirror.save();")
@@ -1288,16 +1293,18 @@ import kotlin.dom.removeClass
             window.alert("Could not save file!")
             return
         }
-        if (obj.type != VFSType.File) {
-            window.alert("You can (currently) only save to files!")
-            return
+        if (save) {
+            if (obj.type != VFSType.File) {
+                window.alert("You can (currently) only save to files!")
+                return
+            }
+            var file = obj as VFSFile
+            file.setText(txt)
+            this.VFS.save()
         }
-        var file = obj as VFSFile
         active_abs_file_name = obj.label
-        active_abs_file_path = obj.getPath()
+        set_active_afpath(obj.getPath())
         activeFileinEditor = obj.getPath()
-        file.setText(txt)
-        this.VFS.save()
     }
 
     @JsName("saveVFObject") fun saveVFObject(name: String) {
@@ -1307,6 +1314,11 @@ import kotlin.dom.removeClass
         } else {
             console.log(s)
         }
+    }
+
+    @JsName("clearActiveFileInEditor") fun clearActiveFileInEditor() {
+        active_abs_file_name = null
+        set_active_afpath(null)
     }
 
     @JsName("vdbVFObject") fun vdbVFObject(name: String) {

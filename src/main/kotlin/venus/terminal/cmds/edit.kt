@@ -3,7 +3,6 @@ package venus.terminal.cmds
 import venus.Driver
 import venus.terminal.Command
 import venus.terminal.Terminal
-import venus.vfs.VFSFile
 import venus.vfs.VFSType
 
 var edit = Command(
@@ -24,11 +23,7 @@ var edit = Command(
                 return "edit: Only files can be loaded into the editor."
             }
             try {
-                val txt: String = (obj as VFSFile).readText()
-                js("codeMirror.setValue(txt);")
-                Driver.openEditor()
-                js("codeMirror.refresh();")
-                Driver.activeFileinEditor = obj.getPath()
+                Driver.editVFObjectfromObj(obj)
             } catch (e: Throwable) {
                 return "edit: Could not load file to the editor!"
             }
