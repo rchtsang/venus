@@ -268,7 +268,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
       if (justappendtolast && child !== undefined) {
           child.innerHTML += html
       } else {
-          output_.insertAdjacentHTML('beforeEnd', '<p>' + html + '</p>');
+          output_.insertAdjacentHTML('beforeEnd', "<p style=\"white-space: pre;\">" + html + '</p>');
       }
       document.getElementById("container").scrollTo(0, getDocHeight_());
   }
