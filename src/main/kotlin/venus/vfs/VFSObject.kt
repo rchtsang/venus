@@ -1,7 +1,5 @@
 package venus.vfs
 
-import java.io.File
-
 interface VFSObject {
     val type: VFSType
     var label: String
