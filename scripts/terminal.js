@@ -294,6 +294,12 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
     init: function() {
         output('<img align="left" src="images/favicon.png" width="100" height="100" style="padding: 0px 10px 20px 0px"><h2 style="letter-spacing: 4px">Venus Web Terminal</h2><p>' + new Date() + '</p><p>Enter "help" for more information.</p>');
     },
+    reset: function() {
+        output_.innerHTML = '';
+        this.value = '';
+        window.term.init();
+        setDir();
+    },
     output: output,
     getDocHeight_: getDocHeight_
   }
