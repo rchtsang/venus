@@ -192,10 +192,11 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
     fun getObjectFromPath(path: String, make: Boolean = false, location: VFSObject? = null): VFSObject? {
         // TODO FIX ME
         val f = try {
-            if (location == sentinel) {
+            if (location?.type == VFSType.Drive) {
                 File(path)
             } else {
-                File(location?.getPath() ?: Driver.workingdir, path)
+                val parent = location?.getPath() ?: Driver.workingdir
+                File(parent, path)
             }
         } catch (e: Exception) {
             return null
