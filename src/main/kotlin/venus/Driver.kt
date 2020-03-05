@@ -52,6 +52,7 @@ object Driver {
     fun main(args: Array<String>) {
         val cli = CommandLineInterface("venus")
         val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
+        val libs by cli.flagValueArgument(listOf("-l", "--libs"), "libraries", "This is a list of library files you would like to assemble with the main file. Please separate them by a `;`.", "")
         val regWidth by cli.flagValueArgument(listOf("-r", "--regwidth"), "RegisterWidth", "Sets register width (Currently only supporting 32 (default) and 64).", "32")
         val trace by cli.flagArgument(listOf("-t", "--trace"), "Trace the program given with the pattern given. If no pattern is given, it will use the default.", false, true)
         val template by cli.flagValueArgument(listOf("-tf", "--tracefile"), "TemplateFile", "Optional file/filepath to trace template to use. Only used if the trace argument is set.")
@@ -116,6 +117,18 @@ object Driver {
             progs.add(prog)
         }
 
+        if (libs != "") {
+            for (lib in libs.split(";")) {
+                val assemblyProgramText = readFileDirectlyAsText(lib, false)
+                val prog = assemble(assemblyProgramText, workingdir)
+                if (prog == null) {
+                    exitProcess(-1)
+                } else {
+                    progs.add(prog)
+                }
+            }
+        }
+
         link(progs)
 
         try {
@@ -160,12 +173,14 @@ object Driver {
         }
     }
 
-    fun readFileDirectlyAsText(fileName: String): String {
+    fun readFileDirectlyAsText(fileName: String, set_last_file: Boolean=true): String {
         return try {
             val f = File(fileName)
-            lastReadFile = f
-//            workingdir = f.absoluteFile.parent
-            workingdir = System.getProperty("user.dir")
+            if (set_last_file) {
+                lastReadFile = f
+//                workingdir = f.absoluteFile.parent
+                workingdir = System.getProperty("user.dir")
+            }
             f.readText(Charsets.UTF_8)
         } catch (e: FileNotFoundException) {
             println("Could not find the file: " + fileName)
