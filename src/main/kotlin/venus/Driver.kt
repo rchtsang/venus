@@ -53,6 +53,7 @@ object Driver {
         val cli = CommandLineInterface("venus")
         val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
         val libs by cli.flagValueArgument(listOf("-l", "--libs"), "libraries", "This is a list of library files you would like to assemble with the main file. Please separate them by a `;`.", "")
+        val defs by cli.flagValueArgument(listOf("--def"), "define", "This is a list of define values which you want the assembler to have. Please note it must be in the format `key=value` and are separated by `;`.", "")
         val regWidth by cli.flagValueArgument(listOf("-r", "--regwidth"), "RegisterWidth", "Sets register width (Currently only supporting 32 (default) and 64).", "32")
         val trace by cli.flagArgument(listOf("-t", "--trace"), "Trace the program given with the pattern given. If no pattern is given, it will use the default.", false, true)
         val template by cli.flagValueArgument(listOf("-tf", "--tracefile"), "TemplateFile", "Optional file/filepath to trace template to use. Only used if the trace argument is set.")
@@ -105,6 +106,17 @@ object Driver {
         simSettings.maxSteps = maxSteps.toInt()
         simSettings.mutableText = mutableText
         simSettings.allowAccessBtnStackHeap = stackHeapProtection
+
+        if (defs != "") {
+            for (def in defs.split(";")) {
+                val s = def.split(Regex("="), 2)
+                if (s.size != 2) {
+                    System.err.printf("Invalid define format: %s!\n", def)
+                    exitProcess(-1)
+                }
+                Assembler.defaultDefines[s[0]] = s[1]
+            }
+        }
 
         val progs = ArrayList<Program>()
 
@@ -173,7 +185,7 @@ object Driver {
         }
     }
 
-    fun readFileDirectlyAsText(fileName: String, set_last_file: Boolean=true): String {
+    fun readFileDirectlyAsText(fileName: String, set_last_file: Boolean = true): String {
         return try {
             val f = File(fileName)
             if (set_last_file) {
