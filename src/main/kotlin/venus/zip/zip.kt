@@ -59,7 +59,8 @@ class Zip {
                 new_zip.forEach(function (relativePath, file){
                     if (!relativePath.endsWith("/")) {
                         window.VENUSLOADZIPCOUNTER++;
-                        file.async("string").then(function (data) {
+                        file.async("uint8array").then(function (data) {
+                          data = String.fromCharCode.apply(String, data);
                           var out = vfs.addFile(relativePath, data, folder);
                             if (out != "") {
                                 window.VENUSFNOUTPUT += out + "\n";
