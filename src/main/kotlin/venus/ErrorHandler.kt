@@ -27,7 +27,7 @@ internal fun handleError(where: String, error: Throwable, h: Boolean = false) {
         Driver.LS.lsm = LocalStorageManager("venus_error")
         Driver.LS.remove("venus_error")
         Driver.LS.set("venus", "true")
-        Driver.saveAll()
+        Driver.saveAll(true)
         val t = window.localStorage.getItem("venus_error")
         window.localStorage.removeItem("venus_error")
 

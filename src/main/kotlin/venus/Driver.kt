@@ -105,6 +105,9 @@ import kotlin.dom.removeClass
                 fileExplorerCurrentLocation = VFS.sentinel
                 openVFObjectfromObj(VFS.sentinel)
             }
+            js("""window.onbeforeunload = function(){
+    driver.saveAll();
+}""")
             js("window.driver_load_done();")
         } else {
             window.setInterval(Driver::initFinish, 100)
@@ -1038,7 +1041,10 @@ import kotlin.dom.removeClass
         }
     }
 
-    fun saveAll() {
+    fun saveAll(override: Boolean = false) {
+        if (!(useLS or override)) {
+            return
+        }
         /*Trace settings*/
         loadTraceSettings()
         LS.set("trace_format", tr.format)
