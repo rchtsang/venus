@@ -60,8 +60,11 @@ class Zip {
                     if (!relativePath.endsWith("/")) {
                         window.VENUSLOADZIPCOUNTER++;
                         file.async("uint8array").then(function (data) {
-                          data = String.fromCharCode.apply(String, data);
-                          var out = vfs.addFile(relativePath, data, folder);
+                            var result = "";
+                              for (var i = 0; i < data.length; i++) {
+                                result += String.fromCharCode(data[i]);
+                              }
+                          var out = vfs.addFile(relativePath, result, folder);
                             if (out != "") {
                                 window.VENUSFNOUTPUT += out + "\n";
                             }
