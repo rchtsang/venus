@@ -144,6 +144,14 @@ internal object Renderer {
         printConsole("\n----STDERR_END----\n")
     }
 
+    fun stdout(thing: Any) {
+        printConsole(thing)
+    }
+
+    fun stderr(thing: Any) {
+        displayError(thing)
+    }
+
     /** Display a given [AssemblerError] */
     @Suppress("UNUSED_PARAMETER") fun displayAssemblerError(e: AssemblerError) {
 //        if (e.line !== null) {
