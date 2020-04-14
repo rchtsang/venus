@@ -17,10 +17,11 @@ script:
 - ./gradlew ktlint
 - grunt test
 after_success:
-#  - ./gradlew dokka
+- ./gradlew dokka
 - git clone -b gh-pages https://github.com/ThaumicMekanism/venus.git out && rm -rf out/.git
 - test $TRAVIS_BRANCH = "js" && mv out/jvm jvm && rm -rf out && mkdir out && mv jvm out && grunt dist
 - test $TRAVIS_BRANCH = "jvm" && rm -rf out/jvm && grunt distjvm
+- mv docs out
 cache:
   directories:
   - node_modules/
