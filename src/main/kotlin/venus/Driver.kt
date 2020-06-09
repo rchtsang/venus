@@ -236,6 +236,8 @@ object Driver {
 
     fun loadSim(linked: LinkedProgram) {
         sim = Simulator(linked, VFS, simSettings, state = simState)
+        // We should not keep a history with the JVM version
+        sim.setHistoryLimit(0)
         mainCache.reset()
         sim.state.cache = mainCache
         tr = Tracer(sim)
