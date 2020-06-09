@@ -515,7 +515,7 @@ internal object Renderer {
      * Renders the control buttons to be enabled / disabled appropriately.
      */
     fun updateControlButtons() {
-        setButtonDisabled("simulator-reset", !sim.canUndo())
+        setButtonDisabled("simulator-reset", sim.getCycles() == 0)
         setButtonDisabled("simulator-undo", !sim.canUndo())
         setButtonDisabled("simulator-step", sim.isDone())
         setButtonDisabled("simulator-run", sim.isDone())

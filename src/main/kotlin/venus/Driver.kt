@@ -45,15 +45,15 @@ import kotlin.dom.removeClass
         activeFileinEditor = path ?: ""
     }
 
-    var sim: Simulator = Simulator(LinkedProgram(), VFS)
-    var tr: Tracer = Tracer(sim)
     val mainCache: CacheHandler = CacheHandler(1)
-
     var cache: CacheHandler = mainCache
     var cacheLevels: ArrayList<CacheHandler> = arrayListOf(mainCache)
     val simSettings = SimulatorSettings()
+    var sim: Simulator = Simulator(LinkedProgram(), VFS, settings = simSettings)
     val simState64 = SimulatorState64()
     val temp = QuadWord()
+
+    var tr: Tracer = Tracer(sim)
 
     private var timer: Int? = null
     val LS = LocalStorage()
@@ -679,6 +679,20 @@ import kotlin.dom.removeClass
         }
     }
 
+    @JsName("setMaxHistory") fun setMaxHistory(input: HTMLInputElement) {
+        try {
+            var i = userStringToInt(input.value)
+            try {
+                sim.setHistoryLimit(i)
+            } catch (e: SimulatorError) {
+                console.warn(e.toString())
+            }
+        } catch (e: NumberFormatException) {
+            /* do nothing */
+            console.warn("Unknown number format!")
+        }
+    }
+
     @JsName("setNumberOfCacheLevels") fun setNumberOfCacheLevels(i: Int) {
         if (i < 1) {
             (document.getElementById("setNumCacheLvls") as HTMLInputElement).value = cacheLevels.size.toString()
@@ -1055,6 +1069,8 @@ import kotlin.dom.removeClass
         LS.set("trace_wordAddressed", wordAddressed.toString())
         LS.set("trace_TwoStage", tr.twoStage.toString())
 
+        /* History Limit */
+        LS.set("history_limit", this.simSettings.max_histroy.toString())
         /*Text Begin*/
         LS.set("text_begin", MemorySegments.TEXT_BEGIN.toString())
         /*Other Settings*/
@@ -1126,6 +1142,8 @@ import kotlin.dom.removeClass
         var tws = t.twoStage.toString()
         var wa = wordAddressed.toString()
 
+        /* History Limit */
+        var hlim = this.simSettings.max_histroy.toString()
         /*Text begin*/
         var txtStart = Renderer.intToString(MemorySegments.TEXT_BEGIN)
         /*Other Settings*/
@@ -1149,6 +1167,9 @@ import kotlin.dom.removeClass
             instf = LS.safeget("trace_instFirst", instf)
             tws = LS.safeget("trace_TwoStage", tws)
             wa = LS.safeget("trace_wordAddressed", wa)
+
+            /* History Limit */
+            hlim = LS.safeget("history_limit", hlim)
 
             /*Text Begin*/
             txtStart = LS.safeget("text_begin", txtStart)
@@ -1231,6 +1252,11 @@ import kotlin.dom.removeClass
         wordAddressed = wa == "true"
         Renderer.renderButton(document.getElementById("tTwoStage") as HTMLButtonElement, tws == "true")
         tr.twoStage = tws == "true"
+
+        /* History Limit */
+        val hl = document.getElementById("max-history") as HTMLInputElement
+        hl.value = hlim
+        setMaxHistory(hl)
 
         /*Text Begin*/
         val ts = document.getElementById("text-start") as HTMLInputElement
