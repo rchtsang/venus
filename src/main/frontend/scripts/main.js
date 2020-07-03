@@ -128,12 +128,12 @@ main_venus();
 
 
 function dark() {
-    document.getElementById("venus_theme").href = "css/venus_dark.css";
+    document.getElementById("venus_theme").href = "css/themes/venus_dark.css";
     codeMirror.setOption("theme", "ayu-dark");
 }
 
 function light() {
-    document.getElementById("venus_theme").href = "css/venus.css";
+    document.getElementById("venus_theme").href = "css/themes/venus.css";
     codeMirror.setOption("theme", "default");
 }
 
