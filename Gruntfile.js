@@ -21,12 +21,12 @@ module.exports = function(grunt) {
                 files: [{
                     'out/css/venus.css': ['src/main/frontend/css/*.css', "!src/main/frontend/css/alertify/*", "!src/main/frontend/css/themes/*"],
                 },
-                // {
-                //     expand: true,
-                //     cwd: 'src/main/frontend/css/themes/',
-                //     src: ['*.css'],
-                //     dest: 'out/css/themes/',
-                // }
+                {
+                    expand: true,
+                    cwd: 'src/main/frontend/css/themes/',
+                    src: ['*.css'],
+                    dest: 'out/css/themes/',
+                }
                 ]
             }
         },
@@ -50,10 +50,6 @@ module.exports = function(grunt) {
                         cwd: 'src/main/frontend/css/alertify',
                         src: '**',
                         dest: 'out/css/alertify/',},
-                    {expand: true,
-                        cwd: 'src/main/frontend/css/themes',
-                        src: '**',
-                        dest: 'out/css/themes/',},
                     {src: 'src/main/frontend/CNAME',
                         dest: 'out/CNAME',},
                 ]
