@@ -4,6 +4,8 @@ html {
 
 body {
     height: 100vh;
+    background-color: black;
+    color: #999;
 }
 
 #venus-tab-view {
@@ -36,6 +38,7 @@ body {
 
 .section {
     padding: 0 1.5rem;
+    background-color: black;
 }
 
 #pc-column {
@@ -68,6 +71,7 @@ body {
 
 #program-listing {
     font-family: Courier New, Courier, monospace;
+    background-color: black;
 }
 
 #program-listing-body {
@@ -76,7 +80,7 @@ body {
 }
 
 #program-listing-body tr.is-breakpoint {
-    background-color: #ff3860;
+    background-color: #eb355a;
     color: white;
 }
 
@@ -97,6 +101,7 @@ body {
     min-height: 60vh;
     max-height: 60vh;
     overflow-y: auto;
+    background-color: black;
 }
 
 #sidebar-listings-container {
@@ -144,6 +149,7 @@ body {
 #memory-table {
     font-family: Courier New, Courier, monospace;
     margin: auto;
+    background-color: black;
 }
 
 #memory-table th {
@@ -154,15 +160,21 @@ body {
 #memory-table td {
     text-align: center;
     vertical-align: middle;
+    background-color: #111111;
+    color: #CCCCCC;
 }
 
 #console-output {
     height: 100%;
     font-family: Courier New, Courier, monospace;
+    background-color: black;
+    font-weight: bold;
+    color: #CCCCCC;
 }
 
 .tabs {
     margin-top: 1em;
+    background-color: black;
 }
 
 #simulator-run.is-loading {
@@ -176,6 +188,8 @@ body {
 #regs-tab-view .input {
     font-family: Courier New, Courier, monospace;
     border-width: 2px;
+    background-color: black;
+    font-weight: bold;
 }
 
 #regs-tab-view .field.is-horizontal {
@@ -185,6 +199,8 @@ body {
 #fregs-tab-view .input {
     font-family: Courier New, Courier, monospace;
     border-width: 2px;
+    background-color: black;
+    font-weight: bold;
 }
 
 #fregs-tab-view .field.is-horizontal {
@@ -200,10 +216,14 @@ body {
 #cache-tab-view .input {
     font-family: Courier New, Courier, monospace;
     border-width: 2px;
+    background-color: black;
+    color: #CCCCCC;
+    font-weight: bold;
 }
 
 #cache-tab-view .field.is-horizontal {
     width: 100%;
+    color: #CCCCCC;
 }
 
 #settings-tab-view {
@@ -234,6 +254,7 @@ body {
 }
 .tile {
     position: relative;  /* only in order to make z-index used */
+    background-color: black;
 }
 .tile {
     clear: both;
@@ -271,9 +292,108 @@ body {
 }
 
 #display-settings {
+    background-color: black;
+    color: #EEEEEE;
+}
 
+.input {
+    background-color: black;
+    color: #CCCCCC;
+    font-weight: bold;
+}
+
+.select {
+    background-color: black;
+    color: #CCCCCC;
+}
+
+.input[type=button] {
+    background-color: black;
+    color: #CCCCCC;
+}
+
+.label {
+    color: #CCCCCC;
+}
+
+.table thead th {
+    color: #cacaca;
+    font-weight: bold;
+}
+
+.table tr td {
+    color: #f3f3f3;
+    font-weight: bold;
+}
+
+.table tr:hover {
+    background-color: #333333;
+}
+
+a:hover {
+    color: #fcff00 !important;
+}
+.panel-tabs a {
+    font-weight: bold;
+}
+.panel-tabs a.is-active {
+    color: #a7d900;
+    font-weight: bold;
+}
+
+.button {
+    background-color: #555555;
+    color: #CCCCCC;
+}
+
+.button:hover {
+    background-color: #333333;
+    color: #BBBBBB;
+}
+
+.tabs.is-boxed a:hover, .tabs.is-boxed li.is-active a {
+    background-color: #333333;
+    border-bottom-color: #999999;
+}
+
+.select select {
+    background-color: #333333;
+    color: #CCCCCC;
+}
+
+.button[disabled]:hover {
+    background-color: white;
+    border-color: #dbdbdb;
+    color: #CCCCCC;
+}
+
+.button[disabled].is-primary:hover {
+    background-color: #00d1b2;
+    border-color: transparent;
+    color: #fff;
+}
+
+.button:focus {
+    color: #CCCCCC;
+}
+
+.tabs a {
+    color: #CCCCCC;
+}
+
+.panel-block {
+    color: #CCCCCC;
+}
+
+* {
+    color: #EEEEEE;
 }
 
 #extern-link {
-    color black;
+    color: #ffffff;
+}
+
+.textarea {
+    background-color: #333333;
+    color: #CCCCCC;
 }

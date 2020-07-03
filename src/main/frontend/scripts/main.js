@@ -17,7 +17,8 @@ function setup_venus() {
             }
         );
         window.codeMirror.setSize("100%", "88vh");
-        window.codeMirror.refresh()
+        window.codeMirror.refresh();
+        setup_theme();
     } catch (e) {
         load_error(e.toString())
     }
@@ -87,7 +88,14 @@ window.load_done = function () {
 };
 
 function load_update_message(msg) {
-    document.getElementById("load-msg").innerHTML = msg.replace(/\n/g, "<br>");
+    elm = document.getElementById("load-msg");
+    if (elm === null) {
+        msg = "Could not update the load message to: " + msg;
+        load_error(msg);
+        console.error(msg);
+        return
+    }
+    elm.innerHTML = msg.replace(/\n/g, "<br>");
 }
 
 function load_error_fn(message, source, lineno, colno, error) {
@@ -116,3 +124,52 @@ alertify.prompt()
     });
 
 main_venus();
+
+
+
+function dark() {
+    document.getElementById("venus_theme").href = "css/venus_dark.css";
+    codeMirror.setOption("theme", "ayu-dark");
+}
+
+function light() {
+    document.getElementById("venus_theme").href = "css/venus.css";
+    codeMirror.setOption("theme", "default");
+}
+
+function get_theme() {
+    return localStorage.getItem("venus_theme");
+}
+
+function set_theme(theme) {
+    return localStorage.setItem("venus_theme", theme);
+}
+
+function toggle_theme() {
+    is_dark = get_theme() === "dark";
+    if (is_dark) {
+        set_theme("light");
+        light();
+    } else {
+        set_theme("dark");
+        dark();
+    }
+}
+
+function setup_theme() {
+    if (get_theme() === undefined) {
+        set_theme("light")
+    }
+    if (get_theme() === "dark") {
+        dark();
+        document.getElementById('themeSwitch').click();
+    }
+    if (get_theme() === "light") {
+        // Pass
+    }
+
+    document.getElementById('themeSwitch').addEventListener('change', function(event){
+        toggle_theme();
+    });
+}
+

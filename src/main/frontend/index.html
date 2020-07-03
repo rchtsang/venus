@@ -16,11 +16,13 @@
   </script>
   <title>venus</title>
   <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/switch.css">
   <link rel="stylesheet" type="text/css" href="css/bulma.css">
   <link rel="stylesheet" type="text/css" href="css/codemirror.css">
-  <link rel="stylesheet" type="text/css" href="css/venus.css">
+  <link rel="stylesheet" type="text/css" href="css/venus.css" id="venus_theme">
   <link rel="stylesheet" type="text/css" href="css/alertify/alertify.min.css">
   <link rel="stylesheet" type="text/css" href="css/alertify/default.min.css">
+  <link rel="stylesheet" type="text/css" href="css/ayu-dark.css">
   <link rel="icon" href="images/favicon.png">
 
   <link href="css/Inconsolata.css" rel="stylesheet" type="text/css" />
@@ -68,7 +70,7 @@
                   <li id="venus-terminal-tab" class="is-active"><a onclick="driver.openVenusTab('venus-terminal');">Terminal</a></li>
                   <li id="venus-files-tab"><a onclick="driver.openVenusTab('venus-files');">Files</a></li>
                   <li id="venus-url-tab"><a onclick="driver.openVenusTab('venus-url');">URL</a></li>
-                  <li><a href="https://github.com/ThaumicMekanism/venus/wiki" target="_blank" style="color:black;">Wiki</a></li>
+                  <li><a href="https://github.com/ThaumicMekanism/venus/wiki" target="_blank" class="extern-link">Wiki</a></li>
                   <li id="venus-jvm-tab"><a onclick="driver.openVenusTab('venus-jvm');">JVM</a></li>
                 </ul>
               </div>
@@ -293,9 +295,16 @@
                         </div>
                       </div>
                     </div>
-                    <div id="" class="panel-block">
+                    <div class="panel-block">
                       <label class="label is-small" for="tmaxsteps-val">Max number of steps: <br>(Negative means ignored) </label><br>
                       <input id="tmaxsteps-val" type="number" class="input is-small" style="width:180px;" onblur="" value=-1 spellcheck="false" onkeyup="driver.updateMaxSteps()">
+                    </div>
+                    <div class="panel-block">
+                      <label class="switch">
+                        <input type="checkbox" id="themeSwitch">
+                        <span class="slider round"></span>
+                      </label>
+                      <label for="themeSwitch" style="font-weight: bold;padding-left: 20px;" id="switch_text">Dark Mode</label>
                     </div>
                   </div>
                   <div id="tracer-settings-tab-view">
@@ -1557,7 +1566,7 @@
                 <div class="control">
                   <div class="field">
                     <div class="select is-small">
-                      <select id="display-settings" onchange="driver.updateRegMemDisplay()">
+                      <select id="display-settings" class="display-settings" onchange="driver.updateRegMemDisplay()">
                         <option selected>Hex</option>
                         <option>Decimal</option>
                         <option>Unsigned</option>
