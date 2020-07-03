@@ -18,10 +18,15 @@ module.exports = function(grunt) {
         },
         cssmin: {
             venus: {
-                files: {
+                files: [{
                     'out/css/venus.css': ['src/main/frontend/css/*.css', "!src/main/frontend/css/alertify/*", "!src/main/frontend/css/themes/*"],
-                    'out/css/themes/*.css': ['src/main/frontend/css/themes/*.css'],
-                }
+                },
+                {
+                    expand: true,
+                    cwd: 'src/main/frontend/css/themes/',
+                    src: ['*.css'],
+                    dest: 'out/css/themes/',
+                }]
             }
         },
 
