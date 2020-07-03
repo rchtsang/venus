@@ -20,8 +20,7 @@ module.exports = function(grunt) {
             venus: {
                 files: {
                     'out/css/venus.css': ['src/main/frontend/css/*.css', "!src/main/frontend/css/alertify/*", "!src/main/frontend/css/themes/*"],
-                    'out/css/themes/venus.css': ['src/main/frontend/css/themes/venus.css'],
-                    'out/css/themes/venus_dark.css': ['src/main/frontend/css/themes/venus_dark.css'],
+                    'out/css/themes/*.css': ['src/main/frontend/css/themes/*.css'],
                 }
             }
         },
