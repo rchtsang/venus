@@ -1,0 +1,41 @@
+package venus.terminal.cmds
+
+import venus.terminal.Command
+import venus.terminal.Terminal
+import venus.vfs.VFSMountedDriveHandler
+
+var mount = Command(
+        name = "mount",
+        execute = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): String {
+            if (args.size < 1) {
+                return Command["mount"].help
+            }
+            var url = args[0]
+            var dir = if (args.size > 1) {
+                args[1]
+            } else {
+                "drive"
+            }
+            if (url == "local") {
+                url = "ws://localhost:6161"
+            }
+            if (!url.startsWith("ws://")) {
+                url = "ws://" + url
+            }
+            try {
+                val h = VFSMountedDriveHandler(url)
+            } catch (e: Exception) {
+                return e.toString()
+            }
+            return ""
+        },
+        tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
+            return arrayListOf("", ArrayList<String>())
+        },
+        help = """Allows you to mount external drives to the Venus web file system.
+            |Usage: mount device dir
+            |device is either a name of a device or url of a hosted drive.
+            |dir is the dir you would like to mount to. By default, it will mount it in the current location with the name the drive gives it.
+            |You can use dir to name the mount point/nest it in another folder.
+        """.trimMargin()
+)
