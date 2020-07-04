@@ -2,13 +2,20 @@ group 'venus'
 version '0.1.0'
 
 buildscript {
-    ext.kotlin_version = '1.3.61'
+    ext.kotlin_version = '1.3.72'
     ext.dokka_version = '0.10.1'
     ext.ktlint_version = '0.27.0'
 
     repositories {
         mavenCentral()
         jcenter()
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-dev"
+        }
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
+
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -27,6 +34,12 @@ runDceTestKotlinJs.dceOptions.devMode = true
 
 configurations {
     ktlint
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
 }
 
 repositories {

@@ -39,6 +39,11 @@ interface VFSObject {
         contents.remove(name)
         return true
     }
+
+    fun children(): MutableCollection<Any> {
+        return this.contents.values
+    }
+
     fun stringify(): JsonContainer {
         val me = JsonContainer()
         me.label = this.label

@@ -2,8 +2,13 @@ package venus.vfs
 
 class VFSDrive(val n: String, override var parent: VFSObject) : VFSFolder(n, parent) {
     override val type = VFSType.Drive
+    val mountedHandler: VFSMountedDriveHandler? = null
     init {
         this.contents[".."] = this
+    }
+
+    fun isMounted(): Boolean {
+        return false
     }
 
     companion object {
