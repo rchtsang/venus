@@ -84,12 +84,20 @@ object Driver {
         val maxSteps by cli.flagValueArgument(listOf("-ms", "--maxsteps"), "MaxSteps", "Sets the max number of steps to allow (negative to not care).", "500000")
         val stackHeapProtection by cli.flagArgument(listOf("-ahs", "--AllowHSAccess"), "Allows for load/store operations between the stack and heap. The default (without this flag) is to error on those acceses.", false, true)
 
+        val port by cli.flagValueArgument(listOf("-p", "--port"), "Port", "Port to serve on.", "6161")
+        val driveMount by cli.flagArgument(listOf("-dm", "--driveMount"), "Sets Venus to mount the directory specified by the 'file' to be a mountable drive.", false, true)
+
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
         try {
             cli.parse(args)
         } catch (e: Exception) {
             exitProcess(-1)
+        }
+
+        if (driveMount) {
+            Mounter(port, assemblyTextFile)
+            return
         }
 
         simState = when (regWidth) {
