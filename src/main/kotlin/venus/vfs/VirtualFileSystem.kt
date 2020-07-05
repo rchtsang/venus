@@ -82,10 +82,10 @@ import kotlin.browser.window
             if (dir == "") {
                 continue
             }
-            if (!templocation.contents.containsKey(dir)) {
+            if (!templocation.containsChild(dir)) {
                 return "cd: $dir: No such file or directory"
             }
-            templocation = templocation.contents.get(dir) as VFSObject
+            templocation = templocation.getChild(dir) as VFSObject
             if (templocation.type in listOf(VFSType.File, VFSType.Program)) {
                 return "cd: $dir: Not a directory"
             }
@@ -104,10 +104,14 @@ import kotlin.browser.window
 
     @JsName("ls") fun ls(): String {
         var str = ""
-        for (s in currentLocation.contents.keys) {
-            str += s + (if ((currentLocation.contents[s] as VFSObject).type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
+        for (s in currentLocation.childrenNames()) {
+            str += s + (if ((currentLocation.getChild(s) as VFSObject).type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
         }
         return str
+//        for (c in currentLocation.children() as MutableCollection<VFSObject>) {
+//            str += c.label + (if (c.type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
+//        }
+//        return str
     }
 
     @JsName("cat") fun cat(filedir: String): String {
@@ -122,18 +126,18 @@ import kotlin.browser.window
             if (obj == "") {
                 continue
             }
-            if (!templocation.contents.containsKey(obj)) {
+            if (!templocation.containsChild(obj)) {
                 return "cat: $filedir: No such file or directory"
             }
-            templocation = templocation.contents[obj] as VFSObject
+            templocation = templocation.getChild(obj) as VFSObject
         }
         if (templocation.type != VFSType.File) {
             return "cat: $filedir: Is not a file!"
         }
-        if (!templocation.contents.containsKey(VFSFile.innerTxt)) {
-            return "cat: $filedir: COULD NOT FIND FILE CONTENTS!"
-        }
-        return templocation.contents.get(VFSFile.innerTxt) as String
+//        if (!templocation.containsChild(VFSFile.innerTxt)) {
+//            return "cat: $filedir: COULD NOT FIND FILE CONTENTS!"
+//        }
+        return (templocation as VFSFile).readText()
     }
 
     @JsName("path") fun path(): String {
@@ -169,10 +173,10 @@ import kotlin.browser.window
             if (obj == "") {
                 continue
             }
-            if (!templocation.contents.containsKey(obj)) {
+            if (!templocation.containsChild(obj)) {
                 return "write: cannot write to '$path': No such file or directory"
             }
-            templocation = templocation.contents[obj] as VFSObject
+            templocation = templocation.getChild(obj) as VFSObject
         }
         if (templocation.type != VFSType.File) {
             return "cat: $path: Is not a file!"
@@ -189,8 +193,8 @@ import kotlin.browser.window
         val fname = splitpath.removeAt(splitpath.size - 1)
         var curloc = loc
         for (p in splitpath) {
-            curloc = if (curloc.contents.containsKey(p)) {
-                val next = curloc.contents[p]!! as VFSObject
+            curloc = if (curloc.containsChild(p)) {
+                val next = curloc.getChild(p)!! as VFSObject
                 if (next.type !in listOf(VFSType.Folder, VFSType.Drive)) {
                     return "Could not create folder due to a non folder existing in the path."
                 }
@@ -204,6 +208,14 @@ import kotlin.browser.window
         val f = VFSFile(fname, curloc)
         f.setText(data)
         curloc.addChild(f)
+        return ""
+    }
+
+    fun mountDrive(name: String, handler: VFSMountedDriveHandler, loc: VFSObject = currentLocation): String {
+        if (loc.containsChild(name)) {
+            return "Object with same name exists in this folder!"
+        }
+        loc.addChild(VFSDrive(name, loc, mountedHandler = handler))
         return ""
     }
 
@@ -223,23 +235,23 @@ import kotlin.browser.window
             if (obj == "") {
                 continue
             }
-            if (!templocation.contents.containsKey(obj)) {
+            if (!templocation.containsChild(obj)) {
                 if (make) {
                     templocation.addChild(VFSFile(obj, templocation))
                 } else {
                     return null
                 }
             }
-            templocation = templocation.contents[obj] as VFSObject
+            templocation = templocation.getChild(obj) as VFSObject
         }
         return templocation
     }
 
     fun filesFromPrefix(prefix: String): ArrayList<String> {
         val fnames = ArrayList<String>()
-        for (key: String in this.currentLocation.contents.keys) {
+        for (key: String in this.currentLocation.childrenNames()) {
             if (key.startsWith(prefix)) {
-                val obj = this.currentLocation.contents[key] as VFSObject
+                val obj = this.currentLocation.getChild(key) as VFSObject
                 var k = key
                 if (obj.type in listOf(VFSType.Folder, VFSType.Drive)) {
                     k += "/"

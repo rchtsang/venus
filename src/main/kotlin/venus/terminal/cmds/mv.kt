@@ -13,8 +13,8 @@ var mv = Command(
             var f = t.vfs.getObjectFromPath(args[0]) ?: return "mv: could not find the source file!"
             var d = t.vfs.getObjectFromPath(args[1]) ?: return "mv: could not find the destination folder!"
             f.parent.removeChild(f.label)
-            f.parent = d
             d.addChild(f)
+            f.parent = d
             return result
         },
         tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {

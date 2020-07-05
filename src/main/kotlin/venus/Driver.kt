@@ -1319,11 +1319,18 @@ import kotlin.dom.removeClass
     fun openVFObjectfromObj(obj: VFSObject) {
         Renderer.clearObjectsFromDisplay()
         Renderer.addFilePWD(obj)
-        for ((key, value) in fileExplorerCurrentLocation.contents) {
+//        for ((key, value) in fileExplorerCurrentLocation.contents) {
+//            if (key in listOf(".", "..")) {
+//                Renderer.addObjectToDisplay(value as VFSObject, key)
+//            } else {
+//                Renderer.addObjectToDisplay(value as VFSObject)
+//            }
+//        }
+        for (key in fileExplorerCurrentLocation.childrenNames()) {
             if (key in listOf(".", "..")) {
-                Renderer.addObjectToDisplay(value as VFSObject, key)
+                Renderer.addObjectToDisplay(fileExplorerCurrentLocation.getChild(key) as VFSObject, key)
             } else {
-                Renderer.addObjectToDisplay(value as VFSObject)
+                Renderer.addObjectToDisplay(fileExplorerCurrentLocation.getChild(key) as VFSObject)
             }
         }
     }

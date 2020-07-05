@@ -17,15 +17,18 @@ var mount = Command(
                 "drive"
             }
             if (url == "local") {
-                url = "ws://localhost:6161"
+                url = "http://localhost:6161"
             }
-            if (!url.startsWith("ws://")) {
-                url = "ws://" + url
+            if (!url.startsWith("http://")) {
+                url = "http://" + url
             }
             try {
                 val h = VFSMountedDriveHandler(url)
-            } catch (e: Exception) {
-                return e.toString()
+                val res = t.vfs.mountDrive(dir, h)
+                t.vfs.save()
+                return res
+            } catch (e: Throwable) {
+                return "mount: $e"
             }
             return ""
         },

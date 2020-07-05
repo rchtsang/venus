@@ -23,14 +23,14 @@ var assemble = Command(
             if (file.type != VFSType.File) {
                 return "assemble: $filein: Is a directory"
             }
-            if (!file.contents.containsKey(VFSFile.innerTxt)) {
-                return "assemble: $filein: COULD NOT FIND FILE CONTENTS!"
-            }
+//            if (!file.contents.containsKey(VFSFile.innerTxt)) {
+//                return "assemble: $filein: COULD NOT FIND FILE CONTENTS!"
+//            }
             if (!VFSObject.isValidName(programout)) {
                 return "assemble: $programout: Invalid name"
             }
             var msg = ""
-            val (prog, errors, warnings) = Assembler.assemble(file.contents.get(VFSFile.innerTxt) as String, programout, file.getPath())
+            val (prog, errors, warnings) = Assembler.assemble((file as VFSFile).readText(), programout, file.getPath())
             if (errors.isNotEmpty()) {
                 msg += "assemble: Could not assemble file! Here are the errors:"
                 for (error in errors) {

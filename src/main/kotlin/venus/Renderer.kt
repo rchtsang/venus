@@ -911,7 +911,7 @@ internal object Renderer {
         var b = document.getElementById("files-listing-pwd")!!
         var pwd = ""
         var o = obj
-        while (o !is VFSDrive) {
+        while (o != o.parent && o.parent.type != VFSType.Dummy) {
             val path = o.getPath()
             pwd = "<a onclick=\"driver.openVFObject('$path')\">${o.label}</a>/" + pwd
             o = o.parent
