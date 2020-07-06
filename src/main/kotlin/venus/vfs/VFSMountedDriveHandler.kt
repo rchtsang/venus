@@ -10,6 +10,9 @@ data class VFSMountedDriveHandler(var url: String) {
 //        login()
 //        ping()
 //        ping()
+        if (url.endsWith("/")) {
+            url = url.removeSuffix("/")
+        }
         connect()
     }
 
