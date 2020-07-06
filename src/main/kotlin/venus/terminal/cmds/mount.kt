@@ -1,6 +1,7 @@
 package venus.terminal.cmds
 
 import venus.terminal.Command
+import venus.terminal.Command.Companion.fileTabComplete
 import venus.terminal.Terminal
 import venus.vfs.VFSMountedDriveHandler
 
@@ -32,9 +33,7 @@ var mount = Command(
             }
             return ""
         },
-        tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
-            return arrayListOf("", ArrayList<String>())
-        },
+        tab = ::fileTabComplete,
         help = """Allows you to mount external drives to the Venus web file system.
             |Usage: mount device dir
             |device is either a name of a device or url of a hosted drive.

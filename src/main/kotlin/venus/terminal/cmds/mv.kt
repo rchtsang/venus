@@ -1,6 +1,7 @@
 package venus.terminal.cmds
 
 import venus.terminal.Command
+import venus.terminal.Command.Companion.fileTabComplete
 import venus.terminal.Terminal
 
 var mv = Command(
@@ -17,9 +18,7 @@ var mv = Command(
             f.parent = d
             return result
         },
-        tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
-            return arrayListOf("", ArrayList<String>())
-        },
+        tab = ::fileTabComplete,
         help = """Moves a file/folder to a new location.
             |Usage: mv [source] [destination]
             |NOTE: This is a very dumb implementation of move and does not do any fancy things linux move does.

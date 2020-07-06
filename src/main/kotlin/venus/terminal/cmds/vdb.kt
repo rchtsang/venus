@@ -5,6 +5,7 @@ import venusbackend.assembler.Assembler
 import venus.Driver
 import venus.Renderer
 import venus.terminal.Command
+import venus.terminal.Command.Companion.fileTabComplete
 import venus.terminal.Terminal
 import venus.vfs.VFSFile
 import venus.vfs.VFSLinkedProgram
@@ -112,11 +113,5 @@ var vdb = Command(
             }
             return ""
         },
-        tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
-            if (args.size > 0) {
-                val prefix = args[args.size - 1]
-                return arrayListOf(prefix, t.vfs.filesFromPrefix(prefix))
-            }
-            return arrayListOf("", ArrayList<String>())
-        }
+        tab = ::fileTabComplete
 )

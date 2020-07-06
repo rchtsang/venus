@@ -252,11 +252,12 @@ import kotlin.browser.window
         return templocation
     }
 
-    fun filesFromPrefix(prefix: String): ArrayList<String> {
+    fun filesFromPrefix(path: String, prefix: String): ArrayList<String> {
+        val location: VFSObject = getObjectFromPath(path) ?: this.currentLocation
         val fnames = ArrayList<String>()
-        for (key: String in this.currentLocation.childrenNames()) {
+        for (key: String in location.childrenNames()) {
             if (key.startsWith(prefix)) {
-                val obj = this.currentLocation.getChild(key) as VFSObject
+                val obj = location.getChild(key) as VFSObject
                 var k = key
                 if (obj.type in listOf(VFSType.Folder, VFSType.Drive)) {
                     k += "/"

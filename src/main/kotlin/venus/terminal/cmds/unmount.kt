@@ -1,6 +1,7 @@
 package venus.terminal.cmds
 
 import venus.terminal.Command
+import venus.terminal.Command.Companion.fileTabComplete
 import venus.terminal.Terminal
 import venus.vfs.VFSDrive
 
@@ -20,9 +21,7 @@ var umount = Command(
             }
             return ""
         },
-        tab = fun(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
-            return arrayListOf("", ArrayList<String>())
-        },
+        tab = ::fileTabComplete,
         help = """Allows you to unmount external drives on the Venus web file system.
             |Usage: umount dir
             |dir is the dir you would like to unmount to.
