@@ -19,7 +19,8 @@ class Mounter(var port: String, var dir: String) {
     data class GenericRequest(val data: String)
     data class GenericResponse(val success: Boolean, val data: Any)
     init {
-        val fdir: File = File(dir)
+        println("To connect, enter `mount http://localhost:$port vmfs` on Venus.")
+        val fdir = File(dir)
         if (!fdir.exists() or !fdir.isDirectory) {
             System.err.println("The passed in dir is not a directory: $dir")
             exitProcess(1)
