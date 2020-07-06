@@ -102,10 +102,11 @@ import kotlin.browser.window
         }
     }
 
-    @JsName("ls") fun ls(): String {
+    @JsName("ls") fun ls(path: String? = null): String {
+        var location = path?.let { getObjectFromPath(it) } ?: currentLocation
         var str = ""
-        for (s in currentLocation.childrenNames()) {
-            str += s + (if ((currentLocation.getChild(s) as VFSObject).type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
+        for (s in location.childrenNames()) {
+            str += s + (if ((location.getChild(s) as VFSObject).type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
         }
         return str
 //        for (c in currentLocation.children() as MutableCollection<VFSObject>) {
@@ -157,6 +158,10 @@ import kotlin.browser.window
             return "rm: cannot remove '$path': Path is currently active"
         }
         val p = templocation.parent
+
+        if (templocation.isMounted() && templocation.type == VFSType.Drive) {
+            return "rm: cannot remove a mounted drive. Use `umount` instead."
+        }
 
         return (if (p.removeChild(templocation.label)) "" else "rm: could not remove file")
     }

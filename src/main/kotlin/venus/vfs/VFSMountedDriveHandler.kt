@@ -28,10 +28,16 @@ data class VFSMountedDriveHandler(var url: String) {
         val xhttp = XMLHttpRequest()
         xhttp.open(type, "$url/$endPoint", async = false)
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        if (js("""window.DEBUG""") == true) {
+            console.log("Sending request to $endPoint!")
+        }
         try {
             xhttp.send(data)
         } catch (e: Throwable) {
             return null
+        }
+        if (js("""window.DEBUG""") == true) {
+            console.log("Got response!")
         }
 //        if (xhttp.status == 401.toShort()) {
 //            console.log("Failed to make request to $endPoint due to an auth error, logging back in...")
