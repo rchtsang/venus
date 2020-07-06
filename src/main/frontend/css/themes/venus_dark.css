@@ -397,3 +397,23 @@ a:hover {
     background-color: #333333;
     color: #CCCCCC;
 }
+
+.alertify .ajs-header {
+    background: #111111 !important;
+    color: #CCCCCC !important;
+    border-bottom: #444444 1px solid !important;
+}
+
+.alertify .ajs-footer .ajs-buttons.ajs-primary {
+    background: #111111 !important;
+    color: #CCCCCC !important;
+}
+.alertify .ajs-footer {
+    border-top: #444444 1px solid !important;
+    background: #111111 !important;
+    color: #CCCCCC !important;
+}
+.alertify .ajs-body .ajs-content, .alertify .ajs-dialog {
+    background: #222222 !important;
+    color: #CCCCCC !important;
+}
