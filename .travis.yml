@@ -1,5 +1,5 @@
 language: java
-jdk: oraclejdk12
+jdk: openjdk15
 node_js:
   - '12'
 # Handle git submodules yourself
