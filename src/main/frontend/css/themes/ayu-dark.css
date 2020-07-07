@@ -40,3 +40,7 @@
     text-decoration: underline;
     color: white !important;
 }
+
+.cm-s-ayu-dark .CodeMirror-lint-marker-error, .CodeMirror-lint-message-error, .CodeMirror-lint-message-error, .CodeMirror-lint-message-warning {
+    color: black;
+}
