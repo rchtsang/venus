@@ -157,8 +157,23 @@ function toggle_theme() {
 }
 
 function setup_theme() {
-    if (get_theme() === undefined) {
-        set_theme("light")
+    var thm = get_theme();
+    if (thm === undefined || thm == null) {
+        console.log("No theme selected! Setting to...");
+        try {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                console.log("dark!");
+                set_theme("dark");
+            } else {
+                console.log("light!");
+                set_theme("light");
+            }
+        } catch (e) {
+            console.log("Error!");
+            console.log(e);
+            console.log("Light!");
+            set_theme("light");
+        }
     }
     if (get_theme() === "dark") {
         dark();
