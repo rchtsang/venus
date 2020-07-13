@@ -37,7 +37,6 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
             } catch (e: IOException) {
                 return null
             }
-
         }
         return if (f.isFile) {
             val vfsf = VFSFile(f.name, VFSDummy())
