@@ -18,7 +18,6 @@ function setup_venus() {
         );
         window.codeMirror.setSize("100%", "88vh");
         window.codeMirror.refresh();
-        setup_theme();
     } catch (e) {
         load_error(e.toString())
     }
@@ -127,64 +126,64 @@ main_venus();
 
 
 
-function dark() {
-    document.getElementById("venus_theme").href = "css/themes/venus_dark.css";
-    codeMirror.setOption("theme", "ayu-dark");
-}
-
-function light() {
-    document.getElementById("venus_theme").href = "css/themes/venus.css";
-    codeMirror.setOption("theme", "default");
-}
-
-function get_theme() {
-    return localStorage.getItem("venus_theme");
-}
-
-function set_theme(theme) {
-    return localStorage.setItem("venus_theme", theme);
-}
-
-function toggle_theme() {
-    is_dark = get_theme() === "dark";
-    if (is_dark) {
-        set_theme("light");
-        light();
-    } else {
-        set_theme("dark");
-        dark();
-    }
-}
-
-function setup_theme() {
-    var thm = get_theme();
-    if (thm === undefined || thm == null) {
-        console.log("No theme selected! Setting to...");
-        try {
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                console.log("dark!");
-                set_theme("dark");
-            } else {
-                console.log("light!");
-                set_theme("light");
-            }
-        } catch (e) {
-            console.log("Error!");
-            console.log(e);
-            console.log("Light!");
-            set_theme("light");
-        }
-    }
-    if (get_theme() === "dark") {
-        dark();
-        document.getElementById('themeSwitch').click();
-    }
-    if (get_theme() === "light") {
-        // Pass
-    }
-
-    document.getElementById('themeSwitch').addEventListener('change', function(event){
-        toggle_theme();
-    });
-}
+// function dark() {
+//     document.getElementById("venus_theme").href = "css/themes/venus_dark.css";
+//     codeMirror.setOption("theme", "ayu-dark");
+// }
+//
+// function light() {
+//     document.getElementById("venus_theme").href = "css/themes/venus.css";
+//     codeMirror.setOption("theme", "default");
+// }
+//
+// function get_theme() {
+//     return localStorage.getItem("venus_theme");
+// }
+//
+// function set_theme(theme) {
+//     return localStorage.setItem("venus_theme", theme);
+// }
+//
+// function toggle_theme() {
+//     is_dark = get_theme() === "dark";
+//     if (is_dark) {
+//         set_theme("light");
+//         light();
+//     } else {
+//         set_theme("dark");
+//         dark();
+//     }
+// }
+//
+// function setup_theme() {
+//     var thm = get_theme();
+//     if (thm === undefined || thm == null) {
+//         console.log("No theme selected! Setting to...");
+//         try {
+//             if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+//                 console.log("dark!");
+//                 set_theme("dark");
+//             } else {
+//                 console.log("light!");
+//                 set_theme("light");
+//             }
+//         } catch (e) {
+//             console.log("Error!");
+//             console.log(e);
+//             console.log("Light!");
+//             set_theme("light");
+//         }
+//     }
+//     if (get_theme() === "dark") {
+//         dark();
+//         document.getElementById('themeSwitch').click();
+//     }
+//     if (get_theme() === "light") {
+//         // Pass
+//     }
+//
+//     document.getElementById('themeSwitch').addEventListener('change', function(event){
+//         toggle_theme();
+//     });
+// }
 
