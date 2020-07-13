@@ -3,6 +3,7 @@ package venus.vfs
 import venus.Driver
 import venusbackend.simulator.SimulatorSettings
 import java.io.File
+import java.io.IOException
 import java.nio.file.Paths
 
 class VirtualFileSystem(val defaultDriveName: String, val simSettings: SimulatorSettings = SimulatorSettings()) {
@@ -29,9 +30,14 @@ class VirtualFileSystem(val defaultDriveName: String, val simSettings: Simulator
             return null
         }
         if (!f.exists()) {
-            if (!f.createNewFile()) {
+            try {
+                if (!f.createNewFile()) {
+                    return null
+                }
+            } catch (e: IOException) {
                 return null
             }
+
         }
         return if (f.isFile) {
             val vfsf = VFSFile(f.name, VFSDummy())
