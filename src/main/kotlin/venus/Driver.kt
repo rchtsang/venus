@@ -87,6 +87,8 @@ object Driver {
         val port by cli.flagValueArgument(listOf("-p", "--port"), "Port", "Port to serve on.", "6161")
         val driveMount by cli.flagArgument(listOf("-dm", "--driveMount"), "Sets Venus to mount the directory specified by the 'file' to be a mountable drive.", false, true)
 
+        val callingConventionReport by cli.flagArgument(listOf("-cc", "--callingConvention"), "Runs the calling convention checker.", false, true)
+
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
         try {
@@ -173,7 +175,14 @@ object Driver {
                 dump()
             } else {
                 try {
-                    sim.run()
+                    if (callingConventionReport) {
+                        val ccReporter = CallingConventionCheck(sim)
+                        if (ccReporter.run() > 0) {
+                            exitProcess(-1)
+                        }
+                    } else {
+                        sim.run()
+                    }
                 } catch (e: SimulatorError) {
                     // pass
                     System.err.println("Venus ran into a simulator error!")
