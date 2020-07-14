@@ -88,6 +88,7 @@ object Driver {
         val driveMount by cli.flagArgument(listOf("-dm", "--driveMount"), "Sets Venus to mount the directory specified by the 'file' to be a mountable drive.", false, true)
 
         val callingConventionReport by cli.flagArgument(listOf("-cc", "--callingConvention"), "Runs the calling convention checker.", false, true)
+        val callingConventionRetOnlya0 by cli.flagArgument(listOf("--retToAllA"), "If this flag is enabled, the calling convention checker will assume all `a` register can be used to return values. If this is not there, then it will assume only a0 will be returned.", true, false)
 
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
@@ -176,7 +177,7 @@ object Driver {
             } else {
                 try {
                     if (callingConventionReport) {
-                        val ccReporter = CallingConventionCheck(sim)
+                        val ccReporter = CallingConventionCheck(sim, callingConventionRetOnlya0)
                         if (ccReporter.run() > 0) {
                             exitProcess(-1)
                         }
