@@ -79,11 +79,18 @@ function switchButton(newTheme) {
     let button = document.getElementById('themeSwitch');
     let darkTheme = newTheme === 'dark';
     button.checked = darkTheme;
-    if (darkTheme) {
-        codeMirror.setOption("theme", "ayu-dark");
-    } else {
-        codeMirror.setOption("theme", "default");
+    function setTheme(darktheme) {
+        try {
+            if (darkTheme) {
+                codeMirror.setOption("theme", "ayu-dark");
+            } else {
+                codeMirror.setOption("theme", "default");
+            }
+        } catch (e) {
+            setTimeout(setTheme, 5, darkTheme);
+        }
     }
+    setTheme(darkTheme)
 }
 
 // Switch to another theme
