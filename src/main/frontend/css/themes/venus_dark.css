@@ -266,3 +266,11 @@
     background: #222222 !important;
     color: #CCCCCC !important;
 }
+
+.theme-dark ::-webkit-scrollbar { width: 8px; height: 3px;}
+.theme-dark ::-webkit-scrollbar-button {  background-color: #666; }
+.theme-dark ::-webkit-scrollbar-track {  background-color: #646464;}
+.theme-dark ::-webkit-scrollbar-track-piece { background-color: #000;}
+.theme-dark ::-webkit-scrollbar-thumb { height: 50px; background-color: #666; border-radius: 3px;}
+.theme-dark ::-webkit-scrollbar-corner { background-color: #646464;}
+.theme-dark ::-webkit-resizer { background-color: #666;}
