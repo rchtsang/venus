@@ -78,7 +78,9 @@ function returnThemeBasedOnTime(){
 function switchButton(newTheme) {
     let button = document.getElementById('themeSwitch');
     let darkTheme = newTheme === 'dark';
-    button.checked = darkTheme;
+    if (button) {
+        button.checked = darkTheme;
+    }
     function setTheme(darktheme) {
         try {
             if (darkTheme) {
