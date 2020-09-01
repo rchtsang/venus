@@ -20,7 +20,7 @@
 }
 
 .theme-dark #program-listing-body tr.is-selected {
-    background-color: #00d1b2;
+    background-color: #00927c;
     color: white;
 }
 
@@ -162,7 +162,7 @@
 }
 
 .theme-dark .button {
-    background-color: #555555;
+    background-color: #444444;
     color: #CCCCCC;
 }
 
@@ -172,13 +172,17 @@
 }
 
 .theme-dark .button.is-primary {
-    background-color: #00d1b2;
+    background-color: #00927c;
     border-color: transparent;
     color: #fff;
 }
 
+.button.is-primary:hover, .button.is-primary.is-hovered {
+    background-color: #007d6b;
+}
+
 .theme-dark .button.is-primary.is-active, .theme-dark .button.is-primary:active {
-    background-color: #00b89c;
+    background-color: #006354;
     border-color: transparent;
     -webkit-box-shadow: inset 0 1px 2px rgba(10,10,10,.2);
     box-shadow: inset 0 1px 2px rgba(10,10,10,.2);
@@ -274,3 +278,8 @@
 .theme-dark ::-webkit-scrollbar-thumb { height: 50px; background-color: #666; border-radius: 3px;}
 .theme-dark ::-webkit-scrollbar-corner { background-color: #646464;}
 .theme-dark ::-webkit-resizer { background-color: #666;}
+
+.theme-dark .table {
+    background-color: #363636;
+    color: #fff;
+}
