@@ -283,3 +283,7 @@
     background-color: #363636;
     color: #fff;
 }
+
+.theme-dark .prompt {
+    color: #96b38a;
+}
