@@ -51,7 +51,6 @@ object Driver {
     @JvmStatic
     fun main(args: Array<String>) {
         val cli = CommandLineInterface("venus")
-        val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
         val libs by cli.flagValueArgument(listOf("-l", "--libs"), "libraries", "This is a list of library files you would like to assemble with the main file. Please separate them by a `;`.", "")
         val defs by cli.flagValueArgument(listOf("--def"), "define", "This is a list of define values which you want the assembler to have. Please note it must be in the format `key=value` and are separated by `;`.", "")
         val regWidth by cli.flagValueArgument(listOf("-r", "--regwidth"), "RegisterWidth", "Sets register width (Currently only supporting 32 (default) and 64).", "32")
@@ -90,6 +89,7 @@ object Driver {
         val callingConventionReport by cli.flagArgument(listOf("-cc", "--callingConvention"), "Runs the calling convention checker.", false, true)
         val callingConventionRetOnlya0 by cli.flagArgument(listOf("--retToAllA"), "If this flag is enabled, the calling convention checker will assume all `a` register can be used to return values. If this is not there, then it will assume only a0 will be returned.", true, false)
 
+        val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
         try {
