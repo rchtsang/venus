@@ -178,7 +178,7 @@ object Driver {
                 dump()
             } else {
                 val ccReporter = if (callingConventionReport) CallingConventionCheck(sim, callingConventionRetOnlya0) else null
-                val coverage = if(coverageFile.isNotEmpty()) Coverage(sim) else null
+                val coverage = if (coverageFile.isNotEmpty()) Coverage(sim) else null
                 val plugins = listOfNotNull(ccReporter, coverage)
                 try {
                     sim.run(plugins)
