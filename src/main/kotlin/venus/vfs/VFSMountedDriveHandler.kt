@@ -47,7 +47,10 @@ data class VFSMountedDriveHandler(var url: String) {
 //            login()
 //            return make_request(type, endPoint, data)
 //        }
-        if (xhttp.status >= 400) {
+        if (xhttp.status == 0.toShort()) {
+            throw IllegalStateException("Server responded with ${xhttp.status} - ${xhttp.statusText}! This may be due to strict enforcement of HTTPS.")
+        }
+        if (xhttp.status != 200.toShort()) {
             throw IllegalStateException("Server responded with ${xhttp.status} - ${xhttp.statusText} for request $endPoint. Data: $data")
         }
         return xhttp.responseText
