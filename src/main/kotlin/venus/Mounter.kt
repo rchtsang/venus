@@ -33,7 +33,7 @@ class Mounter(var port: String, var dir: String) {
      * @param verbose prints the absolute path of the requested file if true
      * @returns the file object if access is allowed, otherwise null
      */
-    private fun validateFilePath(targetPath: String, vararg names: String, verbose: Boolean=true): File? {
+    private fun validateFilePath(targetPath: String, vararg names: String, verbose: Boolean = true): File? {
         val fpath = Paths.get(System.getProperty("user.dir"), targetPath, *names).normalize()
         if (verbose) {
             println(fpath.toUri())
