@@ -1302,8 +1302,10 @@ import kotlin.dom.removeClass
     lateinit var fileExplorerCurrentLocation: VFSObject
 
     @JsName("deleteVFObject") fun deleteVFObject(name: String) {
-        VFS.rm(name, fileExplorerCurrentLocation)
-        refreshVFS()
+        if (window.confirm("Are you sure you want to delete this file?")) {
+            VFS.rm(name, fileExplorerCurrentLocation)
+            refreshVFS()
+        }
     }
 
     @JsName("openVFObject") fun openVFObject(name: String) {
@@ -1339,7 +1341,38 @@ import kotlin.dom.removeClass
         openVFObject(".")
     }
 
+    fun saveEditorIfModified(): Boolean {
+        // Returns if there was an error.
+        if (activeFileinEditor == "") {
+            return true
+        }
+        val txt: String = try {
+            js("codeMirror.save();")
+            this.getText()
+        } catch (e: Throwable) {
+            console.error(e)
+            return false
+        }
+        val s = VFS.getObjectFromPath(activeFileinEditor, location = fileExplorerCurrentLocation)
+        if (s is VFSObject && s.type == VFSType.File) {
+            if ((s as VFSFile).readText() != txt) {
+                if (window.confirm("Detected a modification in the opened file in the editor! Do you want to save it before opening the new file?")) {
+                    saveVFObjectfromObj(s)
+                }
+            }
+        } else {
+            console.log(s)
+            return false
+        }
+        return true
+    }
+
     fun editVFObjectfromObj(obj: VFSObject) {
+        if (!saveEditorIfModified()) {
+            if (!window.confirm("Could not save active file! Do you still want to open the new file?")) {
+                return
+            }
+        }
         if (obj.type !== VFSType.File) {
             window.alert("Only files can be loaded into the editor.")
             return
@@ -1368,6 +1401,10 @@ import kotlin.dom.removeClass
     }
 
     fun saveVFObjectfromObj(obj: VFSObject, save: Boolean = true) {
+        val name = obj.getPath()
+        if (activeFileinEditor != name && !window.confirm("Are you sure you want to save the file `$activeFileinEditor` to the file `$name`?")) {
+            return
+        }
         val txt: String
         try {
             js("codeMirror.save();")
