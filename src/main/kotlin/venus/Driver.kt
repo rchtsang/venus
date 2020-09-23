@@ -1368,6 +1368,10 @@ import kotlin.dom.removeClass
     }
 
     fun editVFObjectfromObj(obj: VFSObject) {
+        if (activeFileinEditor == obj.getPath()) {
+            this.openEditor()
+            return
+        }
         if (!saveEditorIfModified()) {
             if (!window.confirm("Could not save active file! Do you still want to open the new file?")) {
                 return
