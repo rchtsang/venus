@@ -71,6 +71,8 @@ import kotlin.dom.removeClass
 
     @JsName("driver_complete_loading") var driver_complete_loading: Boolean = false
 
+    var doCallingConventionCheck: Boolean = false
+
     init {
         /* This code right here is so that you can add custom kotlin code even after venus has been loaded! */
         js("window.eval_in_venus_env = function (s) {return eval(s);}")
@@ -331,6 +333,9 @@ import kotlin.dom.removeClass
         mainCache.reset()
         sim.state.cache = mainCache
         tr = Tracer(sim)
+        if (doCallingConventionCheck) {
+            this.enableCallingConvention(true)
+        }
     }
 
     fun getMaxSteps(): Int {
@@ -399,10 +404,14 @@ import kotlin.dom.removeClass
     @JsName("reset") fun reset() {
         try {
             val args = sim.args
+            val plugins = sim.plugins
             sim = Simulator(sim.linkedProgram, VFS, sim.settings, simulatorID = sim.simulatorID)
             tr.sim = sim
             for (arg in args) {
                 sim.addArg(arg)
+            }
+            for ((id, p) in plugins) {
+                sim.registerPlugin(id, p)
             }
             mainCache.reset()
             sim.state.setCacheHandler(mainCache)
@@ -448,6 +457,7 @@ import kotlin.dom.removeClass
 
     @JsName("runEnd") fun runEnd() {
         handleNotExitOver()
+        sim.finishPlugins()
         Renderer.updatePC(sim.getPC())
         Renderer.updateAll()
         Renderer.setRunButtonSpinning(false)
@@ -533,6 +543,10 @@ import kotlin.dom.removeClass
         Renderer.renderTracerSettingsTab()
     }
 
+    @JsName("openCallingConventionSettingsTab") fun openCallingConventionSettingsTab() {
+        Renderer.renderCallingConventionSettingsTab()
+    }
+
     @JsName("openPackagesTab") fun openPackagesTab() {
         Renderer.renderPackagesTab()
     }
@@ -562,6 +576,15 @@ import kotlin.dom.removeClass
         Renderer.renderTab(tabid, tabs)
         if (tabid == "venus-files") {
             refreshVFS()
+        }
+    }
+
+    @JsName("enableCallingConvention") fun enableCallingConvention(enabled: Boolean) {
+        doCallingConventionCheck = enabled
+        if (doCallingConventionCheck) {
+            sim.registerPlugin("CC", CallingConventionCheck())
+        } else {
+            sim.removePlugin("CC")
         }
     }
 
@@ -1079,6 +1102,7 @@ import kotlin.dom.removeClass
         LS.set("ecall_exit_only", simSettings.ecallOnlyExit.toString())
         LS.set("set_regs_on_init", simSettings.setRegesOnInit.toString())
         LS.set("simargs", getDefaultArgs())
+        LS.set("enableCallingConvention", this.doCallingConventionCheck.toString())
 
         /*Program*/
         js("codeMirror.save()")
@@ -1153,6 +1177,7 @@ import kotlin.dom.removeClass
         var sroi = simSettings.setRegesOnInit.toString()
         var simargs = ""
         var defaultTab = "venus"
+        var docc = "false"
 
         /*Program*/
         js("codeMirror.save()")
@@ -1181,6 +1206,7 @@ import kotlin.dom.removeClass
             sroi = LS.safeget("set_regs_on_init", sroi)
             simargs = LS.safeget("simargs", simargs)
             defaultTab = LS.safeget("defaultTab", defaultTab)
+            docc = LS.safeget("enableCallingConvention", docc)
 
             /*Program*/
             p = LS.safeget("prog", p)
@@ -1273,6 +1299,8 @@ import kotlin.dom.removeClass
         Renderer.renderButton(document.getElementById("setRegsOnInit") as HTMLButtonElement, sroi == "true")
         simSettings.setRegesOnInit = sroi == "true"
         (document.getElementById("ArgsList") as HTMLInputElement).value = simargs
+        Renderer.renderButton(document.getElementById("enableCallingConvention") as HTMLButtonElement, docc == "true")
+        enableCallingConvention(docc == "true")
 
         /*Program*/
         js("codeMirror.setValue(driver.p);")

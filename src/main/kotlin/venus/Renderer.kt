@@ -139,9 +139,9 @@ internal object Renderer {
 
     /** Display a given ERROR */
     fun displayError(thing: Any) {
-        printConsole("\n------STDERR------\n")
+//        printConsole("\n------STDERR------\n")
         printConsole(thing)
-        printConsole("\n----STDERR_END----\n")
+//        printConsole("\n----STDERR_END----\n")
     }
 
     fun stdout(thing: Any) {
@@ -580,6 +580,7 @@ internal object Renderer {
     fun renderGeneralSettingsTab() {
         tabSetVisibility("general-settings", "block")
         tabSetVisibility("tracer-settings", "none")
+        tabSetVisibility("calling-convention-settings", "none")
         tabSetVisibility("packages", "none")
     }
 
@@ -589,12 +590,21 @@ internal object Renderer {
     fun renderTracerSettingsTab() {
         tabSetVisibility("general-settings", "none")
         tabSetVisibility("tracer-settings", "block")
+        tabSetVisibility("calling-convention-settings", "none")
+        tabSetVisibility("packages", "none")
+    }
+
+    fun renderCallingConventionSettingsTab() {
+        tabSetVisibility("general-settings", "none")
+        tabSetVisibility("tracer-settings", "none")
+        tabSetVisibility("calling-convention-settings", "block")
         tabSetVisibility("packages", "none")
     }
 
     fun renderPackagesTab() {
         tabSetVisibility("general-settings", "none")
         tabSetVisibility("tracer-settings", "none")
+        tabSetVisibility("calling-convention-settings", "none")
         tabSetVisibility("packages", "block")
     }
 

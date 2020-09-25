@@ -360,3 +360,15 @@ function loadfromtarget(t) {
 function lftcallback(resp) {
     codeMirror.setValue(resp);
 }
+
+// document.addEventListener ("keydown", function (zEvent) {
+//     if (zEvent.ctrlKey  && zEvent.key === "c") {
+//         if (driver.LS.get("defaultTab") === "venus") {
+//             driver.runEnd();
+//             var cl = document.getElementsByClassName("cmdline");
+//             if (cl.length > 0) {
+//                 cl[cl.length - 1].focus();
+//             }
+//         }
+//     }
+// });
