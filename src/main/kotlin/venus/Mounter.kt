@@ -1,5 +1,6 @@
 package venus
 
+import com.fasterxml.jackson.core.util.ByteArrayBuilder
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 import kotlinx.serialization.Serializable
@@ -136,8 +137,13 @@ class Mounter(var port: String, var dir: String) {
                     } else if (!fp.isFile) {
                         ctx.json(filereadResponse(false, data = "$path: Is not file"))
                     } else {
-                        val data = fp.readText()
-                        ctx.json(filereadResponse(true, data = data))
+                        val raw = fp.readBytes()
+                        val data = StringBuilder()
+                        for (byte in raw) {
+                            data.append(byte.toChar())
+                        }
+                        val str = data.toString()
+                        ctx.json(filereadResponse(true, data = str))
                     }
                 } catch (e: Exception) {
                     ctx.json(filereadResponse(false, "Internal server error: $e"))
@@ -160,7 +166,11 @@ class Mounter(var port: String, var dir: String) {
                     } else if (!fp.isFile) {
                         ctx.json(filewriteResponse(false, data = "$path: No such file or directory"))
                     } else {
-                        fp.writeText(req.data)
+                        val bytearr = ByteArrayBuilder()
+                        for (char in req.data.chars()) {
+                            bytearr.append(char)
+                        }
+                        fp.writeBytes(bytearr.toByteArray())
                         ctx.json(filewriteResponse(true, data = ""))
                     }
                 } catch (e: Exception) {

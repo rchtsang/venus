@@ -177,8 +177,8 @@ object Driver {
             } else if (dumpInsts) {
                 dump()
             } else {
-                val ccReporter = if (callingConventionReport) CallingConventionCheck(sim, callingConventionRetOnlya0) else null
-                val coverage = if (coverageFile.isNotEmpty()) Coverage(sim) else null
+                val ccReporter = if (callingConventionReport) CallingConventionCheck(callingConventionRetOnlya0) else null
+                val coverage = if (coverageFile.isNotEmpty()) Coverage() else null
                 val plugins = listOfNotNull(ccReporter, coverage)
                 try {
                     sim.run(plugins)
@@ -187,7 +187,7 @@ object Driver {
                     }
                     if (coverage != null) {
                         File(coverageFile).bufferedWriter().use { out ->
-                            coverage.finish().forEach { line -> out.appendln(line) }
+                            coverage.finish(sim).forEach { line -> out.appendln(line) }
                         }
                     }
                 } catch (e: SimulatorError) {
