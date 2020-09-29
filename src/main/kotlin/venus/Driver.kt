@@ -1337,7 +1337,11 @@ import kotlin.dom.removeClass
     }
 
     @JsName("openVFObject") fun openVFObject(name: String) {
-        val s = VFS.chdir(name, fileExplorerCurrentLocation)
+        var s = VFS.chdir(name, fileExplorerCurrentLocation)
+        if (s is Pair<*, *>) {
+            console.log(s.second)
+            s = s.first!!
+        }
         if (s is VFSObject && s.type in listOf(VFSType.Drive, VFSType.Folder)) {
             fileExplorerCurrentLocation = s
             openVFObjectfromObj(fileExplorerCurrentLocation)

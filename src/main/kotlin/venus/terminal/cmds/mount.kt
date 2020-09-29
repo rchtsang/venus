@@ -25,6 +25,7 @@ var mount = Command(
             }
             try {
                 val h = VFSMountedDriveHandler(url)
+                h.connect()
                 val res = t.vfs.mountDrive(dir, h)
                 t.vfs.save()
                 return res

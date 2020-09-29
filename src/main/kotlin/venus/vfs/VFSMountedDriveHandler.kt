@@ -6,6 +6,7 @@ import kotlin.browser.window
 val VENUS_AUTH_TOKEN = "1yJPLzMSwOYPYqsLegJ8NpvJXdIC7PcrWLtPxPpZ6DzI9BsFv3iGwIpilpgVy0M7TmmEA063VUkBYIHezoes4vHF6m0mZA8DuTh"
 val COMPATABLE_VERSION = "1.0.0"
 data class VFSMountedDriveHandler(var url: String) {
+    var connected = false
     init {
 //        login()
 //        ping()
@@ -13,7 +14,7 @@ data class VFSMountedDriveHandler(var url: String) {
         if (url.endsWith("/")) {
             url = url.removeSuffix("/")
         }
-        connect()
+//        connect()
     }
 
     fun connect() {
@@ -21,6 +22,7 @@ data class VFSMountedDriveHandler(var url: String) {
             throw IllegalStateException("Could not connect to $url")
         }
         compatable()
+        connected = true
     }
 
     fun save(): String {
@@ -28,6 +30,9 @@ data class VFSMountedDriveHandler(var url: String) {
     }
 
     fun make_request(type: String, endPoint: String, data: String = ""): String? {
+        if (!connected && endPoint !in listOf("ping", "version")) {
+            connect()
+        }
         val xhttp = XMLHttpRequest()
         xhttp.open(type, "$url/$endPoint", async = false)
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
@@ -37,7 +42,10 @@ data class VFSMountedDriveHandler(var url: String) {
         try {
             xhttp.send(data)
         } catch (e: Throwable) {
-            return null
+//            return null
+            console.error(e)
+            connected = false
+            throw IllegalStateException("Failed to send the request! Is the mount server still running?")
         }
         if (js("""window.DEBUG""") == true) {
             console.log("Got response!")
@@ -90,6 +98,17 @@ data class VFSMountedDriveHandler(var url: String) {
         val res = rsp?.let { JSON.parse<pingRes>(it) } ?: pingRes("Server failed to respond!")
         console.log("Server responded with: ${res.data}!")
         return rsp != null
+    }
+
+    fun validate_connection(): String {
+        try {
+            if (!this.ping()) {
+                return "The mount server responded with an invalid response!"
+            }
+        } catch (e: IllegalStateException) {
+            return "cd: $e"
+        }
+        return ""
     }
 
     data class CMDlsReq(val data: String)

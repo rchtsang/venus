@@ -15,13 +15,13 @@ class VFSDrive(val n: String, override var parent: VFSObject, override var mount
     companion object {
         fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject? {
             if (jsonContainer.innerobj is String && jsonContainer.innerobj != "") {
-                val handler = try {
-                    VFSMountedDriveHandler(jsonContainer.innerobj as String)
+                val handler = VFSMountedDriveHandler(jsonContainer.innerobj as String)
+                try {
+                    handler.connect()
                 } catch (e: IllegalStateException) {
                     val emsg = "Failed to mount drive `${jsonContainer.label}`: $e"
                     console.error(emsg)
                     window.alert(emsg)
-                    return null
                 }
                 val folder = VFSDrive(jsonContainer.label, parent, mountedHandler = handler)
                 return folder

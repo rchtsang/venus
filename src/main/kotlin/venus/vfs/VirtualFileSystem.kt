@@ -57,6 +57,11 @@ import kotlin.browser.window
 
     @JsName("cd") fun cd(dir: String): String {
         var tmp = chdir(dir, currentLocation)
+        var msg = ""
+        if (tmp is Pair<*, *>) {
+            msg = tmp.second as String
+            tmp = tmp.first!!
+        }
         if (tmp is VFSObject) {
             if (tmp.type !in listOf(VFSType.Folder, VFSType.Drive)) {
                 return "Can only go into folders and drives."
@@ -65,7 +70,7 @@ import kotlin.browser.window
         } else {
             return tmp.toString()
         }
-        return ""
+        return msg
     }
 
     fun chdir(dir: String, curloc: VFSObject): Any {
@@ -78,16 +83,28 @@ import kotlin.browser.window
         } else {
             curloc
         }
+        val initial_location = templocation
+        var mountCheck = true
         for (dir in splitpath) {
+            if (templocation.isMounted() && mountCheck) {
+                mountCheck = false
+                val connected = templocation.mountedHandler!!.validate_connection()
+                if (connected != "") {
+                    if (initial_location.isMounted() && initial_location.mountedHandler!!.validate_connection() != "") {
+                        return Pair(sentinel, "$connected")
+                    }
+                    return "$connected"
+                }
+            }
             if (dir == "") {
                 continue
             }
             if (!templocation.containsChild(dir)) {
-                return "cd: $dir: No such file or directory"
+                return "$dir: No such file or directory"
             }
             templocation = templocation.getChild(dir) as VFSObject
             if (templocation.type in listOf(VFSType.File, VFSType.Program)) {
-                return "cd: $dir: Not a directory"
+                return "$dir: Not a directory"
             }
         }
         return templocation
