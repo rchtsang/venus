@@ -177,11 +177,19 @@ object Driver {
             } else if (dumpInsts) {
                 dump()
             } else {
-                val ccReporter = if (callingConventionReport) CallingConventionCheck(callingConventionRetOnlya0) else null
-                val coverage = if (coverageFile.isNotEmpty()) Coverage() else null
-                val plugins = listOfNotNull(ccReporter, coverage)
+                val ccReporter = if (callingConventionReport) {
+                    val ccc = CallingConventionCheck(callingConventionRetOnlya0)
+                    sim.registerPlugin("cc", ccc)
+                    ccc
+                } else null
+                val coverage = if (coverageFile.isNotEmpty()) {
+                    val cov = Coverage()
+                    sim.registerPlugin("coverage", cov)
+                    cov
+                } else null
+
                 try {
-                    sim.run(plugins)
+                    sim.run(finishPluginsAfterRun = false)
                     if (ccReporter != null && ccReporter.finish() > 0) {
                         exitProcess(-1)
                     }
