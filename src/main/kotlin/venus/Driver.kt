@@ -16,6 +16,8 @@ import venusbackend.simulator.cache.BlockReplacementPolicy
 import venusbackend.simulator.cache.CacheError
 import venusbackend.simulator.cache.CacheHandler
 import venusbackend.simulator.cache.PlacementPolicy
+import venusbackend.simulator.plugins.CallingConventionCheck
+import venusbackend.simulator.plugins.Coverage
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.jvm.JvmStatic
