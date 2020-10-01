@@ -28,7 +28,7 @@ open class Command(
 
         @OptIn(ExperimentalStdlibApi::class)
         fun fileTabComplete(args: MutableList<String>, t: Terminal, sudo: Boolean): ArrayList<Any> {
-            if (args.size == 1) {
+            if (args.size >= 1) {
                 val pfix = args[args.size - 1]
                 val path = VirtualFileSystem.getPath(pfix)
                 val prefix = try {

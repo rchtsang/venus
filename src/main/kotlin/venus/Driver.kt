@@ -18,6 +18,7 @@ import venusbackend.riscv.*
 import venusbackend.riscv.insts.dsl.types.Instruction
 import venusbackend.riscv.insts.floating.Decimal
 import venusbackend.simulator.*
+import venusbackend.simulator.plugins.*
 import venusbackend.simulator.Tracer.Companion.wordAddressed
 import venusbackend.simulator.cache.BlockReplacementPolicy
 import venusbackend.simulator.cache.CacheError

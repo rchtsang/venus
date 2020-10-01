@@ -14,6 +14,10 @@ import kotlin.browser.window
         fun getPath(path: String): ArrayList<String> {
             return path.split(VFSObject.separator) as ArrayList
         }
+
+        fun makePath(path: ArrayList<String>): String {
+            return path.joinToString(VFSObject.separator)
+        }
     }
 
     init {
