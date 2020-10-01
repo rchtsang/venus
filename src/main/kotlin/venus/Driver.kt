@@ -135,7 +135,7 @@ object Driver {
 
         val assemblyProgramText = readFileDirectlyAsText(assemblyTextFile)
 
-        val prog = assemble(assemblyProgramText, lastReadFile!!.absolutePath)
+        val prog = assemble(assemblyProgramText, assemblyTextFile, lastReadFile!!.absolutePath)
         if (prog == null) {
             exitProcess(-1)
         } else {
@@ -145,7 +145,7 @@ object Driver {
         if (libs != "") {
             for (lib in libs.split(";")) {
                 val assemblyProgramText = readFileDirectlyAsText(lib, false)
-                val prog = assemble(assemblyProgramText, workingdir)
+                val prog = assemble(assemblyProgramText, lib, workingdir)
                 if (prog == null) {
                     exitProcess(-1)
                 } else {
@@ -237,8 +237,8 @@ object Driver {
      *
      * @param text the assembly code.
      */
-    internal fun assemble(text: String, abspath: String): Program? {
-        val (prog, errors, warnings) = Assembler.assemble(text, abspath = abspath)
+    internal fun assemble(text: String, name: String, abspath: String): Program? {
+        val (prog, errors, warnings) = Assembler.assemble(text, name = name, abspath = abspath)
         if (warnings.isNotEmpty()) {
             for (warning in warnings) {
                 Renderer.displayWarning(warning)
