@@ -133,6 +133,11 @@ body {
 #settings-tab-view {
     display: block;
 }
+
+#calling-convention-settings-tab-view {
+    display: none;
+}
+
 #tracer-settings-tab-view {
     display: none;
 }
