@@ -5,24 +5,30 @@ import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.content
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.parse
+import venus.fernet.*
 import java.io.File
-import java.lang.Exception
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.system.exitProcess
+
 
 val VENUS_AUTH_TOKEN = "1yJPLzMSwOYPYqsLegJ8NpvJXdIC7PcrWLtPxPpZ6DzI9BsFv3iGwIpilpgVy0M7TmmEA063VUkBYIHezoes4vHF6m0mZA8DuTh"
 val VENUS_FS_API_PATH = "/api/fs"
 val VENUS_FS_VERSION = "1.0.0"
 
 // By default we bind to loopback - this may become configurable in the future.
-val DEFAULT_HOST = "127.0.0.1"
+val DEFAULT_HOST = "localhost"
 
-class Mounter(var port: String, var dir: String) {
+class Mounter(var port: String, var dir: String, var key_path: String="~/.venus_mount_key") {
 //    data class LoginToken(var token: String, var expiration: String)
 //    val tokens: MutableMap<String, String>
 
     private val baseAbsPath: Path
+
+    val fernet: Fernet
 
     /**
      * Checks that a path is within the directory that was mounted.
@@ -51,6 +57,31 @@ class Mounter(var port: String, var dir: String) {
     data class GenericRequest(val data: String)
     data class GenericResponse(val success: Boolean, val data: Any)
     init {
+////        val key = Fernet.Key("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
+////        val token = Fernet.Token(Fernet.time, byteArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))
+//
+//        val fernet = Fernet("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
+//
+//
+//
+////        val token = fernet.encrypt("The quick brown fox jumps over the lazy dog.".toByteArray())
+////        println("Token = $token")
+//        val token = "gAAAAABgCjgs5fAF5QOd8jJkEaogu9g5w20lbAMcaWIqlMYLEO4iK3TJgPVTQXWHJCCcNGNkPrGtx9wIaRbHfFglj4RNP-vtHw=="
+//        val message = fernet.decrypt(token)
+//        println("Message = " + String(message))
+        var key: String
+        var kp = File(key_path)
+        if (kp.exists()) {
+            // Load key
+            key = kp.readText()
+        } else {
+            // Create key and save it
+            key = Fernet.Key().toString()
+            kp.writeText(key)
+        }
+        fernet = Fernet(key)
+
+
         println("To connect, enter `mount http://localhost:$port vmfs` on Venus.")
         val fdir = File(dir)
         if (!fdir.exists() or !fdir.isDirectory) {
@@ -59,6 +90,7 @@ class Mounter(var port: String, var dir: String) {
         }
         System.setProperty("user.dir", fdir.absolutePath)
         baseAbsPath = Paths.get(fdir.absolutePath).normalize()
+
         val app: Javalin = Javalin.create { config ->
             config.enableCorsForAllOrigins()
         }.start(DEFAULT_HOST, port.toInt())
