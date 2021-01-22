@@ -1,16 +1,13 @@
 package venus
 
-import com.fasterxml.jackson.core.util.ByteArrayBuilder
+/* ktlint-disable no-wildcard-imports */
+
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 import io.javalin.http.Context
 import io.javalin.plugin.json.JavalinJson
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.content
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.parse
 import venus.fernet.*
 import java.io.File
 import java.nio.file.Path
@@ -19,6 +16,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
+/* ktlint-enable no-wildcard-imports */
 
 val VENUS_FS_API_PATH = "/api/fs"
 val VENUS_FS_VERSION = "1.0.1"
@@ -28,14 +26,14 @@ val MESSAGE_TTL = 30
 // By default we bind to loopback - this may become configurable in the future.
 val DEFAULT_HOST = "localhost"
 
-fun getRandomString(length: Int) : String {
+fun getRandomString(length: Int): String {
     val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
     return (1..length)
             .map { allowedChars.random() }
             .joinToString("")
 }
 
-class Mounter(var port: String, var dir: String, var key_path: String=System.getProperty("user.home") + "/.venus_mount_key", var custkey: String? = null) {
+class Mounter(var port: String, var dir: String, var key_path: String = System.getProperty("user.home") + "/.venus_mount_key", var custkey: String? = null) {
 //    data class LoginToken(var token: String, var expiration: String)
 //    val tokens: MutableMap<String, String>
 
@@ -96,22 +94,21 @@ class Mounter(var port: String, var dir: String, var key_path: String=System.get
     data class GenericRequest(val data: String)
     data class GenericResponse(val success: Boolean, val data: Any)
 
-
     fun encryptAndSendJsonToContext(ctx: Context, obj: Any) {
         val msg = GenericResponse(true, fernetEncrypt(JavalinJson.toJson(obj)))
         ctx.json(msg)
     }
 
     init {
-////        val key = Fernet.Key("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
-////        val token = Fernet.Token(Fernet.time, byteArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))
+// //        val key = Fernet.Key("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
+// //        val token = Fernet.Token(Fernet.time, byteArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))
 //
 //        val fernet = Fernet("cw_0x689RpI-jtRR7oE8h_eQsKImvJapLeSbXpwF4e4=")
 //
 //
 //
-////        val token = fernet.encrypt("The quick brown fox jumps over the lazy dog.".toByteArray())
-////        println("Token = $token")
+// //        val token = fernet.encrypt("The quick brown fox jumps over the lazy dog.".toByteArray())
+// //        println("Token = $token")
 //        val token = "gAAAAABgCjgs5fAF5QOd8jJkEaogu9g5w20lbAMcaWIqlMYLEO4iK3TJgPVTQXWHJCCcNGNkPrGtx9wIaRbHfFglj4RNP-vtHw=="
 //        val message = fernet.decrypt(token)
 //        println("Message = " + String(message))
@@ -127,7 +124,6 @@ class Mounter(var port: String, var dir: String, var key_path: String=System.get
             kp.writeText(key)
         }
         fernet = Fernet(key)
-
 
         println("To connect, enter `mount http://localhost:$port vmfs $key` on Venus.")
         val fdir = File(dir)

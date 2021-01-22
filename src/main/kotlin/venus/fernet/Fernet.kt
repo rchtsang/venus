@@ -1,5 +1,6 @@
 package venus.fernet
 
+/* ktlint-disable no-wildcard-imports */
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.InvalidKeyException
@@ -10,6 +11,7 @@ import javax.crypto.Cipher
 import javax.crypto.Mac
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+/* ktlint-enable no-wildcard-imports */
 
 /**
  * Fernet (symmetric encryption)
@@ -210,18 +212,19 @@ class Fernet {
             this.ciphertext = ciphertext
             val token = buildToken()
             signature = generateHash(token, signingKey)
-            return Bytes.concat(token,  // This field is the 256-bit SHA256 HMAC, under signing-key.
-                    signature)
+            return Bytes.concat(token, // This field is the 256-bit SHA256 HMAC, under signing-key.
+                signature)
         }
 
         private fun buildToken(): ByteArray {
-            return Bytes.concat( // This field denotes which version of the format is being used by the token.
-                    byteToByteArray(version),  // This field is a 64-bit unsigned big-endian integer.
-                    longToByteArray(timestamp),  // The 128-bit Initialization Vector used in AES encryption and decryption of
-                    // the Ciphertext.
-                    iv,  // This field has variable size, but is always a multiple of 128 bits, the AES
-                    // block size.
-                    ciphertext)
+            return Bytes.concat(
+                // This field denotes which version of the format is being used by the token.
+                byteToByteArray(version), // This field is a 64-bit unsigned big-endian integer.
+                longToByteArray(timestamp), // The 128-bit Initialization Vector used in AES encryption and decryption of
+                // the Ciphertext.
+                iv, // This field has variable size, but is always a multiple of 128 bits, the AES
+                // block size.
+                ciphertext)
         }
 
         @Throws(NoSuchAlgorithmException::class, InvalidKeyException::class)
@@ -309,7 +312,7 @@ class Fernet {
      * plaintext, the time a message was created will therefore be visible to a
      * possible attacker.
      *
-     * @param data  The message you would like to encrypt.
+     * @param data The message you would like to encrypt.
      * @param token The Fernet token to use.
      * @return A secure message that cannot be read or altered without the key. It
      * is URL-safe base64-encoded. This is referred to as a “Fernet token”.
@@ -334,7 +337,7 @@ class Fernet {
      * plaintext, the time a message was created will therefore be visible to a
      * possible attacker.
      *
-     * @param data  The message you would like to encrypt.
+     * @param data The message you would like to encrypt.
      * @param token The Fernet token to use.
      * @return A secure message that cannot be read or altered without the key. This
      * is referred to as a “Fernet token”.
@@ -360,7 +363,7 @@ class Fernet {
 
     /**
      * @param data The Fernet token. This is the result of calling encrypt().
-     * @param ttl  Optionally, the number of seconds old a message may be for it to
+     * @param ttl Optionally, the number of seconds old a message may be for it to
      * be valid. If the message is older than ttl seconds (from the time
      * it was originally created) an exception will be raised. If ttl is
      * not provided (or is None), the age of the message is not
