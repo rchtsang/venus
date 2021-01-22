@@ -14,8 +14,15 @@ class VFSDrive(val n: String, override var parent: VFSObject, override var mount
 
     companion object {
         fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject? {
-            if (jsonContainer.innerobj is String && jsonContainer.innerobj != "") {
-                val handler = VFSMountedDriveHandler(jsonContainer.innerobj as String)
+            if (jsonContainer.innerobj != "") {
+                val iobj = jsonContainer.innerobj
+                var key = ""
+                var url = ""
+                js("""
+                    key = iobj["key"];
+                    url = iobj["url"];
+                """)
+                val handler = VFSMountedDriveHandler(url, key)
                 try {
                     handler.connect()
                 } catch (e: IllegalStateException) {

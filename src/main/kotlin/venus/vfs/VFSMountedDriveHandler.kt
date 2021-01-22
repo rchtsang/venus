@@ -1,11 +1,13 @@
 package venus.vfs
 
 import org.w3c.xhr.XMLHttpRequest
+import venus.Driver
 import kotlin.browser.window
 
-val VENUS_AUTH_TOKEN = "1yJPLzMSwOYPYqsLegJ8NpvJXdIC7PcrWLtPxPpZ6DzI9BsFv3iGwIpilpgVy0M7TmmEA063VUkBYIHezoes4vHF6m0mZA8DuTh"
-val COMPATABLE_VERSION = "1.0.0"
-data class VFSMountedDriveHandler(var url: String) {
+val COMPATABLE_VERSION = "1.0.1"
+val MESSAGE_TTL = 30
+
+data class VFSMountedDriveHandler(var url: String, var key: String) {
     var connected = false
     init {
 //        login()
@@ -22,16 +24,24 @@ data class VFSMountedDriveHandler(var url: String) {
             throw IllegalStateException("Could not connect to $url")
         }
         compatable()
+        verifyKey()
         connected = true
     }
 
-    fun save(): String {
-        return url
+    data class VFSMDHSave(val url: String, val key: String)
+    fun save(): VFSMDHSave {
+        return VFSMDHSave(url, key)
     }
 
     fun make_request(type: String, endPoint: String, data: String = ""): String? {
-        if (!connected && endPoint !in listOf("ping", "version")) {
+        val isSpecialEndpoint = endPoint in listOf("ping", "version", "showkey", "v1/auth")
+        if (!connected && !isSpecialEndpoint) {
             connect()
+        }
+        val encdata = if (!isSpecialEndpoint) {
+            fernetEncode(key, data)
+        } else {
+            data
         }
         val xhttp = XMLHttpRequest()
         xhttp.open(type, "$url/$endPoint", async = false)
@@ -40,7 +50,7 @@ data class VFSMountedDriveHandler(var url: String) {
             console.log("Sending request to $endPoint!")
         }
         try {
-            xhttp.send(data)
+            xhttp.send(encdata)
         } catch (e: Throwable) {
 //            return null
             console.error(e)
@@ -61,7 +71,23 @@ data class VFSMountedDriveHandler(var url: String) {
         if (xhttp.status != 200.toShort()) {
             throw IllegalStateException("Server responded with ${xhttp.status} - ${xhttp.statusText} for request $endPoint. Data: $data")
         }
-        return xhttp.responseText
+        return if (!isSpecialEndpoint) {
+            val encres = xhttp.responseText.let { JSON.parse<CMDEncRes>(it) } ?: CMDEncRes(success = false)
+            if (!encres.success) {
+                val res = window.prompt("Failed to decrypt the message from the server! Server Message: ${encres.data}\nIf the key has changed, please enter it here. If not, just leave this blank.")
+                if (res == null) {
+                    throw IllegalStateException("Failed to decrypt the message from the server! Server Message: ${encres.data}")
+                } else {
+                    key = res
+                    verifyKey(new_key = true)
+                    make_request(type, endPoint, data)
+                }
+            } else {
+                fernetDecode(key, encres.data)
+            }
+        } else {
+            xhttp.responseText
+        }
     }
 
 //    fun login() {
@@ -82,6 +108,45 @@ data class VFSMountedDriveHandler(var url: String) {
             throw IllegalStateException("Failed to get version from the file server ($url)!")
         } else if (res != COMPATABLE_VERSION) {
             throw IllegalStateException("This version of Venus's drive handler ($COMPATABLE_VERSION) is not compatible with the mounted file server ($res)!")
+        }
+    }
+
+    data class verKey(val msg: String, val send: String, val response: String)
+    fun verifyKey(new_key: Boolean = false) {
+        val rsp = make_request("GET", "showkey")
+        val res = rsp?.let { JSON.parse<verKey>(it) }
+                ?: throw IllegalStateException("Failed to receive a valid response for showkey! (Received $rsp)")
+        var save_on_complete = new_key
+        if (key == "") {
+            while (key == "") {
+                key = window.prompt(res.msg) ?: ""
+            }
+            save_on_complete = true
+        }
+        val senddata = try {
+            fernetEncode(key, res.send)
+        } catch (e: Throwable) {
+            key = ""
+            console.log(e)
+            throw IllegalStateException("You have entered an invalid key!")
+        }
+        val authrsp = make_request("POST", "v1/auth", data = JSON.stringify(verKey(msg = "verify", send = senddata, response = "")))
+        val authres = authrsp?.let { JSON.parse<verKey>(it) } ?: run {
+                key = ""
+                throw IllegalStateException("Auth service on the mount server failed to correctly respond!")
+            }
+        if (authres.msg != "") {
+            key = ""
+            throw IllegalStateException("Auth server responded with an error: ${authres.msg}")
+        }
+        if (fernetDecode(key, authres.response) != res.response) {
+            key = ""
+            throw IllegalStateException("The key you supplied is incorrect!")
+        }
+        console.log("Key verified!")
+        if (save_on_complete) {
+            // Hack to save new key
+            Driver.VFS.save()
         }
     }
 
@@ -111,6 +176,8 @@ data class VFSMountedDriveHandler(var url: String) {
         return ""
     }
 
+    data class CMDEncRes(val success: Boolean, val data: String = "")
+
     data class CMDlsReq(val data: String)
     data class CMDlsRes(val success: Boolean, val data: Array<String> = arrayOf<String>())
     fun CMDls(dir: String = ""): Array<String>? {
@@ -135,13 +202,18 @@ data class VFSMountedDriveHandler(var url: String) {
     fun CMDfileread(path: String): String {
         val rsp = make_request("POST", "api/fs/file/read", data = JSON.stringify(CMDfilereadReq(path = path)))
         val res = rsp?.let { JSON.parse<CMDfilereadRes>(it) } ?: CMDfilereadRes(success = false)
-        return res.data
+        var data = res.data
+        var rd = ""
+        js("rd = atob(data);")
+        return rd
     }
 
     data class CMDfilewriteReq(val path: String, val data: String)
     data class CMDfilewriteRes(val success: Boolean, val data: String = "FAILED TO WRITE TO FILE")
     fun CMDfilewrite(path: String, data: String): String {
-        val rsp = make_request("POST", "api/fs/file/write", data = JSON.stringify(CMDfilewriteReq(path = path, data = data)))
+        val d = ""
+        js("d = btoa(data);")
+        val rsp = make_request("POST", "api/fs/file/write", data = JSON.stringify(CMDfilewriteReq(path = path, data = d)))
         val res = rsp?.let { JSON.parse<CMDfilewriteRes>(it) } ?: CMDfilewriteRes(success = false)
         if (!res.success) {
             window.alert("Failed to write to file: ${res.data}")
@@ -191,3 +263,45 @@ data class VFSMountedDriveHandler(var url: String) {
 }
 
 data class LoginToken(var token: String, var expiration: String)
+
+fun fernetEncode(key: String, data: String): String {
+    var encoded = ""
+    try {
+        js("""
+            var secret = new fernet.Secret(key);
+            var token = new fernet.Token({
+              secret: secret,
+            });
+            encoded = token.encode(data)
+        """)
+    } catch (err: Exception) {
+        throw IllegalStateException("Fernet encryption failed! ${err.message}")
+    }
+    return encoded
+}
+
+fun fernetDecode(key: String, data: String, ttl: Int = MESSAGE_TTL): String {
+    var raw = ""
+    var error: String? = null
+    js("""
+        try {
+            var secret = new fernet.Secret(key);
+            var token = new fernet.Token({
+              secret: secret,
+              token: data,
+              ttl: ttl
+            });
+            raw = token.decode(data)
+        } catch (err) {
+            error = err.message
+        }
+    """)
+    if (error != null) {
+        if (error == "Invalid Token: TTL") {
+            throw IllegalStateException("A message you received has expired! Aborting...")
+        } else {
+            throw IllegalStateException("Unknown error when reading message: $error! Aborting...")
+        }
+    }
+    return raw
+}

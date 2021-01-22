@@ -17,6 +17,11 @@ var mount = Command(
             } else {
                 "drive"
             }
+            var key = if (args.size > 2) {
+                args[2]
+            } else {
+                ""
+            }
             if (url == "local") {
                 url = "http://localhost:6161"
             }
@@ -24,7 +29,7 @@ var mount = Command(
                 url = "http://" + url
             }
             try {
-                val h = VFSMountedDriveHandler(url)
+                val h = VFSMountedDriveHandler(url, key)
                 h.connect()
                 val res = t.vfs.mountDrive(dir, h)
                 t.vfs.save()
@@ -36,9 +41,10 @@ var mount = Command(
         },
         tab = ::fileTabComplete,
         help = """Allows you to mount external drives to the Venus web file system.
-            |Usage: mount device dir
+            |Usage: mount device dir key
             |device is either a name of a device or url of a hosted drive.
             |dir is the dir you would like to mount to. By default, it will mount it in the current location with the name the drive gives it.
+            |key is the validation key to ensure you are talking to the correct mount server.
             |You can use dir to name the mount point/nest it in another folder.
         """.trimMargin()
 )
