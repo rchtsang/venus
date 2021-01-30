@@ -28,6 +28,11 @@ data class VFSMountedDriveHandler(var url: String, var key: String) {
         connected = true
     }
 
+    fun disconect() {
+        connected = false
+        key = ""
+    }
+
     data class VFSMDHSave(val url: String, val key: String)
     fun save(): VFSMDHSave {
         return VFSMDHSave(url, key)
@@ -39,7 +44,12 @@ data class VFSMountedDriveHandler(var url: String, var key: String) {
             connect()
         }
         val encdata = if (!isSpecialEndpoint) {
-            fernetEncode(key, data)
+            try {
+                fernetEncode(key, data)
+            } catch (e: IllegalStateException) {
+                disconect()
+                throw e
+            }
         } else {
             data
         }
@@ -83,7 +93,12 @@ data class VFSMountedDriveHandler(var url: String, var key: String) {
                     make_request(type, endPoint, data)
                 }
             } else {
-                fernetDecode(key, encres.data)
+                try {
+                    fernetDecode(key, encres.data)
+                } catch (e: IllegalStateException) {
+                    disconect()
+                    throw e
+                }
             }
         } else {
             xhttp.responseText
@@ -119,28 +134,31 @@ data class VFSMountedDriveHandler(var url: String, var key: String) {
         var save_on_complete = new_key
         if (key == "") {
             while (key == "") {
-                key = window.prompt(res.msg) ?: ""
+                key = window.prompt(res.msg) ?: run {
+                    disconect()
+                    throw IllegalStateException("Failed to enter a valid key!")
+                }
             }
             save_on_complete = true
         }
         val senddata = try {
             fernetEncode(key, res.send)
         } catch (e: Throwable) {
-            key = ""
+            disconect()
             console.log(e)
             throw IllegalStateException("You have entered an invalid key!")
         }
         val authrsp = make_request("POST", "v1/auth", data = JSON.stringify(verKey(msg = "verify", send = senddata, response = "")))
         val authres = authrsp?.let { JSON.parse<verKey>(it) } ?: run {
-                key = ""
+            disconect()
                 throw IllegalStateException("Auth service on the mount server failed to correctly respond!")
             }
         if (authres.msg != "") {
-            key = ""
+            disconect()
             throw IllegalStateException("Auth server responded with an error: ${authres.msg}")
         }
         if (fernetDecode(key, authres.response) != res.response) {
-            key = ""
+            disconect()
             throw IllegalStateException("The key you supplied is incorrect!")
         }
         console.log("Key verified!")
