@@ -64,12 +64,12 @@ internal object Renderer {
 
     /** Display a given [AssemblerError] */
     fun displayError(thing: Any) {
-        System.err.println(thing)
+        System.err.print(thing)
     }
 
     /** Display a given [AssemblerError] */
     fun displayWarning(thing: Any) {
-        System.err.println(thing)
+        System.err.print(thing)
     }
 
     fun stdout(thing: Any) {
