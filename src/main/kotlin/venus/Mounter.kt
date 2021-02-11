@@ -8,13 +8,19 @@ import io.javalin.http.Context
 import io.javalin.plugin.json.JavalinJson
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import venus.fernet.*
+import org.eclipse.jetty.server.Connector
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.server.ServerConnector
+import org.eclipse.jetty.util.ssl.SslContextFactory
+import venus.fernet.Fernet
+import venus.fernet.FernetException
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
+
 
 /* ktlint-enable no-wildcard-imports */
 
@@ -140,6 +146,16 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
 
         val app: Javalin = Javalin.create { config ->
             config.enableCorsForAllOrigins()
+            config.server {
+                val server = Server()
+                val connector = ServerConnector(server)
+                connector.port = port.toInt()
+                server.connectors = arrayOf<Connector>(connector)
+//                val sslConnector = ServerConnector(server, sslContextFactory())
+//                sslConnector.port = port.toInt() + 1
+//                server.connectors = arrayOf<Connector>(sslConnector, connector)
+                server
+            }
         }.start(host, port.toInt())
         app.routes {
 //            post("/login") { ctx ->
@@ -396,6 +412,13 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
                     println("ERROR: $e")
                 }
             }
+        }
+    }
+
+    private fun sslContextFactory(): SslContextFactory? {
+        return SslContextFactory().apply {
+            keyStorePath = Mounter::class.java.getResource("/keystore.jks").toExternalForm() // replace with your real keystore
+            setKeyStorePassword("password") // replace with your real password
         }
     }
 }
