@@ -33,7 +33,7 @@ fun getRandomString(length: Int): String {
             .joinToString("")
 }
 
-class Mounter(var port: String, var dir: String, var key_path: String = System.getProperty("user.home") + "/.venus_mount_key", var custkey: String? = null) {
+class Mounter(var port: String, var dir: String, var key_path: String = System.getProperty("user.home") + "/.venus_mount_key", var custkey: String? = null, var host: String = DEFAULT_HOST) {
 //    data class LoginToken(var token: String, var expiration: String)
 //    val tokens: MutableMap<String, String>
 
@@ -113,19 +113,23 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
 //        val message = fernet.decrypt(token)
 //        println("Message = " + String(message))
         var key: String
-        var kp = File(key_path)
-        if (kp.exists()) {
-            // Load key
-            key = kp.readText()
+        if (custkey == null) {
+            var kp = File(key_path)
+            if (kp.exists()) {
+                // Load key
+                key = kp.readText()
+            } else {
+                // Create key and save it
+                key = Fernet.Key().toString()
+                kp.createNewFile()
+                kp.writeText(key)
+            }
         } else {
-            // Create key and save it
-            key = Fernet.Key().toString()
-            kp.createNewFile()
-            kp.writeText(key)
+            key = custkey!!
         }
         fernet = Fernet(key)
 
-        println("To connect, enter `mount http://localhost:$port vmfs $key` on Venus.")
+        println("To connect, enter `mount http://$host:$port vmfs $key` on Venus.")
         val fdir = File(dir)
         if (!fdir.exists() or !fdir.isDirectory) {
             System.err.println("The passed in dir is not a directory: $dir")
@@ -136,7 +140,7 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
 
         val app: Javalin = Javalin.create { config ->
             config.enableCorsForAllOrigins()
-        }.start(DEFAULT_HOST, port.toInt())
+        }.start(host, port.toInt())
         app.routes {
 //            post("/login") { ctx ->
 //                val auth_token = ctx.body()

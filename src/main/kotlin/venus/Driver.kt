@@ -85,6 +85,7 @@ object Driver {
         val maxSteps by cli.flagValueArgument(listOf("-ms", "--maxsteps"), "MaxSteps", "Sets the max number of steps to allow (negative to not care).", "500000")
         val stackHeapProtection by cli.flagArgument(listOf("-ahs", "--AllowHSAccess"), "Allows for load/store operations between the stack and heap. The default (without this flag) is to error on those acceses.", false, true)
 
+        val host by cli.flagValueArgument(listOf("--host"), "Host", "Host to server to.", "localhost")
         val port by cli.flagValueArgument(listOf("-p", "--port"), "Port", "Port to serve on.", "6161")
         val driveMount by cli.flagArgument(listOf("-dm", "--driveMount"), "Sets Venus to mount the directory specified by the 'file' to be a mountable drive.", false, true)
         val fernetKeyPath by cli.flagValueArgument(listOf("-kp", "--keyPath"), "Key", "The path to the key you want to use to validate connections. ", initialValue = System.getProperty("user.home") + "/.venus_mount_key")
@@ -105,7 +106,7 @@ object Driver {
         }
 
         if (driveMount) {
-            Mounter(port, assemblyTextFile, fernetKeyPath, fernetKey)
+            Mounter(port, assemblyTextFile, key_path = fernetKeyPath, custkey = fernetKey, host = host)
             return
         }
 
