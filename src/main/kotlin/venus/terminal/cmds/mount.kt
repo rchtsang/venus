@@ -25,9 +25,9 @@ var mount = Command(
             if (url == "local") {
                 url = "http://localhost:6161"
             }
-//            if (!url.startsWith("http://")) {
-//                url = "http://" + url
-//            }
+            if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+                url = "http://" + url
+            }
             try {
                 val h = VFSMountedDriveHandler(url, key)
                 h.connect()
