@@ -457,16 +457,24 @@ internal object Renderer {
      * @param thing the thing to print
      */
     internal fun printConsole(thing: Any) {
-        val console = getElement("console-output") as HTMLTextAreaElement
-        console.value += thing.toString()
+        try {
+            val console = getElement("console-output") as HTMLTextAreaElement
+            console.value += thing.toString()
+        } catch (e: ClassCastException) {
+            console.log("Failed to print to console: $e\nMessage: $thing")
+        }
     }
 
     /**
      * Clears the console
      */
     fun clearConsole() {
-        val console = getElement("console-output") as HTMLTextAreaElement
-        console.value = ""
+        try {
+            val console = getElement("console-output") as HTMLTextAreaElement
+            console.value = ""
+        } catch (e: ClassCastException) {
+            console.log("Failed to clear console: $e")
+        }
     }
 
     /**
