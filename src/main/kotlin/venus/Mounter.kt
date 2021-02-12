@@ -14,17 +14,14 @@ import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.ssl.SslContextFactory
 import venus.fernet.Fernet
 import venus.fernet.FernetException
-import java.io.BufferedReader
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.InputStreamReader
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
-
 
 /* ktlint-enable no-wildcard-imports */
 
@@ -175,7 +172,7 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
 //                }
 //            }
             ApiBuilder.get("/") { ctx ->
-                ctx.html("Welcome to the Venus mount server!<br><br>To connect, enter <pre>$connect_command</pre> on Venus.<br><br>If you are unable to connect to the mount server via the official <a href=\"$VENUS_URL\">Venus website</a>, you can try using a <a href=\"/venus\">local proxy through this server</a>. Please note that these two websites do NOT share settings or files so you will need to work in only one.")
+                ctx.html("Welcome to the Venus mount server!<br><br>To connect, enter <pre>$connect_command</pre> on Venus.<br><br>If you are unable to connect to the mount server via the official <a href=\"$VENUS_URL\">Venus website</a>, you can try using a <a href=\"/venus\">local proxy through this server</a>. Please note that these two websites do NOT share settings or files so you will need to work in only one. If you change the port of the mount server, your settings will also not be preserved!")
             }
             ApiBuilder.get("/venus") { ctx ->
                 val url = URL(VENUS_URL)
