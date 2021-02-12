@@ -14,17 +14,24 @@ import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.ssl.SslContextFactory
 import venus.fernet.Fernet
 import venus.fernet.FernetException
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.InputStreamReader
+import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
+
 /* ktlint-enable no-wildcard-imports */
 
 val VENUS_FS_API_PATH = "/api/fs"
 val VENUS_FS_VERSION = "1.0.1"
+
+val VENUS_URL = "https://venus.cs61c.org"
 
 val MESSAGE_TTL = 30
 
@@ -48,6 +55,9 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
 
     val sendString = getRandomString(64)
     val responseString = getRandomString(64)
+
+    val connect_message: String
+    val connect_command: String
 
     /**
      * Checks that a path is within the directory that was mounted.
@@ -133,8 +143,9 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
             key = custkey!!
         }
         fernet = Fernet(key)
-
-        println("To connect, enter `mount http://$host:$port vmfs $key` on Venus.")
+        connect_command = "mount http://$host:$port vmfs $key"
+        connect_message = "To connect, enter `$connect_command` on Venus."
+        println(connect_message)
         val fdir = File(dir)
         if (!fdir.exists() or !fdir.isDirectory) {
             System.err.println("The passed in dir is not a directory: $dir")
@@ -163,6 +174,31 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
 //                    ctx.json()
 //                }
 //            }
+            ApiBuilder.get("/") { ctx ->
+                ctx.html("Welcome to the Venus mount server!<br><br>To connect, enter <pre>$connect_command</pre> on Venus.<br><br>If you are unable to connect to the mount server via the official <a href=\"$VENUS_URL\">Venus website</a>, you can try using a <a href=\"/venus\">local proxy through this server</a>. Please note that these two websites do NOT share settings or files so you will need to work in only one.")
+            }
+            ApiBuilder.get("/venus") { ctx ->
+                val url = URL(VENUS_URL)
+                ctx.html(url.readText())
+            }
+            ApiBuilder.get("/css/*") { ctx ->
+                proxy(ctx)
+            }
+            ApiBuilder.get("/images/*") { ctx ->
+                proxy(ctx)
+            }
+            ApiBuilder.get("/js/*") { ctx ->
+                proxy(ctx)
+            }
+            ApiBuilder.get("/jvm/*") { ctx ->
+                proxy(ctx)
+            }
+            ApiBuilder.get("/packages/*") { ctx ->
+                proxy(ctx)
+            }
+            ApiBuilder.get("/scripts/*") { ctx ->
+                proxy(ctx)
+            }
             ApiBuilder.get("/version") { ctx ->
                 println("Got version request from ${ctx.ip()}...")
                 ctx.json(mapOf(Pair("data", VENUS_FS_VERSION)))
@@ -418,6 +454,24 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
         return SslContextFactory().apply {
             keyStorePath = Mounter::class.java.getResource("/keystore.jks").toExternalForm() // replace with your real keystore
             setKeyStorePassword("password") // replace with your real password
+        }
+    }
+
+    private fun proxy(ctx: Context) {
+        val urlpath = VENUS_URL + ctx.path()
+//        println("Proxying connection to: $urlpath")
+        val url = URL(urlpath)
+        val connection = url.openConnection()
+        if (connection != null) {
+            try {
+                val input_stream = connection.getInputStream()
+                ctx.contentType(connection.contentType)
+                ctx.result(input_stream.readAllBytes())
+            } catch (e: FileNotFoundException) {
+                ctx.status(404)
+            }
+        } else {
+            ctx.status(404)
         }
     }
 }
