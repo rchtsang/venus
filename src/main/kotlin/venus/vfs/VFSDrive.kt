@@ -18,11 +18,13 @@ class VFSDrive(val n: String, override var parent: VFSObject, override var mount
                 val iobj = jsonContainer.innerobj
                 var key = ""
                 var url = ""
+                var message_ttl = MESSAGE_TTL
                 js("""
                     key = iobj["key"];
                     url = iobj["url"];
+                    message_ttl = iobj["message_ttl"];
                 """)
-                val handler = VFSMountedDriveHandler(url, key)
+                val handler = VFSMountedDriveHandler(url, key, message_ttl = message_ttl)
                 try {
                     handler.connect()
                 } catch (e: IllegalStateException) {

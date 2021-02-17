@@ -7,7 +7,7 @@ import kotlin.browser.window
 val COMPATABLE_VERSION = "1.0.1"
 val MESSAGE_TTL = 30
 
-data class VFSMountedDriveHandler(var url: String, var key: String) {
+data class VFSMountedDriveHandler(var url: String, var key: String, var message_ttl: Int = MESSAGE_TTL) {
     var connected = false
     init {
 //        login()
@@ -33,9 +33,9 @@ data class VFSMountedDriveHandler(var url: String, var key: String) {
         key = ""
     }
 
-    data class VFSMDHSave(val url: String, val key: String)
+    data class VFSMDHSave(val url: String, val key: String, val message_ttl: Int)
     fun save(): VFSMDHSave {
-        return VFSMDHSave(url, key)
+        return VFSMDHSave(url, key, message_ttl)
     }
 
     fun make_request(type: String, endPoint: String, data: String = ""): String? {
@@ -278,30 +278,27 @@ data class VFSMountedDriveHandler(var url: String, var key: String) {
         val res = rsp?.let { JSON.parse<CMDnameRes>(it) } ?: CMDnameRes(false, "Could not get a response from the server!")
         return res.data
     }
-}
 
-data class LoginToken(var token: String, var expiration: String)
-
-fun fernetEncode(key: String, data: String): String {
-    var encoded = ""
-    try {
-        js("""
+    fun fernetEncode(key: String, data: String): String {
+        var encoded = ""
+        try {
+            js("""
             var secret = new fernet.Secret(key);
             var token = new fernet.Token({
               secret: secret,
             });
             encoded = token.encode(data)
         """)
-    } catch (err: Exception) {
-        throw IllegalStateException("Fernet encryption failed! ${err.message}")
+        } catch (err: Exception) {
+            throw IllegalStateException("Fernet encryption failed! ${err.message}")
+        }
+        return encoded
     }
-    return encoded
-}
 
-fun fernetDecode(key: String, data: String, ttl: Int = MESSAGE_TTL): String {
-    var raw = ""
-    var error: String? = null
-    js("""
+    fun fernetDecode(key: String, data: String, ttl: Int = message_ttl): String {
+        var raw = ""
+        var error: String? = null
+        js("""
         try {
             var secret = new fernet.Secret(key);
             var token = new fernet.Token({
@@ -314,12 +311,15 @@ fun fernetDecode(key: String, data: String, ttl: Int = MESSAGE_TTL): String {
             error = err.message
         }
     """)
-    if (error != null) {
-        if (error == "Invalid Token: TTL") {
-            throw IllegalStateException("A message you received has expired! Aborting...")
-        } else {
-            throw IllegalStateException("Unknown error when reading message: $error! Aborting...")
+        if (error != null) {
+            if (error == "Invalid Token: TTL") {
+                throw IllegalStateException("A message you received has expired! Aborting...")
+            } else {
+                throw IllegalStateException("Unknown error when reading message: $error! Aborting...")
+            }
         }
+        return raw
     }
-    return raw
 }
+
+data class LoginToken(var token: String, var expiration: String)
