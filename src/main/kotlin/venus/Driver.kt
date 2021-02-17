@@ -90,6 +90,7 @@ object Driver {
         val driveMount by cli.flagArgument(listOf("-dm", "--driveMount"), "Sets Venus to mount the directory specified by the 'file' to be a mountable drive.", false, true)
         val fernetKeyPath by cli.flagValueArgument(listOf("-kp", "--keyPath"), "Key", "The path to the key you want to use to validate connections. ", initialValue = System.getProperty("user.home") + "/.venus_mount_key")
         val fernetKey by cli.flagValueArgument(listOf("-k", "--key"), "Key", "The key you want to use to validate connections. ")
+        val message_ttl by cli.flagValueArgument(listOf("-ttl", "--messageTTL"), "TTL", "The amount of time (in seconds) you want the mount server to still accept messages from a client. Set to less than or equal to 0 to disable ttl.", initialValue = MESSAGE_TTL) { it.toInt() }
 
         val callingConventionReport by cli.flagArgument(listOf("-cc", "--callingConvention"), "Runs the calling convention checker.", false, true)
         val callingConventionRetOnlya0 by cli.flagArgument(listOf("--retToAllA"), "If this flag is enabled, the calling convention checker will assume all `a` register can be used to return values. If this is not there, then it will assume only a0 will be returned.", true, false)
@@ -106,7 +107,7 @@ object Driver {
         }
 
         if (driveMount) {
-            Mounter(port, assemblyTextFile, key_path = fernetKeyPath, custkey = fernetKey, host = host)
+            Mounter(port, assemblyTextFile, key_path = fernetKeyPath, custkey = fernetKey, host = host, message_ttl = message_ttl)
             return
         }
 

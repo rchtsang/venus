@@ -42,7 +42,7 @@ fun getRandomString(length: Int): String {
             .joinToString("")
 }
 
-class Mounter(var port: String, var dir: String, var key_path: String = System.getProperty("user.home") + "/.venus_mount_key", var custkey: String? = null, var host: String = DEFAULT_HOST) {
+class Mounter(var port: String, var dir: String, var key_path: String = System.getProperty("user.home") + "/.venus_mount_key", var custkey: String? = null, var host: String = DEFAULT_HOST, var message_ttl: Int = MESSAGE_TTL) {
 //    data class LoginToken(var token: String, var expiration: String)
 //    val tokens: MutableMap<String, String>
 
@@ -89,7 +89,7 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
 
     fun fernetDecrypt(data: String): String? {
         return try {
-            val dec = fernet.decrypt(data, MESSAGE_TTL)
+            val dec = fernet.decrypt(data, message_ttl)
             val sb = java.lang.StringBuilder()
             for (b in dec) {
                 val s = b.toUByte().toShort()
@@ -150,6 +150,8 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
         }
         System.setProperty("user.dir", fdir.absolutePath)
         baseAbsPath = Paths.get(fdir.absolutePath).normalize()
+
+        println("Message TTL set to: $message_ttl")
 
         val app: Javalin = Javalin.create { config ->
             config.enableCorsForAllOrigins()
