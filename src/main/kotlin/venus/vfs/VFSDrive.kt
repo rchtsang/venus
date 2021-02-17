@@ -22,7 +22,9 @@ class VFSDrive(val n: String, override var parent: VFSObject, override var mount
                 js("""
                     key = iobj["key"];
                     url = iobj["url"];
-                    message_ttl = iobj["message_ttl"];
+                    if ("message_ttl" in iobj) {
+                        message_ttl = iobj["message_ttl"];
+                    }
                 """)
                 val handler = VFSMountedDriveHandler(url, key, message_ttl = message_ttl)
                 try {
