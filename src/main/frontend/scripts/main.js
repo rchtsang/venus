@@ -1,5 +1,5 @@
 function setup_venus() {
-    // console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
+    console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
     try {
         load_update_message("Initializing codeMirror");
         window.venus_main = window.venus;
@@ -14,15 +14,15 @@ function setup_venus() {
                 indentUnit: 4,
                 autofocus: true,
                 lint: true,
+                autoRefresh:true,
             }
         );
-        if (window.CodeMirror.mac) {
+        if (window.CodeMirror.mac) { // This uses a custom codemirror which exposes this check.
             codeMirror.addKeyMap({"Cmd-/": function(cm){cm.execCommand('toggleComment')}})
         } else {
-            codeMirror.addKeyMap({"Ctrl-/": function(cgm){cm.execCommand('toggleComment')}})
+            codeMirror.addKeyMap({"Ctrl-/": function(cm){cm.execCommand('toggleComment')}})
         }
         window.codeMirror.setSize("100%", "88vh");
-        window.codeMirror.refresh();
     } catch (e) {
         console.error(e);
         load_error(e.toString())
