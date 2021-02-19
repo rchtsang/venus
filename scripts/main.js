@@ -1,5 +1,5 @@
 function setup_venus() {
-    console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
+    // console.log("----------THIS IS THE END OF THE EXPECTED GET ERRORS!----------");
     try {
         load_update_message("Initializing codeMirror");
         window.venus_main = window.venus;
@@ -13,19 +13,26 @@ function setup_venus() {
                 mode: "riscv",
                 indentUnit: 4,
                 autofocus: true,
-                lint: true
+                lint: true,
             }
         );
+        if (window.CodeMirror.mac) {
+            codeMirror.addKeyMap({"Cmd-/": function(cm){cm.execCommand('toggleComment')}})
+        } else {
+            codeMirror.addKeyMap({"Ctrl-/": function(cgm){cm.execCommand('toggleComment')}})
+        }
         window.codeMirror.setSize("100%", "88vh");
         window.codeMirror.refresh();
     } catch (e) {
+        console.error(e);
         load_error(e.toString())
     }
 }
 
 function local_riscv() {
-    load_update_message("Loading required file (local): js/risc-mode.js");
-    loadScript("js/risc-mode.js", "var msg='COULD NOT LOAD RISCVMODE SCRIPT!';load_error(msg);", "local_kotlin();");
+    load_update_message("Loading stylesheets!");
+    load_update_message("Loading required file (local): js/codemirror/risc-mode.js");
+    loadScript("js/codemirror/risc-mode.js", "var msg='COULD NOT LOAD RISCVMODE SCRIPT!';load_error(msg);", "local_kotlin();");
 }
 
 function local_kotlin() {
@@ -95,6 +102,33 @@ function load_update_message(msg) {
         return
     }
     elm.innerHTML = msg.replace(/\n/g, "<br>");
+}
+
+async function isUrlFound(url) {
+    try {
+        const response = await fetch(url, {
+            method: 'HEAD',
+            cache: 'no-cache'
+        });
+
+        return response.status === 200;
+
+    } catch(error) {
+        // console.log(error);
+        return false;
+    }
+}
+
+function addCss(fileName) {
+
+    var head = document.head;
+    var link = document.createElement("link");
+
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = fileName;
+
+    head.appendChild(link);
 }
 
 function load_error_fn(message, source, lineno, colno, error) {
