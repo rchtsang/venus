@@ -2,6 +2,8 @@ package venus
 
 /* ktlint-disable no-wildcard-imports */
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import venusbackend.assembler.Assembler
 import venusbackend.assembler.AssemblerError
 import venusbackend.cli.*
@@ -18,6 +20,8 @@ import venusbackend.simulator.cache.CacheHandler
 import venusbackend.simulator.cache.PlacementPolicy
 import venusbackend.simulator.plugins.CallingConventionCheck
 import venusbackend.simulator.plugins.Coverage
+import venusbackend.simulator.plugins.CoverageLine
+import venusbackend.toHex
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.jvm.JvmStatic
@@ -50,6 +54,7 @@ object Driver {
     var lastReadFile: File? = null
     var workingdir = "."
 
+    @OptIn(ImplicitReflectionSerializer::class)
     @JvmStatic
     fun main(args: Array<String>) {
         val cli = CommandLineInterface("venus")
@@ -95,7 +100,8 @@ object Driver {
         val callingConventionReport by cli.flagArgument(listOf("-cc", "--callingConvention"), "Runs the calling convention checker.", false, true)
         val callingConventionRetOnlya0 by cli.flagArgument(listOf("--retToAllA"), "If this flag is enabled, the calling convention checker will assume all `a` register can be used to return values. If this is not there, then it will assume only a0 will be returned.", true, false)
 
-        val coverageFile by cli.flagValueArgument(listOf("-cf", "--coverageFile"), "Coverage File", "Specifies a file for the coverage output.", "")
+        val coverageFile by cli.flagValueArgument(listOf("-cf", "--coverageFile"), "Coverage File", "Specifies a file for the coverage output. Format: Each line: <Hex PC> <location> <count>", "")
+        val jsonCoverageFile by cli.flagValueArgument(listOf("-jcf", "--jsonCoverageFile"), "Coverage File", "Specifies a file for the coverage output. Format Json: dictionary mapping <PC> to {location, count}", "")
 
         val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
@@ -188,7 +194,7 @@ object Driver {
                     sim.registerPlugin("cc", ccc)
                     ccc
                 } else null
-                val coverage = if (coverageFile.isNotEmpty()) {
+                val coverage = if (coverageFile.isNotEmpty() || jsonCoverageFile.isNotEmpty()) {
                     val cov = Coverage()
                     sim.registerPlugin("coverage", cov)
                     cov
@@ -200,8 +206,20 @@ object Driver {
                         exitProcess(-1)
                     }
                     if (coverage != null) {
-                        File(coverageFile).bufferedWriter().use { out ->
-                            coverage.finish(sim).forEach { line -> out.appendln(line) }
+                        val coverageLines = coverage.finish(sim)
+                        if (coverageFile.isNotEmpty()) {
+                            File(coverageFile).bufferedWriter().use { out ->
+                                coverageLines.forEach { line -> out.appendln("${toHex(line.pc)} ${line.loc} ${line.count}") }
+                            }
+                        }
+                        if (jsonCoverageFile.isNotEmpty()) {
+                            val f = File(jsonCoverageFile)
+                            val lineMap = HashMap<Long, CoverageLine>()
+                            for (entry in coverageLines) {
+                                lineMap.put(entry.pc, entry)
+                            }
+                            val lineMapString = Json.stringify(lineMap)
+                            f.writeText(lineMapString)
                         }
                     }
                 } catch (e: SimulatorError) {
