@@ -15,6 +15,7 @@ internal fun handleError(where: String, error: Throwable, h: Boolean = false) {
     }
     if (!(error is SimulatorError && (error.infe != null))) {
 //        Renderer.clearConsole()
+        console.error(error)
     } else {
         handled = true
     }
