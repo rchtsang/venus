@@ -2,28 +2,32 @@
 var url_string = window.location.href;
 var url = new URL(url_string);
 if (url.searchParams.get("clear") === "true") {
-    console.log("Found clear message! Removing venus data from the localStorage...");
-    localStorage.removeItem("venus");
-    function removeURLParameter(url, parameter) {
-        //prefer to use l.search if you have a location/link object
-        var urlparts= url.split('?');
-        if (urlparts.length>=2) {
+    var clear = window.confirm("Would you like to clear Venus's settings? (Warning: this action cannot be undone!)");
 
-            var prefix= encodeURIComponent(parameter)+'=';
-            var pars= urlparts[1].split(/[&;]/g);
+    if (clear) {
+        console.log("Found clear message! Removing venus data from the localStorage...");
+        localStorage.removeItem("venus");
+        function removeURLParameter(url, parameter) {
+            //prefer to use l.search if you have a location/link object
+            var urlparts= url.split('?');
+            if (urlparts.length>=2) {
 
-            //reverse iteration as may be destructive
-            for (var i= pars.length; i-- > 0;) {
-                //idiom for string.startsWith
-                if (pars[i].lastIndexOf(prefix, 0) !== -1) {
-                    pars.splice(i, 1);
+                var prefix= encodeURIComponent(parameter)+'=';
+                var pars= urlparts[1].split(/[&;]/g);
+
+                //reverse iteration as may be destructive
+                for (var i= pars.length; i-- > 0;) {
+                    //idiom for string.startsWith
+                    if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+                        pars.splice(i, 1);
+                    }
                 }
-            }
 
-            url= urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
-            return url;
-        } else {
-            return url;
+                url= urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
+                return url;
+            } else {
+                return url;
+            }
         }
     }
     window.location.replace(removeURLParameter(window.location.href, "clear"))
