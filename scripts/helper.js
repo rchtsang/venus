@@ -376,3 +376,16 @@ function lftcallback(resp) {
 //         }
 //     }
 // });
+
+// try {
+//     var venusBodyTabView = document.getElementById("venus-body-tab-view");
+//     // var venusBodyTabViewChild = document.getElementById("venus-body-tab-view-child");
+//     var venusBodyTabViewChild = document.getElementById("container");
+// } catch (e) {
+//     console.error(e);
+// }
+// function modifyTerminalSize() {
+//     venusBodyTabViewChild.style.width = (venusBodyTabView.clientWidth).toString() + "px";
+// }
+// modifyTerminalSize();
+// window.onresize = modifyTerminalSize;
