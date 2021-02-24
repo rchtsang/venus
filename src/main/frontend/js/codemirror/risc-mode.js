@@ -164,10 +164,18 @@ CodeMirror.defineMode("riscv", function(config, parserConfig) {
         ".data_start"
     ], "i");
 
+    var preprocessor_directives = ["#define", "#undef", "#if", "#elif", "#else", "#endif", "#ifdef", "#ifndef", "#error", "#import", "#include", "#pragma", "#line", "#using"];
+
     function normal(stream, state) {
         var ch = stream.next();
 
         if (ch == "#") {
+            var line = stream.lookAhead(0);
+            for (let i in preprocessor_directives) {
+                if (line.startsWith(preprocessor_directives[i])) {
+                    return "keyword"
+                }
+            }
             stream.skipToEnd();
             return "comment";
         }
