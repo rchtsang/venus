@@ -171,12 +171,13 @@ CodeMirror.defineMode("riscv", function(config, parserConfig) {
 
         if (ch == "#") {
             var line = stream.lookAhead(0);
+            stream.skipToEnd();
             for (let i in preprocessor_directives) {
-                if (line.startsWith(preprocessor_directives[i])) {
-                    return "keyword"
+                let dir = preprocessor_directives[i];
+                if (line.startsWith(dir)) {
+                    return "meta"
                 }
             }
-            stream.skipToEnd();
             return "comment";
         }
 
