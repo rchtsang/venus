@@ -103,6 +103,9 @@ object Driver {
         val coverageFile by cli.flagValueArgument(listOf("-cf", "--coverageFile"), "Coverage File", "Specifies a file for the coverage output. Format: Each line: <Hex PC> <location> <count>", "")
         val jsonCoverageFile by cli.flagValueArgument(listOf("-jcf", "--jsonCoverageFile"), "Coverage File", "Specifies a file for the coverage output. Format Json: dictionary mapping <PC> to {location, count}", "")
 
+//        val fileIsAssembly by cli.flagArgument(listOf("-fa", "--fileIsAssembly"), "This will interpret the assembly text file as instructions.", false, true)
+        val fileIsAssembly by cli.flagArgument(listOf("-fa", "--fileIsAssembly"), "This will interpret the assembly text file as instructions. If you set file to stdin, venus will listen on stdin to return a dump of the instruction. Note that branches and jumps will have a 0 immediate in this case.", false, true)
+
         val assemblyTextFile by cli.positionalArgument("file", "This is the file/filepath you want to assemble", "", minArgs = 1)
         val simArgs by cli.positionalArgumentsList("simulatorArgs", "Args which are put into the simulated program.")
 
@@ -145,9 +148,23 @@ object Driver {
 
         val progs = ArrayList<Program>()
 
-        val assemblyProgramText = readFileDirectlyAsText(assemblyTextFile)
+        val assemblyProgramText = if (fileIsAssembly) {
+            assemblyTextFile
+        } else {
+            readFileDirectlyAsText(assemblyTextFile)
+        }
 
-        val prog = assemble(assemblyProgramText, assemblyTextFile, lastReadFile!!.absolutePath)
+        if (assemblyTextFile == "stdin" && fileIsAssembly) {
+            stdinLoop()
+            exitProcess(0)
+        }
+        val abspath = if (fileIsAssembly) {
+            workingdir
+        } else {
+            lastReadFile!!.absolutePath
+        }
+
+        val prog = assemble(assemblyProgramText, assemblyTextFile, abspath)
         if (prog == null) {
             exitProcess(-1)
         } else {
@@ -307,10 +324,11 @@ object Driver {
         return tmp
     }
 
-    fun getInstructionDump(): String {
+    fun getInstructionDump(prog: Program? = null): String {
+        val program = prog ?: sim.linkedProgram.prog
         val sb = StringBuilder()
-        for (i in 0 until sim.linkedProgram.prog.insts.size) {
-            val mcode = sim.linkedProgram.prog.insts[i]
+        for (i in 0 until program.insts.size) {
+            val mcode = program.insts[i]
             val hexRepresentation = Renderer.toHex(mcode[InstructionField.ENTIRE])
             sb.append(hexRepresentation/*.removePrefix("0x")*/)
             sb.append("\n")
@@ -323,6 +341,18 @@ object Driver {
             Renderer.printConsole(getInstructionDump())
         } catch (e: Throwable) {
             handleError("dump", e)
+        }
+    }
+
+    fun stdinLoop() {
+        var line: String? = readLine()
+        while (line != null) {
+            val prog = assemble(line, "main.S", workingdir)
+            if (prog != null) {
+                val progdump = getInstructionDump(prog)
+                Renderer.printConsole(progdump)
+            }
+            line = readLine()
         }
     }
 
