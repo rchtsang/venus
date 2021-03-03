@@ -126,6 +126,18 @@ body {
     display: none;
 }
 
+#vdb-tab-view {
+     display: none;
+ }
+
+#breakpoints-tab-view {
+    display: block;
+}
+
+#watchpoints-tab-view {
+    display: none;
+}
+
 #cache-tab-view {
     display: none;
 }
@@ -281,4 +293,16 @@ body {
 
 #extern-link {
     color: black;
+}
+
+/* Chrome, Safari, Edge, Opera */
+#no-arrow input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+#no-arrow input[type=number] {
+    -moz-appearance: textfield;
 }

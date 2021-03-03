@@ -37,7 +37,14 @@ internal object Renderer {
     /** The simulator being rendered */
     private var sim: Simulator = Simulator(LinkedProgram(), VirtualFileSystem("dummy"))
     /* The way the information in the registers is displayed*/
-    private var displayType = "hex"
+    var displayType = "hex"
+
+    var mainTabs: ArrayList<String> = arrayListOf("simulator", "editor", "venus")
+    val simulatorTabs: ArrayList<String> = arrayListOf("register", "memory", "cache", "vdb")
+    val venusMainSettingsTabs: ArrayList<String> = arrayListOf("settings")
+    val venusSubSettingsTabs: ArrayList<String> = arrayListOf("general-settings", "tracer-settings", "calling-convention-settings", "packages")
+    val simulatorRegisterTabs: ArrayList<String> = arrayListOf("regs", "fregs")
+    val venusSimulatorVDBTabs: ArrayList<String> = arrayListOf("breakpoints", "watchpoints")
 
     @JsName("renderTab") fun renderTab(tab: String, tabs: List<String>) {
         if (!tabs.contains(tab)) {
@@ -45,7 +52,7 @@ internal object Renderer {
         }
         for (t in tabs) {
             var disp = "none"
-            if (t.equals(tab)) {
+            if (t == tab) {
                 disp = "block"
             }
             tabSetVisibility(t, disp)
@@ -68,7 +75,6 @@ internal object Renderer {
         return false
     }
 
-    var mainTabs: ArrayList<String> = arrayListOf("simulator", "editor", "venus")
     /**
      * Shows the simulator tab and hides other tabs
      *
@@ -561,71 +567,6 @@ internal object Renderer {
      */
     const val MEMORY_CONTEXT = 6
 
-    /** Show the memory sidebar tab */
-    fun renderMemoryTab() {
-        tabSetVisibility("memory", "block")
-        tabSetVisibility("register", "none")
-        tabSetVisibility("cache", "none")
-    }
-
-    /** Show the register sidebar tab */
-    fun renderRegisterTab() {
-        tabSetVisibility("register", "block")
-        tabSetVisibility("memory", "none")
-        tabSetVisibility("cache", "none")
-    }
-
-    fun renderCacheTab() {
-        tabSetVisibility("cache", "block")
-        tabSetVisibility("memory", "none")
-        tabSetVisibility("register", "none")
-    }
-
-    fun renderSettingsTab() {
-        tabSetVisibility("settings", "block")
-    }
-
-    fun renderGeneralSettingsTab() {
-        tabSetVisibility("general-settings", "block")
-        tabSetVisibility("tracer-settings", "none")
-        tabSetVisibility("calling-convention-settings", "none")
-        tabSetVisibility("packages", "none")
-    }
-
-    /**
-     * Show the tracer settings tab
-     */
-    fun renderTracerSettingsTab() {
-        tabSetVisibility("general-settings", "none")
-        tabSetVisibility("tracer-settings", "block")
-        tabSetVisibility("calling-convention-settings", "none")
-        tabSetVisibility("packages", "none")
-    }
-
-    fun renderCallingConventionSettingsTab() {
-        tabSetVisibility("general-settings", "none")
-        tabSetVisibility("tracer-settings", "none")
-        tabSetVisibility("calling-convention-settings", "block")
-        tabSetVisibility("packages", "none")
-    }
-
-    fun renderPackagesTab() {
-        tabSetVisibility("general-settings", "none")
-        tabSetVisibility("tracer-settings", "none")
-        tabSetVisibility("calling-convention-settings", "none")
-        tabSetVisibility("packages", "block")
-    }
-
-    fun renderRegsTab() {
-        tabSetVisibility("regs", "block")
-        tabSetVisibility("fregs", "none")
-    }
-
-    fun renderFRegsTab() {
-        tabSetVisibility("regs", "none")
-        tabSetVisibility("fregs", "block")
-    }
-
     fun rendererAddPackage(pid: String, enabled: Boolean, removable: Boolean = true) {
         val rp = document.createElement("div")
         rp.addClass("panel-block")
@@ -704,6 +645,7 @@ internal object Renderer {
         }
 
         for (rowIdx in -MEMORY_CONTEXT..MEMORY_CONTEXT) {
+//        val rowIdx = 6
             val row = getElement("mem-row-$rowIdx")
             val rowAddr = activeMemoryAddress + 4 * rowIdx
             renderMemoryRow(row, rowAddr)
@@ -725,6 +667,15 @@ internal object Renderer {
      * @param row the HTML element of the row to render
      * @param rowAddr the new address of that row
      */
+    fun displayByteAsString(byte: Int): String {
+        return when (displayType) {
+            "Hex" -> byteToHex(byte)
+            "Decimal" -> byteToDec(byte)
+            "Unsigned" -> byteToUnsign(byte)
+            "ASCII" -> toAscii(byte, 2)
+            else -> byteToHex(byte)
+        }
+    }
     private fun renderMemoryRow(urow: HTMLElement, rowAddr: Int) {
         val row = cleanTableRow(urow)
         val tdAddress = row.childNodes[0] as HTMLTableCellElement
@@ -732,20 +683,20 @@ internal object Renderer {
             tdAddress.innerText = toHex(rowAddr)
             for (i in 1..4) {
                 val tdByte = row.childNodes[i] as HTMLTableCellElement
+                val input = tdByte.childNodes[0] as HTMLInputElement
                 val byte = sim.loadByte(rowAddr + i - 1)
-                tdByte.innerText = when (displayType) {
-                    "Hex" -> byteToHex(byte)
-                    "Decimal" -> byteToDec(byte)
-                    "Unsigned" -> byteToUnsign(byte)
-                    "ASCII" -> toAscii(byte, 2)
-                    else -> byteToHex(byte)
-                }
+                input.value = displayByteAsString(byte)
+                input.disabled = false
+                js("input.onkeydown();")
             }
         } else {
             tdAddress.innerText = "----------"
             for (i in 1..4) {
                 val tdByte = row.childNodes[i] as HTMLTableCellElement
-                tdByte.innerText = "--"
+                val input = tdByte.childNodes[0] as HTMLInputElement
+                input.value = "--"
+                input.disabled = true
+                js("input.onkeydown();")
             }
         }
     }

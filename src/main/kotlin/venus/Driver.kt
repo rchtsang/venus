@@ -516,52 +516,26 @@ import kotlin.dom.removeClass
     }
 
     /**
-     * Change to memory tab.
-     */
-    @JsName("openMemoryTab") fun openMemoryTab() {
-        Renderer.renderMemoryTab()
-    }
-
-    /**
      * Change to register tab.
      */
-    @JsName("openRegisterTab") fun openRegisterTab() {
-        Renderer.renderRegisterTab()
+    @JsName("openSimulatorTab") fun openSimulatorTab(tabid: String) {
+        Renderer.renderTab(tabid, Renderer.simulatorTabs)
     }
 
-    @JsName("openRegsTab") fun openRegsTab() {
-        Renderer.renderRegsTab()
+    @JsName("openSimulatorRegisterTab") fun openSimulatorReigsterTab(tabid: String) {
+        Renderer.renderTab(tabid, Renderer.simulatorRegisterTabs)
     }
 
-    @JsName("openFRegsTab") fun openFRegsTab() {
-        Renderer.renderFRegsTab()
+    @JsName("openSettingsTab") fun openSettingsTab(tabid: String) {
+        Renderer.renderTab(tabid, Renderer.venusMainSettingsTabs)
     }
 
-    /**
-     * Change to trace settings tab
-     */
-    @JsName("openTracerSettingsTab") fun openTracerSettingsTab() {
-        Renderer.renderTracerSettingsTab()
+    @JsName("openVenusSubSettingsTab") fun openVenusSubSettingsTab(tabid: String) {
+        Renderer.renderTab(tabid, Renderer.venusSubSettingsTabs)
     }
 
-    @JsName("openCallingConventionSettingsTab") fun openCallingConventionSettingsTab() {
-        Renderer.renderCallingConventionSettingsTab()
-    }
-
-    @JsName("openPackagesTab") fun openPackagesTab() {
-        Renderer.renderPackagesTab()
-    }
-
-    @JsName("openCacheTab") fun openCacheTab() {
-        Renderer.renderCacheTab()
-    }
-
-    @JsName("openSettingsTab") fun openSettingsTab() {
-        Renderer.renderSettingsTab()
-    }
-
-    @JsName("openGeneralSettingsTab") fun openGeneralSettingsTab() {
-        Renderer.renderGeneralSettingsTab()
+    @JsName("openSimulatorVDBTab") fun openSimulatorVDBTab(tabid: String) {
+        Renderer.renderTab(tabid, Renderer.venusSimulatorVDBTabs)
     }
 
     @JsName("currentlyRunning") fun currentlyRunning(): Boolean = timer != null
@@ -633,6 +607,24 @@ import kotlin.dom.removeClass
             Renderer.updateMemory(addr)
         } catch (e: Throwable) {
             handleError("MoveMemLoc", e, true)
+        }
+    }
+
+    @JsName("updateMemoryLocation") fun updateMemoryLocation(e: HTMLSelectElement, byteOffset: Int) {
+        try {
+            val tr = e.parentElement!!.parentElement!!
+            val addressNode = tr.children[0]!!
+            val addrvalue = addressNode.innerHTML
+            if (addrvalue.contains("-")) {
+                return
+            }
+            val address = userStringToLong(addrvalue) + byteOffset
+            val value = userStringToInt(e.value) and 0xFF
+            sim.storeByte(address, value)
+            e.value = Renderer.displayByteAsString(value)
+            js("e.onkeydown();")
+        } catch (e: Throwable) {
+            handleError("updateMemoryLocation", e, true)
         }
     }
 

@@ -199,14 +199,14 @@
             <article class="tile is-child">
               <nav class="panel">
                 <p class="panel-tabs">
-                  <a id="settings-tab" onclick="driver.openSettingsTab()" class="is-active">Settings</a>
+                  <a id="settings-tab" onclick="driver.openSettingsTab('settings')" class="is-active">Settings</a>
                 </p>
                 <nav id="settings-tab-view" class="panel">
                   <p class="panel-tabs">
-                    <a id="general-settings-tab" onclick="driver.openGeneralSettingsTab()" class="is-active">General</a>
-                    <a id="calling-convention-settings-tab" onclick="driver.openCallingConventionSettingsTab()">Calling Convention</a>
-                    <a id="tracer-settings-tab" onclick="driver.openTracerSettingsTab()">Tracer</a>
-                    <a id="packages-tab" onclick="driver.openPackagesTab()">Packages</a>
+                    <a id="general-settings-tab" onclick="driver.openVenusSubSettingsTab('general-settings')" class="is-active">General</a>
+                    <a id="calling-convention-settings-tab" onclick="driver.openVenusSubSettingsTab('calling-convention-settings')">Calling Convention</a>
+                    <a id="tracer-settings-tab" onclick="driver.openVenusSubSettingsTab('tracer-settings')">Tracer</a>
+                    <a id="packages-tab" onclick="driver.openVenusSubSettingsTab('packages')">Packages</a>
                   </p>
                   <div id="general-settings-tab-view">
                     <div id="ArgsList-div" class="panel-block">
@@ -486,14 +486,15 @@
           <article class="tile is-child" id="sidebar-listings-container">
             <nav class="panel">
               <p class="panel-tabs">
-                <a id="register-tab" class="is-active" onclick="driver.openRegisterTab()">Registers</a>
-                <a id="memory-tab" onclick="driver.openMemoryTab()">Memory</a>
-                <a id="cache-tab" onclick="driver.openCacheTab()">Cache</a>
+                <a id="register-tab" class="is-active" onclick="driver.openSimulatorTab('register')">Registers</a>
+                <a id="memory-tab" onclick="driver.openSimulatorTab('memory')">Memory</a>
+                <a id="cache-tab" onclick="driver.openSimulatorTab('cache')">Cache</a>
+                <a id="vdb-tab" onclick="driver.openSimulatorTab('vdb')">VDB</a>
               </p>
               <nav id="register-tab-view" class="panel">
                 <p class="panel-tabs"></a>
-                  <a id="regs-tab" onclick="driver.openRegsTab()" class="is-active">Integer (R)</a>
-                  <a id="fregs-tab" onclick="driver.openFRegsTab()">Floating (F)</a>
+                  <a id="regs-tab" onclick="driver.openSimulatorRegisterTab('regs')" class="is-active">Integer (R)</a>
+                  <a id="fregs-tab" onclick="driver.openSimulatorRegisterTab('fregs')">Floating (F)</a>
                 </p>
                 <div id="regs-tab-view">
                   <div id="reg-0" class="panel-block tile">
@@ -1294,94 +1295,94 @@
                     </thead>
                     <tr id="mem-row-6">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row-5">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row-4">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row-3">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row-2">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row-1">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row-0">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row--1">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row--2">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row--3">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row--4">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row--5">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                     <tr id="mem-row--6">
                       <td>0x00000000</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 0);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 1);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 2);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
+                      <td><input class="input is-small" style="text-align:center" onblur="driver.updateMemoryLocation(this, 3);" onkeydown="changeMemoryBoxSize(this);" onkeyup="changeMemoryBoxSize(this);" spellcheck="false" maxlength="4" size="4"></td>
                     </tr>
                   </table>
                 </div>
@@ -1569,6 +1570,18 @@
                   </div>
                 </div>
               </div>
+              <nav id="vdb-tab-view" class="panel">
+                <p class="panel-tabs"></a>
+                  <a id="breakpoints-tab" onclick="driver.openSimulatorVDBTab('breakpoints')" class="is-active">Breakpoints</a>
+                  <a id="watchpoints-tab" onclick="driver.openSimulatorVDBTab('watchpoints')">Watchpoints</a>
+                </p>
+                <div id="breakpoints-tab-view">
+                In depth break point view coming soon!
+                </div>
+                <div id="watchpoints-tab-view">
+                Watchpoints coming soon!
+                </div>
+              </nav>
             </nav>
           </article>
         </div>
