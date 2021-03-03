@@ -339,6 +339,15 @@ function httpGetAsync(theUrl, callback)
     xmlHttp.send(null);
 }
 
+function changeMemoryBoxSize(elm) {
+    var value = elm.value.toString();
+    var len = value.length;
+    if (len < 4) {
+        len += 1;
+    }
+    elm.style.width = (len * 0.75) + "rem";
+}
+
 // (function() {
 //     var cors_api_host = 'cors-anywhere.herokuapp.com';
 //     var cors_api_url = 'https://' + cors_api_host + '/';
