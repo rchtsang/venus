@@ -103,7 +103,8 @@ var fernet = function fernet(opts) {
 
     var decrypted = AES.decrypt(encrypted, encryptionKey, { iv: iv });
 
-    return decrypted.toString(Utf8);
+    // return decrypted.toString(Utf8);
+    return decrypted.toString(Latin1);
   }
 
   this.timeBytes = timeBytes;
