@@ -312,7 +312,7 @@
                     </div>
                   </div>
                   <div id="tracer-settings-tab-view">
-                  <div id="" class="panel-block">
+                  <div class="panel-block">
                     <div class="field is-horizontal">
                       <article class="tile is-child is-primary" align="center">
                         <h3>Registers Pattern:</h3>
@@ -1579,8 +1579,42 @@
                 In depth break point view coming soon!
                 </div>
                 <div id="watchpoints-tab-view">
-                Watchpoints coming soon!
-                </div>
+                  <div class="panel-block">
+                    <div class="tile is-child is-primary" align="center">
+                      <small><table class="table is-striped" style="margin-bottom: 0.25rem">
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                          <th>Name</th>-->
+<!--                          <th>Setting</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+                        <tr>
+                          <th>Read/Write</th>
+                          <th>On Read <input type="checkbox" value="On Read" onclick=""> | On Write <input type="checkbox" value="On Write" onclick=""></th>
+                        </tr>
+                        <tr>
+                          <th>Address</th>
+                          <th><input class="input is-small" spellcheck="false" onblur=""></th>
+                        </tr>
+                        <tr>
+                          <th>Value</th>
+                          <th><input class="input is-small" spellcheck="false" onblur=""></th>
+                        </tr>
+                        <tr>
+                          <th>Mask</th>
+                          <th><input class="input is-small" spellcheck="false" onblur=""></th>
+                        </tr>
+                      </table></small>
+                      <input type="hidden" value="">
+                      <button class="button is-primary" onclick="driver.addWatchpoint(this.parentNode.parentNode)">Add Watchpoint</button>
+                    </div>
+                  </div>
+                    <div class="panel-block" align="center">
+                      <div class="tile is-child is-primary" align="center">
+                      <font size="2px" color="green">vvv Watchpoints vvv</font>
+                      </div>
+                    </div>
+
               </nav>
             </nav>
           </article>

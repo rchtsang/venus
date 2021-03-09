@@ -141,6 +141,18 @@
     font-weight: bold;
 }
 
+.theme-dark .table th {
+    color: #CCCCCC;
+}
+
+.table.is-striped tbody tr:not(.is-selected):nth-child(even) {
+    background-color: #484848;
+}
+
+.table.is-striped tbody tr:not(.is-selected):nth-child(even):hover {
+    background-color: #585858;
+}
+
 .theme-dark .table tr td {
     color: #f3f3f3;
     font-weight: bold;
@@ -269,6 +281,10 @@
 .theme-dark .alertify .ajs-body .ajs-content, .theme-dark .alertify .ajs-dialog {
     background: #222222 !important;
     color: #CCCCCC !important;
+}
+
+.theme-dark .alertify .ajs-footer .ajs-buttons .ajs-button {
+    color: #d4d4d4;
 }
 
 .theme-dark ::-webkit-scrollbar { width: 8px; height: 3px;}

@@ -191,7 +191,7 @@ internal object Renderer {
         updateText()
         updatePC(sim.getPC())
         updateMemory(activeMemoryAddress)
-        updateControlButtons()
+        updateControlButtons()g
         for (i in 0..31) {
             updateRegister(i, sim.getReg(i))
         }

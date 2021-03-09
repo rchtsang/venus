@@ -12,7 +12,6 @@ import venusbackend.assembler.*
 import venusbackend.linker.LinkedProgram
 import venusbackend.linker.Linker
 import venusbackend.linker.ProgramAndLibraries
-import venusbackend.numbers.QuadWord
 import venusbackend.plus
 import venusbackend.riscv.*
 import venusbackend.riscv.insts.dsl.types.Instruction
@@ -24,6 +23,7 @@ import venusbackend.simulator.cache.BlockReplacementPolicy
 import venusbackend.simulator.cache.CacheError
 import venusbackend.simulator.cache.CacheHandler
 import venusbackend.simulator.cache.PlacementPolicy
+import venusbackend.toHex
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.dom.addClass
@@ -51,8 +51,8 @@ import kotlin.dom.removeClass
     var cacheLevels: ArrayList<CacheHandler> = arrayListOf(mainCache)
     val simSettings = SimulatorSettings()
     var sim: Simulator = Simulator(LinkedProgram(), VFS, settings = simSettings)
-    val simState64 = SimulatorState64()
-    val temp = QuadWord()
+
+    val watchpoints = HashSet<WatchPoint>()
 
     var tr: Tracer = Tracer(sim)
 
@@ -78,8 +78,6 @@ import kotlin.dom.removeClass
         /* This code right here is so that you can add custom kotlin code even after venus has been loaded! */
         js("window.eval_in_venus_env = function (s) {return eval(s);}")
         js("load_update_message(\"Initializing Venus: Init\");")
-        simState64.getReg(0)
-        Linter.lint("")
         console.log("Loading driver...")
         mainCache.attach(false)
 
@@ -337,6 +335,9 @@ import kotlin.dom.removeClass
         if (doCallingConventionCheck) {
             this.enableCallingConvention(true)
         }
+        for (wp in this.watchpoints) {
+            sim.addWatchpoint(wp)
+        }
     }
 
     fun getMaxSteps(): Int {
@@ -411,6 +412,9 @@ import kotlin.dom.removeClass
             for (arg in args) {
                 sim.addArg(arg)
             }
+            for (wp in this.watchpoints) {
+                sim.addWatchpoint(wp)
+            }
             for ((id, p) in plugins) {
                 sim.registerPlugin(id, p)
             }
@@ -428,6 +432,225 @@ import kotlin.dom.removeClass
     @JsName("toggleBreakpoint") fun addBreakpoint(idx: Int) {
         val isBreakpoint = sim.toggleBreakpointAt(idx)
         Renderer.renderBreakpointAt(idx, isBreakpoint)
+    }
+
+    @JsName("addWatchpoint") fun addWatchpoint(elm: HTMLDivElement) {
+        val inputs = elm.getElementsByTagName("input")
+        var onReadElm = inputs[0] as HTMLInputElement
+        var onWriteElm = inputs[1] as HTMLInputElement
+        var address = inputs[2] as HTMLInputElement
+        var value = inputs[3] as HTMLInputElement
+        var mask = inputs[4] as HTMLInputElement
+        var hidden = inputs[5] as HTMLInputElement
+
+        if (!onReadElm.checked && !onWriteElm.checked) {
+            js("alertify.alert('On read and/or On write must be selected!');")
+            return
+        }
+
+        if (address.value == "" && value.value == "") {
+            js("alertify.alert('You must set an address and or a value.');")
+            return
+        }
+
+        val newwpnode = elm.cloneNode(true) as HTMLDivElement
+        val btn = newwpnode.getElementsByTagName("button")[0] as HTMLButtonElement
+        btn.style.backgroundColor = "red"
+        btn.onclick = { it ->
+            js("driver.removeWatchpoint(this.parentNode.parentNode)")
+        }
+        btn.innerText = "Remove"
+
+        val newinputs = newwpnode.getElementsByTagName("input")
+        (newinputs[0] as HTMLInputElement).onclick = { it ->
+            js("driver.editWatchpoint('onRead', this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement)")
+        }
+        (newinputs[1] as HTMLInputElement).onclick = { it ->
+            js("driver.editWatchpoint('onWrite', this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement)")
+        }
+        (newinputs[2] as HTMLInputElement).onblur = { it ->
+            js("driver.editWatchpoint('value', this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement)")
+        }
+        (newinputs[3] as HTMLInputElement).onblur = { it ->
+            js("driver.editWatchpoint('address', this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement)")
+        }
+        (newinputs[4] as HTMLInputElement).onblur = { it ->
+            js("driver.editWatchpoint('mask', this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement)")
+        }
+
+        if (internalAddWatchpoint("new", newwpnode)) {
+            val wpdiv = document.getElementById("watchpoints-tab-view") as HTMLDivElement
+            wpdiv.appendChild(newwpnode)
+
+            onReadElm.checked = false
+            onWriteElm.checked = false
+            address.value = ""
+            value.value = ""
+            mask.value = ""
+            hidden.value = ""
+        }
+    }
+
+    fun internalAddWatchpoint(which: String, elm: HTMLDivElement): Boolean {
+        val inputs = elm.getElementsByTagName("input")
+        if (inputs.length != 6) {
+            console.log(elm)
+            console.log(inputs)
+            js("alertify.alert('Unable to edit this watchpoint: This watchpoint is malformed!')")
+            return false
+        }
+        var onReadElm = inputs[0] as HTMLInputElement
+        var onWriteElm = inputs[1] as HTMLInputElement
+        var address = inputs[2] as HTMLInputElement
+        var value = inputs[3] as HTMLInputElement
+        var mask = inputs[4] as HTMLInputElement
+        var hidden = inputs[5] as HTMLInputElement
+        var hiddenvalue = hidden.value
+
+        var oldwp = try {
+            if (hiddenvalue != "") {
+                WatchPoint.parse(hiddenvalue)
+            } else {
+                WatchPoint(true, false, 0, 0, 0)
+            }
+        } catch (e: SimulatorError) {
+            console.error(e)
+            js("alertify.alert('Could not parse what this watchpoint was! Please remove this watchpoint then re-add the one you want.')")
+            return false
+        }
+        var addressint: Number?
+        var valueint: Number?
+        var maskint: Number?
+        try {
+            addressint = if (address.value.toLowerCase() in listOf("none", "null", "na", "nil", "nul", "")) {
+                null
+            } else {
+                userStringToLong(address.value)
+            }
+            valueint = if (value.value.toLowerCase() in listOf("none", "null", "na", "nil", "nul", "")) {
+                null
+            } else {
+                userStringToLong(value.value)
+            }
+            maskint = if (mask.value.toLowerCase() in listOf("none", "null", "na", "nil", "nul", "")) {
+                null
+            } else {
+                userStringToLong(mask.value)
+            }
+        } catch (e: NumberFormatException) {
+            console.error(e)
+            onReadElm.checked = oldwp.onRead
+            onWriteElm.checked = oldwp.onWrite
+            address.value = oldwp.address?.let { it -> toHex(it) } ?: "None"
+            value.value = oldwp.value?.let { it -> toHex(it) } ?: "None"
+            mask.value = oldwp.mask?.let { it -> toHex(it) } ?: "None"
+            js("alertify.alert('Could not parse your watchpoint ' + which + '. ' + e);")
+            return false
+        }
+        val newwp = try {
+            WatchPoint(onReadElm.checked, onWriteElm.checked, addressint, valueint, maskint)
+        } catch (e: SimulatorError) {
+            console.error(e)
+            onReadElm.checked = oldwp.onRead
+            onWriteElm.checked = oldwp.onWrite
+            address.value = oldwp.address?.let { it -> toHex(it) } ?: "None"
+            value.value = oldwp.value?.let { it -> toHex(it) } ?: "None"
+            mask.value = oldwp.mask?.let { it -> toHex(it) } ?: "None"
+            js("alertify.alert('Could not parse ' + which + '. ' + e);")
+            return false
+        }
+        if (this.watchpoints.contains(newwp)) {
+            onReadElm.checked = oldwp.onRead
+            onWriteElm.checked = oldwp.onWrite
+            address.value = oldwp.address?.let { it -> toHex(it) } ?: "None"
+            value.value = oldwp.value?.let { it -> toHex(it) } ?: "None"
+            mask.value = oldwp.mask?.let { it -> toHex(it) } ?: "None"
+            js("alertify.alert('This watchpoint already exists!');")
+            return false
+        }
+        this.sim.addWatchpoint(newwp)
+        this.watchpoints.add(newwp)
+        onReadElm.checked = newwp.onRead
+        onWriteElm.checked = newwp.onWrite
+        address.value = newwp.address?.let { it -> toHex(it) } ?: "None"
+        value.value = newwp.value?.let { it -> toHex(it) } ?: "None"
+        mask.value = newwp.mask?.let { it -> toHex(it) } ?: "None"
+        hidden.value = newwp.stringify()
+        return true
+    }
+
+    @JsName("editWatchpoint") fun editWatchpoint(which: String, elm: HTMLDivElement) {
+        val inputs = elm.getElementsByTagName("input")
+        var hidden = inputs[5] as HTMLInputElement
+        var hiddenvalue = hidden.value
+        var oldwp = try {
+            WatchPoint.parse(hiddenvalue)
+        } catch (e: SimulatorError) {
+            console.error(e)
+            js("alertify.alert('Unable to edit this watchpoint: This watchpoint is malformed! This watchpoint was changed but not removed!')")
+            return
+        }
+        if (!internalAddWatchpoint(which, elm)) {
+            return
+        }
+        this.watchpoints.remove(oldwp)
+        sim.removeWatchpoint(oldwp)
+    }
+
+    @JsName("removeWatchpoint") fun removeWatchpoint(elm: HTMLDivElement) {
+        val inputs = elm.getElementsByTagName("input")
+        if (inputs.length != 6) {
+            console.log(elm)
+            console.log(inputs)
+            if (!window.confirm("The watchpoint you selected seems to be malformed! Do you still want to attempt to remove the watchpoint?")) {
+                return
+            }
+        } else {
+            var hidden = inputs[inputs.length - 1] as HTMLInputElement
+            var hiddenvalue = hidden.value
+            try {
+                var oldwp = WatchPoint.parse(hiddenvalue)
+                this.watchpoints.remove(oldwp)
+                sim.removeWatchpoint(oldwp)
+            } catch (e: SimulatorError) {
+                console.error(e)
+                if (!window.confirm("The watchpoint you selected seems to be malformed! Do you still want to attempt to remove the watchpoint?")) {
+                    return
+                }
+            }
+        }
+        elm.parentElement?.removeChild(elm)
+    }
+
+    @JsName("addRawWatchpoint") fun addRawWatchpoint(
+        onRead: Boolean = false,
+        onWrite: Boolean = false,
+        address: Number? = null,
+        value: Number? = null,
+        mask: Number? = null
+    ) {
+        try {
+            val wp = WatchPoint(onRead, onWrite, address, value, mask)
+            sim.addWatchpoint(wp)
+        } catch (e: SimulatorError) {
+            console.error(e)
+        }
+    }
+
+    @JsName("removeRawWatchpoint") fun removeRawWatchpoint(
+        onRead: Boolean = false,
+        onWrite: Boolean = false,
+        address: Number? = null,
+        value: Number? = null,
+        mask: Number? = null
+    ) {
+        try {
+            val wp = WatchPoint(onRead, onWrite, address, value, mask)
+            this.watchpoints.remove(wp)
+            sim.removeWatchpoint(wp)
+        } catch (e: SimulatorError) {
+            console.error(e)
+        }
     }
 
     internal const val TIMEOUT_CYCLES = 100
