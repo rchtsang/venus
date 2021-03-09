@@ -348,6 +348,55 @@ function changeMemoryBoxSize(elm) {
     elm.style.width = (len * 0.75) + "rem";
 }
 
+function awp() {
+    alertify.confirm(`<div id="wp-info" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <label class="label is-small" for="wp-onRead-val">onRead</label>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <input id="wp-onRead-val" type="checkbox" value="On Read">
+                        </div>
+                        <div class="field-label">
+                          <label class="label is-small" for="wp-onWrite-val">onWrite</label>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <input id="wp-onWrite-val" type="checkbox" value="On Write">
+                        </div>
+                      </div>
+                    </div>
+                    <div id="wp-address" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <label class="label is-small" for="wp-address-val">Address</label>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <input id="wp-address-val" class="input is-small" spellcheck="false">
+                        </div>
+                      </div>
+                    </div>
+                    <div id="wp-value" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <label class="label is-small" for="wp-value-val">Value</label>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <input id="wp-value-val" class="input is-small" spellcheck="false">
+                        </div>
+                      </div>
+                    </div>
+                    <div id="wp-mask" class="panel-block">
+                      <div class="field is-horizontal">
+                        <div class="field-label">
+                          <label class="label is-small" for="wp-mask-val">Mask</label>
+                        </div>
+                        <div class="field-body is-expanded">
+                          <input id="wp-mask-val" class="input is-small" spellcheck="false">
+                        </div>
+                      </div>
+                    </div>`, function(){driver.addWatchpoint()});
+}
+
 // (function() {
 //     var cors_api_host = 'cors-anywhere.herokuapp.com';
 //     var cors_api_url = 'https://' + cors_api_host + '/';
