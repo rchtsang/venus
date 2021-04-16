@@ -35,6 +35,7 @@ var mv = Command(
                 f.label = rn
                 d.addChild(f)
                 f.parent = d
+                t.vfs.save()
                 return ""
             }
             for (source in sourceFiles) {
@@ -47,6 +48,7 @@ var mv = Command(
                 d.addChild(f)
                 f.parent = d
             }
+            t.vfs.save()
             return result
         },
         tab = ::fileTabComplete,

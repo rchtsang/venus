@@ -19,6 +19,7 @@ var cp = Command(
                 val new_f = VFSFile(f.label, d)
                 new_f.permissions = f.permissions
                 d.addChild(new_f, text)
+                t.vfs.save()
             } else {
                 result = "cp: Copy currently only works on files!"
             }
