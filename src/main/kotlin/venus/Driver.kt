@@ -1544,6 +1544,7 @@ import kotlin.dom.removeClass
     }
 
     lateinit var fileExplorerCurrentLocation: VFSObject
+    lateinit var fileExplorerPreviousLocation: VFSObject
 
     @JsName("deleteVFObject") fun deleteVFObject(name: String) {
         if (window.confirm("Are you sure you want to delete this file?")) {
@@ -1559,14 +1560,26 @@ import kotlin.dom.removeClass
             s = s.first!!
         }
         if (s is VFSObject && s.type in listOf(VFSType.Drive, VFSType.Folder)) {
+            fileExplorerPreviousLocation = fileExplorerCurrentLocation
             fileExplorerCurrentLocation = s
-            openVFObjectfromObj(fileExplorerCurrentLocation)
+            if (!openVFObjectfromObj(fileExplorerCurrentLocation)) {
+                fileExplorerCurrentLocation = fileExplorerPreviousLocation
+                Renderer.addFilePWD(fileExplorerCurrentLocation)
+            }
         } else {
-            console.log(s)
+            console.error(s)
+            js("window.alertify.error('Could not open `' + name + '`: ' + s).delay(15);")
+            Renderer.addFilePWD(fileExplorerCurrentLocation)
         }
     }
 
-    fun openVFObjectfromObj(obj: VFSObject) {
+    fun openVFObjectfromObj(obj: VFSObject): Boolean {
+        if (obj.isMounted() && obj.mountedHandler!!.validate_connection() != "") {
+            val name = obj.label
+            val path = obj.getPath(html_color_code = true)
+            js("window.alertify.error('Could not open `' + name + '` (' + path + ')');")
+            return false
+        }
         Renderer.clearObjectsFromDisplay()
         Renderer.addFilePWD(obj)
 //        for ((key, value) in fileExplorerCurrentLocation.contents) {
@@ -1583,6 +1596,7 @@ import kotlin.dom.removeClass
                 Renderer.addObjectToDisplay(fileExplorerCurrentLocation.getChild(key) as VFSObject)
             }
         }
+        return true
     }
 
     @JsName("refreshVFS") fun refreshVFS() {

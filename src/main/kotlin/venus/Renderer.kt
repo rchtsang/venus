@@ -833,7 +833,22 @@ internal object Renderer {
         var elm = document.createElement("tr")
         if (special == "") {
             elm.setAttribute("id", obj.label)
-            elm.innerHTML = "<td>${obj.label}</td>"
+
+            val objlabel = if (obj.type == VFSType.Drive) {
+                var styleclass = "terminal-drive"
+                if (obj.isMounted()) {
+                    styleclass = if (obj.mountedHandler!!.validate_connection() == "") {
+                        "terminal-drive-mounted-connected"
+                    } else {
+                        "terminal-drive-mounted-disconnected"
+                    }
+                }
+                "<font class=$styleclass>${obj.label}</font>"
+            } else {
+                obj.label
+            }
+
+            elm.innerHTML = "<td>$objlabel</td>"
             elm.innerHTML += "<td>${obj.type.name}</td>"
             var options = "<td>"
 
