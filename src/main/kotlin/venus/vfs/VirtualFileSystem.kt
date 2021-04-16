@@ -123,11 +123,29 @@ import kotlin.browser.window
         }
     }
 
-    @JsName("ls") fun ls(path: String? = null): String {
+    @JsName("ls") fun ls(path: String? = null, html_color_code: Boolean = true): String {
         var location = path?.let { getObjectFromPath(it) } ?: currentLocation
         var str = ""
         for (s in location.childrenNames()) {
-            str += s + (if ((location.getChild(s) as VFSObject).type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
+            val obj = (location.getChild(s) as VFSObject)
+            if (obj.type == VFSType.Drive) {
+                val dr = obj as VFSDrive
+                var styleclass = "terminal-drive"
+                if (dr.isMounted()) {
+                    styleclass = if (dr.mountedHandler!!.validate_connection() == "") {
+                        "terminal-drive-mounted-connected"
+                    } else {
+                        "terminal-drive-mounted-disconnected"
+                    }
+                }
+                str += if (html_color_code) {
+                    "<font class='" + styleclass + "'>" + s + VFSObject.separator + "</font>\n"
+                } else {
+                    s + VFSObject.separator + "\n"
+                }
+            } else {
+                str += s + (if (obj.type in listOf(VFSType.Folder)) VFSObject.separator else "") + "\n"
+            }
         }
         return str
 //        for (c in currentLocation.children() as MutableCollection<VFSObject>) {
@@ -162,8 +180,8 @@ import kotlin.browser.window
         return (templocation as VFSFile).readText()
     }
 
-    @JsName("path") fun path(): String {
-        return currentLocation.getPath() + VFSObject.separator
+    @JsName("path") fun path(html_color_code: Boolean = false): String {
+        return currentLocation.getPath(html_color_code) + VFSObject.separator
     }
     // @FIXME There is a bug for going into a file
     @JsName("remove") fun remove(path: String): String {

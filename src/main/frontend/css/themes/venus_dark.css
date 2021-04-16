@@ -303,3 +303,15 @@
 .theme-dark .prompt {
     color: #96b38a;
 }
+
+.theme-dark .terminal-drive {
+    color: #42a2ff;
+}
+
+.theme-dark .terminal-drive-mounted-connected {
+    color: #00b800;
+}
+
+.theme-dark .terminal-drive-mounted-disconnected {
+    color: #ff7171;
+}

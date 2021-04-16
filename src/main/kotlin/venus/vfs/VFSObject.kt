@@ -19,11 +19,24 @@ interface VFSObject {
         return mountedHandler != null
     }
 
-    fun getPath(): String {
+    fun getPath(html_color_code: Boolean = false): String {
         var path = ""
         var node: VFSObject? = this
         while (node != null && node.parent != node && node.parent !is VFSDummy) {
-            path = separator + node.label + path
+            val nodelabel = if (html_color_code && node.type == VFSType.Drive) {
+                var styleclass = "terminal-drive"
+                if (node.isMounted()) {
+                    styleclass = if (node.mountedHandler!!.validate_connection() == "") {
+                        "terminal-drive-mounted-connected"
+                    } else {
+                        "terminal-drive-mounted-disconnected"
+                    }
+                }
+                "<font class='" + styleclass + "'>" + node.label + "</font>"
+            } else {
+                node.label
+            }
+            path = separator + nodelabel + path
             node = node.parent
         }
         return (path)

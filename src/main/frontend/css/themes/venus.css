@@ -306,3 +306,15 @@ input::-webkit-inner-spin-button {
 #no-arrow input[type=number] {
     -moz-appearance: textfield;
 }
+
+.terminal-drive {
+    color: #42a2ff;
+}
+
+.terminal-drive-mounted-connected {
+    color: #00b800;
+}
+
+.terminal-drive-mounted-disconnected {
+    color: #ff7171;
+}

@@ -238,7 +238,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   }
 
   function setDir() {
-      $('#currentprompt').html('[user@venus] ' + driver.VFS.path() + '# ');
+      $('#currentprompt').html('[user@venus] ' + driver.VFS.path(true) + '# ');
   }
 
   //
