@@ -26,7 +26,7 @@ import kotlin.system.exitProcess
 /* ktlint-enable no-wildcard-imports */
 
 val VENUS_FS_API_PATH = "/api/fs"
-val VENUS_FS_VERSION = "1.0.1"
+val VENUS_FS_VERSION = "1.0.2"
 
 val VENUS_URL = "https://venus.cs61c.org"
 
@@ -253,7 +253,10 @@ class Mounter(var port: String, var dir: String, var key_path: String = System.g
                     if (fp == null) {
                         encryptAndSendJsonToContext(ctx, GenericResponse(false, "$filepath: No such file or directory"))
                     } else {
-                        val list = fp.list()
+                        val list = mutableListOf<Array<String>>()
+                        for (f in fp.listFiles()) {
+                            list.add(arrayOf(f.name, if (f.isFile) { "file" } else { "dir" }))
+                        }
                         encryptAndSendJsonToContext(ctx, GenericResponse(true, list))
                     }
                 } catch (e: Exception) {
