@@ -882,11 +882,37 @@ internal object Renderer {
         var o = obj
         while (o != o.parent && o.parent.type != VFSType.Dummy) {
             val path = o.getPath()
-            pwd = "<a onclick=\"driver.openVFObject('$path')\">${o.label}</a>/" + pwd
+            val extra = if (o.type == VFSType.Drive) {
+                var styleclass = "terminal-drive"
+                if (o.isMounted()) {
+                    styleclass = if (o.mountedHandler!!.validate_connection() == "") {
+                        "terminal-drive-mounted-connected"
+                    } else {
+                        "terminal-drive-mounted-disconnected"
+                    }
+                }
+                "class=$styleclass"
+            } else {
+                ""
+            }
+            pwd = "<a $extra onclick=\"driver.openVFObject('$path')\">${o.label}</a>/" + pwd
             o = o.parent
         }
         val path = o.getPath()
-        pwd = "<a onclick=\"driver.openVFObject('$path')\">${o.label}</a>/" + pwd
+        val extra = if (o.type == VFSType.Drive) {
+            var styleclass = "terminal-drive"
+            if (o.isMounted()) {
+                styleclass = if (o.mountedHandler!!.validate_connection() == "") {
+                    "terminal-drive-mounted-connected"
+                } else {
+                    "terminal-drive-mounted-disconnected"
+                }
+            }
+            "class=$styleclass"
+        } else {
+            ""
+        }
+        pwd = "<a $extra onclick=\"driver.openVFObject('$path')\">${o.label}</a>/" + pwd
         b.innerHTML = pwd
     }
 
