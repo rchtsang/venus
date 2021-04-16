@@ -1,7 +1,5 @@
 package venus.vfs
 
-import kotlin.browser.window
-
 class VFSDrive(val n: String, override var parent: VFSObject, override var mountedHandler: VFSMountedDriveHandler? = null) : VFSFolder(n, parent) {
     override val type = VFSType.Drive
     init {
@@ -30,9 +28,13 @@ class VFSDrive(val n: String, override var parent: VFSObject, override var mount
                 try {
                     handler.connect()
                 } catch (e: IllegalStateException) {
-                    val emsg = "Failed to mount drive `${jsonContainer.label}`: $e"
+                    var path = parent.getPath()
+                    if (path == "") {
+                        path = "/"
+                    }
+                    val emsg = "Failed to mount drive `${jsonContainer.label}` in `$path`: $e"
                     console.error(emsg)
-                    window.alert(emsg)
+                    js("window.alertify.error(emsg).delay(30);")
                 }
                 val folder = VFSDrive(jsonContainer.label, parent, mountedHandler = handler)
                 return folder
