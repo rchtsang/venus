@@ -7,6 +7,7 @@ open class VFSFolder(var name: String, override var parent: VFSObject, override 
     override var label = name
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()
+    override var mountedChildrenHelper: MutableList<VFSObject> = mutableListOf()
     init {
         contents[".."] = parent
         contents["."] = this

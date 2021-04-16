@@ -1596,6 +1596,7 @@ import kotlin.dom.removeClass
                 Renderer.addObjectToDisplay(fileExplorerCurrentLocation.getChild(key) as VFSObject)
             }
         }
+        fileExplorerCurrentLocation.childrenNamesFinish()
         return true
     }
 

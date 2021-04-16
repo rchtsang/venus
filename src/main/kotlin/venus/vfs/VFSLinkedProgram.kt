@@ -6,6 +6,7 @@ class VFSLinkedProgram(override var label: String, override var parent: VFSObjec
     override val type = VFSType.LinkedProgram
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()
+    override var mountedChildrenHelper: MutableList<VFSObject> = mutableListOf()
     companion object {
         val innerProgram = "innerprogram"
         fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {

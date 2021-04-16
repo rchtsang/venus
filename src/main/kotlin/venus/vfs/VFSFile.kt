@@ -4,6 +4,7 @@ class VFSFile(override var label: String, override var parent: VFSObject, overri
     override val type = VFSType.File
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()
+    override var mountedChildrenHelper: MutableList<VFSObject> = mutableListOf()
     companion object {
         val innerTxt = "innertext"
         fun inflate(jsonContainer: JsonContainer, parent: VFSObject): VFSObject {

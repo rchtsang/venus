@@ -47,6 +47,7 @@ class Zip {
                 }
             }
         }
+        folder.childrenNamesFinish()
     }
 
     fun loadZip(zipfile: VFSFile, vfs: VirtualFileSystem, folder: VFSFolder) {

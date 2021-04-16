@@ -7,6 +7,7 @@ interface VFSObject {
     var permissions: VFSPermissions
     var parent: VFSObject
     var mountedHandler: VFSMountedDriveHandler?
+    var mountedChildrenHelper: MutableList<VFSObject>
 
     companion object {
         fun isValidName(name: String): Boolean {
@@ -116,9 +117,32 @@ interface VFSObject {
         }
     }
 
-    fun childrenNames(): MutableSet<String> {
+    fun childrenNames(full_load: Boolean = false): MutableSet<String> {
+        /**
+         * Make sure to call .childrenNamesFinish() after you do this to reset the mount data otherwise there will be
+         * stale data.
+         */
         return if (this.isMounted()) {
-            val set = this.mountedHandler!!.CMDls(this.getMountedPath())?.toMutableSet() ?: mutableSetOf()
+            this@VFSObject.mountedChildrenHelper.clear()
+            val set = this.mountedHandler!!.CMDls(this.getMountedPath())?.run {
+                val mutableset = mutableSetOf<String>()
+                for (l in this) {
+                    if ((l as Any) is String) {
+                        mutableset.add(l as String)
+                        continue
+                    }
+                    val name = l[0]
+                    val type = l[1]
+                    mutableset.add(name)
+
+                    this@VFSObject.mountedChildrenHelper.add(if (type == "file") {
+                        VFSFile(name, parent = this@VFSObject, mountedHandler = this@VFSObject.mountedHandler)
+                    } else {
+                        VFSFolder(name, parent = this@VFSObject, mountedHandler = this@VFSObject.mountedHandler)
+                    })
+                }
+                mutableset
+            } ?: mutableSetOf()
             val orig = mutableSetOf<String>(".", "..")
             orig.union(set).toMutableSet()
         } else {
@@ -126,14 +150,25 @@ interface VFSObject {
         }
     }
 
+    fun childrenNamesFinish() {
+        this.mountedChildrenHelper.clear()
+    }
+
     fun children(): MutableCollection<Any> {
         return this.contents.values // FIXME
     }
 
-    fun getChild(name: String): Any? {
+    fun getChild(name: String, force_get: Boolean = false): Any? {
         return if (this.isMounted()) {
             if (name in this.contents) {
                 return this.contents[name]
+            }
+            if (!force_get) {
+                for (obj in this.mountedChildrenHelper) {
+                    if (obj.label == name) {
+                        return obj
+                    }
+                }
             }
             val mpath = this.getMountedPath()
             val info = this.mountedHandler!!.CMDfileinfo(mpath, name)
@@ -148,7 +183,9 @@ interface VFSObject {
     }
 
     fun containsChild(child: String): Boolean {
-        return this.childrenNames().contains(child)
+        val res = this.childrenNames().contains(child)
+        this.childrenNamesFinish()
+        return res
 //        return this.contents.containsKey(child)
     }
 

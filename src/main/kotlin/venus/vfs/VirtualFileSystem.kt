@@ -147,6 +147,7 @@ import kotlin.browser.window
                 str += s + (if (obj.type in listOf(VFSType.Folder)) VFSObject.separator else "") + "\n"
             }
         }
+        location.childrenNamesFinish()
         return str
 //        for (c in currentLocation.children() as MutableCollection<VFSObject>) {
 //            str += c.label + (if (c.type in listOf(VFSType.Folder, VFSType.Drive)) VFSObject.separator else "") + "\n"
@@ -304,6 +305,7 @@ import kotlin.browser.window
                 fnames.add(k)
             }
         }
+        location.childrenNamesFinish()
         return fnames
     }
 

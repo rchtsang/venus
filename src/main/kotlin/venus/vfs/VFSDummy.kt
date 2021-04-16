@@ -9,4 +9,5 @@ class VFSDummy(override var mountedHandler: VFSMountedDriveHandler? = null) : VF
     override var contents = HashMap<String, Any>()
     override var permissions = VFSPermissions()
     override lateinit var parent: VFSObject
+    override var mountedChildrenHelper: MutableList<VFSObject> = mutableListOf()
 }

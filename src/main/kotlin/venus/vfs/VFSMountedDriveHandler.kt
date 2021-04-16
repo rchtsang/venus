@@ -2,13 +2,15 @@ package venus.vfs
 
 import org.w3c.xhr.XMLHttpRequest
 import venus.Driver
+import venusbackend.utils.Version
 import kotlin.browser.window
 
-val COMPATABLE_VERSION = "1.0.1"
+val COMPATABLE_VERSION = Version("1.0.1")
 val MESSAGE_TTL = 30
 
 data class VFSMountedDriveHandler(var url: String, var key: String, var message_ttl: Int = MESSAGE_TTL) {
     var connected = false
+    var server_version = Version("0.0.0")
     init {
 //        login()
 //        ping()
@@ -121,7 +123,10 @@ data class VFSMountedDriveHandler(var url: String, var key: String, var message_
         val res = this.getVersion()
         if (res == null) {
             throw IllegalStateException("Failed to get version from the file server ($url)!")
-        } else if (res != COMPATABLE_VERSION) {
+            return
+        }
+        server_version = Version(res)
+        if (server_version < COMPATABLE_VERSION) {
             throw IllegalStateException("This version of Venus's drive handler ($COMPATABLE_VERSION) is not compatible with the mounted file server ($res)!")
         }
     }
@@ -197,8 +202,8 @@ data class VFSMountedDriveHandler(var url: String, var key: String, var message_
     data class CMDEncRes(val success: Boolean, val data: String = "")
 
     data class CMDlsReq(val data: String)
-    data class CMDlsRes(val success: Boolean, val data: Array<String> = arrayOf<String>())
-    fun CMDls(dir: String = ""): Array<String>? {
+    data class CMDlsRes(val success: Boolean, val data: Array<Array<String>> = arrayOf<Array<String>>())
+    fun CMDls(dir: String = ""): Array<Array<String>>? {
         val rsp = make_request("POST", "api/fs/ls/names", data = JSON.stringify(CMDlsReq(dir)))
         val res = rsp?.let { JSON.parse<CMDlsRes>(it) } ?: CMDlsRes(success = false)
         if (!res.success) {
