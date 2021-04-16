@@ -15,7 +15,7 @@ before_install:
 script:
 - ./gradlew build -x ktlint
 - ./gradlew ktlint
-- grunt test
+#- grunt test # This errors on jvm and also is not how the tests actually run.
 after_success:
 #  - ./gradlew dokka
 - git clone -b gh-pages https://github.com/ThaumicMekanism/venus.git out && rm -rf out/.git
