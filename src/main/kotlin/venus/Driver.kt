@@ -2,6 +2,7 @@ package venus
 
 /* ktlint-disable no-wildcard-imports */
 
+import io.javalin.plugin.json.JavalinJson
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import venusbackend.assembler.Assembler
@@ -54,6 +55,8 @@ object Driver {
     var lastReadFile: File? = null
     var workingdir = "."
 
+    var coreDumpDefaultFile = "venus_core_dump.json"
+
     @OptIn(ImplicitReflectionSerializer::class)
     @JvmStatic
     fun main(args: Array<String>) {
@@ -82,6 +85,7 @@ object Driver {
         val traceTwoStage by cli.flagArgument(listOf("-ts", "--traceTwoStage"), "Sets the trace to be two stages.", false, true)
         val traceTotalNumCommands by cli.flagValueArgument(listOf("-tn", "--traceTotalNumCommands"), "NumberOfCommands", "Sets the number of trace lines which will be printed (negative is ignored).", -1) { it.toInt() }
         val dumpInsts by cli.flagArgument(listOf("-d", "--dump"), "Dumps the instructions of the input program then quits.", false, true)
+        val coreDumpFile: String by cli.flagValueArgument(listOf("-cdf", "--coreDumpFile"), "file", "Performs a core dump to file after the program finishes. Empty string does not perform a core dump.", "")
         val unsetRegisters by cli.flagArgument(listOf("-ur", "--unsetRegisters"), "All registers start as 0 when set.", false, true)
 
         val getNumberOfCycles by cli.flagArgument(listOf("-n", "--numberCycles"), "Prints out the total number of cycles.", false, true)
@@ -219,6 +223,7 @@ object Driver {
 
                 try {
                     sim.run(finishPluginsAfterRun = false)
+                    coreDumpToFile(coreDumpFile, sim)
                     if (ccReporter != null && ccReporter.finish() > 0) {
                         exitProcess(-1)
                     }
@@ -241,6 +246,7 @@ object Driver {
                     }
                 } catch (e: SimulatorError) {
                     // pass
+                    coreDumpToFile(coreDumpFile, sim)
                     System.err.println("Venus ran into a simulator error!")
                     System.err.println(e.message ?: throw e)
                     exitProcess(-1)
@@ -552,6 +558,14 @@ object Driver {
             Renderer.printConsole(tr.getString())
         } catch (e: Throwable) {
             handleError("Trace to String", e)
+        }
+    }
+
+    @OptIn(ImplicitReflectionSerializer::class)
+    internal fun coreDumpToFile(fileName: String, sim: Simulator) {
+        if (fileName != "") {
+            val coreDump = sim.coreDump()
+            File(fileName).writeText(JavalinJson.toJson(coreDump))
         }
     }
 }
